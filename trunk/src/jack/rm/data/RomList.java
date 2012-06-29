@@ -43,6 +43,11 @@ public class RomList
 		Collections.sort(list);
 	}
 	
+	public void clear()
+	{
+		list.clear();
+	}
+	
 	public Rom getByCRC(long crc)
 	{
 		return crcs.get(crc);

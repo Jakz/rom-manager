@@ -19,12 +19,15 @@ public class DatLoader
 	{
 		try
 		{
+			Main.romList.clear();
+			
 			XMLReader reader = XMLReaderFactory.createXMLReader();
 			reader.setContentHandler(handler);
 			
 			reader.parse(RomSet.current.datPath);
 			
 			Main.searchPanel.updateSizes(RomSize.mapping.values().toArray(new RomSize[RomSize.mapping.size()]));
+			Main.mainFrame.romListModel.fireChanges();
 		}
 		catch (Exception e)
 		{
