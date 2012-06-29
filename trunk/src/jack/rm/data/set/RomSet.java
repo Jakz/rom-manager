@@ -9,25 +9,16 @@ import jack.rm.data.*;
 import java.awt.Desktop;
 import java.awt.Dimension;
 
+import jack.rm.data.parser.*;
+import org.xml.sax.helpers.DefaultHandler;
+
 public abstract class RomSet
 {
-	public static final List<RomSet> sets = new ArrayList<RomSet>();
-	public static RomSet current;
-	
-	static
-	{
-		sets.add(new GBA());
-		sets.add(new NDS());
-		sets.add(new GBC());
-		sets.add(new NES());
-		sets.add(new GB());
-		
-		current = sets.get(3);
-	}
+	public static RomSet current = null;
+
 
 	public final Console type;
 	public final String romPath;
-	public final String name;
 	public final String provider;
 	
 	public final String datPath;
@@ -35,11 +26,10 @@ public abstract class RomSet
 	public final Dimension screenTitle;
 	public final Dimension screenGame;
 	
-	RomSet(Console type, String name, String provider, String romPath, String datPath, Dimension screenTitle, Dimension screenGame)
+	RomSet(Console type, String provider, String romPath, String datPath, Dimension screenTitle, Dimension screenGame)
 	{
 		this.type = type;
 		this.romPath = romPath;
-		this.name = name;
 		this.provider = provider;
 		this.datPath = datPath;
 		this.screenTitle = screenTitle;
@@ -52,11 +42,21 @@ public abstract class RomSet
 	public abstract String gameImage(Rom rom);
 	public abstract String downloadURL(Rom rom);
 	
+	public DefaultHandler buildDatLoader(RomList list)
+	{
+		return new OfflineListXMLParser(list);
+	}
+	
+	public String toString()
+	{
+		return type.name+" ("+provider+")";
+	}
+	
 	static class GBA extends RomSet
 	{
 		public GBA()
 		{
-			super(Console.GBA, "gba", "OfflineList", "roms/gba/", "dat/ol-gba.xml", new Dimension(480,320), new Dimension(480,320));
+			super(Console.GBA, "OfflineList", "roms/gba/", "dat/ol-gba.xml", new Dimension(480,320), new Dimension(480,320));
 		}
 		
 		public String titleImageURL(Rom rom)
@@ -98,7 +98,7 @@ public abstract class RomSet
 	{
 		public GBC()
 		{
-			super(Console.GBC, "gbc", "NoIntro", "roms/gbc/", "dat/ni-gbc.xml", new Dimension(320,288), new Dimension(320,288));
+			super(Console.GBC, "NoIntro", "roms/gbc/", "dat/ni-gbc.xml", new Dimension(320,288), new Dimension(320,288));
 		}
 		
 		public String titleImageURL(Rom rom)
@@ -142,7 +142,7 @@ public abstract class RomSet
 	{
 		public GB()
 		{
-			super(Console.GBC, "gb", "NoIntro", "roms/gb/", "dat/ni-gb.xml", new Dimension(320,288), new Dimension(320,288));
+			super(Console.GB, "NoIntro", "roms/gb/", "dat/ni-gb.xml", new Dimension(320,288), new Dimension(320,288));
 		}
 		
 		public String titleImageURL(Rom rom)
@@ -185,7 +185,7 @@ public abstract class RomSet
 	{
 		NDS()
 		{
-			super(Console.NDS, "nds", "AdvanScene", "roms/nds/", "dat/as-nds.xml", new Dimension(384,384), new Dimension(256,384));
+			super(Console.NDS, "AdvanScene", "roms/nds/", "dat/as-nds.xml", new Dimension(384,384), new Dimension(256,384));
 		}
 		
 		public String titleImageURL(Rom rom)
@@ -225,7 +225,7 @@ public abstract class RomSet
 	{
 		public NES()
 		{
-			super(Console.NES, "nes", "NoIntro", "roms/nes/", "dat/ni-nes.xml", new Dimension(256,240), new Dimension(256,240));
+			super(Console.NES, "NoIntro", "roms/nes/", "dat/ni-nes.xml", new Dimension(256,240), new Dimension(256,240));
 		}
 		
 		public String titleImageURL(Rom rom)

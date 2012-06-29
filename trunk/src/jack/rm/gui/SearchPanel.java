@@ -72,11 +72,12 @@ public class SearchPanel extends JPanel
 		active = true;
 	}
 	
-	public void updateSizes(final RomSize[] nsizes)
+	public void resetFields(final RomSize[] nsizes)
 	{
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				sizes.removeAll();
+				sizes.removeAllItems();
+				sizes.addItem(Text.SIZE_TITLE.text());
 				for (RomSize s : nsizes)
 				{
 					System.out.println(s.bytes+"  ->  "+s.toString());
@@ -84,6 +85,11 @@ public class SearchPanel extends JPanel
 				}
 			}
 		});
+		
+		romName.setText("");
+		sizes.setSelectedIndex(0);
+		locations.setSelectedIndex(0);
+		languages.setSelectedIndex(0);
 	}
 	
 	class SearchListener implements ActionListener

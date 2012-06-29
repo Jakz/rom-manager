@@ -1,5 +1,6 @@
 package jack.rm.gui;
 
+import jack.rm.Main;
 import jack.rm.data.*;
 import jack.rm.data.set.RomSet;
 import jack.rm.i18n.Text;
@@ -69,11 +70,9 @@ public class InfoPanel extends JPanel implements ActionListener
 		downloadButton.setEnabled(false);
 		
 		imgTitle = new JLabel();
-		imgTitle.setPreferredSize(new Dimension(RomSet.current.screenTitle.width+30,RomSet.current.screenTitle.height));
 		imgTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		imgScreen = new JLabel();
-		imgScreen.setPreferredSize(new Dimension(RomSet.current.screenGame.width+30,RomSet.current.screenGame.height));
 		imgScreen.setHorizontalAlignment(SwingConstants.CENTER);
 				
 		pFields.setLayout(new BoxLayout(pFields,BoxLayout.PAGE_AXIS));
@@ -108,6 +107,20 @@ public class InfoPanel extends JPanel implements ActionListener
 		pTotal.add(buttons, BorderLayout.SOUTH);
 		
 		this.add(pTotal);
+	}
+	
+	public void setScreenSizes(final Dimension title, final Dimension game)
+	{
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				imgTitle.setPreferredSize(new Dimension(title.width+30,title.height));
+				imgScreen.setPreferredSize(new Dimension(game.width,game.height));
+				revalidate();
+				repaint();
+			}
+		});
+		
+
 	}
 	
 	ImageIcon loadImage(Rom rom, String type)

@@ -6,7 +6,7 @@ import org.xml.sax.*;
 import org.xml.sax.helpers.*;
 import java.io.CharArrayWriter;
 
-class OfflineListXMLParser extends DefaultHandler
+public class OfflineListXMLParser extends DefaultHandler
 {
 	CharArrayWriter buffer = new CharArrayWriter();
 	
@@ -17,11 +17,12 @@ class OfflineListXMLParser extends DefaultHandler
 	
 	RomList romList;
 	
-	OfflineListXMLParser(RomList romList)
+	
+	public OfflineListXMLParser(RomList romList)
 	{
 		this.romList = romList;
 	}
-	
+
 	public void startElement(String namespaceURI, String localName, String qName, Attributes attr) throws SAXException
 	{			
 		if (localName.equals("game"))

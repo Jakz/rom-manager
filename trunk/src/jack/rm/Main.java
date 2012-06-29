@@ -4,7 +4,7 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import jack.rm.data.*;
-import jack.rm.data.parser.*;
+import jack.rm.data.set.*;
 import jack.rm.gui.*;
 
 public class Main
@@ -46,21 +46,13 @@ public class Main
 		searchPanel = new SearchPanel();
 		infoPanel = new InfoPanel();
 		countPanel = new CountPanel();
-		
 		mainFrame = new MainFrame();
-		
-		//ProgressDialog dg = new ProgressDialog(mainFrame,"Progress");
-		//dg.setVisible(true);
-		
 		renamerFrame = new RenamerFrame();
-
-		DatLoader.load();
 		
 		scanner = new Scanner(romList);
-		scanner.scanForRoms();
 		downloader = new Downloader();
-		
-		romList.showAll();
+
+		RomSetManager.loadSet(Console.GBA);
 		
 		mainFrame.setVisible(true);
 	

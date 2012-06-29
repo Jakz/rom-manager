@@ -2,15 +2,12 @@ package jack.rm.gui;
 
 import jack.rm.*;
 import jack.rm.data.*;
+import jack.rm.data.set.*;
 import jack.rm.i18n.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
 import java.awt.*;
-import java.net.URL;
-import java.util.ArrayList;
-import java.io.File;
 
 public class MainFrame extends JFrame
 {	
@@ -38,6 +35,9 @@ public class MainFrame extends JFrame
 	public final RomListModel romListModel = new RomListModel();
 	final public JList list = new JList();
 	final private JScrollPane listPane = new JScrollPane(list);
+	
+	public final JComboBox cbRomSets = new JComboBox();
+	public final RomSetListener rsListener = new RomSetListener();
 	
 	final MenuListener menuListener = new MenuListener();
 	
@@ -68,8 +68,16 @@ public class MainFrame extends JFrame
 		
 		setJMenuBar(menu);
 		
+		for (RomSet rs : RomSetManager.sets())
+			cbRomSets.addItem(rs);
+		cbRomSets.addActionListener(rsListener);
+		
+		JPanel romListPanel = new JPanel(new BorderLayout());
+		romListPanel.add(cbRomSets, BorderLayout.NORTH);
+		romListPanel.add(listPane, BorderLayout.CENTER);
+		
 		JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		split.add(listPane);
+		split.add(romListPanel);
 		split.add(Main.infoPanel);
 		split.setDividerLocation(400);
 		
@@ -167,6 +175,14 @@ public class MainFrame extends JFrame
 		}
 	}
 	
+	class RomSetListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			RomSetManager.loadSet((RomSet)cbRomSets.getSelectedItem());
+		}
+	}
+	
 	void toggleConsole(boolean flag)
 	{
 		if (flag)
@@ -179,5 +195,12 @@ public class MainFrame extends JFrame
 	{
 		romListModel.fireChanges();
 		Main.countPanel.update();
+	}
+	
+	public void updateCbRomSet(RomSet set)
+	{
+		cbRomSets.removeActionListener(rsListener);
+		cbRomSets.setSelectedItem(set);
+		cbRomSets.addActionListener(rsListener);
 	}
 }
