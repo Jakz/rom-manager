@@ -3,11 +3,13 @@ package jack.rm.gui;
 import jack.rm.data.*;
 import jack.rm.i18n.Text;
 import jack.rm.*;
+
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
 import java.awt.event.*;
+import java.util.Arrays;
 
 public class SearchPanel extends JPanel
 {
@@ -43,10 +45,7 @@ public class SearchPanel extends JPanel
 		
 		for (Language l : Language.values())
 			languages.addItem(l);
-		
-		for (RomSize s : RomSize.values())
-			sizes.addItem(s);
-		
+
 		/*romName.setFont(new Font(null,Font.PLAIN,9));
 		sizes.setFont(new Font(null,Font.PLAIN,9));
 		genres.setFont(new Font(null,Font.PLAIN,9));
@@ -73,6 +72,19 @@ public class SearchPanel extends JPanel
 		active = true;
 	}
 	
+	public void updateSizes(final RomSize[] nsizes)
+	{
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				sizes.removeAll();
+				for (RomSize s : nsizes)
+				{
+					System.out.println(s.bytes+"  ->  "+s.toString());
+					sizes.addItem(s);
+				}
+			}
+		});
+	}
 	
 	class SearchListener implements ActionListener
 	{

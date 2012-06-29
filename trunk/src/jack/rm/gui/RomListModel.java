@@ -59,7 +59,7 @@ public class RomListModel extends AbstractListModel
 	{
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				Main.mainFrame.list.setSelectedIndex(-1);
+				Main.mainFrame.list.clearSelection();
 				fireIntervalRemoved(this,0,list.size());
 			}
 		});

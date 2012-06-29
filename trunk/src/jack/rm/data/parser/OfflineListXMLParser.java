@@ -6,7 +6,7 @@ import org.xml.sax.*;
 import org.xml.sax.helpers.*;
 import java.io.CharArrayWriter;
 
-class AdvanceSceneXMLParser extends DefaultHandler
+class OfflineListXMLParser extends DefaultHandler
 {
 	CharArrayWriter buffer = new CharArrayWriter();
 	
@@ -14,6 +14,13 @@ class AdvanceSceneXMLParser extends DefaultHandler
 	int curString;
 	
 	boolean started = false;
+	
+	RomList romList;
+	
+	OfflineListXMLParser(RomList romList)
+	{
+		this.romList = romList;
+	}
 	
 	public void startElement(String namespaceURI, String localName, String qName, Attributes attr) throws SAXException
 	{			
@@ -99,9 +106,9 @@ class AdvanceSceneXMLParser extends DefaultHandler
 		else if (localName.equals("game"))
 		{
 			//if (rom.number > 0)
-				Main.romList.add(rom);
+				romList.add(rom);
 			
-			Main.romList.sort();
+			romList.sort();
 		}
 	
 	}

@@ -1,6 +1,6 @@
 package jack.rm;
 
-import jack.rm.data.RomSet;
+import jack.rm.data.set.RomSet;
 
 import java.io.*;
 
@@ -14,12 +14,12 @@ public class Paths
 
 	public static String screensTitle()
 	{
-		return "screens/"+RomSet.current.setName+"/title/";
+		return "screens/"+RomSet.current.name+"/title/";
 	}
 	
 	public static String screensGame()
 	{
-		return "screens/"+RomSet.current.setName+"/game/";
+		return "screens/"+RomSet.current.name+"/game/";
 	}
 	
 	static

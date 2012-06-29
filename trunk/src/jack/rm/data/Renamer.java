@@ -16,7 +16,7 @@ public class Renamer
 	{
 		format = new DecimalFormat();
 		format.applyPattern("0000");
-		renamingPattern = "%n - %t [%SMb]";
+		renamingPattern = "%n - %t [%S]";
 		renameInZipToo = false;
 	}
 	
@@ -85,7 +85,7 @@ public class Renamer
 	
 	static class MegabitSizePattern extends Pattern {
 		MegabitSizePattern() { super("%S", "Size of the game dump in megabits"); }
-		public String apply(String name, Rom rom) { return name.replace(code,rom.size.mbitesAsString()); }
+		public String apply(String name, Rom rom) { return name.replace(code,rom.size.bitesAsStringShort()); }
 	}
 	
 	static class FullLocationPattern extends Pattern {

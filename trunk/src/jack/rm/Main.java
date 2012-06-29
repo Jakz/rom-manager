@@ -42,7 +42,6 @@ public class Main
 	public static void main(String[] args)
 	{
 		setLNF();
-		DatLoader.load();
 		
 		searchPanel = new SearchPanel();
 		infoPanel = new InfoPanel();
@@ -54,17 +53,17 @@ public class Main
 		//dg.setVisible(true);
 		
 		renamerFrame = new RenamerFrame();
+
+		DatLoader.load();
 		
 		scanner = new Scanner(romList);
 		scanner.scanForRoms();
-		
 		downloader = new Downloader();
-
+		
 		romList.showAll();
 		
 		mainFrame.setVisible(true);
-		
-		
+	
 	}
 	
 	public static void log(String str)

@@ -2,36 +2,35 @@ package jack.rm.data;
 
 import java.util.*;
 
-public enum RomSize
+public class RomSize implements Comparable<RomSize>
 {
-	MBIT1L(1),
-	MBIT1(131072),
-	MBIT2(262144),
-	MBIT4(524288),
-	MBIT8(1048576),
-	MBIT16(2097152),
-	MBIT32(4194304),
-	MBIT64(8388608),
-	MBIT128(16777216),
-	MBIT256(33554432),
-	MBIT512(67108864),
-	MBIT1024(134217728),
-	MBIT2048(268435456),
-	MBIT4096(536870912)
-	
-	;
-	
 	public final static int MEGABYTE = 1048576;
 	public final static int MEGABIT = MEGABYTE/8;
 	
-	public final static Map<Integer, RomSize> mapping = new HashMap<Integer, RomSize>();
+	public final static int KBYTE = 1024;
+	public final static int KBIT = KBYTE/8;
 	
-	static
+	public final static String[] shortSizesBit = {"Kb", "Mb", "Gb"};
+	public final static String[] longSizesBit = {" Kbit", " Mbit", " Gbit"};
+	
+	public final static Map<Integer, RomSize> mapping = new TreeMap<Integer, RomSize>();
+	
+	public static RomSize forBytes(int size)
 	{
-		for (RomSize s : values())
-			mapping.put(s.bytes, s);
+		if (size%KBYTE != 0)
+			size -= size%KBYTE;
+		
+		RomSize m = mapping.get(size);
+		
+		if (m == null)
+		{
+			m = new RomSize(size);
+			mapping.put(size, m);
+		}
+		
+		return m;
 	}
-	
+
 	public final int bytes;
 	
 	RomSize(int bytes)
@@ -46,53 +45,51 @@ public enum RomSize
 	
 	public String mbytesAsString()
 	{
-		if (bytes == 1) return "<1";
+		int mbits = bytes/MEGABYTE;
 		
-		if (bytes%MEGABYTE == 0)
-			return Integer.toString(bytes/MEGABYTE);
+		if (mbits < 1)
+			return bytes/KBYTE+" KByte";
 		else
-			return Float.toString(bytes/(float)MEGABYTE);
-	}
-	
-	public String mbitesAsString()
-	{
-		if (bytes == 1) return "<1";
-		
-		if (bytes%MEGABIT == 0)
-			return Integer.toString(bytes/MEGABIT);
-		else
-			return Float.toString(bytes/(float)MEGABIT);
-	}
-	
-	public static RomSize forBytes(int size)
-	{
-		RomSize m = mapping.get(size);
-		
-		if (m != null)
-			return m;
-		
-		return MBIT1L;
-		/*if (m == null)
 		{
-			if (size < MBIT1.bytes)
-				return MBIT1L;
-		}*/
-
-		//return m;
+			if (bytes%MEGABYTE == 0)
+				return Integer.toString(bytes/MEGABYTE)+ " MByte";
+			else
+				return String.format("%.2f", bytes/(float)MEGABYTE) +" MByte";
+		}
 	}
 	
-	public static RomSize forName(String name)
+	private String bitesAsString(String[] sss)
 	{
-		for (RomSize s : mapping.values())
-			if (s.toString().equals(name))
-				return s;
+		int mbits = bytes/MEGABIT;
 		
-		return null;
+		if (mbits < 1)
+			return bytes/KBIT+sss[0];
+		else
+		{
+			if (bytes%MEGABIT == 0)
+				return Integer.toString(bytes/MEGABIT)+ sss[1];
+			else
+				return String.format("%.2f", bytes/(float)MEGABIT) + sss[1];
+		}
 	}
 	
+	public String bitesAsStringShort()
+	{
+		return bitesAsString(shortSizesBit);
+	}
+	
+	public String bitesAsStringLong()
+	{
+		return bitesAsString(longSizesBit);
+	}
+		
 	public String toString()
 	{
-		return mbitesAsString()+" Mbits";
+		return bitesAsStringLong();
 	}
 	
+	public int compareTo(RomSize s)
+	{
+		return bytes < s.bytes ? -1 : (bytes == s.bytes ? 0 : 1);
+	}
 }

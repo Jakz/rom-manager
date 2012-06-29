@@ -1,6 +1,7 @@
 package jack.rm.gui;
 
 import jack.rm.data.*;
+import jack.rm.data.set.RomSet;
 import jack.rm.i18n.Text;
 
 import javax.swing.*;
@@ -177,7 +178,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		fields[Field.PUBLISHER.index].setText(rom.publisher);
 		fields[Field.GROUP.index].setText(rom.group);
 		fields[Field.DUMP_DATE.index].setText(rom.date);
-		fields[Field.SIZE.index].setText(rom.size.mbitesAsString()+" Mbits ("+rom.size.mbytesAsString()+" Mbytes)");
+		fields[Field.SIZE.index].setText(rom.size.bitesAsStringLong()+" ("+rom.size.mbytesAsString()+")");
 		//fields[5].setText(StringManager.getGenre(rom.genre));
 		fields[Field.LOCATION.index].setText(rom.location.fullName);
 		fields[Field.INTERNAL_NAME.index].setText(rom.internalName);

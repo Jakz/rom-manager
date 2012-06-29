@@ -1,6 +1,7 @@
 package jack.rm.data;
 
 import jack.rm.*;
+import jack.rm.data.set.RomSet;
 import jack.rm.gui.*;
 import jack.rm.i18n.Text;
 
