@@ -6,7 +6,8 @@ public enum Console
 	GB("gb", "GameBoy"),
 	GBC("gbc", "GameBoy Color"),
 	GBA("gba", "GameBoy Advance"),
-	NDS("nds", "Nintendo DS")
+	NDS("nds", "Nintendo DS"),
+	WS("ws", "WonderSwan")
 	;
 	
 	public final String tag;

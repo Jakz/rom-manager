@@ -19,7 +19,7 @@ public class Scanner
 		this.list = list;
 	}
 	
-	public long computeCRC(File file)
+	public static long computeCRC(File file)
 	{
 		try
 		{

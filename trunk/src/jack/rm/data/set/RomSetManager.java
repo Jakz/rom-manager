@@ -1,14 +1,10 @@
 package jack.rm.data.set;
 
+import java.io.File;
 import java.util.*;
 
-import jack.rm.Main;
+import jack.rm.*;
 import jack.rm.data.RomSize;
-import jack.rm.data.set.RomSet.GB;
-import jack.rm.data.set.RomSet.GBA;
-import jack.rm.data.set.RomSet.GBC;
-import jack.rm.data.set.RomSet.NDS;
-import jack.rm.data.set.RomSet.NES;
 
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
@@ -25,6 +21,7 @@ public class RomSetManager
 		sets.put(Console.GBC, new GBC());
 		sets.put(Console.NES, new NES());
 		sets.put(Console.GB, new GB());
+		sets.put(Console.WS, new WS());
 	}
 	
 	public static Collection<RomSet> sets()
@@ -57,10 +54,15 @@ public class RomSetManager
 		Main.logln("Loading romset: "+set+"..");
 		
 		RomSet.current = set;
+		
+		new File(Paths.screensTitle()).mkdirs();
+		new File(Paths.screensGame()).mkdirs();
+		new File(set.romPath).mkdirs();
+		
 		Main.romList.clear();
 		
 		RomSize.mapping.clear();
-		loadDat(set.buildDatLoader(Main.romList), set.datPath);
+		loadDat(set.buildDatLoader(Main.romList), set.datPath());
 		
 		Main.searchPanel.resetFields(RomSize.mapping.values().toArray(new RomSize[RomSize.mapping.size()]));
 		Main.mainFrame.romListModel.fireChanges();

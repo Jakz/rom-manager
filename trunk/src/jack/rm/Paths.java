@@ -22,10 +22,5 @@ public class Paths
 		return "screens/"+RomSet.current.type.tag+"/game/";
 	}
 	
-	static
-	{
-		new File(screensTitle()).mkdirs();
-		new File(screensGame()).mkdirs();
-		new File(RomSet.current.romPath).mkdirs();
-	}
+	public static final String dats = "dat/";
 }

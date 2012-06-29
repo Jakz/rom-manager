@@ -1,6 +1,7 @@
 package jack.rm.gui;
 
-import jack.rm.Main;
+import jack.rm.*;
+import jack.rm.Downloader.ArtDownloaderTask;
 import jack.rm.data.*;
 import jack.rm.data.set.RomSet;
 import jack.rm.i18n.Text;
@@ -24,6 +25,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	final private JLabel imgTitle, imgScreen;
 	
 	final private JButton downloadButton = new JButton("Download ROM");
+	final private JButton artButton = new JButton("Download Art");
 	final private JPanel buttons = new JPanel();
 	
 	private Rom rom;
@@ -102,7 +104,9 @@ public class InfoPanel extends JPanel implements ActionListener
 		
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.LINE_AXIS));
 		buttons.add(downloadButton);
+		buttons.add(artButton);
 		downloadButton.addActionListener(this);
+		artButton.addActionListener(this);
 		
 		pTotal.add(buttons, BorderLayout.SOUTH);
 		
@@ -127,6 +131,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	{
 		String path = null;
 		int w,h;
+		long crc = -1L;
 		
 		if (rom == null)
 			path = "images/missing.png";
@@ -137,6 +142,9 @@ public class InfoPanel extends JPanel implements ActionListener
 				path = RomSet.current.titleImage(rom);
 			w = RomSet.current.screenTitle.width;
 			h = RomSet.current.screenTitle.height;
+			
+			if (rom != null)
+				crc = rom.imgCRC1;
 		}
 		else
 		{
@@ -144,11 +152,14 @@ public class InfoPanel extends JPanel implements ActionListener
 				path = RomSet.current.gameImage(rom);
 			w = RomSet.current.screenGame.width;
 			h = RomSet.current.screenGame.height;
+			
+			if (rom != null)
+				crc = rom.imgCRC2;
 		}
 		
 
 		File f = new File(path);
-		if (f.exists())
+		if (f.exists() && (!Main.pref.booleanSetting("check-art-crc") || crc == Scanner.computeCRC(f)))
 		{
 			ImageIcon i = new ImageIcon(path);
 			
@@ -209,17 +220,30 @@ public class InfoPanel extends JPanel implements ActionListener
 			downloadButton.setEnabled(true);
 		else
 			downloadButton.setEnabled(false);
+		
+		if (rom.hasTitleArt() && rom.hasGameArt())
+			artButton.setEnabled(false);
+		else
+			artButton.setEnabled(true);
 	}
 	
 	public void actionPerformed(ActionEvent e)
 	{
-		try
+		if (e.getSource() == downloadButton)
 		{
-			Desktop.getDesktop().browse(new URI(RomSet.current.downloadURL(rom)));
+			try
+			{
+				Desktop.getDesktop().browse(new URI(RomSet.current.downloadURL(rom)));
+			}
+			catch (Exception ee)
+			{
+				ee.printStackTrace();
+			}
 		}
-		catch (Exception ee)
+		else if (e.getSource() == artButton)
 		{
-			ee.printStackTrace();
+			Rom r = rom;
+			Main.downloader.pool.submit(new Downloader.TwinArtDownloaderTask(r));
 		}
 	}
 }

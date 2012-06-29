@@ -1,5 +1,6 @@
 package jack.rm.data;
 
+import jack.rm.Main;
 import jack.rm.Paths;
 import java.io.*;
 
@@ -44,6 +45,10 @@ public class Rom implements Comparable<Rom>
 	{
 		this();
 		this.number = number;
+		
+		imgCRC1 = -1L;
+		imgCRC2 = -1L;
+		
 	}
 	
 	public String toString()
@@ -80,12 +85,36 @@ public class Rom implements Comparable<Rom>
 	
 	public boolean hasTitleArt()
 	{
-		return new File(Paths.screensTitle()+Renamer.formatNumber(imageNumber)+".png").exists();
+		File f = new File(Paths.screensTitle()+Renamer.formatNumber(imageNumber)+".png");
+
+		if (!f.exists()) return false;
+		else
+		{
+			if (Main.pref.booleanSetting("check-art-crc"))
+			{
+				long icrc = Scanner.computeCRC(f);
+				return icrc == imgCRC1;
+			}
+			else
+				return true;
+		}
 	}
 	
 	public boolean hasGameArt()
 	{
-		return new File(Paths.screensGame()+Renamer.formatNumber(imageNumber)+".png").exists();
+		File f = new File(Paths.screensGame()+Renamer.formatNumber(imageNumber)+".png");
+		
+		if (!f.exists()) return false;
+		else
+		{
+			if (Main.pref.booleanSetting("check-art-crc"))
+			{
+				long icrc = Scanner.computeCRC(f);
+				return Scanner.computeCRC(f) == imgCRC2;
+			}
+			else
+				return true;
+		}
 	}
 	
 	public int compareTo(Rom rom)

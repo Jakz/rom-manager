@@ -87,7 +87,6 @@ public class OfflineListXMLParser extends DefaultHandler
 		{
 			rom.group = asString();
 		}
-		// language
 		else if (localName.equals("romCRC"))
 		{
 			rom.crc = Long.parseLong(asString(), 16);
@@ -98,7 +97,7 @@ public class OfflineListXMLParser extends DefaultHandler
 		}
 		else if (localName.equals("im2CRC"))
 		{
-			rom.imgCRC1 = Long.parseLong(asString(), 16);
+			rom.imgCRC2 = Long.parseLong(asString(), 16);
 		}
 		else if (localName.equals("comment"))
 		{
