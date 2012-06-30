@@ -69,7 +69,7 @@ public class Scanner
 		return -1;
 	}
 	
-	public void scanFolder(File folder, CustomFilter filter) throws Exception
+	public void scanFolder(File folder, CustomFilter filter)
 	{
 		File[] files = folder.listFiles(filter);
 		
@@ -81,26 +81,33 @@ public class Scanner
 			}
 			else if (files[t].getName().endsWith(".zip"))
 			{
-				Enumeration<? extends ZipEntry> enu = new ZipFile(files[t]).entries();
-				String fileName = files[t].getName();
-				fileName = fileName.substring(0, fileName.length()-4);
-				
-				while (enu.hasMoreElements())
+				try
 				{
-					long curCrc = ((ZipEntry)enu.nextElement()).getCrc();
+					Enumeration<? extends ZipEntry> enu = new ZipFile(files[t]).entries();
+					String fileName = files[t].getName();
+					fileName = fileName.substring(0, fileName.length()-4);
 					
-					Rom rom = list.getByCRC(curCrc);
-					
-					if (rom != null)
+					while (enu.hasMoreElements())
 					{
-						if (Renamer.isCorrectlyNamed(fileName, rom))
-							rom.status = RomStatus.FOUND;
-						else
-							rom.status = RomStatus.INCORRECT_NAME;
+						long curCrc = ((ZipEntry)enu.nextElement()).getCrc();
 						
-						rom.type = RomType.ZIP;
-						rom.path = files[t];
+						Rom rom = list.getByCRC(curCrc);
+						
+						if (rom != null)
+						{
+							if (Renamer.isCorrectlyNamed(fileName, rom))
+								rom.status = RomStatus.FOUND;
+							else
+								rom.status = RomStatus.INCORRECT_NAME;
+							
+							rom.type = RomType.ZIP;
+							rom.path = files[t];
+						}
 					}
+				}
+				catch (Exception e)
+				{
+					Main.logln("[ERROR] Zipped file "+files[t].getName()+" is corrupt. Skipping.");
 				}
 			}
 			else

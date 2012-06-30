@@ -67,7 +67,7 @@ class MenuListener implements ActionListener
 		}
 		else if (source == Main.mainFrame.miTools[1])
 		{
-			Main.renamerFrame.showMe();
+			Main.optionsFrame.showMe();
 		}
 		else if (source == Main.mainFrame.miTools[2])
 		{

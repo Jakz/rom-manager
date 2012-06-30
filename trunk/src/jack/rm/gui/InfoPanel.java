@@ -78,21 +78,15 @@ public class InfoPanel extends JPanel implements ActionListener
 		imgScreen = new JLabel();
 		imgScreen.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		JPanel subField1 = new JPanel(), subField2 = new JPanel();
+		JPanel subField1 = new JPanel();
 		GroupLayout gl1 = new GroupLayout(subField1);
 		subField1.setLayout(gl1);
-		subField1.setPreferredSize(new Dimension(600,200));
-		GroupLayout gl2 = new GroupLayout(subField2);
-		subField2.setLayout(gl2);
 		
 		pFields.setLayout(new BorderLayout());
-		pFields.add(subField1, BorderLayout.WEST);
-		pFields.add(subField2, BorderLayout.CENTER);
-		
+		pFields.add(subField1, BorderLayout.CENTER);
+
 		gl1.setAutoCreateGaps(true);
 		gl1.setAutoCreateContainerGaps(true);
-		gl2.setAutoCreateGaps(true);
-		gl2.setAutoCreateContainerGaps(true);
 				
 		Font f = new Font("null", Font.BOLD, 14);
 		
@@ -100,60 +94,48 @@ public class InfoPanel extends JPanel implements ActionListener
 		{
 			labels[t] = new JLabel(Field.forIndex(t).title+":");
 			fields[t] = new JLabel();
-			fields[t].setFont(f);
+			
+			if (t < labels.length-1)
+				fields[t].setFont(f);
 			//fields[t].setEditable(false);
 			fields[t].setBackground(new Color(220,220,220));
 			labels[t].setHorizontalAlignment(SwingConstants.RIGHT);
 		}
 		
 		GroupLayout.SequentialGroup hGroup1 = gl1.createSequentialGroup();
-		GroupLayout.SequentialGroup hGroup2 = gl2.createSequentialGroup();
 		
 		GroupLayout.ParallelGroup pg1 = gl1.createParallelGroup();
-		GroupLayout.ParallelGroup pg2 = gl2.createParallelGroup();
 		
-		for (int i = 0; i < 7; ++i)
+		for (int i = 0; i < labels.length; ++i)
 		{
 			pg1.addComponent(labels[i]);
-			pg2.addComponent(labels[7+i]);
 		}
 		
-		hGroup1.addGroup(pg1); hGroup2.addGroup(pg2);
+		hGroup1.addGroup(pg1);
 		
 		pg1 = gl1.createParallelGroup();
-		pg2 = gl2.createParallelGroup();
-		
-		for (int i = 0; i < 7; ++i)
+
+		for (int i = 0; i < labels.length; ++i)
 		{
 			pg1.addComponent(fields[i]);
-			pg2.addComponent(fields[7+i]);
 		}
 		
-		hGroup1.addGroup(pg1); hGroup2.addGroup(pg2);
+		hGroup1.addGroup(pg1);
 		
 		gl1.setHorizontalGroup(hGroup1);
-		gl2.setHorizontalGroup(hGroup2);
 		
 		GroupLayout.SequentialGroup vGroup1 = gl1.createSequentialGroup();
-		GroupLayout.SequentialGroup vGroup2 = gl2.createSequentialGroup();
 		
-		for (int i = 0; i < 7; ++i)
+		for (int i = 0; i < labels.length; ++i)
 		{
 			pg1 = gl1.createParallelGroup(Alignment.BASELINE);
 			pg1.addComponent(labels[i]);
 			pg1.addComponent(fields[i]);
 			vGroup1.addGroup(pg1);
-			
-			pg2 = gl2.createParallelGroup(Alignment.BASELINE);
-			pg2.addComponent(labels[7+i]);
-			pg2.addComponent(fields[7+i]);
-			vGroup2.addGroup(pg2);
 		}
 		
 		gl1.setVerticalGroup(vGroup1);
-		gl2.setVerticalGroup(vGroup2);
-		
-		
+			
 		JPanel imgs = new JPanel();
 		imgTitle.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 30));
 		imgs.add(imgTitle);
@@ -197,7 +179,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		long crc = -1L;
 		
 		if (rom == null)
-			path = "images/missing.png";
+			path = "data/images/missing.png";
 		
 		if (type.equals("title"))
 		{
@@ -235,7 +217,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		}
 		else
 		{
-			ImageIcon i = new ImageIcon("images/missing.png");
+			ImageIcon i = new ImageIcon("data/images/missing.png");
 			
 			Image img = i.getImage();
 			BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);

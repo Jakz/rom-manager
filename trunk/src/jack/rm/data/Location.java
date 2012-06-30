@@ -54,7 +54,7 @@ public enum Location
 		this.fullName = name.text();
 		this.shortName = shortName;
 		this.tinyName = tinyName;
-		this.icon = new ImageIcon("images/"+imgName+".png");
+		this.icon = new ImageIcon("data/images/"+imgName+".png");
 	}
 	
 	public static Location get(int index)

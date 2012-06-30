@@ -17,8 +17,6 @@ public class Preferences
 	public boolean organizeRomsDeleteEmptyFolders = true;
 	public int organizeRomsByNumberFolderSize = 100;
 
-	public String screensPath = "images/";
-	
 	public boolean booleanSetting(String name)
 	{
 		return (Boolean)preferences.get(name);

@@ -18,7 +18,7 @@ public class CountPanel extends JPanel
 		for (int i = 0; i < counters.length; ++i)
 		{
 			counters[i] = new JLabel("1234");
-			counters[i].setIcon(new ImageIcon("images/"+icons[i]+".png"));
+			counters[i].setIcon(new ImageIcon("data/images/"+icons[i]+".png"));
 			counters[i].setPreferredSize(new Dimension(55,12));
 			inner.add(counters[i]);
 		}

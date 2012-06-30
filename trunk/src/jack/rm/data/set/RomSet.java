@@ -1,6 +1,7 @@
 package jack.rm.data.set;
 
 import jack.rm.Paths;
+import jack.rm.Settings;
 import jack.rm.data.*;
 
 import java.awt.Dimension;
@@ -27,6 +28,8 @@ public abstract class RomSet
 		this.provider = provider;
 		this.screenTitle = screenTitle;
 		this.screenGame = screenGame;
+		
+		Settings.get(this);
 	}
 	
 	public abstract String titleImageURL(Rom rom);
@@ -45,14 +48,14 @@ public abstract class RomSet
 		return type.name+" ("+provider.name+")";
 	}
 	
-	public String setIdentifier()
+	public String ident()
 	{
-		return Paths.dats+provider.tag+"-"+type.tag;
+		return provider.tag+"-"+type.tag;
 	}
 	
 	public String datPath()
 	{
-		return setIdentifier()+".xml";
+		return Paths.dats+ident()+".xml";
 	}
 
 }

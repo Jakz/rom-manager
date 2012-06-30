@@ -18,7 +18,8 @@ public class Main
 	public static InfoPanel infoPanel;
 	public static CountPanel countPanel;
 	
-	public static RenamerFrame renamerFrame;
+	public static RenamerPanel renamerPanel;
+	public static OptionsFrame optionsFrame;
 	
 	
 	public static Scanner scanner;
@@ -47,7 +48,9 @@ public class Main
 		infoPanel = new InfoPanel();
 		countPanel = new CountPanel();
 		mainFrame = new MainFrame();
-		renamerFrame = new RenamerFrame();
+		renamerPanel = new RenamerPanel();
+		
+		optionsFrame = new OptionsFrame();
 		
 		scanner = new Scanner(romList);
 		downloader = new Downloader();
@@ -56,6 +59,7 @@ public class Main
 		
 		mainFrame.setVisible(true);
 	
+		Settings.consolidate();
 	}
 	
 	public static void log(String str)

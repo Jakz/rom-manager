@@ -13,7 +13,7 @@ import javax.swing.table.*;
 import java.awt.event.*;
 import java.awt.*;
 
-public class RenamerFrame extends JFrame implements CaretListener, ActionListener
+public class RenamerPanel extends JPanel implements CaretListener, ActionListener
 {
 	private JTextField patternField = new JTextField(30);
 	private JTextField exampleField = new JTextField(30);
@@ -35,7 +35,7 @@ public class RenamerFrame extends JFrame implements CaretListener, ActionListene
 	
 	private TableModel model = new TableModel();
 	
-	public RenamerFrame()
+	public RenamerPanel()
 	{
 		JPanel fields = new JPanel(new GridBagLayout());
 		JPanel main = new JPanel(new BorderLayout());
@@ -102,7 +102,7 @@ public class RenamerFrame extends JFrame implements CaretListener, ActionListene
 		
 		this.add(main);
 		
-		pack();
+		//pack();
 	}
 	
 	public void updateGBC(GridBagConstraints c, int x, int y, int w, int h)
@@ -110,16 +110,7 @@ public class RenamerFrame extends JFrame implements CaretListener, ActionListene
 		c.gridx = x; c.gridy = y; c.gridwidth = w; c.gridheight = h;
 	}
 	
-	public void showMe()
-	{
-		if (this.isVisible())
-			return;
-		
-		updateFields();
-		setLocationRelativeTo(Main.mainFrame);
-		
-		setVisible(true);
-	}
+
 	
 	public void updateFields()
 	{

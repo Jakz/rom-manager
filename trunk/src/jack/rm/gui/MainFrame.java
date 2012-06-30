@@ -118,7 +118,7 @@ public class MainFrame extends JFrame
 			miView[t].addActionListener(menuListener);
 		}
 		
-		Text[] myToolsNames = {Text.MENU_TOOLS_DOWNLOAD_ART,Text.MENU_TOOLS_RENAMER_OPTIONS};
+		Text[] myToolsNames = {Text.MENU_TOOLS_DOWNLOAD_ART,Text.MENU_TOOLS_OPTIONS};
 		for (int t = 0; t < miTools.length-1; ++t)
 		{
 			miTools[t] = new JMenuItem(myToolsNames[t].text());

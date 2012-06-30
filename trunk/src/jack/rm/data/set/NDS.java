@@ -10,7 +10,7 @@ class NDS extends RomSet
 {
 	NDS()
 	{
-		super(Console.NDS, Provider.ADVANSCENE, "roms/nds/", new Dimension(214,384), new Dimension(256,384));
+		super(Console.NDS, Provider.ADVANSCENE, "/Volumes/Vicky/Roms/roms/nds", new Dimension(214,384), new Dimension(256,384));
 	}
 	
 	public String titleImageURL(Rom rom)
