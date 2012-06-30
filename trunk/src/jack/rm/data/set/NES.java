@@ -6,35 +6,13 @@ import jack.rm.data.Rom;
 
 import java.awt.Dimension;
 
-class NES extends RomSet
+class NES extends RomSetOfflineList
 {
 	public NES()
 	{
-		super(Console.NES, Provider.NOINTRO, "roms/nes/", new Dimension(256,240), new Dimension(256,240));
+		super(Console.NES, Provider.NOINTRO, new Dimension(256,240), new Dimension(256,240),"http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20NES%20-%20Famicom/");
 	}
-	
-	public String titleImageURL(Rom rom)
-	{
-		String partial = ((((rom.number-1)/500)*500)+1)+"-"+((((rom.number-1)/500+1)*500))+"/";
-		return "http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20NES%20-%20Famicom/"+partial+(rom.imageNumber)+"a.png";
-	}
-	
-	public String gameImageURL(Rom rom)
-	{
-		String partial = ((((rom.number-1)/500)*500)+1)+"-"+((((rom.number-1)/500+1)*500))+"/";
-		return "http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20NES%20-%20Famicom/"+partial+(rom.imageNumber)+"b.png";
-	}
-	
-	public String titleImage(Rom rom)
-	{
-		return Paths.screensTitle()+Renamer.formatNumber(rom.imageNumber)+".png";
-	}
-	
-	public String gameImage(Rom rom)
-	{
-		return Paths.screensGame()+Renamer.formatNumber(rom.imageNumber)+".png";
-	}
-	
+
 	public String downloadURL(Rom rom)
 	{
 		String query1 = "http://www.emuparadise.me/roms/search.php?query=";

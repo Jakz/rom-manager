@@ -150,7 +150,7 @@ public class RomList
 				String first = Renamer.formatNumber(folderSize*which+1);
 				String last = Renamer.formatNumber(folderSize*(which+1));
 				
-				String finalPath = RomSet.current.romPath+first+"-"+last+File.separator;
+				String finalPath = RomSet.current.romPath()+first+"-"+last+File.separator;
 				
 				System.out.println("Creating "+finalPath);
 				new File(finalPath).mkdirs();
@@ -170,7 +170,7 @@ public class RomList
 	public void deleteEmptyFolders()
 	{
 		Queue<File> files = new LinkedList<File>();
-		files.add(new File(RomSet.current.romPath));
+		files.add(new File(RomSet.current.romPath()));
 		
 		while (!files.isEmpty())
 		{

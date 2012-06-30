@@ -6,35 +6,13 @@ import jack.rm.data.Rom;
 
 import java.awt.Dimension;
 
-class WS extends RomSet
+class WS extends RomSetOfflineList
 {
 	public WS()
 	{
-		super(Console.WS, Provider.NOINTRO, "roms/ws/", new Dimension(448,448), new Dimension(448,448));
+		super(Console.WS, Provider.NOINTRO, new Dimension(448,448), new Dimension(448,448),"http://nointro.free.fr/imgs/Official%20No-Intro%20Bandai%20WonderSwan/");
 	}
-	
-	public String titleImageURL(Rom rom)
-	{
-		String partial = ((((rom.imageNumber-1)/500)*500)+1)+"-"+((((rom.imageNumber-1)/500+1)*500))+"/";
-		return "http://nointro.free.fr/imgs/Official%20No-Intro%20Bandai%20WonderSwan/"+partial+(rom.imageNumber)+"a.png";
-	}
-	
-	public String gameImageURL(Rom rom)
-	{
-		String partial = ((((rom.imageNumber-1)/500)*500)+1)+"-"+((((rom.imageNumber-1)/500+1)*500))+"/";
-		return "http://nointro.free.fr/imgs/Official%20No-Intro%20Bandai%20WonderSwan/"+partial+(rom.imageNumber)+"b.png";
-	}
-	
-	public String titleImage(Rom rom)
-	{
-		return Paths.screensTitle()+Renamer.formatNumber(rom.imageNumber)+".png";
-	}
-	
-	public String gameImage(Rom rom)
-	{
-		return Paths.screensGame()+Renamer.formatNumber(rom.imageNumber)+".png";
-	}
-	
+
 	public String downloadURL(Rom rom)
 	{
 		//TODO FIX

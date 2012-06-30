@@ -14,12 +14,12 @@ public class Paths
 
 	public static String screensTitle()
 	{
-		return "screens/"+RomSet.current.type.tag+"/title/";
+		return "screens/"+RomSet.current.ident()+"/title/";
 	}
 	
 	public static String screensGame()
 	{
-		return "screens/"+RomSet.current.type.tag+"/game/";
+		return "screens/"+RomSet.current.ident()+"/game/";
 	}
 	
 	public static final String dats = "dat/";

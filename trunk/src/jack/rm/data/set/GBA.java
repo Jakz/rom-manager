@@ -6,35 +6,13 @@ import jack.rm.data.Rom;
 
 import java.awt.Dimension;
 
-class GBA extends RomSet
+class GBA extends RomSetOfflineList
 {
 	public GBA()
 	{
-		super(Console.GBA, Provider.OFFLINELIST, "roms/gba/", new Dimension(480,320), new Dimension(480,320));
+		super(Console.GBA, Provider.OFFLINELIST, new Dimension(480,320), new Dimension(480,320),"http://offlinelistgba.free.fr/imgs/");
 	}
-	
-	public String titleImageURL(Rom rom)
-	{
-		String partial = ((((rom.number-1)/500)*500)+1)+"-"+((((rom.number-1)/500+1)*500))+"/";
-		return "http://offlinelistgba.free.fr/imgs/"+partial+(rom.imageNumber)+"a.png";
-	}
-	
-	public String gameImageURL(Rom rom)
-	{
-		String partial = ((((rom.number-1)/500)*500)+1)+"-"+((((rom.number-1)/500+1)*500))+"/";
-		return "http://offlinelistgba.free.fr/imgs/"+partial+(rom.imageNumber)+"b.png";
-	}
-	
-	public String titleImage(Rom rom)
-	{
-		return Paths.screensTitle()+Renamer.formatNumber(rom.number)+".png";
-	}
-	
-	public String gameImage(Rom rom)
-	{
-		return Paths.screensGame()+Renamer.formatNumber(rom.number)+".png";
-	}
-	
+
 	public String downloadURL(Rom rom)
 	{
 		String query1 = "http://www.emuparadise.me/roms/search.php?query=";

@@ -29,21 +29,6 @@ public class RomSetManager
 		return sets.values();
 	}
 	
-	private static void loadDat(DefaultHandler handler, String path)
-	{
-		try
-		{
-			XMLReader reader = XMLReaderFactory.createXMLReader();
-			reader.setContentHandler(handler);
-			
-			reader.parse(path);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-	
 	public static void loadSet(Console console)
 	{
 		loadSet(sets.get(console));
@@ -57,12 +42,12 @@ public class RomSetManager
 		
 		new File(Paths.screensTitle()).mkdirs();
 		new File(Paths.screensGame()).mkdirs();
-		new File(set.romPath).mkdirs();
+		//new File(set.romPath).mkdirs();
 		
 		Main.romList.clear();
 		
 		RomSize.mapping.clear();
-		loadDat(set.buildDatLoader(Main.romList), set.datPath());
+		set.load();
 		
 		Main.searchPanel.resetFields(RomSize.mapping.values().toArray(new RomSize[RomSize.mapping.size()]));
 		Main.mainFrame.romListModel.fireChanges();

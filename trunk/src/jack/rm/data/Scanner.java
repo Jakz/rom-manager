@@ -134,12 +134,17 @@ public class Scanner
 	
 	public void scanForRoms()
 	{
-		Main.logln("Scanning for roms in path "+RomSet.current.romPath+"...");
+		Main.logln("Scanning for roms in path "+RomSet.current.romPath()+"...");
 		
 		try
 		{		
-			File folder = new File(RomSet.current.romPath);
+			File folder = new File(RomSet.current.romPath());
 			scanFolder(folder, new CustomFilter(RomSet.current.type.exts));
+		}
+		catch (NullPointerException e)
+		{
+			Main.logln("[ERROR] Roms path doesn't exist! Scanning will halt.");
+			return;
 		}
 		catch (Exception e)
 		{

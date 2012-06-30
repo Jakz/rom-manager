@@ -12,19 +12,16 @@ import org.xml.sax.helpers.DefaultHandler;
 public abstract class RomSet
 {
 	public static RomSet current = null;
-
-
+	
 	public final Console type;
-	public final String romPath;
 	public final Provider provider;
 	
 	public final Dimension screenTitle;
 	public final Dimension screenGame;
 	
-	RomSet(Console type, Provider provider, String romPath, Dimension screenTitle, Dimension screenGame)
+	RomSet(Console type, Provider provider, Dimension screenTitle, Dimension screenGame)
 	{
 		this.type = type;
-		this.romPath = romPath;
 		this.provider = provider;
 		this.screenTitle = screenTitle;
 		this.screenGame = screenGame;
@@ -38,6 +35,8 @@ public abstract class RomSet
 	public abstract String gameImage(Rom rom);
 	public abstract String downloadURL(Rom rom);
 	
+	public abstract void load();
+
 	public DefaultHandler buildDatLoader(RomList list)
 	{
 		return new OfflineListXMLParser(list);
@@ -58,4 +57,18 @@ public abstract class RomSet
 		return Paths.dats+ident()+".xml";
 	}
 
+	public boolean hasGameArt()
+	{
+		return screenGame != null;
+	}
+	
+	public boolean hasTitleArt()
+	{
+		return screenTitle != null;
+	}
+	
+	public String romPath()
+	{
+		return Settings.get(this).romsPath;
+	}
 }
