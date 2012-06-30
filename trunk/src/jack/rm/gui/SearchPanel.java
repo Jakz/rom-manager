@@ -4,12 +4,10 @@ import jack.rm.data.*;
 import jack.rm.i18n.Text;
 import jack.rm.*;
 
-import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
 import java.awt.event.*;
-import java.util.Arrays;
 
 public class SearchPanel extends JPanel
 {
@@ -33,12 +31,6 @@ public class SearchPanel extends JPanel
 		labels[1] = new JLabel();
 		labels[2] = new JLabel();
 		labels[3] = new JLabel();
-
-		/*labels[0].setFont(new Font(null,Font.PLAIN,9));
-		labels[1].setFont(new Font(null,Font.PLAIN,9));
-		labels[2].setFont(new Font(null,Font.PLAIN,9));
-		labels[3].setFont(new Font(null,Font.PLAIN,9));
-		labels[4].setFont(new Font(null,Font.PLAIN,9));*/
 		
 		for (Location l : Location.values())
 			locations.addItem(l);
@@ -46,12 +38,6 @@ public class SearchPanel extends JPanel
 		for (Language l : Language.values())
 			languages.addItem(l);
 
-		/*romName.setFont(new Font(null,Font.PLAIN,9));
-		sizes.setFont(new Font(null,Font.PLAIN,9));
-		genres.setFont(new Font(null,Font.PLAIN,9));
-		locations.setFont(new Font(null,Font.PLAIN,9));
-		languages.setFont(new Font(null,Font.PLAIN,9));*/
-		
 		romName.addCaretListener(new FieldListener());
 		sizes.addActionListener(listener);
 		//genres.addActionListener(listener);

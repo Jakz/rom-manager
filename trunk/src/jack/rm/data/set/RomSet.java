@@ -1,12 +1,8 @@
 package jack.rm.data.set;
 
-import java.net.URI;
-import java.util.*;
-
 import jack.rm.Paths;
 import jack.rm.data.*;
 
-import java.awt.Desktop;
 import java.awt.Dimension;
 
 import jack.rm.data.parser.*;
@@ -49,9 +45,14 @@ public abstract class RomSet
 		return type.name+" ("+provider.name+")";
 	}
 	
+	public String setIdentifier()
+	{
+		return Paths.dats+provider.tag+"-"+type.tag;
+	}
+	
 	public String datPath()
 	{
-		return Paths.dats+provider.tag+"-"+type.tag+".xml";
+		return setIdentifier()+".xml";
 	}
 
 }

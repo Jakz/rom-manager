@@ -7,6 +7,7 @@ import jack.rm.data.set.RomSet;
 import jack.rm.i18n.Text;
 
 import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -17,10 +18,10 @@ import java.net.URI;
 public class InfoPanel extends JPanel implements ActionListener
 {
 	final JLabel[] labels = new JLabel[Field.values().length];
-	final private JTextField[] fields = new JTextField[14];
+	final private JLabel[] fields = new JLabel[14];
 	
 	final private JPanel pFields = new JPanel();
-	final private JPanel pTotal = new JPanel(new BorderLayout());
+	final private JPanel pTotal = new JPanel();
 	
 	final private JLabel imgTitle, imgScreen;
 	
@@ -76,31 +77,93 @@ public class InfoPanel extends JPanel implements ActionListener
 		
 		imgScreen = new JLabel();
 		imgScreen.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		JPanel subField1 = new JPanel(), subField2 = new JPanel();
+		GroupLayout gl1 = new GroupLayout(subField1);
+		subField1.setLayout(gl1);
+		subField1.setPreferredSize(new Dimension(600,200));
+		GroupLayout gl2 = new GroupLayout(subField2);
+		subField2.setLayout(gl2);
+		
+		pFields.setLayout(new BorderLayout());
+		pFields.add(subField1, BorderLayout.WEST);
+		pFields.add(subField2, BorderLayout.CENTER);
+		
+		gl1.setAutoCreateGaps(true);
+		gl1.setAutoCreateContainerGaps(true);
+		gl2.setAutoCreateGaps(true);
+		gl2.setAutoCreateContainerGaps(true);
 				
-		pFields.setLayout(new BoxLayout(pFields,BoxLayout.PAGE_AXIS));
+		Font f = new Font("null", Font.BOLD, 14);
 		
 		for (int t = 0; t < labels.length; ++t)
 		{
-			labels[t] = new JLabel(Field.forIndex(t).title);
-			fields[t] = new JTextField(20);
-			fields[t].setEditable(false);
+			labels[t] = new JLabel(Field.forIndex(t).title+":");
+			fields[t] = new JLabel();
+			fields[t].setFont(f);
+			//fields[t].setEditable(false);
 			fields[t].setBackground(new Color(220,220,220));
 			labels[t].setHorizontalAlignment(SwingConstants.RIGHT);
-			JPanel tmpPanel = new JPanel(new GridLayout(1,2));
-			tmpPanel.add(labels[t]);
-			tmpPanel.add(fields[t]);
-			pFields.add(tmpPanel);
 		}
+		
+		GroupLayout.SequentialGroup hGroup1 = gl1.createSequentialGroup();
+		GroupLayout.SequentialGroup hGroup2 = gl2.createSequentialGroup();
+		
+		GroupLayout.ParallelGroup pg1 = gl1.createParallelGroup();
+		GroupLayout.ParallelGroup pg2 = gl2.createParallelGroup();
+		
+		for (int i = 0; i < 7; ++i)
+		{
+			pg1.addComponent(labels[i]);
+			pg2.addComponent(labels[7+i]);
+		}
+		
+		hGroup1.addGroup(pg1); hGroup2.addGroup(pg2);
+		
+		pg1 = gl1.createParallelGroup();
+		pg2 = gl2.createParallelGroup();
+		
+		for (int i = 0; i < 7; ++i)
+		{
+			pg1.addComponent(fields[i]);
+			pg2.addComponent(fields[7+i]);
+		}
+		
+		hGroup1.addGroup(pg1); hGroup2.addGroup(pg2);
+		
+		gl1.setHorizontalGroup(hGroup1);
+		gl2.setHorizontalGroup(hGroup2);
+		
+		GroupLayout.SequentialGroup vGroup1 = gl1.createSequentialGroup();
+		GroupLayout.SequentialGroup vGroup2 = gl2.createSequentialGroup();
+		
+		for (int i = 0; i < 7; ++i)
+		{
+			pg1 = gl1.createParallelGroup(Alignment.BASELINE);
+			pg1.addComponent(labels[i]);
+			pg1.addComponent(fields[i]);
+			vGroup1.addGroup(pg1);
+			
+			pg2 = gl2.createParallelGroup(Alignment.BASELINE);
+			pg2.addComponent(labels[7+i]);
+			pg2.addComponent(fields[7+i]);
+			vGroup2.addGroup(pg2);
+		}
+		
+		gl1.setVerticalGroup(vGroup1);
+		gl2.setVerticalGroup(vGroup2);
+		
 		
 		JPanel imgs = new JPanel();
 		imgTitle.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 30));
 		imgs.add(imgTitle);
 		imgs.add(imgScreen);
 		
-		pTotal.add(imgs, BorderLayout.NORTH);
+		pTotal.setLayout(new BoxLayout(pTotal, BoxLayout.PAGE_AXIS));
+		pTotal.add(imgs);
 		JPanel pFields2 = new JPanel(new BorderLayout());
 		pFields2.add(pFields, BorderLayout.NORTH);
-		pTotal.add(pFields2, BorderLayout.CENTER);
+		pTotal.add(pFields2);
 		
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.LINE_AXIS));
 		buttons.add(downloadButton);
@@ -108,7 +171,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		downloadButton.addActionListener(this);
 		artButton.addActionListener(this);
 		
-		pTotal.add(buttons, BorderLayout.SOUTH);
+		pTotal.add(buttons);
 		
 		this.add(pTotal);
 	}

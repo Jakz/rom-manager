@@ -5,7 +5,8 @@ import jack.rm.Paths;
 import jack.rm.data.set.RomSet;
 
 import java.io.File;
-import java.util.Enumeration;
+import java.io.FileFilter;
+import java.util.*;
 import java.util.zip.*;
 import java.io.FileInputStream;
 
@@ -13,6 +14,35 @@ public class Scanner
 {
 	RomList list;
 	boolean scanSubdirectories = true;
+	
+	private static class CustomFilter implements FileFilter
+	{
+		String[] exts;
+		
+		CustomFilter(String[] exts)
+		{
+			this.exts = exts;
+		}
+		
+		public boolean accept(File file)
+		{
+			String name = file.getName();
+			
+			if (name.charAt(0) == '.')
+				return false;
+			
+			if (file.isDirectory() || name.endsWith("zip"))
+				return true;
+			
+			for (String s : exts)
+			{
+				if (name.endsWith(s))
+					return true;
+			}
+
+			return true;
+		}
+	}
 	
 	public Scanner(RomList list)
 	{
@@ -39,17 +69,17 @@ public class Scanner
 		return -1;
 	}
 	
-	public void scanFolder(File folder) throws Exception
+	public void scanFolder(File folder, CustomFilter filter) throws Exception
 	{
-		File[] files = folder.listFiles();
+		File[] files = folder.listFiles(filter);
 		
 		for (int t = 0; t < files.length; ++t)
 		{
 			if (files[t].isDirectory())
 			{
-				scanFolder(files[t].getAbsoluteFile());
+				scanFolder(files[t].getAbsoluteFile(), filter);
 			}
-			if (files[t].getName().endsWith(".zip"))
+			else if (files[t].getName().endsWith(".zip"))
 			{
 				Enumeration<? extends ZipEntry> enu = new ZipFile(files[t]).entries();
 				String fileName = files[t].getName();
@@ -73,7 +103,7 @@ public class Scanner
 					}
 				}
 			}
-			else if (files[t].getName().endsWith(".gba"))
+			else
 			{
 				long crc = computeCRC(files[t]);
 				String fileName = files[t].getName();
@@ -102,7 +132,7 @@ public class Scanner
 		try
 		{		
 			File folder = new File(RomSet.current.romPath);
-			scanFolder(folder);
+			scanFolder(folder, new CustomFilter(RomSet.current.type.exts));
 		}
 		catch (Exception e)
 		{

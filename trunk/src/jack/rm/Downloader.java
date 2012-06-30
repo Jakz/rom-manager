@@ -11,12 +11,12 @@ import java.io.*;
 
 public class Downloader
 {
-	public ExecutorService pool;
+	public ThreadPoolExecutor pool;
 	boolean started;
-	
+
 	Downloader()
 	{
-		pool = Executors.newFixedThreadPool(10);
+		pool = (ThreadPoolExecutor)Executors.newFixedThreadPool(10);
 	}
 	
 	public void start()
@@ -94,7 +94,7 @@ public class Downloader
 		Rom rom;
 		
 		public ArtDownloaderTask(Rom rom, String type)
-		{
+		{	
 			if (type.equals("title"))
 			{
 				path = RomSet.current.titleImage(rom);
