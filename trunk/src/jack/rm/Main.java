@@ -3,6 +3,7 @@ package jack.rm;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
+import jack.rm.data.parser.*;
 import jack.rm.data.*;
 import jack.rm.data.set.*;
 import jack.rm.gui.*;

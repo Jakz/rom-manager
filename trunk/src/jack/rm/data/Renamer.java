@@ -63,6 +63,7 @@ public class Renamer
 		new ShortLocationPattern();
 		new TinyLocationPattern();
 		new ShortLanguagePattern();
+		new GroupPattern();
 	}
 	
 	static class NumberPattern extends Pattern {
@@ -78,6 +79,11 @@ public class Renamer
 	static class PublisherPattern extends Pattern {
 		PublisherPattern() { super("%c", "Publisher"); }
 		public String apply(String name, Rom rom) { return name.replace(code,rom.publisher); }
+	}
+	
+	static class GroupPattern extends Pattern {
+		GroupPattern() { super("%g", "Releaser group"); }
+		public String apply(String name, Rom rom) { return name.replace(code,rom.group); }
 	}
 	
 	static class MegabyteSizePattern extends Pattern {
