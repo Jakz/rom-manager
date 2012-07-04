@@ -60,6 +60,7 @@ public class Settings
 	public boolean checkInsideArchives;
 	public boolean moveUnknownFiles;
 	
+	public boolean useRenamer;
 	public boolean renameInsideZips;
 	
 	Settings(RomSet set)
@@ -70,6 +71,7 @@ public class Settings
 		checkInsideArchives = true;
 		moveUnknownFiles = false;
 		renameInsideZips = false;
+		useRenamer = false;
 		
 		renamingPattern = "%n - %t [%S]";
 		romsPath = null;
@@ -89,6 +91,7 @@ public class Settings
 		sb.append("\t\t<checkImageCRC>").append(checkImageCRC).append("</checkImageCRC>\n");
 		sb.append("\t\t<checkInsideArchives>").append(checkInsideArchives).append("</checkInsideArchives>\n");
 		sb.append("\t\t<moveUnknownFiles>").append(moveUnknownFiles).append("</moveUnknownFiles>\n");
+		sb.append("\t\t<useRenamer>").append(renameInsideZips).append("</useRenamer>\n");
 		sb.append("\t\t<renameInsideZips>").append(renameInsideZips).append("</renameInsideZips>\n");
 		sb.append("\t</setting>\n");
 		

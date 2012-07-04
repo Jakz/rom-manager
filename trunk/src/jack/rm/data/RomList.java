@@ -100,7 +100,7 @@ public class RomList
 			
 			if (rom.status != RomStatus.NOT_FOUND)
 			{				
-				if (rom.path.getName().startsWith(Renamer.getCorrectName(rom)))
+				if (!Settings.current().useRenamer || rom.path.getName().startsWith(Renamer.getCorrectName(rom)))
 					rom.status = RomStatus.FOUND;
 				else
 					rom.status = RomStatus.INCORRECT_NAME;
@@ -112,6 +112,9 @@ public class RomList
 	
 	public void renameRoms()
 	{
+		if (!Settings.current().useRenamer)
+			return;
+		
 		for (int x = 0; x < list.size(); ++x)
 		{
 			Rom rom = list.get(x);

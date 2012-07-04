@@ -28,7 +28,7 @@ public class Renamer
 	
 	public static boolean isCorrectlyNamed(String name, Rom rom)
 	{
-		return name.equals(getCorrectName(rom));
+		return !Settings.current().useRenamer || name.equals(getCorrectName(rom));
 	}
 	
 	public static String getCorrectName(Rom rom)
