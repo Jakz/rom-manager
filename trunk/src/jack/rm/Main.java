@@ -18,6 +18,7 @@ public class Main
 	public static InfoPanel infoPanel;
 	public static CountPanel countPanel;
 	
+	public static ManagerPanel romsetPanel;
 	public static RenamerPanel renamerPanel;
 	public static OptionsFrame optionsFrame;
 	
@@ -48,6 +49,8 @@ public class Main
 		infoPanel = new InfoPanel();
 		countPanel = new CountPanel();
 		mainFrame = new MainFrame();
+		
+		romsetPanel = new ManagerPanel();
 		renamerPanel = new RenamerPanel();
 		
 		optionsFrame = new OptionsFrame();

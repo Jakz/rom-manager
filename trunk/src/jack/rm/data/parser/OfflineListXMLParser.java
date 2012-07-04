@@ -1,6 +1,5 @@
 package jack.rm.data.parser;
 
-import jack.rm.Main;
 import jack.rm.data.*;
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;

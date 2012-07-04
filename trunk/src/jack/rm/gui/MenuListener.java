@@ -2,8 +2,6 @@ package jack.rm.gui;
 
 import jack.rm.*;
 
-import java.awt.*;
-import javax.swing.*;
 import java.awt.event.*;
 
 class MenuListener implements ActionListener

@@ -1,10 +1,8 @@
 package jack.rm.gui;
 
 import jack.rm.Main;
-import jack.rm.data.Language;
-import jack.rm.data.Location;
+import jack.rm.Settings;
 import jack.rm.data.Renamer;
-import jack.rm.data.RomSize;
 import jack.rm.i18n.Text;
 
 import javax.swing.*;
@@ -13,18 +11,20 @@ import javax.swing.table.*;
 import java.awt.event.*;
 import java.awt.*;
 
-public class RenamerPanel extends JPanel implements CaretListener, ActionListener
+public class RenamerPanel extends JPanel implements CaretListener
 {
+	private static final long serialVersionUID = 1L;
+	
 	private JTextField patternField = new JTextField(30);
 	private JTextField exampleField = new JTextField(30);
-	
-	private JButton close = new JButton(Text.TEXT_CLOSE.text());
-	
+
 	private JTable patterns;
 	
 	public class TableModel extends AbstractTableModel
 	{
-    public int getColumnCount() { return 2; }
+		private static final long serialVersionUID = 1L;
+		
+		public int getColumnCount() { return 2; }
     public int getRowCount() { return Renamer.patterns.size();}
     public String getColumnName(int col) { return col == 0 ? "Code" : "Description"; }
     public Object getValueAt(int row, int col) {
@@ -89,17 +89,9 @@ public class RenamerPanel extends JPanel implements CaretListener, ActionListene
 		exampleField.setEnabled(false);
 		exampleField.setDisabledTextColor(Color.BLACK);  
 		patternField.addCaretListener(this);
-		
-		close.addActionListener(this);
-		close.setPreferredSize(new Dimension(100,30));
-
-		JPanel buttons = new JPanel(new FlowLayout());
-		buttons.add(close);
 
 		main.add(fields,BorderLayout.NORTH);
 		main.add(scrollPane,BorderLayout.CENTER);
-		main.add(buttons,BorderLayout.SOUTH);
-		
 		this.add(main);
 		
 		//pack();
@@ -114,19 +106,12 @@ public class RenamerPanel extends JPanel implements CaretListener, ActionListene
 	
 	public void updateFields()
 	{
-		patternField.setText(Renamer.renamingPattern);
+		patternField.setText(Settings.current().renamingPattern);
 	}
 
 	public void caretUpdate(CaretEvent e)
 	{
-		Renamer.renamingPattern = patternField.getText();
+		Settings.current().renamingPattern = patternField.getText();
 		exampleField.setText(Renamer.getCorrectName(Main.romList.get(0)));
 	}
-	
-	public void actionPerformed(ActionEvent e)
-	{
-		setVisible(false);
-		Main.romList.checkNames();
-	}
-
 }

@@ -5,6 +5,8 @@ import java.awt.*;
 
 public class ProgressDialog extends JDialog
 {
+	private static final long serialVersionUID = 1L;
+	
 	JLabel title;
 	JLabel desc;
 	JProgressBar progress;

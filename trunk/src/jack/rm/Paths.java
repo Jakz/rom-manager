@@ -2,8 +2,6 @@ package jack.rm;
 
 import jack.rm.data.set.RomSet;
 
-import java.io.*;
-
 public class Paths
 {
 	//public static String roms = "roms/";//"/Volumes/Vicky/Roms/roms/gba/";

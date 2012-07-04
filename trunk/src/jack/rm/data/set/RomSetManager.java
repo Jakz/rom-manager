@@ -6,10 +6,6 @@ import java.util.*;
 import jack.rm.*;
 import jack.rm.data.RomSize;
 
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
-
 public class RomSetManager
 {
 	private static Map<Console, RomSet> sets = new HashMap<Console, RomSet>();

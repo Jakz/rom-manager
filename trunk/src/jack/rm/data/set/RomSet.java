@@ -6,9 +6,6 @@ import jack.rm.data.*;
 
 import java.awt.Dimension;
 
-import jack.rm.data.parser.*;
-import org.xml.sax.helpers.DefaultHandler;
-
 public abstract class RomSet
 {
 	public static RomSet current = null;
@@ -36,11 +33,6 @@ public abstract class RomSet
 	public abstract String downloadURL(Rom rom);
 	
 	public abstract void load();
-
-	public DefaultHandler buildDatLoader(RomList list)
-	{
-		return new OfflineListXMLParser(list);
-	}
 	
 	public String toString()
 	{

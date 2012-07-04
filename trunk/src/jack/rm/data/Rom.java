@@ -110,7 +110,7 @@ public class Rom implements Comparable<Rom>
 			if (Main.pref.booleanSetting("check-art-crc"))
 			{
 				long icrc = Scanner.computeCRC(f);
-				return Scanner.computeCRC(f) == imgCRC2;
+				return icrc == imgCRC2;
 			}
 			else
 				return true;

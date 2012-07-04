@@ -1,5 +1,7 @@
 package jack.rm.data;
 
+import jack.rm.Settings;
+
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -8,15 +10,14 @@ public class Renamer
 	public final static ArrayList<Pattern> patterns = new ArrayList<Pattern>();
 	
 	private static DecimalFormat format;
-	
-	public static String renamingPattern;
+
 	private static boolean renameInZipToo;
 	
 	static
 	{
 		format = new DecimalFormat();
 		format.applyPattern("0000");
-		renamingPattern = "%n - %t [%S]";
+		//renamingPattern = "%n - %t [%S]";
 		renameInZipToo = false;
 	}
 	
@@ -32,7 +33,7 @@ public class Renamer
 	
 	public static String getCorrectName(Rom rom)
 	{
-		String temp = new String(renamingPattern);
+		String temp = new String(Settings.current().renamingPattern);
 		
 		for (Pattern p : patterns)
 			temp = p.apply(temp, rom);
@@ -61,6 +62,7 @@ public class Renamer
 		new FullLocationPattern();
 		new ShortLocationPattern();
 		new TinyLocationPattern();
+		new ShortLanguagePattern();
 	}
 	
 	static class NumberPattern extends Pattern {
@@ -101,5 +103,25 @@ public class Renamer
 	static class TinyLocationPattern extends Pattern {
 		TinyLocationPattern() { super("%l", "Tiny location name"); }
 		public String apply(String name, Rom rom) { return name.replace(code,rom.location.tinyName); }
+	}
+	
+	static class ShortLanguagePattern extends Pattern {
+		ShortLanguagePattern() { super("%i", "Short language"); }
+		public String apply(String name, Rom rom) {
+			int c = 0;
+			Language l = null;
+			
+			for (Language l2 : Language.values())
+				if ((rom.languages & l2.code) != 0)
+				{
+					++c;
+					l = l2;
+				}
+			
+			if (c == 1)
+				return name.replace(code,l.iso639_1);
+			else 
+				return name.replace(code,"M"+c);
+		}
 	}
 }

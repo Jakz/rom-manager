@@ -1,7 +1,6 @@
 package jack.rm.gui;
 
 import jack.rm.*;
-import jack.rm.Downloader.ArtDownloaderTask;
 import jack.rm.data.*;
 import jack.rm.data.set.RomSet;
 import jack.rm.i18n.Text;
@@ -17,6 +16,8 @@ import java.net.URI;
 
 public class InfoPanel extends JPanel implements ActionListener
 {
+	private static final long serialVersionUID = 1L;
+	
 	final JLabel[] labels = new JLabel[Field.values().length];
 	final private JLabel[] fields = new JLabel[14];
 	

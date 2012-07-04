@@ -4,7 +4,6 @@ import jack.rm.data.*;
 import jack.rm.data.set.RomSet;
 
 import java.util.concurrent.*;
-import java.nio.*;
 import java.nio.channels.*;
 import java.net.*;
 import java.io.*;

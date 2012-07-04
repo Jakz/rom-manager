@@ -1,7 +1,6 @@
 package jack.rm.data;
 
 import jack.rm.Main;
-import jack.rm.Paths;
 import jack.rm.data.set.RomSet;
 
 import java.io.File;

@@ -1,7 +1,5 @@
 package jack.rm.data.set;
 
-import jack.rm.Paths;
-import jack.rm.data.Renamer;
 import jack.rm.data.Rom;
 
 import java.awt.Dimension;
