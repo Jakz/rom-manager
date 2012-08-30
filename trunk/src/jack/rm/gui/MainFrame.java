@@ -93,7 +93,7 @@ public class MainFrame extends JFrame
 		
 		list.setSelectedIndex(0);
 
-		this.setPreferredSize(new Dimension(1440,900));
+		this.setPreferredSize(new Dimension(1280,700));
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			
 		pack();

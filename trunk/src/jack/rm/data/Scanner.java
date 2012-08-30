@@ -1,6 +1,7 @@
 package jack.rm.data;
 
 import jack.rm.Main;
+import jack.rm.PersistenceRom;
 import jack.rm.data.set.RomSet;
 
 import java.io.File;
@@ -139,6 +140,7 @@ public class Scanner
 		{		
 			File folder = new File(RomSet.current.romPath());
 			scanFolder(folder, new CustomFilter(RomSet.current.type.exts));
+			PersistenceRom.consolidate(list);
 		}
 		catch (NullPointerException e)
 		{

@@ -132,6 +132,8 @@ public class RomList
 				rom.path = newF;
 			}
 		}
+		
+		PersistenceRom.consolidate(this);
 	}
 	
 	public void organizeRomsByNumber()

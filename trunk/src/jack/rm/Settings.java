@@ -1,13 +1,34 @@
 package jack.rm;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.util.*;
+
+import com.google.gson.*;
 
 import jack.rm.data.set.*;
 
 public class Settings
 {
 	private static Map<RomSet, Settings> settings = new HashMap<RomSet, Settings>(); 
+	public final static Gson loader;
+	
+	static
+	{
+		GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeAdapter(RomSet.class, new RomSetSerializer());
+		loader = builder.setPrettyPrinting().create();
+	}
+	
+	private static class RomSetSerializer implements JsonSerializer<RomSet>, JsonDeserializer<RomSet> {
+		  public JsonElement serialize(RomSet src, Type typeOfSrc, JsonSerializationContext context) {
+		    return new JsonPrimitive(src.ident());
+		  }
+		  
+		  public RomSet deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+			  	return RomSetManager.byIdent(json.getAsJsonPrimitive().getAsString());
+			  }
+		}
 	
 	public static Settings get(RomSet set)
 	{
@@ -27,20 +48,38 @@ public class Settings
 		return settings.get(RomSet.current);
 	}
 	
-	public static void consolidate()
+	public static void load()
 	{
 		try
 		{
-			DataOutputStream dos = new DataOutputStream(new FileOutputStream("data/settings.xml"));
-		
-			dos.writeUTF("<settings>\n");
+			File file = new File("data/settings.json");
 			
-			for (Settings s : settings.values())
+			if (file.exists())
 			{
-				dos.writeUTF(s.toXML());
+				
+				Settings[] sts = loader.fromJson(new FileReader(file), Settings[].class);
+				
+				for (Settings s : sts)
+				{
+					settings.put(s.set, s);
+				}
 			}
+		}
+		catch (Exception e )
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public static void consolidate()
+	{
+		try
+		{			
+			DataOutputStream dos = new DataOutputStream(new FileOutputStream("data/settings.json"));
 			
-			dos.writeUTF("</settings>\n");
+			Settings[] sts = settings.values().toArray(new Settings[settings.values().size()]);
+
+			dos.writeBytes(loader.toJson(sts, Settings[].class));
 			
 			dos.close();
 		}
@@ -50,8 +89,7 @@ public class Settings
 		}
 	}
 	
-	public final RomSet set;
-	
+	public RomSet set;
 	public String renamingPattern;
 	public String romsPath;
 	public String unknownPath;
@@ -62,6 +100,11 @@ public class Settings
 	
 	public boolean useRenamer;
 	public boolean renameInsideZips;
+	
+	Settings()
+	{
+		
+	}
 	
 	Settings(RomSet set)
 	{
@@ -77,24 +120,5 @@ public class Settings
 		romsPath = null;
 		unknownPath = null;
 	}
-	
-	public String toXML()
-	{
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append("\t<setting>\n");
-		sb.append("\t\t<dat>").append(set.ident()).append("</dat>\n");
-		sb.append("\t\t<romsPath>").append(romsPath).append("</romsPath>\n");
-		sb.append("\t\t<unknownPath>").append(unknownPath).append("</unknownPath>\n");
-		sb.append("\t\t<pattern>").append(renamingPattern).append("</pattern>\n");
-		
-		sb.append("\t\t<checkImageCRC>").append(checkImageCRC).append("</checkImageCRC>\n");
-		sb.append("\t\t<checkInsideArchives>").append(checkInsideArchives).append("</checkInsideArchives>\n");
-		sb.append("\t\t<moveUnknownFiles>").append(moveUnknownFiles).append("</moveUnknownFiles>\n");
-		sb.append("\t\t<useRenamer>").append(renameInsideZips).append("</useRenamer>\n");
-		sb.append("\t\t<renameInsideZips>").append(renameInsideZips).append("</renameInsideZips>\n");
-		sb.append("\t</setting>\n");
-		
-		return sb.toString();
-	}
+
 }

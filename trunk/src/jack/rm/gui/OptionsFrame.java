@@ -1,6 +1,7 @@
 package jack.rm.gui;
 
 import jack.rm.Main;
+import jack.rm.Settings;
 import jack.rm.i18n.Text;
 
 import java.awt.event.*;
@@ -65,6 +66,7 @@ public class OptionsFrame extends JFrame implements ActionListener
 	public void actionPerformed(ActionEvent e)
 	{
 		Main.romList.checkNames();
+		Settings.consolidate();
 		this.setVisible(false);
 	}
 }

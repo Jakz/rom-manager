@@ -18,6 +18,19 @@ public class RomSetManager
 		sets.put(Console.NES, new NES());
 		sets.put(Console.GB, new GB());
 		sets.put(Console.WS, new WS());
+		
+		Settings.load();
+	}
+	
+	public static RomSet byIdent(String ident)
+	{
+		for (RomSet rs : sets.values())
+		{
+			if (rs.ident().equals(ident))
+				return rs;
+		}
+		
+		return null;
 	}
 	
 	public static Collection<RomSet> sets()
