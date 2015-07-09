@@ -3,6 +3,9 @@ package jack.rm;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
+import java.awt.Desktop;
+import java.io.File;
+
 import jack.rm.data.parser.*;
 import jack.rm.data.*;
 import jack.rm.data.set.*;
@@ -44,7 +47,8 @@ public class Main
 	
 	public static void main(String[] args)
 	{
-		setLNF();
+	  setOS();
+	  setLNF();
 		
 		searchPanel = new SearchPanel();
 		infoPanel = new InfoPanel();
@@ -59,7 +63,7 @@ public class Main
 		scanner = new Scanner(romList);
 		downloader = new Downloader();
 
-		RomSetManager.loadSet(Console.GBA);
+		RomSetManager.loadSet(Console.NDS);
 		
 		mainFrame.setVisible(true);
 	
@@ -74,5 +78,34 @@ public class Main
 	public static void logln(String str)
 	{
 		mainFrame.cardConsole.appendln(str);
+	}
+	
+	enum OS
+	{
+	  WIN,
+	  OSX,
+	  LINUX
+	}
+	
+	private static void setOS()
+	{
+	  String system = System.getProperty("os.name").toLowerCase();
+	  
+	  if (system.indexOf("win") >= 0)
+	    os = OS.WIN;
+	  else if (system.indexOf("mac") >= 0)
+	    os = OS.OSX;
+	  else
+	    os = OS.OSX;
+	}
+	
+	private static OS os;
+	public static void openFolder(File folder)
+	{
+	  try {
+	    Desktop.getDesktop().open(folder);
+	  } catch (Exception e) {
+	    e.printStackTrace();
+	  }
 	}
 }

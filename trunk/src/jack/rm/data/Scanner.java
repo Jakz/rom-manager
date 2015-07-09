@@ -3,6 +3,7 @@ package jack.rm.data;
 import jack.rm.Main;
 import jack.rm.PersistenceRom;
 import jack.rm.data.set.RomSet;
+import jack.rm.gui.ProgressDialog;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -10,10 +11,15 @@ import java.util.*;
 import java.util.zip.*;
 import java.io.FileInputStream;
 
+import javax.swing.SwingWorker;
+
 public class Scanner
 {
 	RomList list;
 	boolean scanSubdirectories = true;
+	
+	private Set<File> existing = new HashSet<File>();
+	private Set<File> foundFiles = new HashSet<File>();
 	
 	private static class CustomFilter implements FileFilter
 	{
@@ -79,68 +85,115 @@ public class Scanner
 			{
 				scanFolder(files[t].getAbsoluteFile(), filter);
 			}
-			else if (files[t].getName().endsWith(".zip"))
+			else 
 			{
-				try
-				{
-					Enumeration<? extends ZipEntry> enu = new ZipFile(files[t]).entries();
-					String fileName = files[t].getName();
-					fileName = fileName.substring(0, fileName.length()-4);
-					
-					while (enu.hasMoreElements())
-					{
-						long curCrc = ((ZipEntry)enu.nextElement()).getCrc();
-						
-						Rom rom = list.getByCRC(curCrc);
-						
-						if (rom != null)
-						{
-							if (Renamer.isCorrectlyNamed(fileName, rom))
-								rom.status = RomStatus.FOUND;
-							else
-								rom.status = RomStatus.INCORRECT_NAME;
-							
-							rom.type = RomType.ZIP;
-							rom.path = files[t];
-						}
-					}
-				}
-				catch (Exception e)
-				{
-					Main.logln("[ERROR] Zipped file "+files[t].getName()+" is corrupt. Skipping.");
-				}
-			}
-			else
-			{
-				long crc = computeCRC(files[t]);
-				String fileName = files[t].getName();
-				fileName = fileName.substring(0, fileName.length()-4);
-				
-				Rom rom = list.getByCRC(crc);
-				
-				if (rom != null)
-				{
-					if (Renamer.isCorrectlyNamed(fileName, rom))
-						rom.status = RomStatus.FOUND;
-					else
-						rom.status = RomStatus.INCORRECT_NAME;
-					
-					rom.type = RomType.GBA;
-					rom.path = files[t];
-				}
+			  foundFiles.add(files[t]);
 			}
 		}
 	}
 	
-	public void scanForRoms()
+	public void foundRom(File file, String fileName, Rom rom, RomType type)
 	{
-		Main.logln("Scanning for roms in path "+RomSet.current.romPath()+"...");
+	  if (rom.status == RomStatus.FOUND)
+	  {
+      Main.logln("A duplicated rom has been found: "+rom.file+" and "+file+".");
+	  }
+	  else if (Renamer.isCorrectlyNamed(fileName, rom))
+	  {
+	    rom.status = RomStatus.FOUND;
+	    ++Main.romList.countCorrect;
+	  }
+	  else
+	  {
+	    rom.status = RomStatus.INCORRECT_NAME;
+	    ++Main.romList.countBadlyNamed;
+	  }
+	  
+	  --Main.romList.countNotFound;
+	  
+	  rom.type = type;
+	}
+	
+	public void scanFile(File file)
+	{
+	  if (file.getName().endsWith(".zip"))
+    {
+      try
+      {
+        if (!existing.contains(file))
+        {         
+          Enumeration<? extends ZipEntry> enu = new ZipFile(file).entries();
+          String fileName = file.getName();
+          fileName = fileName.substring(0, fileName.length()-4);
+          
+          while (enu.hasMoreElements())
+          {
+            ZipEntry entry = enu.nextElement();
+            long curCrc = entry.getCrc();
+            
+            Rom rom = list.getByCRC(curCrc);
+            
+            if (rom != null)
+            {
+              Main.logln("Archive "+file.getName()+" contains file with CRC: "+curCrc+" that matches rom: "+rom.number+" "+rom.title);
+              
+              foundRom(file, fileName, rom, RomType.ZIP);
+              rom.file = new RomFileEntry.Archive(file, entry.getName());
+            }
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        Main.logln("[ERROR] Zipped file "+file.getName()+" is corrupt. Skipping.");
+      }
+    }
+    else
+    {
+      long crc = computeCRC(file);
+      String fileName = file.getName();
+      fileName = fileName.substring(0, fileName.length()-4);
+      
+      Rom rom = list.getByCRC(crc);
+      
+      if (rom != null)
+      {
+        foundRom(file, fileName, rom, RomType.BIN);
+        rom.file = new RomFileEntry.Bin(file);
+      }
+    }
+	}
+	
+	public void scanForRoms(boolean total)
+	{
+		existing.clear();
+		foundFiles.clear();
 		
+		if (total)
+		{
+			Main.logln("Scanning for roms in path "+RomSet.current.romPath()+"...");
+			Main.romList.resetStatus();
+		}
+		else
+		{
+			Main.logln("Scanning for new roms in path "+RomSet.current.romPath()+"...");
+			int c = Main.romList.count();
+			for (int j = 0; j < c; ++j)
+			{
+				Rom r = Main.romList.get(j);
+				
+				if (r.status != RomStatus.NOT_FOUND)
+					existing.add(r.file.file());
+			}
+		}
+
 		try
 		{		
 			File folder = new File(RomSet.current.romPath());
 			scanFolder(folder, new CustomFilter(RomSet.current.type.exts));
-			PersistenceRom.consolidate(list);
+			
+			ScannerWorker worker = new ScannerWorker(foundFiles);
+			worker.execute();
 		}
 		catch (NullPointerException e)
 		{
@@ -151,5 +204,62 @@ public class Scanner
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	
+	
+	
+	
+	
+	public class ScannerWorker extends SwingWorker<Void, Integer>
+	{
+	  private int total = 0;
+	  private final List<File> files;
+	  
+	  ScannerWorker(Set<File> files)
+	  {
+	    this.files = new ArrayList<File>(files);
+	    total = files.size();
+	  }
+
+	  @Override
+	  public Void doInBackground()
+	  {
+	    ProgressDialog.init(Main.mainFrame, "Rom Scan");
+	    
+	    for (int i = 0; i < total; ++i)
+	    {
+	      setProgress((int)((((float)i)/total)*100));
+	      
+	      /*try {
+	      Thread.sleep(200);
+	      }
+	      catch (Exception e)
+	      {
+	        e.printStackTrace();
+	      }*/
+	      
+	      File f = files.get(i);
+	      scanFile(f);
+	      publish(i);
+	    }
+	    
+	    return null;
+	  }
+	  
+	  @Override
+	  public void process(List<Integer> v)
+	  {
+	    ProgressDialog.update(this, "Scanning "+v.get(v.size()-1)+" of "+foundFiles.size()+"..");
+	    Main.mainFrame.updateTable();
+	  }
+	  
+	  @Override
+	  public void done()
+	  {
+	    PersistenceRom.consolidate(list);
+	    ProgressDialog.finished();
+	  }
+	  
 	}
 }

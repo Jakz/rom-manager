@@ -18,8 +18,46 @@ public class InfoPanel extends JPanel implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
 	
+  private static enum Field
+  {
+    TITLE        (0, Text.ROM_INFO_TITLE),
+    PUBLISHER    (1, Text.ROM_INFO_PUBLISHER),
+    LOCATION     (2, Text.ROM_INFO_LOCATION),
+    LANGUAGES    (3, Text.ROM_INFO_LANGUAGES),
+    SIZE         (4, Text.ROM_INFO_SIZE),
+    SAVE_TYPE    (5, Text.ROM_INFO_SAVE_TYPE),
+    GENRE        (6, Text.ROM_INFO_GENRE),
+    CLONES       (7, Text.ROM_INFO_CLONES),
+    CRC          (8, Text.ROM_INFO_CRC),
+    INTERNAL_NAME(9, Text.ROM_INFO_INTERNAL_NAME),
+    SERIAL       (10, Text.ROM_INFO_SERIAL),
+    GROUP        (11, Text.ROM_INFO_GROUP),
+    DUMP_DATE    (12, Text.ROM_INFO_DUMP_DATE),
+    COMMENT      (13, Text.ROM_INFO_COMMENT),
+    PATH         (14, Text.ROM_INFO_PATH)
+    ;
+     
+    public final int index;
+    public final String title;
+     
+    Field(int index, Text text)
+    {
+      this.index = index;
+      this.title = text.text();
+    }
+     
+    static Field forIndex(int index)
+    {
+      for (Field f : values())
+        if (f.index == index)
+          return f;
+      
+      return null;
+    }
+   }
+	
 	final JLabel[] labels = new JLabel[Field.values().length];
-	final private JLabel[] fields = new JLabel[14];
+	final private JLabel[] fields = new JLabel[Field.values().length];
 	
 	final private JPanel pFields = new JPanel();
 	final private JPanel pTotal = new JPanel();
@@ -28,50 +66,18 @@ public class InfoPanel extends JPanel implements ActionListener
 	
 	final private JButton downloadButton = new JButton("Download ROM");
 	final private JButton artButton = new JButton("Download Art");
+	final private JButton openFolderButton = new JButton("Open Folder");
+	final private JButton openArchiveButton = new JButton("Open Archive");
 	final private JPanel buttons = new JPanel();
 	
 	private Rom rom;
-	
-	private static enum Field
-	{
-		TITLE        (0, Text.ROM_INFO_TITLE),
-		PUBLISHER    (1, Text.ROM_INFO_PUBLISHER),
-		LOCATION     (2, Text.ROM_INFO_LOCATION),
-		LANGUAGES    (3, Text.ROM_INFO_LANGUAGES),
-		SIZE         (4, Text.ROM_INFO_SIZE),
-		SAVE_TYPE    (5, Text.ROM_INFO_SAVE_TYPE),
-		GENRE        (6, Text.ROM_INFO_GENRE),
-		CLONES       (7, Text.ROM_INFO_CLONES),
-		CRC          (8, Text.ROM_INFO_CRC),
-		INTERNAL_NAME(9, Text.ROM_INFO_INTERNAL_NAME),
-		SERIAL       (10, Text.ROM_INFO_SERIAL),
-		GROUP        (11, Text.ROM_INFO_GROUP),
-		DUMP_DATE    (12, Text.ROM_INFO_DUMP_DATE),
-		COMMENT      (13, Text.ROM_INFO_COMMENT)
-		;
 		
-		public final int index;
-		public final String title;
-		
-		Field(int index, Text text)
-		{
-			this.index = index;
-			this.title = text.text();
-		}
-		
-		static Field forIndex(int index)
-		{
-			for (Field f : values())
-				if (f.index == index)
-					return f;
-			
-			return null;
-		}
-	}
-	
 	public InfoPanel()
 	{
-		downloadButton.setEnabled(false);
+		openFolderButton.setEnabled(false);
+		openArchiveButton.setEnabled(false);
+	  
+	  downloadButton.setEnabled(false);
 		
 		imgTitle = new JLabel();
 		imgTitle.setHorizontalAlignment(SwingConstants.CENTER);
@@ -151,8 +157,12 @@ public class InfoPanel extends JPanel implements ActionListener
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.LINE_AXIS));
 		buttons.add(downloadButton);
 		buttons.add(artButton);
+		buttons.add(openFolderButton);
+		buttons.add(openArchiveButton);
 		downloadButton.addActionListener(this);
 		artButton.addActionListener(this);
+		openFolderButton.addActionListener(this);
+		openArchiveButton.addActionListener(this);
 		
 		pTotal.add(buttons);
 		
@@ -258,14 +268,26 @@ public class InfoPanel extends JPanel implements ActionListener
 		//fields[11].setText(rom.getClonesString());
 		fields[Field.SAVE_TYPE.index].setText(rom.save+rom.saveType());
 		fields[Field.COMMENT.index].setText(rom.info);
+		fields[Field.PATH.index].setText(rom.file != null ? rom.file.toString() : "");
 		
 		imgTitle.setIcon(loadImage(rom,"title"));
 		imgScreen.setIcon(loadImage(rom,"game"));
 		
 		if (rom.status == RomStatus.NOT_FOUND)
-			downloadButton.setEnabled(true);
+		{
+		  openFolderButton.setEnabled(false);
+		  openArchiveButton.setEnabled(false);
+			
+		  downloadButton.setEnabled(true);
+		}
 		else
-			downloadButton.setEnabled(false);
+		{
+	    openFolderButton.setEnabled(true);
+	    if (rom.type == RomType.ZIP)
+	      openArchiveButton.setEnabled(true);
+	      
+		  downloadButton.setEnabled(false);
+		}
 		
 		if (rom.hasTitleArt() && rom.hasGameArt())
 			artButton.setEnabled(false);
@@ -275,7 +297,9 @@ public class InfoPanel extends JPanel implements ActionListener
 	
 	public void actionPerformed(ActionEvent e)
 	{
-		if (e.getSource() == downloadButton)
+		Object src = e.getSource();
+	  
+	  if (src == downloadButton)
 		{
 			try
 			{
@@ -286,7 +310,15 @@ public class InfoPanel extends JPanel implements ActionListener
 				ee.printStackTrace();
 			}
 		}
-		else if (e.getSource() == artButton)
+	  else if (src == openFolderButton)
+	  {
+	    Main.openFolder(rom.file.file().getParentFile());
+	  }
+	  else if (src == openArchiveButton)
+	  {
+	    Main.openFolder(rom.file.file());
+	  }
+		else if (src == artButton)
 		{
 			Rom r = rom;
 			Main.downloader.pool.submit(new Downloader.TwinArtDownloaderTask(r));

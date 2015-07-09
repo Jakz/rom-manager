@@ -3,73 +3,75 @@ package jack.rm.gui;
 import jack.rm.*;
 
 import java.awt.event.*;
+import javax.swing.*;
 
 class MenuListener implements ActionListener
 {
-	public void actionPerformed(ActionEvent e)
+	public static final MenuListener listener = new MenuListener();
+  
+  public void actionPerformed(ActionEvent e)
 	{
 		Object source = e.getSource();
-		
-		if (source == Main.mainFrame.miRoms[0])
+		JMenuItem item = (JMenuItem)source;
+		MenuElement tag = MenuElement.elementForItem(item);
+
+		if (tag == MenuElement.ROMS_SCAN_FOR_ROMS)
 		{
-			Main.scanner.scanForRoms();
+			Main.scanner.scanForRoms(true);
 			Main.mainFrame.updateTable();
 		}
-		else if (source == Main.mainFrame.miRoms[1])
+		else if (tag == MenuElement.ROMS_SCAN_FOR_NEW_ROMS)
+		{
+			Main.scanner.scanForRoms(false);
+			Main.mainFrame.updateTable();
+		}
+		else if (tag == MenuElement.ROMS_EXPORT_MISSING)
 		{
 			//export missing				
 		}
-		else if (source == Main.mainFrame.miRoms[2])
+		else if (tag == MenuElement.ROMS_EXPORT_FOUND)
 		{
 			//export correct
 		}
-		else if (source == Main.mainFrame.miRoms[3])
+		else if (tag == MenuElement.ROMS_EXIT)
 		{
 			//Main.romList.saveStatus();
 			System.exit(0);
 		}
-		else if (source == Main.mainFrame.miRoms[4])
+		else if (tag == MenuElement.ROMS_RENAME)
 		{
 			Main.romList.renameRoms();
-			
-			if (Main.pref.organizeRomsByNumber)
-			{
-				Main.romList.organizeRomsByNumber();
-				
-				if (Main.pref.organizeRomsDeleteEmptyFolders)
-					Main.romList.deleteEmptyFolders();
-			}
 			Main.mainFrame.updateTable();
 		}
-		else if (source == Main.mainFrame.miView[0])
+		else if (tag == MenuElement.VIEW_SHOW_CORRECT)
 		{
 			Main.mainFrame.romListModel.isCorrect = !Main.mainFrame.romListModel.isCorrect;
 			Main.mainFrame.romListModel.clear();
 			Main.romList.showAll();
 		}
-		else if (source == Main.mainFrame.miView[1])
+		else if (tag == MenuElement.VIEW_SHOW_NOT_FOUND)
 		{
 			Main.mainFrame.romListModel.isMissing = !Main.mainFrame.romListModel.isMissing;
 			Main.mainFrame.romListModel.clear();
 			Main.romList.showAll();
 		}
-		else if (source == Main.mainFrame.miView[2])
+		else if (tag == MenuElement.VIEW_SHOW_BADLY_NAMED)
 		{
 			Main.mainFrame.romListModel.isBadlyNamed = !Main.mainFrame.romListModel.isBadlyNamed;
 			Main.mainFrame.romListModel.clear();
 			Main.romList.showAll();
 		}
-		else if (source == Main.mainFrame.miTools[0])
+		else if (tag == MenuElement.TOOLS_DOWNLOAD_ART)
 		{
 			Main.downloader.start();
 		}
-		else if (source == Main.mainFrame.miTools[1])
+		else if (tag == MenuElement.TOOLS_OPTIONS)
 		{
 			Main.optionsFrame.showMe();
 		}
-		else if (source == Main.mainFrame.miTools[2])
+		else if (tag == MenuElement.TOOLS_SHOW_CONSOLE)
 		{
-			Main.mainFrame.toggleConsole(Main.mainFrame.miTools[2].isSelected());
+			Main.mainFrame.toggleConsole(item.isSelected());
 		}
 		else
 		{

@@ -30,7 +30,7 @@ public class Rom implements Comparable<Rom>
 	
 	public String info;
 	
-	public File path;
+	public RomFileEntry file;
 	public RomType type;
 	
 	public long imgCRC1;

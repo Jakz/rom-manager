@@ -69,7 +69,13 @@ public class ManagerPanel extends JPanel implements ActionListener
 		unknownPathButton.setEnabled(s.moveUnknownFiles);
 		moveUnknownFiles.setSelected(s.moveUnknownFiles);
 		
-
+		romsPath.setText(s.romsPath);
+		
+		if (s.moveUnknownFiles)
+			unknownPath.setText(s.unknownPath);
+		else
+			unknownPath.setText("");
+		
 	}
 	
 	public void actionPerformed(ActionEvent e)

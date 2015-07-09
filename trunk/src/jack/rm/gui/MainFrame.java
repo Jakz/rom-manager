@@ -12,19 +12,21 @@ import java.awt.*;
 public class MainFrame extends JFrame
 {	
 	private static final long serialVersionUID = 1L;
-
-	//menu
-	final private JMenuBar menu = new JMenuBar();
 	
-	final JMenu romsMenu = new JMenu(Text.MENU_ROMS_TITLE.text());
-	final JMenu viewMenu = new JMenu(Text.MENU_VIEW_TITLE.text());
-	final JMenu toolsMenu = new JMenu(Text.MENU_TOOLS_TITLE.text());
+	 //menu
+  final private JMenuBar menu = new JMenuBar();
+  
+  final JMenu romsMenu = new JMenu(Text.MENU_ROMS_TITLE.text());
+  final JMenu romsExportSubmenu = new JMenu(Text.MENU_ROMS_EXPORT.text());
+
+  final JMenu viewMenu = new JMenu(Text.MENU_VIEW_TITLE.text());
+  final JMenu toolsMenu = new JMenu(Text.MENU_TOOLS_TITLE.text());
+	
 	final JMenu langMenu = new JMenu(Text.MENU_LANGUAGE_TITLE.text());
 	final JMenu helpMenu = new JMenu(Text.MENU_HELP_TITLE.text());
 	
 	//menu File
-	final JMenu romsSubmenu = new JMenu(Text.MENU_ROMS_EXPORT.text());
-	final JMenuItem miRoms[] = new JMenuItem[5];
+	final JMenuItem miRoms[] = new JMenuItem[6];
 	
 	//menu View
 	final JCheckBoxMenuItem miView[] = new JCheckBoxMenuItem[3];
@@ -102,56 +104,30 @@ public class MainFrame extends JFrame
 	
 	private void initMenu()
 	{	
-		Text[] miRomsNames = {Text.MENU_ROMS_SCAN_FOR_ROMS,Text.MENU_ROMS_EXPORT_MISSING,Text.MENU_ROMS_EXPORT_FOUND,Text.MENU_ROMS_EXIT,Text.MENU_ROMS_RENAME};
+		romsMenu.add(MenuElement.ROMS_SCAN_FOR_ROMS.item);
+    romsMenu.add(MenuElement.ROMS_SCAN_FOR_NEW_ROMS.item);
+    romsMenu.add(MenuElement.ROMS_RENAME.item);
+    romsMenu.add(romsExportSubmenu);
+    romsExportSubmenu.add(MenuElement.ROMS_EXPORT_FOUND.item);
+    romsExportSubmenu.add(MenuElement.ROMS_EXPORT_MISSING.item);
+    romsMenu.addSeparator();
+    romsMenu.add(MenuElement.ROMS_EXIT.item);
+    
+    viewMenu.add(MenuElement.VIEW_SHOW_CORRECT.item);
+    viewMenu.add(MenuElement.VIEW_SHOW_BADLY_NAMED.item);
+    viewMenu.add(MenuElement.VIEW_SHOW_NOT_FOUND.item);
+    
+    toolsMenu.add(MenuElement.TOOLS_DOWNLOAD_ART.item);
+    toolsMenu.add(MenuElement.TOOLS_OPTIONS.item);
+    toolsMenu.add(MenuElement.TOOLS_SHOW_CONSOLE.item);
 		
-		for (int t = 0; t < 5; ++t)
-		{	
-			miRoms[t] = new JMenuItem(miRomsNames[t].text());
-			miRoms[t].addActionListener(menuListener);
-		}
-
-		Text[] miViewNames = {Text.MENU_VIEW_SHOW_CORRECT,Text.MENU_VIEW_SHOW_NOT_FOUND,Text.MENU_VIEW_SHOW_BADLY_NAMED};
-		
-		for (int t = 0; t < miView.length; ++t)
-		{
-			miView[t] = new JCheckBoxMenuItem(miViewNames[t].text(),false);
-			miView[t].addActionListener(menuListener);
-		}
-		
-		Text[] myToolsNames = {Text.MENU_TOOLS_DOWNLOAD_ART,Text.MENU_TOOLS_OPTIONS};
-		for (int t = 0; t < miTools.length-1; ++t)
-		{
-			miTools[t] = new JMenuItem(myToolsNames[t].text());
-			miTools[t].addActionListener(menuListener);
-		}
-		miTools[miTools.length-1] = new JCheckBoxMenuItem(Text.MENU_TOOLS_SHOW_CONSOLE.text());
-		miTools[miTools.length-1].addActionListener(menuListener);
-		
-		romsSubmenu.add(miRoms[1]);
-		romsSubmenu.add(miRoms[2]);
-		romsMenu.add(miRoms[0]);
-		romsMenu.add(miRoms[4]);
-		romsMenu.add(romsSubmenu);
-		romsMenu.addSeparator();
-		romsMenu.add(miRoms[3]);
-		
-		viewMenu.add(miView[0]);
-		viewMenu.add(miView[1]);
-		viewMenu.add(miView[2]);
-		
-		toolsMenu.add(miTools[0]);
-		toolsMenu.add(miTools[1]);
-		toolsMenu.addSeparator();
-		toolsMenu.add(miTools[2]);
-		
-		
-		miRoms[0].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
+		/*miRoms[0].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
 		miRoms[4].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0));
 		//miRoms[3].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.ALT_MASK));
 		
 		miView[0].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
 		miView[1].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
-		miView[2].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0));
+		miView[2].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0));*/
 	}
 			
 	class ListListener implements ListSelectionListener

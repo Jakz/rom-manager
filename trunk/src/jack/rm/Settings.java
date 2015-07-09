@@ -6,6 +6,7 @@ import java.util.*;
 
 import com.google.gson.*;
 
+import jack.rm.data.RomFileEntry;
 import jack.rm.data.set.*;
 
 public class Settings
@@ -17,6 +18,7 @@ public class Settings
 	{
 		GsonBuilder builder = new GsonBuilder();
 		builder.registerTypeAdapter(RomSet.class, new RomSetSerializer());
+		builder.registerTypeAdapter(RomFileEntry.class, new RomFileEntry.Adapter());
 		loader = builder.setPrettyPrinting().create();
 	}
 	
@@ -100,10 +102,11 @@ public class Settings
 	
 	public boolean useRenamer;
 	public boolean renameInsideZips;
+	public boolean stripUselessFilesInZips;
 	
 	Settings()
 	{
-		
+
 	}
 	
 	Settings(RomSet set)
@@ -114,6 +117,7 @@ public class Settings
 		checkInsideArchives = true;
 		moveUnknownFiles = false;
 		renameInsideZips = false;
+		stripUselessFilesInZips = false;
 		useRenamer = false;
 		
 		renamingPattern = "%n - %t [%S]";

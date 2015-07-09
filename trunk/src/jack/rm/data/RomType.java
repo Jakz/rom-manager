@@ -2,8 +2,10 @@ package jack.rm.data;
 
 public enum RomType
 {
-	GBA("gba"),
-	ZIP("zip");
+	BIN(""),
+	ZIP("zip")
+	
+	;
 	
 	public final String ext;
 	
