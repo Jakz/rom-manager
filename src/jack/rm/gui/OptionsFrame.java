@@ -8,14 +8,14 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
 
-public class OptionsFrame extends JFrame implements ActionListener
+public class OptionsFrame extends JFrame implements ActionListener, ComponentListener
 {
 	private static final long serialVersionUID = 1L;
 
 	JTabbedPane tabs = new JTabbedPane();
 	
 	JButton close = new JButton(Text.TEXT_CLOSE.text());
-	
+		
 	public OptionsFrame()
 	{
 		setTitle(Text.MENU_TOOLS_OPTIONS.text());
@@ -41,6 +41,7 @@ public class OptionsFrame extends JFrame implements ActionListener
 		all.add(lower, BorderLayout.SOUTH);
 		close.addActionListener(this);
 		
+		this.addComponentListener(this);
 		
 		this.add(all);
 		
@@ -54,7 +55,7 @@ public class OptionsFrame extends JFrame implements ActionListener
 	public void showMe()
 	{
 		if (this.isVisible())
-			return;
+			return;		  
 		
 		Main.romsetPanel.updateFields();
 		Main.renamerPanel.updateFields();
@@ -65,8 +66,16 @@ public class OptionsFrame extends JFrame implements ActionListener
 	
 	public void actionPerformed(ActionEvent e)
 	{
-		Main.romList.checkNames();
-		Settings.consolidate();
 		this.setVisible(false);
+	}
+
+	public void componentMoved(ComponentEvent e) { }
+	public void componentResized(ComponentEvent e) { }
+	public void componentShown(ComponentEvent e) { }
+	
+	public void componentHidden(ComponentEvent e)
+	{
+	  Main.romList.checkNames();
+	  Settings.consolidate();
 	}
 }

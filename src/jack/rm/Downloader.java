@@ -43,6 +43,22 @@ public class Downloader
 		ProgressDialog.init(Main.mainFrame, "Art Download", new Callback() { public void call() { pool.shutdownNow(); started = false; } });
 	}
 	
+	public void downloadArt(final Rom r)
+	{
+	  new Thread()
+	  {
+	    public void run()
+	    {
+	      if (!r.hasTitleArt())
+	        new ArtDownloaderTask(r, "title").call();
+	      if (!r.hasGameArt())
+	        new ArtDownloaderTask(r, "game").call();
+	      
+	      Main.infoPanel.updateFields(r);
+	    }
+	  }.run();
+	}
+	
 	public static class TwinArtDownloaderTask implements Callable<Boolean>
 	{
 		String urlt, patht, urlg, pathg;
@@ -157,11 +173,14 @@ public class Downloader
 			
 			//Main.logln("Downloaded art for "+Renamer.formatNumber(rom.number)+" ("+type+").");
 			
-			long completed = pool.getCompletedTaskCount();
-			long total = pool.getTaskCount(); 
+		  if (pool != null)
+		  {
+		    long completed = pool.getCompletedTaskCount();
+		    long total = pool.getTaskCount(); 
 			
-			ProgressDialog.update(completed/(float)total, completed+" of "+total);
-			
+		    ProgressDialog.update(completed/(float)total, completed+" of "+total);
+		  }
+
 	    return true;
 		}
 	}

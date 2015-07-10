@@ -143,18 +143,22 @@ public class RomList
 	
 	public void checkNames()
 	{
-		for (int x = 0; x < list.size(); ++x)
-		{
-			Rom rom = list.get(x);
-			
-			if (rom.status != RomStatus.NOT_FOUND)
-			{				
-				if (!Settings.current().useRenamer || rom.file.file().getName().startsWith(Renamer.getCorrectName(rom)))
-					rom.status = RomStatus.FOUND;
-				else
-					rom.status = RomStatus.INCORRECT_NAME;
-			}
-		}
+    for (Rom rom : list)
+    {
+      if (rom.status != RomStatus.NOT_FOUND)
+      {  
+        String filename = rom.file.file().getName().substring(rom.file.file().getName().length()-4);
+        
+        if (rom.status == RomStatus.FOUND)
+        {
+          if (!Renamer.isCorrectlyNamed(filename, rom))
+            rom.status = RomStatus.INCORRECT_NAME;
+        }
+        else if (rom.status == RomStatus.INCORRECT_NAME)
+          if (!Renamer.isCorrectlyNamed(filename, rom))
+            rom.status = RomStatus.FOUND;
+      }
+    }
 		
 		Main.mainFrame.updateTable();
 	}
@@ -378,8 +382,6 @@ public class RomList
 			return;
 		
 		new RenamerWorker(this).execute();
-		
-		
 	}
 
 	public void deleteEmptyFolders()

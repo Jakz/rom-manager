@@ -321,7 +321,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		else if (src == artButton)
 		{
 			Rom r = rom;
-			Main.downloader.pool.submit(new Downloader.TwinArtDownloaderTask(r));
+			Main.downloader.downloadArt(r);
 		}
 	}
 }
