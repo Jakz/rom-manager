@@ -63,7 +63,7 @@ public class Main
 		scanner = new Scanner(romList);
 		downloader = new Downloader();
 
-		RomSetManager.loadSet(Console.NDS);
+		RomSetManager.loadSet(Console.GBA);
 		
 		mainFrame.setVisible(true);
 	

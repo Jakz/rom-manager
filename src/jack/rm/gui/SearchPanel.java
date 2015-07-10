@@ -6,7 +6,7 @@ import jack.rm.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
-
+import java.awt.*;
 import java.awt.event.*;
 
 public class SearchPanel extends JPanel
@@ -18,22 +18,64 @@ public class SearchPanel extends JPanel
 	
 	final JComboBox sizes = new JComboBox(new String[]{Text.SIZE_TITLE.text()});
 	//final JComboBox genres = new JComboBox();
-	final JComboBox locations = new JComboBox(new String[]{Text.LOCATION_TITLE.text()});
+	final JComboBox locations = new JComboBox();
 	final JComboBox languages = new JComboBox(new String[]{Text.LANGUAGE_TITLE.text()});
 	
 	final private SearchListener listener = new SearchListener();
 	
 	boolean active = false;
 	
+	class LocationCellRenderer extends JLabel implements ListCellRenderer
+	{
+	  LocationCellRenderer()
+	  {
+	    setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+	  }
+	  
+	  public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus)
+	  {
+	    Location location = (Location)value;
+      
+      if (isSelected)
+      {
+        setBackground(list.getSelectionBackground());
+        setForeground(list.getSelectionForeground());
+      } 
+      else 
+      {
+        setBackground(list.getBackground());
+        setForeground(list.getForeground());
+      }
+      
+      if (value == null)
+      {
+        setText(Text.LOCATION_TITLE.text());
+        setIcon(null);
+      }
+      else
+      {
+        setText(location.fullName);
+        setIcon(location.icon);
+      }
+      
+      return this;
+	  };
+	}
+	  
 	public SearchPanel()
 	{
 		labels[0] = new JLabel();
 		labels[1] = new JLabel();
 		labels[2] = new JLabel();
-		labels[3] = new JLabel();
+		labels[3] = new JLabel();		
+		
+		locations.addItem(null);
 		
 		for (Location l : Location.values())
-			locations.addItem(l);
+		  if (l != Location.NONE)
+		    locations.addItem(l);
+		
+		locations.setRenderer(new LocationCellRenderer());
 		
 		for (Language l : Language.values())
 			languages.addItem(l);
