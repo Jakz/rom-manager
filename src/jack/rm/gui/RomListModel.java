@@ -7,7 +7,7 @@ import javax.swing.SwingUtilities;
 
 import java.util.*;
 
-public class RomListModel extends AbstractListModel
+public class RomListModel extends AbstractListModel<Rom>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -40,7 +40,7 @@ public class RomListModel extends AbstractListModel
 		list.remove(index);
 	}
 	
-	public Object getElementAt(int index)
+	public Rom getElementAt(int index)
 	{
 		return(list.get(index));
 	}

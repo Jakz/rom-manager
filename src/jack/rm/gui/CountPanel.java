@@ -10,7 +10,7 @@ public class CountPanel extends JPanel
 	private static final long serialVersionUID = 1L;
 	
 	JLabel[] counters = new JLabel[4];
-	String[] icons = new String[]{"status_correct","status_badly_named","status_not_found","status_all"};
+	Icon[] icons = new Icon[]{Icon.STATUS_CORRECT, Icon.STATUS_BADLY_NAMED, Icon.STATUS_NOT_FOUND, Icon.STATUS_ALL};
 	
 	public CountPanel()
 	{
@@ -18,7 +18,7 @@ public class CountPanel extends JPanel
 		for (int i = 0; i < counters.length; ++i)
 		{
 			counters[i] = new JLabel("1234");
-			counters[i].setIcon(new ImageIcon("data/images/"+icons[i]+".png"));
+			counters[i].setIcon(icons[i].getIcon());
 			counters[i].setPreferredSize(new Dimension(55,12));
 			inner.add(counters[i]);
 		}

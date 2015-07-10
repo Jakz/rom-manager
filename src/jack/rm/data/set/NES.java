@@ -14,7 +14,7 @@ class NES extends RomSetOfflineList
 	public String downloadURL(Rom rom)
 	{
 		String query1 = "http://www.emuparadise.me/roms/search.php?query=";
-		String query2 = "&section=roms&sysid=11";
+		String query2 = "&section=roms&sysid=13";
 		
 		String name = rom.title.replaceAll("\\W", " ").toLowerCase();
 		name = name.replace(" ","%20");

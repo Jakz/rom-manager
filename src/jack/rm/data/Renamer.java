@@ -13,15 +13,11 @@ public class Renamer
 	public final static ArrayList<Pattern> patterns = new ArrayList<Pattern>();
 	
 	private static DecimalFormat format;
-
-	private static boolean renameInZipToo;
 	
 	static
 	{
 		format = new DecimalFormat();
 		format.applyPattern("0000");
-		//renamingPattern = "%n - %t [%S]";
-		renameInZipToo = false;
 	}
 	
 	public static String formatNumber(int index)

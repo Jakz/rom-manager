@@ -127,11 +127,13 @@ public class Scanner
 	{
 	  if (file.getName().endsWith(".zip"))
     {
-      try
+      ZipFile zip = null;
+	    try
       {
         if (!existing.contains(file))
         {         
-          Enumeration<? extends ZipEntry> enu = new ZipFile(file).entries();
+          zip = new ZipFile(file);
+          Enumeration<? extends ZipEntry> enu = zip.entries();
           String fileName = file.getName();
           
           while (enu.hasMoreElements())
@@ -148,6 +150,9 @@ public class Scanner
             }
           }
         }
+        
+        zip.close();
+
       }
       catch (Exception e)
       {

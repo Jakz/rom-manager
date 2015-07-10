@@ -4,8 +4,8 @@ import java.io.File;
 
 public class ScanResult
 {
-  final public Rom rom;
-  final public RomFileEntry entry;
+  public Rom rom;
+  public RomFileEntry entry;
   
   ScanResult(Rom rom, RomFileEntry entry)
   {

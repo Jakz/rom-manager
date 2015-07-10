@@ -99,8 +99,11 @@ public class Settings
 	public boolean checkImageCRC;
 	public boolean checkInsideArchives;
 	public boolean moveUnknownFiles;
-	
+		
 	public boolean useRenamer;
+	public boolean organizeByFolders;
+	public boolean organizeByDeletingEmptyFolders;
+	public int folderSize;
 	public boolean renameInsideZips;
 	public boolean stripUselessFilesInZips;
 	
@@ -118,7 +121,10 @@ public class Settings
 		moveUnknownFiles = false;
 		renameInsideZips = false;
 		stripUselessFilesInZips = false;
-		useRenamer = false;
+		useRenamer = true;
+		organizeByFolders = true;
+		organizeByDeletingEmptyFolders = false;
+		folderSize = 100;
 		
 		renamingPattern = "%n - %t [%S]";
 		romsPath = null;

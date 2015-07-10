@@ -215,7 +215,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		
 
 		File f = new File(path);
-		if (f.exists() && (!Main.pref.booleanSetting("check-art-crc") || crc == Scanner.computeCRC(f)))
+		if (f.exists() && (!Settings.current().checkImageCRC || crc == Scanner.computeCRC(f)))
 		{
 			ImageIcon i = new ImageIcon(path);
 			
