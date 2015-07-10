@@ -29,9 +29,9 @@ public class CountPanel extends JPanel
 	
 	public void update()
 	{	  
-	  counters[0].setText(""+Main.romList.countCorrect);
-		counters[1].setText(""+Main.romList.countBadlyNamed);
-		counters[2].setText(""+Main.romList.countNotFound);
-		counters[3].setText(""+Main.romList.countTotal);
+	  counters[0].setText(""+Main.romList.getCountCorrect());
+		counters[1].setText(""+Main.romList.getCountBadName());
+		counters[2].setText(""+Main.romList.getCountMissing());
+		counters[3].setText(""+Main.romList.count());
 	}
 }

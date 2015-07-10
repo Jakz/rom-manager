@@ -9,6 +9,9 @@ import jack.rm.log.LogTarget;
 import jack.rm.log.LogType;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -146,11 +149,18 @@ public class Renamer
     File tmp = rom.file.file();
     
     File newF = new File(renameTo);
-    while (!tmp.renameTo(newF));
     
-    rom.status = RomStatus.FOUND;
-
-    rom.file = rom.file.build(newF); 
+    try
+    {
+      Files.move(tmp.toPath(), Paths.get(renameTo));
+      rom.status = RomStatus.FOUND;
+      rom.file = rom.file.build(newF);
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+      // TODO: handle and write on log
+    }
 	}
 	
 	public static void organizeRom(Rom rom, int folderSize)
@@ -180,10 +190,17 @@ public class Renamer
       }
       else if (!newFile.equals(rom.file.file()))
       {  
-        while (!rom.file.file().renameTo(newFile));
-        rom.file = rom.file.build(newFile);
-        
-        Log.log(LogType.MESSAGE, LogSource.RENAMER, LogTarget.rom(rom), "Moved rom to "+finalPath);
+        try
+        {
+          Files.move(rom.file.file().toPath(), newFile.toPath());
+          rom.file = rom.file.build(newFile);
+          Log.log(LogType.MESSAGE, LogSource.RENAMER, LogTarget.rom(rom), "Moved rom to "+finalPath);
+        }
+        catch (Exception e)
+        {
+          //TODO: handle and log
+          e.printStackTrace();
+        }   
       }
     } 
 	}

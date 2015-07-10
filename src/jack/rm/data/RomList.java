@@ -15,7 +15,7 @@ public class RomList
 	List<Rom> list;
 	Map<Long, Rom> crcs;
 	
-	public int countCorrect, countBadlyNamed, countNotFound, countTotal;
+	private int countCorrect, countBadlyNamed, countNotFound, countTotal;
 	
 	public RomList()
 	{
@@ -68,10 +68,29 @@ public class RomList
 		for (Rom r : list)
 			r.status = RomStatus.NOT_FOUND;
 		
-		countCorrect = 0;
-		countBadlyNamed = 0;
-		countNotFound = 0;
-		countTotal = 0;
+		updateStatus();
+	}
+	
+	public int getCountCorrect() { return countCorrect; }
+	public int getCountMissing() { return countNotFound; }
+	public int getCountBadName() { return countBadlyNamed; }
+	
+	public void updateStatus()
+	{
+	  countTotal = list.size();
+	  countNotFound = 0;
+	  countBadlyNamed = 0;
+	  countCorrect = 0;
+	  
+	  for (Rom r : list)
+	  {
+	    switch (r.status)
+	    {
+	      case NOT_FOUND: ++countNotFound; break;
+	      case INCORRECT_NAME: ++countBadlyNamed; break;
+	      case FOUND: ++countCorrect; break;
+	    }
+	  }
 	}
 	
 	public void search(String name, RomSize size, Location loc, Language lang)

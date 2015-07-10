@@ -27,10 +27,15 @@ public abstract class LogTarget
   
   public static class Rom extends LogTarget
   {
+    private final jack.rm.data.Rom rom;
+    
     Rom(jack.rm.data.Rom rom)
     {
       super(Type.ROM);
+      this.rom = rom;
     }
+    
+    public String toString() { return rom.title; }
   }
   
   public static class RomSet extends LogTarget

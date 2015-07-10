@@ -109,34 +109,24 @@ public class Scanner
 	    Log.log(LogType.WARNING, LogSource.SCANNER, LogTarget.file(result.entry.file()), "File contains a rom already present in romset: "+rom.file);
 	  }
 	  else if (Renamer.isCorrectlyNamed(result.entry.plainName(), rom))
-	  {
 	    rom.status = RomStatus.FOUND;
-	    ++Main.romList.countCorrect;
-	  }
 	  else
-	  {
 	    rom.status = RomStatus.INCORRECT_NAME;
-	    ++Main.romList.countBadlyNamed;
-	  }
 	  
 	  rom.file = result.entry;
-	  
-	  --Main.romList.countNotFound;
 	}
 	
 	public ScanResult scanFile(File file)
 	{
+	  ScanResult result = null;
+	  
 	  if (file.getName().endsWith(".zip"))
-    {	    
-	    ZipFile zip = null;
-      
+    {	          
       if (!existing.contains(file))
       {    
-  	    try
+  	    try (ZipFile zip = new ZipFile(file))
         {          
-          zip = new ZipFile(file);
           Enumeration<? extends ZipEntry> enu = zip.entries();
-          String fileName = file.getName();
           
           while (enu.hasMoreElements())
           {
@@ -146,15 +136,8 @@ public class Scanner
             Rom rom = list.getByCRC(curCrc);
             
             if (rom != null)
-            {
-              //Main.logln("Archive "+file.getName()+" contains file with CRC: "+curCrc+" that matches rom: "+rom.number+" "+rom.title);
-              return new ScanResult(rom, new RomFileEntry.Archive(file, entry.getName()));
-            }
+              result = new ScanResult(rom, new RomFileEntry.Archive(file, entry.getName()));
           }
-      
-          
-          zip.close();
-  
         }
         catch (Exception e)
         {
@@ -162,7 +145,7 @@ public class Scanner
         }
       }
       
-      return null;
+      return result;
     }
     else
     {
@@ -246,7 +229,10 @@ public class Scanner
 
 	      File f = files.get(i);
 	      ScanResult result = scanFile(f);
+	      
 	      foundRom(result);
+	      Main.romList.updateStatus();
+	      
 	      publish(i);
 	    }
 	    

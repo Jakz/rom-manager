@@ -9,7 +9,7 @@ import javax.swing.event.*;
 import java.awt.event.*;
 import java.awt.*;
 
-public class MainFrame extends JFrame
+public class MainFrame extends JFrame implements WindowListener
 {	
 	private static final long serialVersionUID = 1L;
 	
@@ -42,10 +42,7 @@ public class MainFrame extends JFrame
 	public final RomSetListener rsListener = new RomSetListener();
 	
 	final MenuListener menuListener = new MenuListener();
-	
-	
-	final FileDrop fileDropper;
-	
+		
 	final private CardLayout layout = new CardLayout();
 	final private JPanel cardMain = new JPanel(new BorderLayout());
 	final public ConsolePanel cardConsole = new ConsolePanel();
@@ -64,7 +61,9 @@ public class MainFrame extends JFrame
 		list.getSelectionModel().addListSelectionListener(new ListListener());
 		listPane.setPreferredSize(new Dimension(230,500));		
 		
-		fileDropper = new FileDrop(list, new FileDropperListener());
+		this.setTransferHandler(new FileTransferHandler(this, new FileDropperListener()));
+		
+		//fileDropper = new FileDrop(list, new FileDropperListener());
 		
 		menu.add(romsMenu);
 		menu.add(viewMenu);
@@ -101,6 +100,7 @@ public class MainFrame extends JFrame
 		list.setSelectedIndex(0);
 
 		this.setPreferredSize(new Dimension(1280,700));
+		this.addWindowListener(this);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			
 		pack();
@@ -186,5 +186,17 @@ public class MainFrame extends JFrame
 		cbRomSets.removeActionListener(rsListener);
 		cbRomSets.setSelectedItem(set);
 		cbRomSets.addActionListener(rsListener);
+	}
+	
+	public void windowActivated(WindowEvent e) { }
+	public void windowClosed(WindowEvent e) { }
+	public void windowDeactivated(WindowEvent e) { }
+	public void windowIconified(WindowEvent e) { }
+	public void windowDeiconified(WindowEvent e) { }
+	public void windowOpened(WindowEvent e) { }
+	
+	public void windowClosing(WindowEvent e)
+	{
+    PersistenceRom.consolidate(Main.romList);
 	}
 }
