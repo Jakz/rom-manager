@@ -19,7 +19,7 @@ class CellRenderer extends JLabel implements ListCellRenderer
 		setFont(new Font("Default",Font.PLAIN,12));
 		setText(rom.toString());
 		
-		setIcon(rom.location.icon);
+		setIcon(rom.location.icon.getIcon());
 		
 		setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));
 		
