@@ -16,51 +16,89 @@ public class SearchPanel extends JPanel
 	final JLabel[] labels = new JLabel[4];
 	final JPlaceHolderTextField romName = new JPlaceHolderTextField(10);
 	
-	final JComboBox sizes = new JComboBox(new String[]{Text.SIZE_TITLE.text()});
+	final JComboBox<RomSize> sizes = new JComboBox<>();
 	//final JComboBox genres = new JComboBox();
-	final JComboBox locations = new JComboBox();
-	final JComboBox languages = new JComboBox(new String[]{Text.LANGUAGE_TITLE.text()});
+	final JComboBox<Location> locations = new JComboBox<>();
+	final JComboBox<Language> languages = new JComboBox<>();
 	
 	final private SearchListener listener = new SearchListener();
 	
 	boolean active = false;
-	
-	class LocationCellRenderer extends JLabel implements ListCellRenderer
+
+	abstract class CustomCellRenderer<T> implements ListCellRenderer<T>
 	{
-	  LocationCellRenderer()
+	  private javax.swing.plaf.basic.BasicComboBoxRenderer renderer;
+	  
+	  CustomCellRenderer()
 	  {
-	    setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+	    renderer = new javax.swing.plaf.basic.BasicComboBoxRenderer();
 	  }
 	  
-	  public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus)
+    public Component getListCellRendererComponent(JList<? extends T> list, T obj, int index, boolean isSelected, boolean cellHasFocus)
+    {
+      JLabel label = (JLabel)renderer.getListCellRendererComponent(list, obj, index, isSelected, cellHasFocus);
+
+      customRendering(label, obj);
+      return label;
+    }
+    
+    abstract void customRendering(JLabel label, T value);
+	}
+	
+	class LocationCellRenderer extends CustomCellRenderer<Location>
+	{
+	  @Override
+	  void customRendering(JLabel label, Location location)
 	  {
-	    Location location = (Location)value;
-      
-      if (isSelected)
+      if (location == null)
       {
-        setBackground(list.getSelectionBackground());
-        setForeground(list.getSelectionForeground());
-      } 
-      else 
-      {
-        setBackground(list.getBackground());
-        setForeground(list.getForeground());
-      }
-      
-      if (value == null)
-      {
-        setText(Text.LOCATION_TITLE.text());
-        setIcon(null);
+        label.setText(Text.LOCATION_TITLE.text());
+        label.setIcon(null);
       }
       else
       {
-        setText(location.fullName);
-        setIcon(location.icon);
+        label.setText(location.fullName);
+        label.setIcon(location.icon.getIcon());
       }
-      
-      return this;
-	  };
+	  }
 	}
+	
+	class LanguageCellRenderer extends CustomCellRenderer<Language>
+	{
+	  @Override
+	  void customRendering(JLabel label, Language language)
+	  {
+      if (language == null)
+        label.setText(Text.LANGUAGE_TITLE.text());
+      else
+        label.setText(language.fullName);
+      
+      if (language != null && language.icon != null)
+        label.setIcon(language.icon.getIcon());
+      else
+        label.setIcon(null);
+	  }
+	}
+	
+  class RomSizeCellRenderer extends CustomCellRenderer<RomSize>
+  {
+    @Override
+    void customRendering(JLabel label, RomSize size)
+    {
+      if (size == null)
+        label.setText(Text.SIZE_TITLE.text());
+      else
+        label.setText(size.toString());
+    }
+  }
+  
+  private void setComboBoxSelectedBackground(JComboBox<?> comboBox)
+  {
+    Object child = comboBox.getAccessibleContext().getAccessibleChild(0);
+    javax.swing.plaf.basic.BasicComboPopup popup = (javax.swing.plaf.basic.BasicComboPopup)child;
+    JList<?> list = popup.getList();
+    list.setSelectionBackground(new Color(164,171,184)); //TODO: hacked
+  }
 	  
 	public SearchPanel()
 	{
@@ -69,16 +107,23 @@ public class SearchPanel extends JPanel
 		labels[2] = new JLabel();
 		labels[3] = new JLabel();		
 		
-		locations.addItem(null);
+
+		setComboBoxSelectedBackground(locations);
+		setComboBoxSelectedBackground(languages);
+		setComboBoxSelectedBackground(sizes);
 		
+		locations.addItem(null);
 		for (Location l : Location.values())
 		  if (l != Location.NONE)
 		    locations.addItem(l);
-		
 		locations.setRenderer(new LocationCellRenderer());
 		
+		languages.addItem(null);
 		for (Language l : Language.values())
 			languages.addItem(l);
+		languages.setRenderer(new LanguageCellRenderer());
+		
+		sizes.setRenderer(new RomSizeCellRenderer());
 
 		romName.addCaretListener(new FieldListener());
 		sizes.addActionListener(listener);
@@ -105,19 +150,16 @@ public class SearchPanel extends JPanel
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				sizes.removeAllItems();
-				sizes.addItem(Text.SIZE_TITLE.text());
+				sizes.addItem(null);
 				for (RomSize s : nsizes)
-				{
-					System.out.println(s.bytes+"  ->  "+s.toString());
 					sizes.addItem(s);
-				}
 			}
 		});
 		
 		romName.setText("");
-		sizes.setSelectedIndex(0);
-		locations.setSelectedIndex(0);
-		languages.setSelectedIndex(0);
+		sizes.setSelectedIndex(-1);
+		locations.setSelectedIndex(-1);
+		languages.setSelectedIndex(-1);
 	}
 	
 	class SearchListener implements ActionListener
@@ -126,9 +168,9 @@ public class SearchPanel extends JPanel
 		{
 			if (active)
 			{
-				RomSize size = sizes.getSelectedIndex() > 0 ? (RomSize)sizes.getSelectedItem() : null;
-				Location location = locations.getSelectedIndex() > 0 ? (Location)locations.getSelectedItem() : null;
-				Language language = languages.getSelectedIndex() > 0 ? (Language)languages.getSelectedItem() : null;
+				RomSize size = sizes.getItemAt(sizes.getSelectedIndex());
+				Location location = locations.getItemAt(locations.getSelectedIndex());
+				Language language = languages.getItemAt(languages.getSelectedIndex());
 				Main.romList.search(romName.getText(),size,location,language);
 			}
 				
@@ -141,9 +183,9 @@ public class SearchPanel extends JPanel
 		{
 			if (active)
 			{
-				RomSize size = sizes.getSelectedIndex() > 0 ? (RomSize)sizes.getSelectedItem() : null;
-				Location location = locations.getSelectedIndex() > 0 ? (Location)locations.getSelectedItem() : null;
-				Language language = languages.getSelectedIndex() > 0 ? (Language)languages.getSelectedItem() : null;
+				RomSize size = sizes.getItemAt(sizes.getSelectedIndex());
+        Location location = locations.getItemAt(locations.getSelectedIndex());
+        Language language = languages.getItemAt(languages.getSelectedIndex());
 				Main.romList.search(romName.getText(),size,location,language);
 			}
 		}

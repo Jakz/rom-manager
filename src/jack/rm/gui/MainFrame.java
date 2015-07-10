@@ -9,8 +9,6 @@ import javax.swing.event.*;
 import java.awt.event.*;
 import java.awt.*;
 
-import net.iharder.dnd.*;
-
 public class MainFrame extends JFrame
 {	
 	private static final long serialVersionUID = 1L;
@@ -37,28 +35,28 @@ public class MainFrame extends JFrame
 	final JMenuItem miTools[] = new JMenuItem[3];
 	
 	public final RomListModel romListModel = new RomListModel();
-	final public JList list = new JList();
+	final public JList<Rom> list = new JList<>();
 	final private JScrollPane listPane = new JScrollPane(list);
 	
-	public final JComboBox cbRomSets = new JComboBox();
+	public final JComboBox<RomSet> cbRomSets = new JComboBox<RomSet>();
 	public final RomSetListener rsListener = new RomSetListener();
 	
 	final MenuListener menuListener = new MenuListener();
 	
 	
+	final FileDrop fileDropper;
+	
 	final private CardLayout layout = new CardLayout();
 	final private JPanel cardMain = new JPanel(new BorderLayout());
 	final public ConsolePanel cardConsole = new ConsolePanel();
-	
-	final private FileDrop fileDropper;
-	
+		
 	public MainFrame()
 	{
 		initMenu();
 		
 		
 		list.setModel(romListModel);
-		list.setCellRenderer(new CellRenderer());
+		list.setCellRenderer(new RomCellRenderer());
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.setLayoutOrientation(JList.VERTICAL);
 		list.setFixedCellHeight(16);

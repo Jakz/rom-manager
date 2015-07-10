@@ -1,6 +1,5 @@
 package jack.rm.gui;
 
-import net.iharder.dnd.*;
 import jack.rm.Main;
 import jack.rm.Settings;
 import jack.rm.data.*;
@@ -53,8 +52,6 @@ public class FileDropperListener implements FileDrop.Listener
           
         }
       }
-      
-      
     }
   }
 }
