@@ -2,6 +2,8 @@ package jack.rm.data;
 
 import jack.rm.Main;
 import jack.rm.Paths;
+import jack.rm.Settings;
+
 import java.io.*;
 
 public class Rom implements Comparable<Rom>
@@ -89,7 +91,7 @@ public class Rom implements Comparable<Rom>
 		if (!f.exists()) return false;
 		else
 		{
-			if (Main.pref.booleanSetting("check-art-crc"))
+			if (Settings.current().checkImageCRC)
 			{
 				long icrc = Scanner.computeCRC(f);
 				return icrc == imgCRC1;
@@ -106,7 +108,7 @@ public class Rom implements Comparable<Rom>
 		if (!f.exists()) return false;
 		else
 		{
-			if (Main.pref.booleanSetting("check-art-crc"))
+			if (Settings.current().checkImageCRC)
 			{
 				long icrc = Scanner.computeCRC(f);
 				return icrc == imgCRC2;

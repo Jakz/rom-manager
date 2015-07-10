@@ -147,7 +147,7 @@ public class RomList
     {
       if (rom.status != RomStatus.NOT_FOUND)
       {  
-        String filename = rom.file.file().getName().substring(rom.file.file().getName().length()-4);
+        String filename = rom.file.plainName();
         
         if (rom.status == RomStatus.FOUND)
         {
@@ -155,7 +155,7 @@ public class RomList
             rom.status = RomStatus.INCORRECT_NAME;
         }
         else if (rom.status == RomStatus.INCORRECT_NAME)
-          if (!Renamer.isCorrectlyNamed(filename, rom))
+          if (Renamer.isCorrectlyNamed(filename, rom))
             rom.status = RomStatus.FOUND;
       }
     }
@@ -210,8 +210,8 @@ public class RomList
     {
       ProgressDialog.finished();
       
-      if (Main.pref.organizeRomsByNumber)
-        new OrganizeByFolderWorker(list, 100).execute();
+      if (Settings.current().organizeByFolders)
+        new OrganizeByFolderWorker(list, Settings.current().folderSize).execute();
       else
         PersistenceRom.consolidate(list);
     }

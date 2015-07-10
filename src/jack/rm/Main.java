@@ -13,9 +13,7 @@ import jack.rm.data.set.*;
 import jack.rm.gui.*;
 
 public class Main
-{
-	public static final Preferences pref = new Preferences();
-	
+{	
 	public static final RomList romList = new RomList();
 	
 	public static MainFrame mainFrame;
