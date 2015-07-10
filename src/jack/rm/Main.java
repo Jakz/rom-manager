@@ -11,6 +11,7 @@ import jack.rm.data.parser.*;
 import jack.rm.data.*;
 import jack.rm.data.set.*;
 import jack.rm.gui.*;
+import jack.rm.log.*;
 
 public class Main
 {	
@@ -72,17 +73,7 @@ public class Main
 	
 		Settings.consolidate();
 	}
-	
-	public static void log(String str)
-	{
-		mainFrame.cardConsole.append(str);
-	}
-	
-	public static void logln(String str)
-	{
-		mainFrame.cardConsole.appendln(str);
-	}
-	
+
 	enum OS
 	{
 	  WIN,

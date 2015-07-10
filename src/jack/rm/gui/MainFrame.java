@@ -167,7 +167,10 @@ public class MainFrame extends JFrame
 	void toggleConsole(boolean flag)
 	{
 		if (flag)
-			layout.last(this.getContentPane());
+		{
+			cardConsole.populate();
+		  layout.last(this.getContentPane());
+		}
 		else
 			layout.first(this.getContentPane());
 	}

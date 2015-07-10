@@ -3,6 +3,7 @@ package jack.rm.gui;
 import jack.rm.Main;
 import jack.rm.Settings;
 import jack.rm.data.*;
+import jack.rm.log.*;
 
 import java.io.File;
 
@@ -16,7 +17,6 @@ public class FileDropperListener implements FileDrop.Listener
     {
       if (file.isFile())
       {
-      
         ScanResult result = Main.scanner.scanFile(file);
       
         if (result != null)
@@ -48,9 +48,15 @@ public class FileDropperListener implements FileDrop.Listener
             ++Main.romList.countCorrect;
             --Main.romList.countNotFound;
             Main.mainFrame.updateTable();
+            
+            Log.log(LogType.MESSAGE, LogSource.IMPORTER, LogTarget.rom(result.rom), "Successfully imported new rom");
           }
+          else
+            Log.log(LogType.WARNING, LogSource.IMPORTER, LogTarget.rom(result.rom), "Imported file is a rom already included in romset, skipping import");
           
         }
+        else
+          Log.log(LogType.WARNING, LogSource.IMPORTER, LogTarget.file(file), "The file is not any recognized rom for this romset");
       }
     }
   }

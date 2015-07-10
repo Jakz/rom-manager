@@ -4,6 +4,7 @@ import jack.rm.Main;
 import jack.rm.PersistenceRom;
 import jack.rm.data.set.RomSet;
 import jack.rm.gui.ProgressDialog;
+import jack.rm.log.*;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -105,7 +106,7 @@ public class Scanner
 	  
 	  if (rom.status == RomStatus.FOUND)
 	  {
-      Main.logln("A duplicated rom has been found: "+rom.file+" and "+result.entry.file().getName()+".");
+	    Log.log(LogType.WARNING, LogSource.SCANNER, LogTarget.file(result.entry.file()), "File contains a rom already present in romset: "+rom.file);
 	  }
 	  else if (Renamer.isCorrectlyNamed(result.entry.plainName(), rom))
 	  {
@@ -126,12 +127,13 @@ public class Scanner
 	public ScanResult scanFile(File file)
 	{
 	  if (file.getName().endsWith(".zip"))
-    {
-      ZipFile zip = null;
-	    try
-      {
-        if (!existing.contains(file))
-        {         
+    {	    
+	    ZipFile zip = null;
+      
+      if (!existing.contains(file))
+      {    
+  	    try
+        {          
           zip = new ZipFile(file);
           Enumeration<? extends ZipEntry> enu = zip.entries();
           String fileName = file.getName();
@@ -149,14 +151,15 @@ public class Scanner
               return new ScanResult(rom, new RomFileEntry.Archive(file, entry.getName()));
             }
           }
+      
+          
+          zip.close();
+  
         }
-        
-        zip.close();
-
-      }
-      catch (Exception e)
-      {
-        Main.logln("[ERROR] Zipped file "+file.getName()+" is corrupt. Skipping.");
+        catch (Exception e)
+        {
+          Log.log(LogType.ERROR, LogSource.SCANNER, LogTarget.file(file), "Zipped file is corrupt, skipping");
+        }
       }
       
       return null;
@@ -182,12 +185,13 @@ public class Scanner
 		
 		if (total)
 		{
-			Main.logln("Scanning for roms in path "+RomSet.current.romPath()+"...");
+			Log.log(LogType.MESSAGE, LogSource.SCANNER, LogTarget.romset(RomSet.current), "Scanning for roms");
 			Main.romList.resetStatus();
 		}
 		else
 		{
-			Main.logln("Scanning for new roms in path "+RomSet.current.romPath()+"...");
+	    Log.log(LogType.MESSAGE, LogSource.SCANNER, LogTarget.romset(RomSet.current), "Scanning for new roms");
+
 			int c = Main.romList.count();
 			for (int j = 0; j < c; ++j)
 			{
@@ -208,7 +212,7 @@ public class Scanner
 		}
 		catch (NullPointerException e)
 		{
-			Main.logln("[ERROR] Roms path doesn't exist! Scanning will halt.");
+			Log.log(LogType.ERROR, LogSource.SCANNER, LogTarget.romset(RomSet.current), "Roms path doesn't exist! Scanning interrupted");
 			return;
 		}
 		catch (Exception e)
@@ -239,15 +243,7 @@ public class Scanner
 	    for (int i = 0; i < total; ++i)
 	    {
 	      setProgress((int)((((float)i)/total)*100));
-	      
-	      /*try {
-	      Thread.sleep(200);
-	      }
-	      catch (Exception e)
-	      {
-	        e.printStackTrace();
-	      }*/
-	      
+
 	      File f = files.get(i);
 	      ScanResult result = scanFile(f);
 	      foundRom(result);

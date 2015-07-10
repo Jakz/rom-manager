@@ -3,6 +3,10 @@ package jack.rm.data;
 import jack.rm.Main;
 import jack.rm.Settings;
 import jack.rm.data.set.RomSet;
+import jack.rm.log.Log;
+import jack.rm.log.LogSource;
+import jack.rm.log.LogTarget;
+import jack.rm.log.LogType;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -164,21 +168,22 @@ public class Renamer
       
       if (!finalPathF.exists() || !finalPathF.isDirectory())
       {
-        System.out.println("Creating "+finalPath);
         new File(finalPath).mkdirs();
+        Log.log(LogType.MESSAGE, LogSource.RENAMER, "Creating folder "+finalPath);
       }
       
       File newFile = new File(finalPath+rom.file.file().getName());
       
       if (newFile.exists())
       {
-        Main.logln("Cannot rename "+rom.number+" to "+newFile.toString()+", file exists.");
+        Log.log(LogType.ERROR, LogSource.RENAMER, LogTarget.rom(rom), "Cannot rename to "+newFile.toString()+", file exists");
       }
       else if (!newFile.equals(rom.file.file()))
-      {
-        Main.logln("Moving rom "+Renamer.formatNumber(rom.number)+" to "+finalPath);
+      {  
         while (!rom.file.file().renameTo(newFile));
         rom.file = rom.file.build(newFile);
+        
+        Log.log(LogType.MESSAGE, LogSource.RENAMER, LogTarget.rom(rom), "Moved rom to "+finalPath);
       }
     } 
 	}

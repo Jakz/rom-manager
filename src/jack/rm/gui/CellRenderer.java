@@ -4,7 +4,7 @@ import jack.rm.data.*;
 import javax.swing.*;
 import java.awt.*;
 
-class CellRenderer extends JLabel implements ListCellRenderer
+class CellRenderer extends JLabel implements ListCellRenderer<Rom>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -13,9 +13,8 @@ class CellRenderer extends JLabel implements ListCellRenderer
 		setOpaque(true);
 	}
 	
-	public Component getListCellRendererComponent(JList list, Object value, int index, boolean iss, boolean chf)
+	public Component getListCellRendererComponent(JList<? extends Rom> list, Rom rom, int index, boolean iss, boolean chf)
 	{
-		Rom rom = (Rom)value;
 		setFont(new Font("Default",Font.PLAIN,12));
 		setText(rom.toString());
 		

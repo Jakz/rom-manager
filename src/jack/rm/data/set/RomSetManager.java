@@ -5,6 +5,7 @@ import java.util.*;
 
 import jack.rm.*;
 import jack.rm.data.RomSize;
+import jack.rm.log.*;
 
 public class RomSetManager
 {
@@ -45,8 +46,8 @@ public class RomSetManager
 	
 	public static void loadSet(RomSet set)
 	{
-		Main.logln("Loading romset: "+set+"..");
-		
+		Log.log(LogType.MESSAGE, LogSource.STATUS, LogTarget.romset(set), "Loading romset");
+	  		
 		RomSet.current = set;
 		
 		new File(Paths.screensTitle()).mkdirs();

@@ -9,6 +9,7 @@ import java.util.*;
 import jack.rm.data.*;
 import jack.rm.data.set.RomSet;
 import jack.rm.data.set.RomSetManager;
+import jack.rm.log.*;
 
 public class PersistenceRom
 {
@@ -27,8 +28,6 @@ public class PersistenceRom
 	
 	public static void consolidate(RomList list)
 	{
-		Main.logln("Saving romset status on json..");
-		
 		List<PersistenceRom> roms = new ArrayList<PersistenceRom>();
 		
 		int s = list.count();
@@ -61,6 +60,8 @@ public class PersistenceRom
 		{
 			e.printStackTrace();
 		}
+		
+		Log.log(LogType.MESSAGE, LogSource.STATUS, LogTarget.romset(RomSet.current), "Romset status saved on json");
 	}
 	
 	public static boolean load(RomSet set)
