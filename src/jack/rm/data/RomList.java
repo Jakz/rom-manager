@@ -186,24 +186,9 @@ public class RomList
         
         if (rom.status == RomStatus.INCORRECT_NAME)
         {        
-          String renameTo = rom.file.file().getParent()+File.separator+Renamer.getCorrectName(rom)+".";
-          
-          if (rom.type != RomType.BIN)
-            renameTo += rom.type.ext;
-          else
-            renameTo += RomSet.current.type.exts[0];
-                  
-          File tmp = rom.file.file();
-          
-          File newF = new File(renameTo);
-          while (!tmp.renameTo(newF));
-          
-          rom.status = RomStatus.FOUND;
-          
-          ++list.countCorrect;
-          --list.countBadlyNamed;
-          
-          rom.file = rom.file.build(newF); 
+          Renamer.renameRom(rom);  
+          ++Main.romList.countCorrect;
+          --Main.romList.countBadlyNamed; 
         }
         
         publish(i);
@@ -253,41 +238,11 @@ public class RomList
       
       for (int i = 0; i < list.count(); ++i)
       {
-        Rom rom = list.get(i);
-        
         setProgress((int)((((float)i)/total)*100));
 
-        if (rom.status != RomStatus.NOT_FOUND)
-        {
-          int which = (rom.number - 1) / folderSize;
-          
-          String first = Renamer.formatNumber(folderSize*which+1);
-          String last = Renamer.formatNumber(folderSize*(which+1));
-          
-          String finalPath = RomSet.current.romPath()+first+"-"+last+File.separator;
-          
-          File finalPathF = new File(finalPath);
-          
-          if (!finalPathF.exists() || !finalPathF.isDirectory())
-          {
-            System.out.println("Creating "+finalPath);
-            new File(finalPath).mkdirs();
-          }
-          
-          File newFile = new File(finalPath+rom.file.file().getName());
-          
-          if (newFile.exists())
-          {
-            Main.logln("Cannot rename "+rom.number+" to "+newFile.toString()+", file exists.");
-          }
-          else if (!newFile.equals(rom.file.file()))
-          {
-            Main.logln("Moving rom "+Renamer.formatNumber(rom.number)+" to "+finalPath);
-            while (!rom.file.file().renameTo(newFile));
-            rom.file = rom.file.build(newFile);
-          }
-        } 
-        
+        Rom rom = list.get(i); 
+        Renamer.organizeRom(rom, folderSize);
+
         publish(i);
       }
   
@@ -340,7 +295,7 @@ public class RomList
         setProgress((int)((((float)i)/total)*100));
 
         try {
-          if (rom.status != RomStatus.NOT_FOUND && rom.file.type == RomFileEntry.EntryType.ARCHIVE)
+          if (rom.status != RomStatus.NOT_FOUND && rom.file.type == RomType.ZIP)
           {
             ZipFile zfile = new ZipFile(rom.file.file());
             //ZipFile ffile = new ZipFile()

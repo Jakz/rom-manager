@@ -31,7 +31,6 @@ public class Rom implements Comparable<Rom>
 	public String info;
 	
 	public RomFileEntry file;
-	public RomType type;
 	
 	public long imgCRC1;
 	public long imgCRC2;

@@ -6,21 +6,17 @@ import java.lang.reflect.Type;
 
 public abstract class RomFileEntry
 {
-  public final EntryType type;
+  public final RomType type;
   public abstract String toString();
   public abstract File file();
+  public abstract String plainName();
   public abstract RomFileEntry build(File file);
+
   
-  RomFileEntry(EntryType type)
+  RomFileEntry(RomType type)
   {
     this.type = type;
   }
-  
-  public static enum EntryType
-  {
-    BIN,
-    ARCHIVE
-  };
 
   public static class Bin extends RomFileEntry
   {
@@ -28,12 +24,13 @@ public abstract class RomFileEntry
 
     public Bin(File file)
     {
-      super(EntryType.BIN);
+      super(RomType.BIN);
       this.file = file;
     }
     
     public File file() { return file; }
     public String toString() { return file.getAbsolutePath(); }
+    public String plainName() { return file.getName().substring(0, file.getName().length()-4); }
     
     public RomFileEntry build(File file)
     {
@@ -48,13 +45,14 @@ public abstract class RomFileEntry
     
     public Archive(File file, String internalName)
     {
-      super(EntryType.ARCHIVE);
+      super(RomType.ZIP);
       this.file = file;
       this.internalName = internalName;
     }
     
     public File file() { return file; }
     public String toString() { return file.getAbsolutePath() + " ("+internalName+")"; }
+    public String plainName() { return file.getName().substring(0, file.getName().length()-4); }
     
     public RomFileEntry build(File file)
     {
@@ -69,13 +67,13 @@ public abstract class RomFileEntry
     {
       JsonObject obj = json.getAsJsonObject();
       
-      EntryType type = (EntryType)context.deserialize(obj.get("type"), EntryType.class);
+      RomType type = (RomType)context.deserialize(obj.get("type"), RomType.class);
       
       if (type != null)
       {
-        if (type == EntryType.BIN)
+        if (type == RomType.BIN)
           return new Bin(new File((String)context.deserialize(obj.get("file"), String.class)));
-        else if (type == EntryType.ARCHIVE)
+        else if (type == RomType.ZIP)
           return new Archive(new File((String)context.deserialize(obj.get("file"), String.class)), obj.get("internalName").getAsString());
       }      
       return null;
@@ -85,8 +83,8 @@ public abstract class RomFileEntry
     public JsonElement serialize(RomFileEntry entry, Type typeOfT, JsonSerializationContext context)
     {
       JsonObject json = new JsonObject();
-      EntryType entryType = entry.type;
-      json.add("type", context.serialize(entryType, EntryType.class));
+      RomType entryType = entry.type;
+      json.add("type", context.serialize(entryType, RomType.class));
       
       switch (entryType)
       {
@@ -95,7 +93,7 @@ public abstract class RomFileEntry
           json.add("file", context.serialize(entry.file().getAbsolutePath(), String.class));
           break;
         }
-        case ARCHIVE:
+        case ZIP:
         {
           json.add("file", context.serialize(entry.file().getAbsolutePath(), String.class));
           json.add("internalName", context.serialize(((Archive)entry).internalName, String.class));

@@ -96,13 +96,18 @@ public class Scanner
 		}
 	}
 	
-	public void foundRom(File file, String fileName, Rom rom, RomType type)
+	public void foundRom(ScanResult result)
 	{
+	  if (result == null)
+	    return;
+	  
+	  Rom rom = result.rom;
+	  
 	  if (rom.status == RomStatus.FOUND)
 	  {
-      Main.logln("A duplicated rom has been found: "+rom.file+" and "+file+".");
+      Main.logln("A duplicated rom has been found: "+rom.file+" and "+result.entry.file().getName()+".");
 	  }
-	  else if (Renamer.isCorrectlyNamed(fileName, rom))
+	  else if (Renamer.isCorrectlyNamed(result.entry.plainName(), rom))
 	  {
 	    rom.status = RomStatus.FOUND;
 	    ++Main.romList.countCorrect;
@@ -113,12 +118,12 @@ public class Scanner
 	    ++Main.romList.countBadlyNamed;
 	  }
 	  
-	  --Main.romList.countNotFound;
+	  rom.file = result.entry;
 	  
-	  rom.type = type;
+	  --Main.romList.countNotFound;
 	}
 	
-	public void scanFile(File file)
+	public ScanResult scanFile(File file)
 	{
 	  if (file.getName().endsWith(".zip"))
     {
@@ -128,7 +133,6 @@ public class Scanner
         {         
           Enumeration<? extends ZipEntry> enu = new ZipFile(file).entries();
           String fileName = file.getName();
-          fileName = fileName.substring(0, fileName.length()-4);
           
           while (enu.hasMoreElements())
           {
@@ -139,10 +143,8 @@ public class Scanner
             
             if (rom != null)
             {
-              Main.logln("Archive "+file.getName()+" contains file with CRC: "+curCrc+" that matches rom: "+rom.number+" "+rom.title);
-              
-              foundRom(file, fileName, rom, RomType.ZIP);
-              rom.file = new RomFileEntry.Archive(file, entry.getName());
+              //Main.logln("Archive "+file.getName()+" contains file with CRC: "+curCrc+" that matches rom: "+rom.number+" "+rom.title);
+              return new ScanResult(rom, new RomFileEntry.Archive(file, entry.getName()));
             }
           }
         }
@@ -151,6 +153,8 @@ public class Scanner
       {
         Main.logln("[ERROR] Zipped file "+file.getName()+" is corrupt. Skipping.");
       }
+      
+      return null;
     }
     else
     {
@@ -161,10 +165,8 @@ public class Scanner
       Rom rom = list.getByCRC(crc);
       
       if (rom != null)
-      {
-        foundRom(file, fileName, rom, RomType.BIN);
-        rom.file = new RomFileEntry.Bin(file);
-      }
+        return new ScanResult(rom, new RomFileEntry.Bin(file));
+      else return null;
     }
 	}
 	
@@ -209,9 +211,7 @@ public class Scanner
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
+
 	
 	
 	
@@ -244,7 +244,8 @@ public class Scanner
 	      }*/
 	      
 	      File f = files.get(i);
-	      scanFile(f);
+	      ScanResult result = scanFile(f);
+	      foundRom(result);
 	      publish(i);
 	    }
 	    

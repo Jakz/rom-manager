@@ -1,7 +1,10 @@
 package jack.rm.data;
 
+import jack.rm.Main;
 import jack.rm.Settings;
+import jack.rm.data.set.RomSet;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -30,7 +33,7 @@ public class Renamer
 	{
 		return !Settings.current().useRenamer || name.equals(getCorrectName(rom));
 	}
-	
+		
 	public static String getCorrectName(Rom rom)
 	{
 		String temp = new String(Settings.current().renamingPattern);
@@ -129,5 +132,58 @@ public class Renamer
 			else 
 				return name.replace(code,"M"+c);
 		}
+	}
+	
+	public static void renameRom(Rom rom)
+	{
+    String renameTo = rom.file.file().getParent()+File.separator+Renamer.getCorrectName(rom)+".";
+    
+    if (rom.file.type != RomType.BIN)
+      renameTo += rom.file.type.ext;
+    else
+      renameTo += RomSet.current.type.exts[0];
+            
+    File tmp = rom.file.file();
+    
+    File newF = new File(renameTo);
+    while (!tmp.renameTo(newF));
+    
+    rom.status = RomStatus.FOUND;
+
+    rom.file = rom.file.build(newF); 
+	}
+	
+	public static void organizeRom(Rom rom, int folderSize)
+	{
+	  if (rom.status != RomStatus.NOT_FOUND)
+    {
+      int which = (rom.number - 1) / folderSize;
+      
+      String first = Renamer.formatNumber(folderSize*which+1);
+      String last = Renamer.formatNumber(folderSize*(which+1));
+      
+      String finalPath = RomSet.current.romPath()+first+"-"+last+File.separator;
+      
+      File finalPathF = new File(finalPath);
+      
+      if (!finalPathF.exists() || !finalPathF.isDirectory())
+      {
+        System.out.println("Creating "+finalPath);
+        new File(finalPath).mkdirs();
+      }
+      
+      File newFile = new File(finalPath+rom.file.file().getName());
+      
+      if (newFile.exists())
+      {
+        Main.logln("Cannot rename "+rom.number+" to "+newFile.toString()+", file exists.");
+      }
+      else if (!newFile.equals(rom.file.file()))
+      {
+        Main.logln("Moving rom "+Renamer.formatNumber(rom.number)+" to "+finalPath);
+        while (!rom.file.file().renameTo(newFile));
+        rom.file = rom.file.build(newFile);
+      }
+    } 
 	}
 }

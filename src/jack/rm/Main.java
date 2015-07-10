@@ -4,6 +4,7 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import java.awt.Desktop;
+import java.awt.Font;
 import java.io.File;
 
 import jack.rm.data.parser.*;
@@ -36,8 +37,10 @@ public class Main
 		try {
 		  for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 		      if ("Nimbus".equals(info.getName())) {
+		        
 		        UIManager.setLookAndFeel(info.getClassName());
-		          break;
+		        //UIManager.getLookAndFeelDefaults().put("defaultFont", new Font("Helvetica", Font.PLAIN, 14));
+		        break;
 		      }
 		  }
 		} catch (Exception e) {

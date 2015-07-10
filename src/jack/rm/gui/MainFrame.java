@@ -9,6 +9,8 @@ import javax.swing.event.*;
 import java.awt.event.*;
 import java.awt.*;
 
+import net.iharder.dnd.*;
+
 public class MainFrame extends JFrame
 {	
 	private static final long serialVersionUID = 1L;
@@ -48,9 +50,12 @@ public class MainFrame extends JFrame
 	final private JPanel cardMain = new JPanel(new BorderLayout());
 	final public ConsolePanel cardConsole = new ConsolePanel();
 	
+	final private FileDrop fileDropper;
+	
 	public MainFrame()
 	{
 		initMenu();
+		
 		
 		list.setModel(romListModel);
 		list.setCellRenderer(new CellRenderer());
@@ -60,6 +65,8 @@ public class MainFrame extends JFrame
 		list.setBackground(Color.WHITE);
 		list.getSelectionModel().addListSelectionListener(new ListListener());
 		listPane.setPreferredSize(new Dimension(230,500));		
+		
+		fileDropper = new FileDrop(list, new FileDropperListener());
 		
 		menu.add(romsMenu);
 		menu.add(viewMenu);

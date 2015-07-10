@@ -283,7 +283,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		else
 		{
 	    openFolderButton.setEnabled(true);
-	    if (rom.type == RomType.ZIP)
+	    if (rom.file.type == RomType.ZIP)
 	      openArchiveButton.setEnabled(true);
 	      
 		  downloadButton.setEnabled(false);
