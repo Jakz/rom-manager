@@ -2,6 +2,8 @@ package jack.rm;
 
 import jack.rm.data.*;
 import jack.rm.data.set.RomSet;
+import jack.rm.gui.ProgressDialog;
+import jack.rm.gui.Callback;
 
 import java.util.concurrent.*;
 import java.nio.channels.*;
@@ -11,11 +13,12 @@ import java.io.*;
 public class Downloader
 {
 	public ThreadPoolExecutor pool;
+	int totalTasks;
+	int missingTasks;
 	boolean started;
 
 	Downloader()
 	{
-		pool = (ThreadPoolExecutor)Executors.newFixedThreadPool(10);
 	}
 	
 	public void start()
@@ -23,6 +26,7 @@ public class Downloader
 		if (started)
 			return;
 		
+    pool = (ThreadPoolExecutor)Executors.newFixedThreadPool(10);
 		started = true;
 		
 		for (int i = 0; i < Main.romList.count(); ++i)
@@ -33,7 +37,10 @@ public class Downloader
 				pool.submit(new ArtDownloaderTask(r, "title"));
 			if (!r.hasGameArt())
 				pool.submit(new ArtDownloaderTask(r, "game"));
+			
 		}
+				
+		ProgressDialog.init(Main.mainFrame, "Art Download", new Callback() { public void call() { pool.shutdownNow(); started = false; } });
 	}
 	
 	public static class TwinArtDownloaderTask implements Callable<Boolean>
@@ -70,7 +77,7 @@ public class Downloader
 			}
 			catch (FileNotFoundException e)
 			{
-				Main.logln("Downloaded art for "+Renamer.formatNumber(rom.number)+".");
+				//Main.logln("Downloaded art for "+Renamer.formatNumber(rom.number)+".");
 				Main.infoPanel.updateFields(rom);
 				return false;
 			}
@@ -80,13 +87,13 @@ public class Downloader
 				return false;
 			}
 
-			Main.logln("Downloaded art for "+Renamer.formatNumber(rom.number)+".");
+			//Main.logln("Downloaded art for "+Renamer.formatNumber(rom.number)+".");
 			Main.infoPanel.updateFields(rom);
 			return true;
 		}
 	}
 	
-	public static class ArtDownloaderTask implements Callable<Boolean>
+	public class ArtDownloaderTask implements Callable<Boolean>
 	{
 		String url, path;
 		String type;
@@ -111,26 +118,50 @@ public class Downloader
 		
 		public Boolean call()
 		{
-			try
+		  FileOutputStream fos = null;
+		  try
 			{
 				URL realUrl = new URL(url);
 				ReadableByteChannel rbc = Channels.newChannel(realUrl.openStream());
-				FileOutputStream fos = new FileOutputStream(path);
+				fos = new FileOutputStream(path);
 				fos.getChannel().transferFrom(rbc, 0, 1 << 24);
+				fos.close();
 			}
 			catch (FileNotFoundException e)
 			{
-				Main.logln("Downloaded art for "+Renamer.formatNumber(rom.number)+".");
+				//Main.logln("Downloaded art for "+Renamer.formatNumber(rom.number)+".");
 				Main.infoPanel.updateFields(rom);
 				return false;
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace();
+				try
+				{
+				  if (fos != null)
+				    fos.close();
+				}
+				catch (IOException ee)
+				{
+				  ee.printStackTrace();
+				}
+			  
+			  File partialDownload = new File(path);
+				if (partialDownload.exists())
+				{
+				  //Main.logln("Deleting partial artwork for "+Renamer.formatNumber(rom.number));
+				  partialDownload.delete();
+				}
+
 				return false;
 			}
 			
-			Main.logln("Downloaded art for "+Renamer.formatNumber(rom.number)+" ("+type+").");
+			//Main.logln("Downloaded art for "+Renamer.formatNumber(rom.number)+" ("+type+").");
+			
+			long completed = pool.getCompletedTaskCount();
+			long total = pool.getTaskCount(); 
+			
+			ProgressDialog.update(completed/(float)total, completed+" of "+total);
+			
 	    return true;
 		}
 	}

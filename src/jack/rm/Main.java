@@ -65,7 +65,9 @@ public class Main
 
 		RomSetManager.loadSet(Console.GBA);
 		
+		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setVisible(true);
+		
 	
 		Settings.consolidate();
 	}

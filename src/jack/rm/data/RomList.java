@@ -173,7 +173,7 @@ public class RomList
     @Override
     public Void doInBackground()
     {
-      ProgressDialog.init(Main.mainFrame, "Rom Rename");
+      ProgressDialog.init(Main.mainFrame, "Rom Rename", null);
       
       for (int i = 0; i < list.count(); ++i)
       {
@@ -245,7 +245,7 @@ public class RomList
     @Override
     public Void doInBackground()
     {
-      ProgressDialog.init(Main.mainFrame, "Rom Organize");
+      ProgressDialog.init(Main.mainFrame, "Rom Organize", null);
       
       for (int i = 0; i < list.count(); ++i)
       {
@@ -327,7 +327,7 @@ public class RomList
     @Override
     public Void doInBackground()
     {
-      ProgressDialog.init(Main.mainFrame, "Rom Zip Renamer");
+      ProgressDialog.init(Main.mainFrame, "Rom Zip Renamer", null);
       
       for (int i = 0; i < list.count(); ++i)
       {

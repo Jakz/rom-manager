@@ -2,3 +2,5 @@ screens
 roms
 data/ol-gba-ol
 data/as-nds-ol
+data/settings.json
+bin

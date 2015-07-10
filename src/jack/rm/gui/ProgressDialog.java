@@ -3,6 +3,7 @@ package jack.rm.gui;
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 
+import java.awt.event.*;
 import java.awt.*;
 
 public class ProgressDialog extends JDialog
@@ -12,10 +13,12 @@ public class ProgressDialog extends JDialog
 	JLabel title;
 	JLabel desc;
 	JProgressBar progress;
+	Callback callback;
 	
-	public ProgressDialog(Frame frame, String title)
+	public ProgressDialog(Frame frame, String title, Callback cb)
 	{
 		super(frame, title);
+		this.callback = cb;
 		
 		//this.setUndecorated(true);
 		
@@ -30,7 +33,16 @@ public class ProgressDialog extends JDialog
 		desc.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		panel.add(progress, BorderLayout.CENTER);
-		panel.add(desc, BorderLayout.SOUTH);
+		panel.add(desc, BorderLayout.NORTH);
+		
+		if (callback != null)
+		{
+		  JButton cancelButton = new JButton("Cancel");
+		  panel.add(cancelButton, BorderLayout.SOUTH);
+		  cancelButton.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) { callback.call(); finished(); }
+		  });
+		}
 		
 		panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		
@@ -42,14 +54,14 @@ public class ProgressDialog extends JDialog
 	
 	public ProgressDialog()
 	{
-		this(null, "");
+		this(null, "", null);
 	}
 
 	private static ProgressDialog dialog;
 	
-	public static void init(Frame parent, String title)
+	public static void init(Frame parent, String title, Callback callback)
 	{
-	  dialog = new ProgressDialog(parent, title);
+	  dialog = new ProgressDialog(parent, title, callback);
 	  dialog.progress.setMaximum(100);
 	  dialog.progress.setValue(0);
 	  dialog.setVisible(true);
@@ -58,6 +70,12 @@ public class ProgressDialog extends JDialog
 	public static void update(SwingWorker<?,?> worker, String desc)
 	{
 	  dialog.progress.setValue(worker.getProgress());
+	  dialog.desc.setText(desc);
+	}
+	
+	public static void update(float value, String desc)
+	{
+	  dialog.progress.setValue((int)(value*100));
 	  dialog.desc.setText(desc);
 	}
 	

@@ -65,7 +65,11 @@ public class Scanner
 			
 			while (cis.read(buf) >= 0);
 			
-			return cis.getChecksum().getValue();
+			long crc = cis.getChecksum().getValue();
+			
+			cis.close();
+			
+			return crc;
 		}
 		catch (Exception e)
 		{
@@ -225,7 +229,7 @@ public class Scanner
 	  @Override
 	  public Void doInBackground()
 	  {
-	    ProgressDialog.init(Main.mainFrame, "Rom Scan");
+	    ProgressDialog.init(Main.mainFrame, "Rom Scan", null);
 	    
 	    for (int i = 0; i < total; ++i)
 	    {
