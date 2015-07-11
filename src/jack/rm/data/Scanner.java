@@ -2,6 +2,7 @@ package jack.rm.data;
 
 import jack.rm.Main;
 import jack.rm.PersistenceRom;
+import jack.rm.Settings;
 import jack.rm.data.set.RomSet;
 import jack.rm.files.*;
 import jack.rm.gui.ProgressDialog;
@@ -55,9 +56,10 @@ public class Scanner
 	  Rom rom = result.rom;
 	  
 	  if (rom.status != RomStatus.NOT_FOUND)
-	  {
+	  {	    
 	    clones.add(result);
-	    Log.log(LogType.WARNING, LogSource.SCANNER, LogTarget.file(result.entry.file()), "File contains a rom already present in romset: "+rom.entry);
+	    Log.log(LogType.WARNING, LogSource.SCANNER, LogTarget.file(Settings.current().romsPath.relativize(result.entry.file())), "File contains a rom already present in romset: "+rom.entry);
+	    return;
 	  }
 	  else if (Organizer.isCorrectlyNamed(result.entry.plainName(), rom))
 	    rom.status = RomStatus.FOUND;
@@ -206,6 +208,9 @@ public class Scanner
 
 	    PersistenceRom.consolidate(list);
 	    ProgressDialog.finished();
+	    
+	    if (!clones.isEmpty())
+	      Main.clonesDialog.activate(Main.romList, clones);
 	  }
 	  
 	}

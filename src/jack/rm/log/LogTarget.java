@@ -64,7 +64,7 @@ public abstract class LogTarget
     }
     
     @Override
-    public String toString() { return path.getFileName().toString(); }
+    public String toString() { return path.toString(); }
   }
   
   public static LogTarget none() { return new None(); }

@@ -22,6 +22,8 @@ public class Main
 	public static RenamerPanel renamerPanel;
 	public static OptionsFrame optionsFrame;
 	
+	public static ClonesDialog clonesDialog;
+	
 	
 	public static Scanner scanner;
 	public static Downloader downloader;
@@ -58,6 +60,7 @@ public class Main
 		
 		optionsFrame = new OptionsFrame();
 		
+		
 		scanner = new Scanner(romList);
 		downloader = new Downloader();
 
@@ -65,6 +68,8 @@ public class Main
 		
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setVisible(true);
+		
+    clonesDialog = new ClonesDialog(mainFrame, "Rom Clones");
 		
 	
 		Settings.consolidate();

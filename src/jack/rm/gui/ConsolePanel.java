@@ -74,8 +74,7 @@ public class ConsolePanel extends JPanel
 	      
 	      return label;
 	    }
-	  }
-	    
+	  } 
 	}
 	
 	private final JTable table;

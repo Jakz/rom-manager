@@ -119,8 +119,14 @@ public class Rom implements Comparable<Rom>
 	}
 	
 	@Override
+	public boolean equals(Object other)
+	{
+	  return other instanceof Rom && ((Rom)other).number == number;
+	}
+	
+	@Override
   public int compareTo(Rom rom)
 	{
-		return number < rom.number ? -1 : (number == rom.number ? 0 : 1);
+		return number - rom.number;
 	}
 }
