@@ -1,6 +1,7 @@
 package jack.rm.data.set;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
 
 import jack.rm.*;
@@ -13,12 +14,19 @@ public class RomSetManager
 	
 	static
 	{
-		sets.put(Console.GBA, new GBA());
-		sets.put(Console.NDS, new NDS());
-		sets.put(Console.GBC, new GBC());
-		sets.put(Console.NES, new NES());
-		sets.put(Console.GB, new GB());
-		sets.put(Console.WS, new WS());
+		try
+		{
+		  sets.put(Console.GBA, new GBA());
+		  sets.put(Console.NDS, new NDS());
+		  sets.put(Console.GBC, new GBC());
+		  sets.put(Console.NES, new NES());
+		  sets.put(Console.GB, new GB());
+		  sets.put(Console.WS, new WS());
+		}
+		catch (Exception e)
+		{
+		  e.printStackTrace();
+		}
 		
 		Settings.load();
 	}
@@ -50,10 +58,17 @@ public class RomSetManager
 	  		
 		RomSet.current = set;
 		
-		new File(Paths.screensTitle()).mkdirs();
-		new File(Paths.screensGame()).mkdirs();
-		//new File(set.romPath).mkdirs();
-		
+		try
+		{
+		  Files.createDirectories(Settings.screensTitle());
+		  Files.createDirectories(Settings.screensGame());
+		}
+		catch (IOException e)
+		{
+		  e.printStackTrace();
+		  // TODO: log
+		}
+
 		Main.romList.clear();
 		
 		RomSize.mapping.clear();

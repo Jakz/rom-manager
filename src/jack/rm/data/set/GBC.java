@@ -3,15 +3,18 @@ package jack.rm.data.set;
 import jack.rm.data.Rom;
 
 import java.awt.Dimension;
+import java.net.URL;
+import java.net.MalformedURLException;
 
 class GBC extends RomSetOfflineList
 {
-	public GBC()
+	public GBC() throws MalformedURLException
 	{
-		super(Console.GBC, Provider.NOINTRO, new Dimension(320,288), new Dimension(320,288),"http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20Gameboy%20Color/");
+		super(Console.GBC, Provider.NOINTRO, new Dimension(320,288), new Dimension(320,288), new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20Gameboy%20Color/"));
 	}
 	
-	public String downloadURL(Rom rom)
+	@Override
+  public String downloadURL(Rom rom)
 	{
 		//TODO FIX
 		

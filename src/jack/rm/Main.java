@@ -4,14 +4,10 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import java.awt.Desktop;
-import java.awt.Font;
-import java.io.File;
 
-import jack.rm.data.parser.*;
 import jack.rm.data.*;
 import jack.rm.data.set.*;
 import jack.rm.gui.*;
-import jack.rm.log.*;
 
 public class Main
 {	
@@ -94,7 +90,7 @@ public class Main
 	}
 	
 	private static OS os;
-	public static void openFolder(File folder)
+	public static void openFolder(java.io.File folder)
 	{
 	  try {
 	    Desktop.getDesktop().open(folder);

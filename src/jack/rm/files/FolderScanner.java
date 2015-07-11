@@ -1,43 +1,45 @@
 package jack.rm.files;
 
-import java.io.File;
-import java.io.FileFilter;
+import java.io.IOException;
+import java.nio.file.*;
 import java.util.Set;
 import java.util.HashSet;
 
 public class FolderScanner
 {
-  final Set<File> files;
-  final FileFilter filter;
+  final Set<Path> files;
+  final PathMatcher filter;
   
-  public FolderScanner(FileFilter filter)
+  public FolderScanner(PathMatcher filter)
   {
-    files = new HashSet<File>();
+    files = new HashSet<Path>();
     this.filter = filter;
   }
   
-  public Set<File> scan(File root)
+  public Set<Path> scan(Path root)
   {
-    if (root.isDirectory())
+    if (Files.isDirectory(root))
       innerScan(root);
     
     return files;
   }
   
-  private void innerScan(File folder)
+  private void innerScan(Path folder)
   {
-    File[] files = folder.listFiles(filter);
-        
-    for (int t = 0; t < files.length; ++t)
+    try (DirectoryStream<Path> stream = Files.newDirectoryStream(folder))
     {
-      if (files[t].isDirectory())
-      {
-        innerScan(files[t].getAbsoluteFile());
-      }
-      else 
-      {
-        this.files.add(files[t]);
-      }
+      stream.forEach( e ->
+      {                
+        if (Files.isDirectory(e))
+           innerScan(e);
+        else if (filter.matches(e.getFileName()))
+          files.add(e);
+      });
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+      //TODO: log
     }
   }
 }

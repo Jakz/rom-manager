@@ -9,8 +9,6 @@ import java.util.*;
 import java.util.stream.Stream;
 import java.io.*;
 import java.util.zip.*;
-import java.nio.file.Path;
-
 import javax.swing.SwingWorker;
 
 public class RomList
@@ -169,7 +167,7 @@ public class RomList
     {
       if (rom.status != RomStatus.NOT_FOUND)
       {  
-        String filename = rom.file.plainName();
+        String filename = rom.entry.plainName();
         
         if (rom.status == RomStatus.FOUND)
         {
@@ -317,11 +315,9 @@ public class RomList
         setProgress((int)((((float)i)/total)*100));
 
         try {
-          if (rom.status != RomStatus.NOT_FOUND && rom.file.type == RomType.ZIP)
+          if (rom.status != RomStatus.NOT_FOUND && rom.entry.type == RomType.ZIP)
           {
-            ZipFile zfile = new ZipFile(rom.file.file());
-            //ZipFile ffile = new ZipFile()
-            
+            ZipFile zfile = new ZipFile(rom.entry.file().toFile());
           } 
         }
         catch (Exception e) {

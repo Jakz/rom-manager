@@ -58,7 +58,8 @@ public class ConsolePanel extends JPanel
 	  
 	  class Renderer extends DefaultTableCellRenderer
 	  {
-	    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int r, int c)
+	    @Override
+      public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int r, int c)
 	    {
 	      JLabel label = (JLabel)super.getTableCellRendererComponent(table, value, isSelected, hasFocus, r, c);
 

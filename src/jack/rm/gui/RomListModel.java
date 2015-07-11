@@ -40,12 +40,14 @@ public class RomListModel extends AbstractListModel<Rom>
 		list.remove(index);
 	}
 	
-	public Rom getElementAt(int index)
+	@Override
+  public Rom getElementAt(int index)
 	{
 		return(list.get(index));
 	}
 	
-	public int getSize()
+	@Override
+  public int getSize()
 	{
 		return(list.size());
 	}
@@ -58,7 +60,8 @@ public class RomListModel extends AbstractListModel<Rom>
 	public void fireChanges()
 	{
 		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
+			@Override
+      public void run() {
 				Main.mainFrame.list.clearSelection();
 				fireIntervalRemoved(this,0,list.size());
 			}

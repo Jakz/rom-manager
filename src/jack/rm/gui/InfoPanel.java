@@ -11,7 +11,7 @@ import javax.swing.GroupLayout.Alignment;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.nio.file.*;
 import java.net.URI;
 
 public class InfoPanel extends JPanel implements ActionListener
@@ -172,7 +172,8 @@ public class InfoPanel extends JPanel implements ActionListener
 	public void setScreenSizes(final Dimension title, final Dimension game)
 	{
 		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
+			@Override
+      public void run() {
 				imgTitle.setPreferredSize(new Dimension(title.width+30,title.height));
 				imgScreen.setPreferredSize(new Dimension(game.width,game.height));
 				revalidate();
@@ -185,12 +186,12 @@ public class InfoPanel extends JPanel implements ActionListener
 	
 	ImageIcon loadImage(Rom rom, String type)
 	{
-		String path = null;
+		Path path = null;
 		int w,h;
 		long crc = -1L;
 		
 		if (rom == null)
-			path = "data/images/missing.png";
+			path = Paths.get("data/images/missing.png");
 		
 		if (type.equals("title"))
 		{
@@ -214,10 +215,9 @@ public class InfoPanel extends JPanel implements ActionListener
 		}
 		
 
-		File f = new File(path);
-		if (f.exists() && (!Settings.current().checkImageCRC || crc == Scanner.computeCRC(f)))
+		if (Files.exists(path) && (!Settings.current().checkImageCRC || crc == Scanner.computeCRC(path)))
 		{
-			ImageIcon i = new ImageIcon(path);
+			ImageIcon i = new ImageIcon(path.toString());
 			
 			Image img = i.getImage();
 			BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
@@ -268,7 +268,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		//fields[11].setText(rom.getClonesString());
 		fields[Field.SAVE_TYPE.index].setText(rom.save+rom.saveType());
 		fields[Field.COMMENT.index].setText(rom.info);
-		fields[Field.PATH.index].setText(rom.file != null ? rom.file.toString() : "");
+		fields[Field.PATH.index].setText(rom.entry != null ? rom.entry.toString() : "");
 		
 		imgTitle.setIcon(loadImage(rom,"title"));
 		imgScreen.setIcon(loadImage(rom,"game"));
@@ -283,7 +283,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		else
 		{
 	    openFolderButton.setEnabled(true);
-	    if (rom.file.type == RomType.ZIP)
+	    if (rom.entry.type == RomType.ZIP)
 	      openArchiveButton.setEnabled(true);
 	      
 		  downloadButton.setEnabled(false);
@@ -295,7 +295,8 @@ public class InfoPanel extends JPanel implements ActionListener
 			artButton.setEnabled(true);
 	}
 	
-	public void actionPerformed(ActionEvent e)
+	@Override
+  public void actionPerformed(ActionEvent e)
 	{
 		Object src = e.getSource();
 	  
@@ -312,11 +313,11 @@ public class InfoPanel extends JPanel implements ActionListener
 		}
 	  else if (src == openFolderButton)
 	  {
-	    Main.openFolder(rom.file.file().getParentFile());
+	    Main.openFolder(rom.entry.file().getParent().toFile());
 	  }
 	  else if (src == openArchiveButton)
 	  {
-	    Main.openFolder(rom.file.file());
+	    Main.openFolder(rom.entry.file().toFile());
 	  }
 		else if (src == artButton)
 		{

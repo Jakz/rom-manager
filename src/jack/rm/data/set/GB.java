@@ -3,15 +3,18 @@ package jack.rm.data.set;
 import jack.rm.data.Rom;
 
 import java.awt.Dimension;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 class GB extends RomSetOfflineList
 {
-	public GB()
+	public GB() throws MalformedURLException
 	{
-		super(Console.GB, Provider.NOINTRO, new Dimension(320,288), new Dimension(320,288),"http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20Gameboy/");
+		super(Console.GB, Provider.NOINTRO, new Dimension(320,288), new Dimension(320,288), new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20Gameboy/"));
 	}
 
-	public String downloadURL(Rom rom)
+	@Override
+  public String downloadURL(Rom rom)
 	{
 		//TODO FIX
 		String query1 = "http://www.emuparadise.me/roms/search.php?query=";

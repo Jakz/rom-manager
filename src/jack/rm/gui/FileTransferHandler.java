@@ -1,20 +1,19 @@
 package jack.rm.gui;
-import java.awt.Cursor;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
-import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 
 public class FileTransferHandler extends TransferHandler {
   public static interface Listener
   {
-    public void filesDropped(File[] files);
+    public void filesDropped(Path[] files);
   }
   
   private static final DataFlavor FILE_FLAVOR = DataFlavor.javaFileListFlavor;
@@ -40,10 +39,14 @@ public class FileTransferHandler extends TransferHandler {
     try
     {
       List<File> files = (List<File>)t.getTransferData(FILE_FLAVOR);
+      Path[] paths = new Path[files.size()];
       
+      for (int i = 0; i < paths.length; ++i)
+        paths[i] = files.get(i).toPath();
+
       support.setDropAction(LINK);
       
-      listener.filesDropped(files.toArray(new File[files.size()]));
+      listener.filesDropped(paths);
     } 
     catch (IOException e)
     {

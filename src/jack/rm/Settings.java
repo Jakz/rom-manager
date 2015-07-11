@@ -3,6 +3,7 @@ package jack.rm;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 import com.google.gson.*;
@@ -26,22 +27,26 @@ public class Settings
 	}
 	
 	private static class RomSetSerializer implements JsonSerializer<RomSet>, JsonDeserializer<RomSet> {
-		  public JsonElement serialize(RomSet src, Type typeOfSrc, JsonSerializationContext context) {
+		  @Override
+      public JsonElement serialize(RomSet src, Type typeOfSrc, JsonSerializationContext context) {
 		    return new JsonPrimitive(src.ident());
 		  }
 		  
-		  public RomSet deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+		  @Override
+      public RomSet deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			  	return RomSetManager.byIdent(json.getAsJsonPrimitive().getAsString());
 			  }
 		}
 	
 	private static class PathSerializer implements JsonSerializer<Path>, JsonDeserializer<Path> {
-	  public JsonElement serialize(Path src, Type type, JsonSerializationContext context)
+	  @Override
+    public JsonElement serialize(Path src, Type type, JsonSerializationContext context)
 	  {
 	    return new JsonPrimitive(src.toString());
 	  }
 	  
-	  public Path deserialize(JsonElement json, Type type, JsonDeserializationContext context)
+	  @Override
+    public Path deserialize(JsonElement json, Type type, JsonDeserializationContext context)
 	  {
 	    return java.nio.file.Paths.get(json.getAsString());
 	  }
@@ -145,5 +150,15 @@ public class Settings
 		romsPath = null;
 		unknownPath = null;
 	}
+
+  public static Path screensTitle()
+  {
+  	return Paths.get("screens/").resolve(RomSet.current.ident()).resolve("title/");
+  }
+
+  public static Path screensGame()
+  {
+    return Paths.get("screens/").resolve(RomSet.current.ident()).resolve("game/");
+  }
 
 }

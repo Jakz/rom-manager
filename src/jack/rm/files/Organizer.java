@@ -1,6 +1,5 @@
 package jack.rm.files;
 
-import jack.rm.Main;
 import jack.rm.Settings;
 import jack.rm.data.*;
 import jack.rm.data.set.*;
@@ -9,11 +8,10 @@ import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.log.LogType;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,8 +34,8 @@ public class Organizer
 	}
 	
 	public static boolean isCorrectlyNamed(String name, Rom rom)
-	{
-		return !Settings.current().useRenamer || name.equals(getCorrectName(rom));
+	{	  
+	  return !Settings.current().useRenamer || name.equals(getCorrectName(rom));
 	}
 		
 	public static String getCorrectName(Rom rom)
@@ -77,52 +75,62 @@ public class Organizer
 	
 	static class NumberPattern extends Pattern {
 		NumberPattern() { super("%n", "Release number in format 1234"); }
-		public String apply(String name, Rom rom) { return name.replace(code,format.format(rom.number)); }
+		@Override
+    public String apply(String name, Rom rom) { return name.replace(code,format.format(rom.number)); }
 	}
 	
 	static class TitlePattern extends Pattern {
 		TitlePattern() { super("%t", "Game title"); }
-		public String apply(String name, Rom rom) { return name.replace(code,rom.title); }
+		@Override
+    public String apply(String name, Rom rom) { return name.replace(code,rom.title); }
 	}
 	
 	static class PublisherPattern extends Pattern {
 		PublisherPattern() { super("%c", "Publisher"); }
-		public String apply(String name, Rom rom) { return name.replace(code,rom.publisher); }
+		@Override
+    public String apply(String name, Rom rom) { return name.replace(code,rom.publisher); }
 	}
 	
 	static class GroupPattern extends Pattern {
 		GroupPattern() { super("%g", "Releaser group"); }
-		public String apply(String name, Rom rom) { return name.replace(code,rom.group); }
+		@Override
+    public String apply(String name, Rom rom) { return name.replace(code,rom.group); }
 	}
 	
 	static class MegabyteSizePattern extends Pattern {
 		MegabyteSizePattern() { super("%s", "Size of the game dump in megabytes"); }
-		public String apply(String name, Rom rom) { return name.replace(code,rom.size.mbytesAsString()); }
+		@Override
+    public String apply(String name, Rom rom) { return name.replace(code,rom.size.mbytesAsString()); }
 	}
 	
 	static class MegabitSizePattern extends Pattern {
 		MegabitSizePattern() { super("%S", "Size of the game dump in megabits"); }
-		public String apply(String name, Rom rom) { return name.replace(code,rom.size.bitesAsStringShort()); }
+		@Override
+    public String apply(String name, Rom rom) { return name.replace(code,rom.size.bitesAsStringShort()); }
 	}
 	
 	static class FullLocationPattern extends Pattern {
 		FullLocationPattern() { super("%L", "Full location name"); }
-		public String apply(String name, Rom rom) { return name.replace(code,rom.location.fullName); }
+		@Override
+    public String apply(String name, Rom rom) { return name.replace(code,rom.location.fullName); }
 	}
 	
 	static class ShortLocationPattern extends Pattern {
 		ShortLocationPattern() { super("%a", "Short location name"); }
-		public String apply(String name, Rom rom) { return name.replace(code,rom.location.shortName); }
+		@Override
+    public String apply(String name, Rom rom) { return name.replace(code,rom.location.shortName); }
 	}
 	
 	static class TinyLocationPattern extends Pattern {
 		TinyLocationPattern() { super("%l", "Tiny location name"); }
-		public String apply(String name, Rom rom) { return name.replace(code,rom.location.tinyName); }
+		@Override
+    public String apply(String name, Rom rom) { return name.replace(code,rom.location.tinyName); }
 	}
 	
 	static class ShortLanguagePattern extends Pattern {
 		ShortLanguagePattern() { super("%i", "Short language"); }
-		public String apply(String name, Rom rom) {
+		@Override
+    public String apply(String name, Rom rom) {
 			int c = 0;
 			Language l = null;
 			
@@ -142,22 +150,20 @@ public class Organizer
 	
 	public static void renameRom(Rom rom)
 	{
-    String renameTo = rom.file.file().getParent()+File.separator+Organizer.getCorrectName(rom)+".";
+    Path renameTo = rom.entry.file().getParent();
     
-    if (rom.file.type != RomType.BIN)
-      renameTo += rom.file.type.ext;
+    if (rom.entry.type != RomType.BIN)
+      renameTo = renameTo.resolve(Organizer.getCorrectName(rom).toString()+"."+rom.entry.type.ext);
     else
-      renameTo += RomSet.current.type.exts[0];
-            
-    File tmp = rom.file.file();
-    
-    File newF = new File(renameTo);
-    
+      renameTo = renameTo.resolve(Organizer.getCorrectName(rom).toString()+"."+RomSet.current.type.exts[0]);
+
+    Path tmp = rom.entry.file();
+  
     try
     {
-      Files.move(tmp.toPath(), Paths.get(renameTo));
+      Files.move(tmp, renameTo);
       rom.status = RomStatus.FOUND;
-      rom.file = rom.file.build(newF);
+      rom.entry = rom.entry.build(renameTo);
     }
     catch (Exception e)
     {
@@ -177,7 +183,7 @@ public class Organizer
         String first = Organizer.formatNumber(folderSize*which+1);
         String last = Organizer.formatNumber(folderSize*(which+1));
         
-        Path finalPath = RomSet.current.romPath().resolve(first+"-"+last+File.separator);
+        Path finalPath = RomSet.current.romPath().resolve(first+"-"+last+java.io.File.separator);
   
         if (!Files.exists(finalPath) || !Files.isDirectory(finalPath))
         {
@@ -185,16 +191,16 @@ public class Organizer
           Log.log(LogType.MESSAGE, LogSource.ORGANIZER, "Creating folder "+finalPath);
         }
         
-        Path newFile = finalPath.resolve(rom.file.file().getName());
+        Path newFile = finalPath.resolve(rom.entry.file().getFileName());
                 
-        if (Files.exists(newFile))
+        if (!newFile.equals(rom.entry.file()) && Files.exists(newFile))
         {
           Log.log(LogType.ERROR, LogSource.ORGANIZER, LogTarget.rom(rom), "Cannot rename to "+newFile.toString()+", file exists");
         }
-        else if (!newFile.equals(rom.file.file()))
+        else if (!newFile.equals(rom.entry.file()))
         {  
-          Files.move(rom.file.file().toPath(), newFile);
-          rom.file = rom.file.build(newFile.toFile());
+          Files.move(rom.entry.file(), newFile);
+          rom.entry = rom.entry.build(newFile);
           Log.log(LogType.MESSAGE, LogSource.ORGANIZER, LogTarget.rom(rom), "Moved rom to "+finalPath);
         }    
       }
@@ -215,25 +221,25 @@ public class Organizer
 	    if (!Files.exists(path) || !Files.isDirectory(path))
 	      Files.createDirectory(path);
 
-	    Set<File> existing = list.stream()
+	    Set<Path> existing = list.stream()
 	      .filter( r -> r.status != RomStatus.NOT_FOUND )
-	      .map( r -> r.file.file())
+	      .map( r -> r.entry.file())
 	      .collect(Collectors.toSet());
 
-	    Set<File> total = new FolderScanner(new AllFileFilter()).scan(Settings.current().romsPath.toFile());
+	    Set<Path> total = new FolderScanner(FileSystems.getDefault().getPathMatcher("glob:*.*")).scan(Settings.current().romsPath);
 	    
 	    total.removeAll(existing);
 	    
 	    total.stream()
-	      .filter( f -> !f.getParentFile().equals(path.toFile()) )
+	      .filter( f -> !f.getParent().equals(path) )
 	      .forEach( f -> {
-	        Path dest = path.resolve(f.getName());
+	        Path dest = path.resolve(f.getFileName());
 	        int i = 1;
 	        
 	        while (Files.exists(dest))
-	          dest = path.resolve(f.getName()+(i++));
+	          dest = path.resolve(f.getFileName().toString()+(i++));
 
-	        try { Files.move(f.toPath(), dest); }
+	        try { Files.move(f, dest); }
 	        catch (IOException e) { e.printStackTrace(); /* TODO: log */ }
    
 	      });

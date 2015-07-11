@@ -3,12 +3,14 @@ package jack.rm.data.set;
 import jack.rm.data.Rom;
 
 import java.awt.Dimension;
+import java.net.URL;
+import java.net.MalformedURLException;
 
 class NDS extends RomSetOfflineList
 {
-	NDS()
+	NDS() throws MalformedURLException
 	{
-		super(Console.NDS, Provider.ADVANSCENE, new Dimension(214,384), new Dimension(256,384),"http://www.retrocovers.com/offline/imgs/ADVANsCEne_NDS/");
+		super(Console.NDS, Provider.ADVANSCENE, new Dimension(214,384), new Dimension(256,384), new URL("http://www.retrocovers.com/offline/imgs/ADVANsCEne_NDS/"));
 	}
 
 	/*
@@ -22,7 +24,8 @@ class NDS extends RomSetOfflineList
 		return "http://advanscene.com/html/Releases/imr2.php?id="+rom.imageNumber;
 	}*/
 
-	public String downloadURL(Rom rom)
+	@Override
+  public String downloadURL(Rom rom)
 	{
 		String query1 = "http://www.emuparadise.me/roms/search.php?query=";
 		String query2 = "&section=roms&sysid=32";

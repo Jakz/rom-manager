@@ -13,7 +13,8 @@ class CellRenderer extends JLabel implements ListCellRenderer<Rom>
 		setOpaque(true);
 	}
 	
-	public Component getListCellRendererComponent(JList<? extends Rom> list, Rom rom, int index, boolean iss, boolean chf)
+	@Override
+  public Component getListCellRendererComponent(JList<? extends Rom> list, Rom rom, int index, boolean iss, boolean chf)
 	{
 		setFont(new Font("Default",Font.PLAIN,12));
 		setText(rom.toString());

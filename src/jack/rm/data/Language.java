@@ -54,7 +54,8 @@ public enum Language
 		this(name, iso639_1, code, null);
 	}
 	
-	public String toString()
+	@Override
+  public String toString()
 	{
 		return fullName;
 	}

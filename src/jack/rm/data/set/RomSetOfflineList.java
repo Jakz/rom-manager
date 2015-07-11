@@ -1,11 +1,14 @@
 package jack.rm.data.set;
 
 import jack.rm.Main;
-import jack.rm.Paths;
+import jack.rm.Settings;
 import jack.rm.data.Rom;
 import jack.rm.data.parser.*;
 import jack.rm.files.Organizer;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Path;
 import java.awt.Dimension;
 
 import org.xml.sax.XMLReader;
@@ -14,42 +17,63 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 public abstract class RomSetOfflineList extends RomSet
 {
-	String artDownloadURL;
+	URL artDownloadURL;
 	
 	public RomSetOfflineList(Console type, Provider provider, Dimension screenTitle, Dimension screenGame)
 	{
 		super(type,provider,screenTitle,screenGame);
 	}
 	
-	public RomSetOfflineList(Console type, Provider provider, Dimension screenTitle, Dimension screenGame, String artDownloadURL)
+	public RomSetOfflineList(Console type, Provider provider, Dimension screenTitle, Dimension screenGame, URL artDownloadURL)
 	{
 		this(type,provider,screenTitle,screenGame);
 		this.artDownloadURL = artDownloadURL;
 	}
 	
-	public String titleImageURL(Rom rom)
+	@Override
+  public URL titleImageURL(Rom rom)
 	{
-		String partial = ((((rom.number-1)/500)*500)+1)+"-"+((((rom.number-1)/500+1)*500))+"/";
-		return artDownloadURL+partial+(rom.imageNumber)+"a.png";
+		try
+		{
+		  String partial = ((((rom.number-1)/500)*500)+1)+"-"+((((rom.number-1)/500+1)*500))+"/";
+		  return new URL(artDownloadURL, partial+(rom.imageNumber)+"a.png");
+		}
+		catch (MalformedURLException e)
+		{
+		  e.printStackTrace();
+		  return null;
+		}
 	}
 	
-	public String gameImageURL(Rom rom)
+	@Override
+  public URL gameImageURL(Rom rom)
 	{
-		String partial = ((((rom.number-1)/500)*500)+1)+"-"+((((rom.number-1)/500+1)*500))+"/";
-		return artDownloadURL+partial+(rom.imageNumber)+"b.png";
+    try
+    {
+      String partial = ((((rom.number-1)/500)*500)+1)+"-"+((((rom.number-1)/500+1)*500))+"/";
+		  return new URL(artDownloadURL, partial+(rom.imageNumber)+"b.png");
+    }
+    catch (MalformedURLException e)
+    {
+      e.printStackTrace();
+      return null;
+    }
 	}
 	
-	public String titleImage(Rom rom)
+	@Override
+  public Path titleImage(Rom rom)
 	{
-		return Paths.screensTitle()+Organizer.formatNumber(rom.imageNumber)+".png";
+		return Settings.screensTitle().resolve(Organizer.formatNumber(rom.imageNumber)+".png");
 	}
 	
-	public String gameImage(Rom rom)
+	@Override
+  public Path gameImage(Rom rom)
 	{
-		return Paths.screensGame()+Organizer.formatNumber(rom.imageNumber)+".png";
+		return Settings.screensGame().resolve(Organizer.formatNumber(rom.imageNumber)+".png");
 	}
 	
-	public String ident()
+	@Override
+  public String ident()
 	{
 		return provider.tag+"-"+type.tag+"-ol";
 	}
@@ -69,10 +93,12 @@ public abstract class RomSetOfflineList extends RomSet
 		}
 	}
 	
-	public void load()
+	@Override
+  public void load()
 	{
 		loadDat(new OfflineListXMLParser(Main.romList), datPath());
 	}
 	
-	public abstract String downloadURL(Rom rom);
+	@Override
+  public abstract String downloadURL(Rom rom);
 }

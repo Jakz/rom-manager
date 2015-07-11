@@ -22,7 +22,8 @@ public class OfflineListXMLParser extends DefaultHandler
 		this.romList = romList;
 	}
 
-	public void startElement(String namespaceURI, String localName, String qName, Attributes attr) throws SAXException
+	@Override
+  public void startElement(String namespaceURI, String localName, String qName, Attributes attr) throws SAXException
 	{			
 		if (localName.equals("game"))
 		{
@@ -46,7 +47,8 @@ public class OfflineListXMLParser extends DefaultHandler
 		return Integer.parseInt(asString());
 	}
 	
-	public void endElement(String namespaceURI, String localName, String qName) throws SAXException
+	@Override
+  public void endElement(String namespaceURI, String localName, String qName) throws SAXException
 	{
 		if (!started)
 			return;
@@ -112,7 +114,8 @@ public class OfflineListXMLParser extends DefaultHandler
 	
 	}
 	
-	public void characters(char[] ch, int start, int length)
+	@Override
+  public void characters(char[] ch, int start, int length)
 	{
 		buffer.write(ch,start,length);
 	}

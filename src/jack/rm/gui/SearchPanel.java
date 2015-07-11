@@ -34,6 +34,7 @@ public class SearchPanel extends JPanel
 	    renderer = new javax.swing.plaf.basic.BasicComboBoxRenderer();
 	  }
 	  
+    @Override
     public Component getListCellRendererComponent(JList<? extends T> list, T obj, int index, boolean isSelected, boolean cellHasFocus)
     {
       JLabel label = (JLabel)renderer.getListCellRendererComponent(list, obj, index, isSelected, cellHasFocus);
@@ -148,7 +149,8 @@ public class SearchPanel extends JPanel
 	public void resetFields(final RomSize[] nsizes)
 	{
 		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
+			@Override
+      public void run() {
 				sizes.removeAllItems();
 				sizes.addItem(null);
 				for (RomSize s : nsizes)
@@ -164,7 +166,8 @@ public class SearchPanel extends JPanel
 	
 	class SearchListener implements ActionListener
 	{
-		public void actionPerformed(ActionEvent e)
+		@Override
+    public void actionPerformed(ActionEvent e)
 		{
 			if (active)
 			{
@@ -179,7 +182,8 @@ public class SearchPanel extends JPanel
 	
 	class FieldListener implements CaretListener
 	{
-		public void caretUpdate(CaretEvent e)
+		@Override
+    public void caretUpdate(CaretEvent e)
 		{
 			if (active)
 			{

@@ -1,8 +1,6 @@
 package jack.rm.data;
 
-import java.io.File;
-
-public class ScanResult
+public class ScanResult implements Comparable<ScanResult>
 {
   public Rom rom;
   public RomFileEntry entry;
@@ -11,5 +9,11 @@ public class ScanResult
   {
     this.rom = rom;
     this.entry = entry;
+  }
+  
+  public int compareTo(ScanResult other)
+  {
+    int i = rom.compareTo(rom);
+    return i != 0 ? entry.file().compareTo(other.entry.file()) : i;
   }
 }

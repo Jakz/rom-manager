@@ -6,28 +6,28 @@ import jack.rm.data.*;
 import jack.rm.files.Organizer;
 import jack.rm.log.*;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class FileDropperListener implements FileTransferHandler.Listener
 {
-  public void filesDropped(File[] files)
+  @Override
+  public void filesDropped(Path[] files)
   {
     new Thread()
     {
       
+    @Override
     public void run()
     {
-    
       Path romsPath = Settings.current().romsPath;
       
-      for (File file : files)
+      for (Path file : files)
       {
         
-        if (file.isFile())
+        if (Files.isRegularFile(file))
         {
-          System.out.println("Processing "+file.getName());
+          System.out.println("Processing "+file.getFileName());
   
           
           ScanResult result = Main.scanner.scanFile(file);
@@ -40,24 +40,24 @@ public class FileDropperListener implements FileTransferHandler.Listener
             // a missing rom has been dropped on list
             if (result.rom.status == RomStatus.NOT_FOUND)
             {
-              result.rom.file = result.entry;
+              result.rom.entry = result.entry;
               Rom rom = result.rom;
               
               // first let's copy the file in the rompath
-              File romFile = rom.file.file();
-              if (!romFile.getParentFile().equals(romsPath))
+              Path romFile = rom.entry.file();
+              if (!romFile.getParent().equals(romsPath))
               {
-                Path destFile = romsPath.resolve(romFile.getName());
+                Path destFile = romsPath.resolve(romFile);
 
-                Files.move(romFile.toPath(), destFile);
+                Files.move(romFile, destFile);
                 
-                rom.file = rom.file.build(destFile.toFile());
+                rom.entry = rom.entry.build(destFile);
               }
               
               rom.status = RomStatus.FOUND;
               
               // rename it if needed
-              if (Settings.current().useRenamer && !Organizer.isCorrectlyNamed(rom.file.plainName(), rom))
+              if (Settings.current().useRenamer && !Organizer.isCorrectlyNamed(rom.entry.plainName(), rom))
                 Organizer.renameRom(rom);
               
               if (Settings.current().organizeByFolders)

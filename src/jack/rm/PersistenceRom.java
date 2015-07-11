@@ -8,7 +8,6 @@ import java.util.*;
 
 import jack.rm.data.*;
 import jack.rm.data.set.RomSet;
-import jack.rm.data.set.RomSetManager;
 import jack.rm.log.*;
 
 public class PersistenceRom
@@ -38,7 +37,7 @@ public class PersistenceRom
 			
 			if (r.status != RomStatus.NOT_FOUND)
 			{
-				PersistenceRom pr = new PersistenceRom(r.number, r.status, r.file);	
+				PersistenceRom pr = new PersistenceRom(r.number, r.status, r.entry);	
 				roms.add(pr);
 			}
 		}
@@ -80,7 +79,7 @@ public class PersistenceRom
 					
 					if (rom != null)
 					{
-					  rom.file = prom.file;
+					  rom.entry = prom.file;
 	          rom.status = prom.status;
 					}
 					

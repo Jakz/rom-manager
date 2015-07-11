@@ -24,9 +24,13 @@ public class RenamerPanel extends JPanel implements CaretListener
 	{
 		private static final long serialVersionUID = 1L;
 		
-		public int getColumnCount() { return 2; }
+		@Override
+    public int getColumnCount() { return 2; }
+    @Override
     public int getRowCount() { return Organizer.patterns.size();}
+    @Override
     public String getColumnName(int col) { return col == 0 ? "Code" : "Description"; }
+    @Override
     public Object getValueAt(int row, int col) {
     	Organizer.Pattern p = Organizer.patterns.get(row);
     	return col == 0 ? p.code : p.desc;
@@ -61,7 +65,8 @@ public class RenamerPanel extends JPanel implements CaretListener
 		patterns.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		patterns.addMouseListener(
 				new MouseAdapter(){
-					public void mouseClicked(MouseEvent e){
+					@Override
+          public void mouseClicked(MouseEvent e){
 						if (e.getClickCount() == 2){
 							int r = patterns.getSelectedRow();
 							
@@ -109,7 +114,8 @@ public class RenamerPanel extends JPanel implements CaretListener
 		patternField.setText(Settings.current().renamingPattern);
 	}
 
-	public void caretUpdate(CaretEvent e)
+	@Override
+  public void caretUpdate(CaretEvent e)
 	{
 		Settings.current().renamingPattern = patternField.getText();
 		exampleField.setText(Organizer.getCorrectName(Main.romList.get(0)));

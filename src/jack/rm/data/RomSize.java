@@ -83,12 +83,14 @@ public class RomSize implements Comparable<RomSize>
 		return bitesAsString(longSizesBit);
 	}
 		
-	public String toString()
+	@Override
+  public String toString()
 	{
 		return bitesAsStringLong();
 	}
 	
-	public int compareTo(RomSize s)
+	@Override
+  public int compareTo(RomSize s)
 	{
 		return bytes < s.bytes ? -1 : (bytes == s.bytes ? 0 : 1);
 	}

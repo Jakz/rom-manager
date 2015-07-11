@@ -7,38 +7,35 @@ import jack.rm.files.*;
 import jack.rm.gui.ProgressDialog;
 import jack.rm.log.*;
 
-import java.io.File;
+import java.nio.file.*;
 import java.util.*;
 import java.util.zip.*;
-import java.io.FileInputStream;
-
 import javax.swing.SwingWorker;
 
 public class Scanner
 {
 	RomList list;
 	
-	private Set<File> existing = new HashSet<File>();
-	private Set<File> foundFiles = new HashSet<File>();
+	private Set<Path> existing = new HashSet<>();
+	private Set<Path> foundFiles = new HashSet<>();
+	private Set<ScanResult> clones = new TreeSet<>();
+	
+	private PathMatcher archiveMatcher = FileSystems.getDefault().getPathMatcher("glob:*.{zip}");
 	
 	public Scanner(RomList list)
 	{
 		this.list = list;
 	}
 	
-	public static long computeCRC(File file)
+	public static long computeCRC(Path file)
 	{
-		try
+		try (CheckedInputStream cis = new CheckedInputStream(Files.newInputStream(file), new CRC32()))
 		{
-			CheckedInputStream cis = new CheckedInputStream(new FileInputStream(file), new CRC32());
-
 			byte[] buf = new byte[1024];
 			
 			while (cis.read(buf) >= 0);
 			
 			long crc = cis.getChecksum().getValue();
-			
-			cis.close();
 			
 			return crc;
 		}
@@ -54,30 +51,31 @@ public class Scanner
 	{
 	  if (result == null)
 	    return;
-	  
+	  	  
 	  Rom rom = result.rom;
 	  
-	  if (rom.status == RomStatus.FOUND)
+	  if (rom.status != RomStatus.NOT_FOUND)
 	  {
-	    Log.log(LogType.WARNING, LogSource.SCANNER, LogTarget.file(result.entry.file()), "File contains a rom already present in romset: "+rom.file);
+	    clones.add(result);
+	    Log.log(LogType.WARNING, LogSource.SCANNER, LogTarget.file(result.entry.file()), "File contains a rom already present in romset: "+rom.entry);
 	  }
 	  else if (Organizer.isCorrectlyNamed(result.entry.plainName(), rom))
 	    rom.status = RomStatus.FOUND;
 	  else
 	    rom.status = RomStatus.INCORRECT_NAME;
 	  
-	  rom.file = result.entry;
+	  rom.entry = result.entry;
 	}
 	
-	public ScanResult scanFile(File file)
+	public ScanResult scanFile(Path file)
 	{
 	  ScanResult result = null;
 	  
-	  if (file.getName().endsWith(".zip"))
-    {	          
-      if (!existing.contains(file))
+	  if (archiveMatcher.matches(file.getFileName()))
+    {	          	    
+	    if (!existing.contains(file))
       {    
-  	    try (ZipFile zip = new ZipFile(file))
+  	    try (ZipFile zip = new ZipFile(file.toFile()))
         {          
           Enumeration<? extends ZipEntry> enu = zip.entries();
           
@@ -103,8 +101,6 @@ public class Scanner
     else
     {
       long crc = computeCRC(file);
-      String fileName = file.getName();
-      fileName = fileName.substring(0, fileName.length()-4);
       
       Rom rom = list.getByCRC(crc);
       
@@ -118,6 +114,7 @@ public class Scanner
 	{
 		existing.clear();
 		foundFiles.clear();
+		clones.clear();
 		
 		if (total)
 		{
@@ -134,14 +131,14 @@ public class Scanner
 				Rom r = Main.romList.get(j);
 				
 				if (r.status != RomStatus.NOT_FOUND)
-					existing.add(r.file.file());
+					existing.add(r.entry.file());
 			}
 		}
 
 		try
 		{		
-			File folder = RomSet.current.romPath().toFile();
-			foundFiles = new FolderScanner(new CustomFileFilter(RomSet.current.type.exts)).scan(folder);
+			Path folder = RomSet.current.romPath();
+			foundFiles = new FolderScanner(RomSet.current.getFileMatcher()).scan(folder);
 			ScannerWorker worker = new ScannerWorker(foundFiles);
 			worker.execute();
 		}
@@ -159,26 +156,29 @@ public class Scanner
 	public class ScannerWorker extends SwingWorker<Void, Integer>
 	{
 	  private int total = 0;
-	  private final List<File> files;
+	  private final List<Path> files;
 	  
-	  ScannerWorker(Set<File> files)
+	  ScannerWorker(Set<Path> files)
 	  {
-	    this.files = new ArrayList<File>(files);
+	    this.files = new ArrayList<>(files);
 	    total = files.size();
 	  }
 
 	  @Override
 	  public Void doInBackground()
 	  {
-	    ProgressDialog.init(Main.mainFrame, "Rom Scan", null);
+	    ProgressDialog.init(Main.mainFrame, "Rom Scan", () -> cancel(true) );
 	    
 	    for (int i = 0; i < total; ++i)
 	    {
+	      if (isCancelled())
+	        return null;
+
 	      setProgress((int)((((float)i)/total)*100));
 
-	      File f = files.get(i);
+	      Path f = files.get(i);
 	      ScanResult result = scanFile(f);
-	      
+	      	      
 	      foundRom(result);
 	      Main.romList.updateStatus();
 	      
@@ -190,7 +190,10 @@ public class Scanner
 	  
 	  @Override
 	  public void process(List<Integer> v)
-	  {
+	  {	    
+	    if (isCancelled())
+        return;
+      	    
 	    ProgressDialog.update(this, "Scanning "+v.get(v.size()-1)+" of "+foundFiles.size()+"..");
 	    Main.mainFrame.updateTable();
 	  }
@@ -198,6 +201,9 @@ public class Scanner
 	  @Override
 	  public void done()
 	  {
+	    if (isCancelled())
+	      return;
+
 	    PersistenceRom.consolidate(list);
 	    ProgressDialog.finished();
 	  }

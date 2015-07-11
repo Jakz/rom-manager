@@ -1,11 +1,9 @@
 package jack.rm.data;
 
-import jack.rm.Main;
-import jack.rm.Paths;
 import jack.rm.Settings;
 import jack.rm.files.Organizer;
 
-import java.io.*;
+import java.nio.file.*;
 
 public class Rom implements Comparable<Rom>
 {
@@ -33,7 +31,7 @@ public class Rom implements Comparable<Rom>
 	
 	public String info;
 	
-	public RomFileEntry file;
+	public RomFileEntry entry;
 	
 	public long imgCRC1;
 	public long imgCRC2;
@@ -53,7 +51,8 @@ public class Rom implements Comparable<Rom>
 		
 	}
 	
-	public String toString()
+	@Override
+  public String toString()
 	{
 		return Organizer.getCorrectName(this);
 	}
@@ -87,9 +86,9 @@ public class Rom implements Comparable<Rom>
 	
 	public boolean hasTitleArt()
 	{
-		File f = new File(Paths.screensTitle()+Organizer.formatNumber(imageNumber)+".png");
+		Path f = Settings.screensTitle().resolve(Organizer.formatNumber(imageNumber)+".png");
 
-		if (!f.exists()) return false;
+		if (!Files.exists(f)) return false;
 		else
 		{
 			if (Settings.current().checkImageCRC)
@@ -104,9 +103,9 @@ public class Rom implements Comparable<Rom>
 	
 	public boolean hasGameArt()
 	{
-		File f = new File(Paths.screensGame()+Organizer.formatNumber(imageNumber)+".png");
-		
-		if (!f.exists()) return false;
+    Path f = Settings.screensGame().resolve(Organizer.formatNumber(imageNumber)+".png");
+    
+    if (!Files.exists(f)) return false;
 		else
 		{
 			if (Settings.current().checkImageCRC)
@@ -119,7 +118,8 @@ public class Rom implements Comparable<Rom>
 		}
 	}
 	
-	public int compareTo(Rom rom)
+	@Override
+  public int compareTo(Rom rom)
 	{
 		return number < rom.number ? -1 : (number == rom.number ? 0 : 1);
 	}

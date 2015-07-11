@@ -35,6 +35,7 @@ public abstract class LogTarget
       this.rom = rom;
     }
     
+    @Override
     public String toString() { return rom.title; }
   }
   
@@ -48,24 +49,26 @@ public abstract class LogTarget
       this.set = set;
     }
     
+    @Override
     public String toString() { return set.toString(); }
   }
   
   public static class File extends LogTarget
   {
-    private final java.io.File file;
+    private final java.nio.file.Path path;
     
-    File(java.io.File file)
+    File(java.nio.file.Path path)
     {
       super(Type.FILE);
-      this.file = file;
+      this.path = path;
     }
     
-    public String toString() { return file.getName(); }
+    @Override
+    public String toString() { return path.getFileName().toString(); }
   }
   
   public static LogTarget none() { return new None(); }
-  public static LogTarget file(java.io.File file) { return new File(file); }
+  public static LogTarget file(java.nio.file.Path file) { return new File(file); }
   public static LogTarget rom(jack.rm.data.Rom rom) { return new Rom(rom); }
   public static LogTarget romset(jack.rm.data.set.RomSet set) { return new RomSet(set); }
 

@@ -18,7 +18,8 @@ public abstract class LongTask extends Thread
 	
 	public abstract void executeTask();
 	
-	public void run()
+	@Override
+  public void run()
 	{
 		executeTask();
 	}

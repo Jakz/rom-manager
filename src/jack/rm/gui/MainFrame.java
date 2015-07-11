@@ -138,7 +138,8 @@ public class MainFrame extends JFrame implements WindowListener
 			
 	class ListListener implements ListSelectionListener
 	{
-		public void valueChanged(ListSelectionEvent e)
+		@Override
+    public void valueChanged(ListSelectionEvent e)
 		{	
 			if (e.getValueIsAdjusting())
 				return;
@@ -151,7 +152,7 @@ public class MainFrame extends JFrame implements WindowListener
 				return;
 			}
 			
-			Rom rom = (Rom)Main.mainFrame.romListModel.getElementAt(lsm.getMinSelectionIndex());
+			Rom rom = Main.mainFrame.romListModel.getElementAt(lsm.getMinSelectionIndex());
 			
 			Main.infoPanel.updateFields(rom);
 		}
@@ -159,7 +160,8 @@ public class MainFrame extends JFrame implements WindowListener
 	
 	class RomSetListener implements ActionListener
 	{
-		public void actionPerformed(ActionEvent e)
+		@Override
+    public void actionPerformed(ActionEvent e)
 		{
 			RomSetManager.loadSet((RomSet)cbRomSets.getSelectedItem());
 		}
@@ -189,14 +191,21 @@ public class MainFrame extends JFrame implements WindowListener
 		cbRomSets.addActionListener(rsListener);
 	}
 	
-	public void windowActivated(WindowEvent e) { }
-	public void windowClosed(WindowEvent e) { }
-	public void windowDeactivated(WindowEvent e) { }
-	public void windowIconified(WindowEvent e) { }
-	public void windowDeiconified(WindowEvent e) { }
-	public void windowOpened(WindowEvent e) { }
+	@Override
+  public void windowActivated(WindowEvent e) { }
+	@Override
+  public void windowClosed(WindowEvent e) { }
+	@Override
+  public void windowDeactivated(WindowEvent e) { }
+	@Override
+  public void windowIconified(WindowEvent e) { }
+	@Override
+  public void windowDeiconified(WindowEvent e) { }
+	@Override
+  public void windowOpened(WindowEvent e) { }
 	
-	public void windowClosing(WindowEvent e)
+	@Override
+  public void windowClosing(WindowEvent e)
 	{
     PersistenceRom.consolidate(Main.romList);
 	}

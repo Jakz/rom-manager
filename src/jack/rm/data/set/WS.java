@@ -3,15 +3,18 @@ package jack.rm.data.set;
 import jack.rm.data.Rom;
 
 import java.awt.Dimension;
+import java.net.URL;
+import java.net.MalformedURLException;
 
 class WS extends RomSetOfflineList
 {
-	public WS()
+	public WS() throws MalformedURLException
 	{
-		super(Console.WS, Provider.NOINTRO, new Dimension(448,448), new Dimension(448,448),"http://nointro.free.fr/imgs/Official%20No-Intro%20Bandai%20WonderSwan/");
+		super(Console.WS, Provider.NOINTRO, new Dimension(448,448), new Dimension(448,448), new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Bandai%20WonderSwan/"));
 	}
 
-	public String downloadURL(Rom rom)
+	@Override
+  public String downloadURL(Rom rom)
 	{
 		//TODO FIX
 		String query1 = "http://www.emuparadise.me/roms/search.php?query=";

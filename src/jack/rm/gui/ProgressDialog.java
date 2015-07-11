@@ -1,8 +1,6 @@
 package jack.rm.gui;
 
 import javax.swing.*;
-import javax.swing.GroupLayout.Alignment;
-
 import java.awt.event.*;
 import java.awt.*;
 
@@ -20,7 +18,7 @@ public class ProgressDialog extends JDialog
 		super(frame, title);
 		this.callback = cb;
 		
-		//this.setUndecorated(true);
+		this.setUndecorated(true);
 		
 		
 		JPanel panel = new JPanel();
@@ -39,13 +37,11 @@ public class ProgressDialog extends JDialog
 		{
 		  JButton cancelButton = new JButton("Cancel");
 		  panel.add(cancelButton, BorderLayout.SOUTH);
-		  cancelButton.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) { callback.call(); finished(); }
-		  });
+		  cancelButton.addActionListener( e -> { callback.call(); finished(); });
 		}
 		
 		panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-		
+
 		this.add(panel);
 		
 		pack();
