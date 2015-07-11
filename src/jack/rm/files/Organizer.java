@@ -1,21 +1,24 @@
-package jack.rm.data;
+package jack.rm.files;
 
 import jack.rm.Main;
 import jack.rm.Settings;
-import jack.rm.data.set.RomSet;
+import jack.rm.data.*;
+import jack.rm.data.set.*;
 import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.log.LogType;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
-public class Renamer
+public class Organizer
 {
 	public final static ArrayList<Pattern> patterns = new ArrayList<Pattern>();
 	
@@ -139,7 +142,7 @@ public class Renamer
 	
 	public static void renameRom(Rom rom)
 	{
-    String renameTo = rom.file.file().getParent()+File.separator+Renamer.getCorrectName(rom)+".";
+    String renameTo = rom.file.file().getParent()+File.separator+Organizer.getCorrectName(rom)+".";
     
     if (rom.file.type != RomType.BIN)
       renameTo += rom.file.type.ext;
@@ -166,42 +169,82 @@ public class Renamer
 	public static void organizeRom(Rom rom, int folderSize)
 	{
 	  if (rom.status != RomStatus.NOT_FOUND)
-    {
-      int which = (rom.number - 1) / folderSize;
-      
-      String first = Renamer.formatNumber(folderSize*which+1);
-      String last = Renamer.formatNumber(folderSize*(which+1));
-      
-      String finalPath = RomSet.current.romPath()+first+"-"+last+File.separator;
-      
-      File finalPathF = new File(finalPath);
-      
-      if (!finalPathF.exists() || !finalPathF.isDirectory())
-      {
-        new File(finalPath).mkdirs();
-        Log.log(LogType.MESSAGE, LogSource.RENAMER, "Creating folder "+finalPath);
-      }
-      
-      File newFile = new File(finalPath+rom.file.file().getName());
-      
-      if (newFile.exists())
-      {
-        Log.log(LogType.ERROR, LogSource.RENAMER, LogTarget.rom(rom), "Cannot rename to "+newFile.toString()+", file exists");
-      }
-      else if (!newFile.equals(rom.file.file()))
-      {  
-        try
+    {     
+      try
+      {      
+  	    int which = (rom.number - 1) / folderSize;
+        
+        String first = Organizer.formatNumber(folderSize*which+1);
+        String last = Organizer.formatNumber(folderSize*(which+1));
+        
+        Path finalPath = RomSet.current.romPath().resolve(first+"-"+last+File.separator);
+  
+        if (!Files.exists(finalPath) || !Files.isDirectory(finalPath))
         {
-          Files.move(rom.file.file().toPath(), newFile.toPath());
-          rom.file = rom.file.build(newFile);
-          Log.log(LogType.MESSAGE, LogSource.RENAMER, LogTarget.rom(rom), "Moved rom to "+finalPath);
+          Files.createDirectories(finalPath);
+          Log.log(LogType.MESSAGE, LogSource.ORGANIZER, "Creating folder "+finalPath);
         }
-        catch (Exception e)
+        
+        Path newFile = finalPath.resolve(rom.file.file().getName());
+                
+        if (Files.exists(newFile))
         {
-          //TODO: handle and log
-          e.printStackTrace();
-        }   
+          Log.log(LogType.ERROR, LogSource.ORGANIZER, LogTarget.rom(rom), "Cannot rename to "+newFile.toString()+", file exists");
+        }
+        else if (!newFile.equals(rom.file.file()))
+        {  
+          Files.move(rom.file.file().toPath(), newFile);
+          rom.file = rom.file.build(newFile.toFile());
+          Log.log(LogType.MESSAGE, LogSource.ORGANIZER, LogTarget.rom(rom), "Moved rom to "+finalPath);
+        }    
       }
+      catch (Exception e)
+      {
+        //TODO: handle and log
+        e.printStackTrace();
+      }   
     } 
+	}
+	
+	public static void moveUnknownFiles(RomList list)
+	{
+	  try
+	  {
+	    Path path = Settings.current().unknownPath;
+	  
+	    if (!Files.exists(path) || !Files.isDirectory(path))
+	      Files.createDirectory(path);
+
+	    Set<File> existing = list.stream()
+	      .filter( r -> r.status != RomStatus.NOT_FOUND )
+	      .map( r -> r.file.file())
+	      .collect(Collectors.toSet());
+
+	    Set<File> total = new FolderScanner(new AllFileFilter()).scan(Settings.current().romsPath.toFile());
+	    
+	    total.removeAll(existing);
+	    
+	    total.stream()
+	      .filter( f -> !f.getParentFile().equals(path.toFile()) )
+	      .forEach( f -> {
+	        Path dest = path.resolve(f.getName());
+	        int i = 1;
+	        
+	        while (Files.exists(dest))
+	          dest = path.resolve(f.getName()+(i++));
+
+	        try { Files.move(f.toPath(), dest); }
+	        catch (IOException e) { e.printStackTrace(); /* TODO: log */ }
+   
+	      });
+	    
+	    
+	  }
+	  catch (IOException e)
+	  {
+	    e.printStackTrace();
+	    // TODO: log
+	  }
+	  
 	}
 }

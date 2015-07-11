@@ -1,6 +1,7 @@
 package jack.rm.gui;
 
 import jack.rm.*;
+import jack.rm.files.Organizer;
 
 import java.awt.event.*;
 import javax.swing.*;
@@ -65,6 +66,10 @@ class MenuListener implements ActionListener
 		{
 			Main.downloader.start();
 		}
+    else if (tag == MenuElement.TOOLS_MOVE_UNKNOWN_FILES)
+    {
+      Organizer.moveUnknownFiles(Main.romList);
+    }
 		else if (tag == MenuElement.TOOLS_OPTIONS)
 		{
 			Main.optionsFrame.showMe();

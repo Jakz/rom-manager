@@ -2,7 +2,7 @@ package jack.rm.gui;
 
 import jack.rm.Main;
 import jack.rm.Settings;
-import jack.rm.data.Renamer;
+import jack.rm.files.Organizer;
 import jack.rm.i18n.Text;
 
 import javax.swing.*;
@@ -25,10 +25,10 @@ public class RenamerPanel extends JPanel implements CaretListener
 		private static final long serialVersionUID = 1L;
 		
 		public int getColumnCount() { return 2; }
-    public int getRowCount() { return Renamer.patterns.size();}
+    public int getRowCount() { return Organizer.patterns.size();}
     public String getColumnName(int col) { return col == 0 ? "Code" : "Description"; }
     public Object getValueAt(int row, int col) {
-    	Renamer.Pattern p = Renamer.patterns.get(row);
+    	Organizer.Pattern p = Organizer.patterns.get(row);
     	return col == 0 ? p.code : p.desc;
     }
 	};
@@ -67,7 +67,7 @@ public class RenamerPanel extends JPanel implements CaretListener
 							
 							if (r != -1)
 							{
-								String code = Renamer.patterns.get(r).code;
+								String code = Organizer.patterns.get(r).code;
 								int p = patternField.getCaretPosition();
 								String before = patternField.getText().substring(0, p);
 								String after = patternField.getText().substring(p);
@@ -112,6 +112,6 @@ public class RenamerPanel extends JPanel implements CaretListener
 	public void caretUpdate(CaretEvent e)
 	{
 		Settings.current().renamingPattern = patternField.getText();
-		exampleField.setText(Renamer.getCorrectName(Main.romList.get(0)));
+		exampleField.setText(Organizer.getCorrectName(Main.romList.get(0)));
 	}
 }

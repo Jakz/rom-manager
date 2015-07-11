@@ -2,11 +2,14 @@ package jack.rm.data;
 
 import jack.rm.*;
 import jack.rm.data.set.RomSet;
+import jack.rm.files.Organizer;
 import jack.rm.gui.ProgressDialog;
 
 import java.util.*;
+import java.util.stream.Stream;
 import java.io.*;
 import java.util.zip.*;
+import java.nio.file.Path;
 
 import javax.swing.SwingWorker;
 
@@ -170,11 +173,11 @@ public class RomList
         
         if (rom.status == RomStatus.FOUND)
         {
-          if (!Renamer.isCorrectlyNamed(filename, rom))
+          if (!Organizer.isCorrectlyNamed(filename, rom))
             rom.status = RomStatus.INCORRECT_NAME;
         }
         else if (rom.status == RomStatus.INCORRECT_NAME)
-          if (Renamer.isCorrectlyNamed(filename, rom))
+          if (Organizer.isCorrectlyNamed(filename, rom))
             rom.status = RomStatus.FOUND;
       }
     }
@@ -205,7 +208,7 @@ public class RomList
         
         if (rom.status == RomStatus.INCORRECT_NAME)
         {        
-          Renamer.renameRom(rom);  
+          Organizer.renameRom(rom);  
           ++Main.romList.countCorrect;
           --Main.romList.countBadlyNamed; 
         }
@@ -260,7 +263,7 @@ public class RomList
         setProgress((int)((((float)i)/total)*100));
 
         Rom rom = list.get(i); 
-        Renamer.organizeRom(rom, folderSize);
+        Organizer.organizeRom(rom, folderSize);
 
         publish(i);
       }
@@ -349,6 +352,8 @@ public class RomList
     
   }
   
+  public Stream<Rom> stream() { return list.stream(); }
+  
 	
 	public void renameRoms()
 	{
@@ -361,13 +366,13 @@ public class RomList
 	public void deleteEmptyFolders()
 	{
 		Queue<File> files = new LinkedList<File>();
-		files.add(new File(RomSet.current.romPath()));
+		files.add(RomSet.current.romPath().toFile());
 		
 		while (!files.isEmpty())
 		{
 			File f = files.poll();
 			File[] l = f.listFiles();
-			
+
 			for (File ff : l)
 			{
 				if (ff.isDirectory())

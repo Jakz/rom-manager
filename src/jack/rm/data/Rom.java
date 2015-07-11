@@ -3,6 +3,7 @@ package jack.rm.data;
 import jack.rm.Main;
 import jack.rm.Paths;
 import jack.rm.Settings;
+import jack.rm.files.Organizer;
 
 import java.io.*;
 
@@ -54,7 +55,7 @@ public class Rom implements Comparable<Rom>
 	
 	public String toString()
 	{
-		return Renamer.getCorrectName(this);
+		return Organizer.getCorrectName(this);
 	}
 	
 	public String languagesAsString()
@@ -86,7 +87,7 @@ public class Rom implements Comparable<Rom>
 	
 	public boolean hasTitleArt()
 	{
-		File f = new File(Paths.screensTitle()+Renamer.formatNumber(imageNumber)+".png");
+		File f = new File(Paths.screensTitle()+Organizer.formatNumber(imageNumber)+".png");
 
 		if (!f.exists()) return false;
 		else
@@ -103,7 +104,7 @@ public class Rom implements Comparable<Rom>
 	
 	public boolean hasGameArt()
 	{
-		File f = new File(Paths.screensGame()+Renamer.formatNumber(imageNumber)+".png");
+		File f = new File(Paths.screensGame()+Organizer.formatNumber(imageNumber)+".png");
 		
 		if (!f.exists()) return false;
 		else

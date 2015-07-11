@@ -2,6 +2,7 @@ package jack.rm;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.nio.file.Path;
 import java.util.*;
 
 import com.google.gson.*;
@@ -16,9 +17,11 @@ public class Settings
 	
 	static
 	{
-		GsonBuilder builder = new GsonBuilder();
-		builder.registerTypeAdapter(RomSet.class, new RomSetSerializer());
-		builder.registerTypeAdapter(RomFileEntry.class, new RomFileEntry.Adapter());
+		GsonBuilder builder = new GsonBuilder()
+		.registerTypeAdapter(RomSet.class, new RomSetSerializer())
+		.registerTypeAdapter(RomFileEntry.class, new RomFileEntry.Adapter())
+		.registerTypeAdapter(Path.class, new PathSerializer());
+		
 		loader = builder.setPrettyPrinting().create();
 	}
 	
@@ -31,6 +34,18 @@ public class Settings
 			  	return RomSetManager.byIdent(json.getAsJsonPrimitive().getAsString());
 			  }
 		}
+	
+	private static class PathSerializer implements JsonSerializer<Path>, JsonDeserializer<Path> {
+	  public JsonElement serialize(Path src, Type type, JsonSerializationContext context)
+	  {
+	    return new JsonPrimitive(src.toString());
+	  }
+	  
+	  public Path deserialize(JsonElement json, Type type, JsonDeserializationContext context)
+	  {
+	    return java.nio.file.Paths.get(json.getAsString());
+	  }
+	}
 	
 	public static Settings get(RomSet set)
 	{
@@ -93,8 +108,8 @@ public class Settings
 	
 	public RomSet set;
 	public String renamingPattern;
-	public String romsPath;
-	public String unknownPath;
+	public Path romsPath;
+	public Path unknownPath;
 	
 	public boolean checkImageCRC;
 	public boolean checkInsideArchives;

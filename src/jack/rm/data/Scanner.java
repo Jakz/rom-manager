@@ -3,11 +3,11 @@ package jack.rm.data;
 import jack.rm.Main;
 import jack.rm.PersistenceRom;
 import jack.rm.data.set.RomSet;
+import jack.rm.files.*;
 import jack.rm.gui.ProgressDialog;
 import jack.rm.log.*;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.util.*;
 import java.util.zip.*;
 import java.io.FileInputStream;
@@ -17,39 +17,9 @@ import javax.swing.SwingWorker;
 public class Scanner
 {
 	RomList list;
-	boolean scanSubdirectories = true;
 	
 	private Set<File> existing = new HashSet<File>();
 	private Set<File> foundFiles = new HashSet<File>();
-	
-	private static class CustomFilter implements FileFilter
-	{
-		String[] exts;
-		
-		CustomFilter(String[] exts)
-		{
-			this.exts = exts;
-		}
-		
-		public boolean accept(File file)
-		{
-			String name = file.getName();
-			
-			if (name.charAt(0) == '.')
-				return false;
-			
-			if (file.isDirectory() || name.endsWith("zip"))
-				return true;
-			
-			for (String s : exts)
-			{
-				if (name.endsWith(s))
-					return true;
-			}
-
-			return true;
-		}
-	}
 	
 	public Scanner(RomList list)
 	{
@@ -80,23 +50,6 @@ public class Scanner
 		return -1;
 	}
 	
-	public void scanFolder(File folder, CustomFilter filter)
-	{
-		File[] files = folder.listFiles(filter);
-		
-		for (int t = 0; t < files.length; ++t)
-		{
-			if (files[t].isDirectory())
-			{
-				scanFolder(files[t].getAbsoluteFile(), filter);
-			}
-			else 
-			{
-			  foundFiles.add(files[t]);
-			}
-		}
-	}
-	
 	public void foundRom(ScanResult result)
 	{
 	  if (result == null)
@@ -108,7 +61,7 @@ public class Scanner
 	  {
 	    Log.log(LogType.WARNING, LogSource.SCANNER, LogTarget.file(result.entry.file()), "File contains a rom already present in romset: "+rom.file);
 	  }
-	  else if (Renamer.isCorrectlyNamed(result.entry.plainName(), rom))
+	  else if (Organizer.isCorrectlyNamed(result.entry.plainName(), rom))
 	    rom.status = RomStatus.FOUND;
 	  else
 	    rom.status = RomStatus.INCORRECT_NAME;
@@ -187,9 +140,8 @@ public class Scanner
 
 		try
 		{		
-			File folder = new File(RomSet.current.romPath());
-			scanFolder(folder, new CustomFilter(RomSet.current.type.exts));
-			
+			File folder = RomSet.current.romPath().toFile();
+			foundFiles = new FolderScanner(new CustomFileFilter(RomSet.current.type.exts)).scan(folder);
 			ScannerWorker worker = new ScannerWorker(foundFiles);
 			worker.execute();
 		}
@@ -204,9 +156,6 @@ public class Scanner
 		}
 	}
 
-	
-	
-	
 	public class ScannerWorker extends SwingWorker<Void, Integer>
 	{
 	  private int total = 0;

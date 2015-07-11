@@ -3,10 +3,12 @@ package jack.rm.gui;
 import jack.rm.Main;
 import jack.rm.Settings;
 import jack.rm.data.*;
+import jack.rm.files.Organizer;
 import jack.rm.log.*;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class FileDropperListener implements FileTransferHandler.Listener
 {
@@ -18,7 +20,7 @@ public class FileDropperListener implements FileTransferHandler.Listener
     public void run()
     {
     
-      File romsPath = new File(Settings.current().romsPath);
+      Path romsPath = Settings.current().romsPath;
       
       for (File file : files)
       {
@@ -45,21 +47,21 @@ public class FileDropperListener implements FileTransferHandler.Listener
               File romFile = rom.file.file();
               if (!romFile.getParentFile().equals(romsPath))
               {
-                File destFile = new File(romsPath, romFile.getName());
-  
-                Files.move(romFile.toPath(), destFile.toPath());
+                Path destFile = romsPath.resolve(romFile.getName());
+
+                Files.move(romFile.toPath(), destFile);
                 
-                rom.file = rom.file.build(destFile);
+                rom.file = rom.file.build(destFile.toFile());
               }
               
               rom.status = RomStatus.FOUND;
               
               // rename it if needed
-              if (Settings.current().useRenamer && !Renamer.isCorrectlyNamed(rom.file.plainName(), rom))
-                Renamer.renameRom(rom);
+              if (Settings.current().useRenamer && !Organizer.isCorrectlyNamed(rom.file.plainName(), rom))
+                Organizer.renameRom(rom);
               
               if (Settings.current().organizeByFolders)
-                Renamer.organizeRom(rom, Settings.current().folderSize);
+                Organizer.organizeRom(rom, Settings.current().folderSize);
               
               
               Main.romList.updateStatus();

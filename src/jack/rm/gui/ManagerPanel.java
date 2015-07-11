@@ -69,12 +69,11 @@ public class ManagerPanel extends JPanel implements ActionListener
 		unknownPathButton.setEnabled(s.moveUnknownFiles);
 		moveUnknownFiles.setSelected(s.moveUnknownFiles);
 		
-		romsPath.setText(s.romsPath);
+		if (s.romsPath != null)
+		  romsPath.setText(s.romsPath.toString());
 		
-		if (s.moveUnknownFiles)
-			unknownPath.setText(s.unknownPath);
-		else
-			unknownPath.setText("");
+		if (s.unknownPath != null)
+		  unknownPath.setText(s.unknownPath.toString());
 		
 	}
 	
@@ -90,8 +89,9 @@ public class ManagerPanel extends JPanel implements ActionListener
 			{
 				File f = jfc.getSelectedFile();
 				
-				romsPath.setText(f.getPath()+File.separator);
-				Settings.current().romsPath = f.getPath()+File.separator;
+				
+				romsPath.setText(f.getPath());
+				Settings.current().romsPath = f.toPath();
 			}
 		}
 		else if (e.getSource() == unknownPathButton)
@@ -104,8 +104,8 @@ public class ManagerPanel extends JPanel implements ActionListener
 			{
 				File f = jfc.getSelectedFile();
 				
-				unknownPath.setText(f.getPath()+File.separator);
-				Settings.current().unknownPath = f.getPath()+File.separator;
+				unknownPath.setText(f.getPath());
+				Settings.current().unknownPath = f.toPath();
 			}
 		}
 		else if (e.getSource() == moveUnknownFiles)
@@ -115,11 +115,6 @@ public class ManagerPanel extends JPanel implements ActionListener
 			unknownPathButton.setEnabled(s.moveUnknownFiles);
 			unknownPath.setEnabled(s.moveUnknownFiles);
 			moveUnknownFiles.setSelected(s.moveUnknownFiles);
-			
-			if (!s.moveUnknownFiles)
-			{
-				unknownPath.setText("");
-			}
 		}
 	}
 }

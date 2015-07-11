@@ -4,6 +4,7 @@ import jack.rm.Paths;
 import jack.rm.Settings;
 import jack.rm.data.*;
 
+import java.nio.file.Path;
 import java.awt.Dimension;
 
 public abstract class RomSet
@@ -59,7 +60,7 @@ public abstract class RomSet
 		return screenTitle != null;
 	}
 	
-	public String romPath()
+	public Path romPath()
 	{
 		return Settings.get(this).romsPath;
 	}

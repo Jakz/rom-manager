@@ -2,9 +2,9 @@ package jack.rm.data.set;
 
 import jack.rm.Main;
 import jack.rm.Paths;
-import jack.rm.data.Renamer;
 import jack.rm.data.Rom;
 import jack.rm.data.parser.*;
+import jack.rm.files.Organizer;
 
 import java.awt.Dimension;
 
@@ -41,12 +41,12 @@ public abstract class RomSetOfflineList extends RomSet
 	
 	public String titleImage(Rom rom)
 	{
-		return Paths.screensTitle()+Renamer.formatNumber(rom.imageNumber)+".png";
+		return Paths.screensTitle()+Organizer.formatNumber(rom.imageNumber)+".png";
 	}
 	
 	public String gameImage(Rom rom)
 	{
-		return Paths.screensGame()+Renamer.formatNumber(rom.imageNumber)+".png";
+		return Paths.screensGame()+Organizer.formatNumber(rom.imageNumber)+".png";
 	}
 	
 	public String ident()

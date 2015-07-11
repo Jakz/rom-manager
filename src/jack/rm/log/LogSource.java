@@ -4,7 +4,7 @@ public enum LogSource
 {
   STATUS,
   DOWNLOADER,
-  RENAMER,
+  ORGANIZER,
   SCANNER,
   IMPORTER
 }
