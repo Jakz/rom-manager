@@ -57,10 +57,7 @@ public class ClonesDialog extends JDialog
       fireChanges();
     }
     
-    public void fireChanges()
-    {
-      this.fireTableDataChanged();
-    }
+    public void fireChanges() { this.fireTableDataChanged(); }
     
     class BooleanTableCellRenderer extends JCheckBox implements TableCellRenderer
     {
@@ -87,6 +84,7 @@ public class ClonesDialog extends JDialog
       
         setSelected((value != null && ((Boolean)value).booleanValue())); return this; 
       }
+      
       @Override public boolean isOpaque() { return true; }
     }
     
@@ -149,5 +147,32 @@ public class ClonesDialog extends JDialog
     model.fireChanges();
     this.setLocationRelativeTo(null);
     this.setVisible(true);
+  }
+  
+  public void autoChoose(boolean reset)
+  {
+    if (reset)
+      this.keep = this.clones.stream().collect(Collectors.toMap( c -> c, c -> false));
+    
+    List<List<ScanResult>> results = new ArrayList<>();
+    LinkedList<ScanResult> current = null;
+    
+    /* create a list for each rom with clones */
+    for (ScanResult result : this.clones)
+    {
+      if (current == null)
+      {
+        current = new LinkedList<>();
+        current.add(result);
+      }
+      else if (current.peekLast().rom.equals(result.rom))
+        current.add(result);
+      else
+      {
+        results.add(current);
+        current = null;
+      }
+    }
+    
   }
 }

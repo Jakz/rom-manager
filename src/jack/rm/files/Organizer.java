@@ -1,5 +1,6 @@
 package jack.rm.files;
 
+import jack.rm.OrganizerType;
 import jack.rm.Settings;
 import jack.rm.data.*;
 import jack.rm.data.set.*;
@@ -8,11 +9,15 @@ import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.log.LogType;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,6 +42,11 @@ public class Organizer
 	{	  
 	  return !Settings.current().useRenamer || name.equals(getCorrectName(rom));
 	}
+	
+	public static boolean isCorrectlyPlaced(Rom rom)
+	{
+	  return getCorrectFolder(rom).equals(rom.entry.file().getParent());
+	}
 		
 	public static String getCorrectName(Rom rom)
 	{
@@ -46,6 +56,31 @@ public class Organizer
 			temp = p.apply(temp, rom);
 		
 		return temp;
+	}
+	
+	public static Path getCorrectFolder(Rom rom)
+	{
+	  OrganizerType type = Settings.current().organizerType;
+	  int folderSize = Settings.current().folderSize;
+	  Path base = Settings.current().romsPath;
+	  Path folder = null;
+	  
+	  if (type == OrganizerType.ROM_NUMBER)
+	  {
+	    int which = (rom.number - 1) / folderSize;
+	    String first = Organizer.formatNumber(folderSize*which+1);
+	    String last = Organizer.formatNumber(folderSize*(which+1));
+	    folder = Paths.get(first+"-"+last+java.io.File.separator);
+	  }
+	  else if (type == OrganizerType.ALPHABETICAL)
+	  {
+	    String normalizedName = Normalizer.normalize(rom.title, Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+	    folder = Paths.get(normalizedName.toUpperCase().charAt(0)+java.io.File.separator);
+	  }
+	  else
+	    return null;
+	  
+	  return base.resolve(folder);
 	}
 	
 	public abstract static class Pattern {
@@ -172,18 +207,13 @@ public class Organizer
     }
 	}
 	
-	public static void organizeRom(Rom rom, int folderSize)
+	public static void organizeRom(Rom rom)
 	{
 	  if (rom.status != RomStatus.NOT_FOUND)
     {     
       try
       {      
-  	    int which = (rom.number - 1) / folderSize;
-        
-        String first = Organizer.formatNumber(folderSize*which+1);
-        String last = Organizer.formatNumber(folderSize*(which+1));
-        
-        Path finalPath = RomSet.current.romPath().resolve(first+"-"+last+java.io.File.separator);
+        Path finalPath = getCorrectFolder(rom);
   
         if (!Files.exists(finalPath) || !Files.isDirectory(finalPath))
         {
@@ -253,4 +283,27 @@ public class Organizer
 	  }
 	  
 	}
+	
+	public static void deleteEmptyFolders()
+  {
+    Queue<File> files = new LinkedList<File>();
+    files.add(RomSet.current.romPath().toFile());
+    
+    while (!files.isEmpty())
+    {
+      File f = files.poll();
+      File[] l = f.listFiles();
+
+      for (File ff : l)
+      {
+        if (ff.isDirectory())
+        {
+          if (ff.listFiles().length == 0)
+            ff.delete();
+          else
+            files.add(ff);
+        }
+      }
+    }
+  }
 }

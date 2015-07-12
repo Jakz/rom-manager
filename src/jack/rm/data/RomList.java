@@ -230,8 +230,11 @@ public class RomList
     {
       ProgressDialog.finished();
       
-      if (Settings.current().organizeByFolders)
+      if (Settings.current().shouldOrganize())
+      {
         new OrganizeByFolderWorker(list, Settings.current().folderSize).execute();
+        Organizer.deleteEmptyFolders(); // TODO: add check of settings
+      }
       else
         PersistenceRom.consolidate(list);
     }
@@ -261,7 +264,7 @@ public class RomList
         setProgress((int)((((float)i)/total)*100));
 
         Rom rom = list.get(i); 
-        Organizer.organizeRom(rom, folderSize);
+        Organizer.organizeRom(rom);
 
         publish(i);
       }
@@ -280,6 +283,7 @@ public class RomList
     public void done()
     {
       ProgressDialog.finished();
+      Organizer.deleteEmptyFolders(); // TODO: add check of settings
       PersistenceRom.consolidate(list);
       
       
@@ -357,28 +361,5 @@ public class RomList
 			return;
 		
 		new RenamerWorker(this).execute();
-	}
-
-	public void deleteEmptyFolders()
-	{
-		Queue<File> files = new LinkedList<File>();
-		files.add(RomSet.current.romPath().toFile());
-		
-		while (!files.isEmpty())
-		{
-			File f = files.poll();
-			File[] l = f.listFiles();
-
-			for (File ff : l)
-			{
-				if (ff.isDirectory())
-				{
-					if (ff.listFiles().length == 0)
-						ff.delete();
-					else
-						files.add(ff);
-				}
-			}
-		}
 	}
 }

@@ -60,8 +60,8 @@ public class FileDropperListener implements FileTransferHandler.Listener
               if (Settings.current().useRenamer && !Organizer.isCorrectlyNamed(rom.entry.plainName(), rom))
                 Organizer.renameRom(rom);
               
-              if (Settings.current().organizeByFolders)
-                Organizer.organizeRom(rom, Settings.current().folderSize);
+              if (Settings.current().shouldOrganize() && !Organizer.isCorrectlyPlaced(rom))
+                Organizer.organizeRom(rom);
               
               
               Main.romList.updateStatus();

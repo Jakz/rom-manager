@@ -121,7 +121,7 @@ public class Settings
 	public boolean moveUnknownFiles;
 		
 	public boolean useRenamer;
-	public boolean organizeByFolders;
+	public OrganizerType organizerType;
 	public boolean organizeByDeletingEmptyFolders;
 	public int folderSize;
 	public boolean renameInsideZips;
@@ -142,7 +142,7 @@ public class Settings
 		renameInsideZips = false;
 		stripUselessFilesInZips = false;
 		useRenamer = true;
-		organizeByFolders = true;
+		organizerType = OrganizerType.ALPHABETICAL;
 		organizeByDeletingEmptyFolders = false;
 		folderSize = 100;
 		
@@ -150,6 +150,8 @@ public class Settings
 		romsPath = null;
 		unknownPath = null;
 	}
+	
+	public boolean shouldOrganize() { return organizerType != OrganizerType.UNTOUCH; }
 
   public static Path screensTitle()
   {
