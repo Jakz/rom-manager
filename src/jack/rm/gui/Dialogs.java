@@ -1,0 +1,19 @@
+package jack.rm.gui;
+
+import javax.swing.JOptionPane;
+import java.awt.Component;
+import java.util.function.Function;
+
+public class Dialogs
+{
+  public static void showWarningDialog(String title, String message, Component parent)
+  {
+    JOptionPane.showMessageDialog(parent, message, title, JOptionPane.WARNING_MESSAGE);
+  }
+  
+  public static void showQuestionDialog(String title, String message, Component parent, Runnable callback)
+  {
+    if (JOptionPane.showConfirmDialog(parent, message, title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+      callback.run();
+  }
+}

@@ -11,7 +11,7 @@ import javax.swing.table.*;
 import java.awt.event.*;
 import java.awt.*;
 
-public class RenamerPanel extends JPanel implements CaretListener
+public class OrganizerPanel extends JPanel implements CaretListener
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -24,14 +24,11 @@ public class RenamerPanel extends JPanel implements CaretListener
 	{
 		private static final long serialVersionUID = 1L;
 		
-		@Override
-    public int getColumnCount() { return 2; }
-    @Override
-    public int getRowCount() { return Organizer.patterns.size();}
-    @Override
-    public String getColumnName(int col) { return col == 0 ? "Code" : "Description"; }
-    @Override
-    public Object getValueAt(int row, int col) {
+		@Override public int getColumnCount() { return 2; }
+    @Override public int getRowCount() { return Organizer.patterns.size();}
+    @Override public String getColumnName(int col) { return col == 0 ? "Code" : "Description"; }
+    
+    @Override public Object getValueAt(int row, int col) {
     	Organizer.Pattern p = Organizer.patterns.get(row);
     	return col == 0 ? p.code : p.desc;
     }
@@ -39,7 +36,7 @@ public class RenamerPanel extends JPanel implements CaretListener
 	
 	private TableModel model = new TableModel();
 	
-	public RenamerPanel()
+	public OrganizerPanel()
 	{
 		JPanel fields = new JPanel(new GridBagLayout());
 		JPanel main = new JPanel(new BorderLayout());
@@ -106,9 +103,7 @@ public class RenamerPanel extends JPanel implements CaretListener
 	{
 		c.gridx = x; c.gridy = y; c.gridwidth = w; c.gridheight = h;
 	}
-	
 
-	
 	public void updateFields()
 	{
 		patternField.setText(Settings.current().renamingPattern);

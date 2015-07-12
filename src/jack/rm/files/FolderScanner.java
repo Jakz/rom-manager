@@ -42,4 +42,15 @@ public class FolderScanner
       //TODO: log
     }
   }
+  
+  public static boolean isParent(Path path, Path parent)
+  {
+    while (path != null)
+      if (path.equals(parent))
+        return true;
+      else
+        path = path.getParent();
+    
+    return false;
+  }
 }

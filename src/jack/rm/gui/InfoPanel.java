@@ -34,7 +34,8 @@ public class InfoPanel extends JPanel implements ActionListener
     GROUP        (11, Text.ROM_INFO_GROUP),
     DUMP_DATE    (12, Text.ROM_INFO_DUMP_DATE),
     COMMENT      (13, Text.ROM_INFO_COMMENT),
-    PATH         (14, Text.ROM_INFO_PATH)
+    FILENAME     (14, Text.ROM_INFO_PATH),
+    PATH         (15, Text.ROM_INFO_PATH)
     ;
      
     public final int index;
@@ -102,7 +103,7 @@ public class InfoPanel extends JPanel implements ActionListener
 			labels[t] = new JLabel(Field.forIndex(t).title+":");
 			fields[t] = new JLabel();
 			
-			if (t < labels.length-1)
+			if (t < labels.length-2)
 				fields[t].setFont(f);
 			//fields[t].setEditable(false);
 			fields[t].setBackground(new Color(220,220,220));
@@ -155,7 +156,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		pTotal.add(pFields2);
 		
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.LINE_AXIS));
-		buttons.add(downloadButton);
+		//buttons.add(downloadButton);
 		buttons.add(artButton);
 		buttons.add(openFolderButton);
 		buttons.add(openArchiveButton);
@@ -268,7 +269,8 @@ public class InfoPanel extends JPanel implements ActionListener
 		//fields[11].setText(rom.getClonesString());
 		fields[Field.SAVE_TYPE.index].setText(rom.save+rom.saveType());
 		fields[Field.COMMENT.index].setText(rom.info);
-		fields[Field.PATH.index].setText(rom.entry != null ? rom.entry.toString() : "");
+    fields[Field.FILENAME.index].setText(rom.entry != null ? rom.entry.file().getFileName().toString() : "");
+		fields[Field.PATH.index].setText(rom.entry != null ? rom.entry.file().getParent().toString() : "");
 		
 		imgTitle.setIcon(loadImage(rom,"title"));
 		imgScreen.setIcon(loadImage(rom,"game"));

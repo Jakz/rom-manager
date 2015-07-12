@@ -19,7 +19,7 @@ public class Main
 	public static CountPanel countPanel;
 	
 	public static ManagerPanel romsetPanel;
-	public static RenamerPanel renamerPanel;
+	public static OrganizerPanel renamerPanel;
 	public static OptionsFrame optionsFrame;
 	
 	public static ClonesDialog clonesDialog;
@@ -56,7 +56,7 @@ public class Main
 		mainFrame = new MainFrame();
 		
 		romsetPanel = new ManagerPanel();
-		renamerPanel = new RenamerPanel();
+		renamerPanel = new OrganizerPanel();
 		
 		optionsFrame = new OptionsFrame();
 		

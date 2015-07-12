@@ -232,7 +232,7 @@ public class RomList
       
       if (Settings.current().shouldOrganize())
       {
-        new OrganizeByFolderWorker(list, Settings.current().folderSize).execute();
+        new OrganizeByFolderWorker(list).execute();
         Organizer.deleteEmptyFolders(); // TODO: add check of settings
       }
       else
@@ -245,13 +245,11 @@ public class RomList
   {
     private int total = 0;
     private final RomList list;
-    private final int folderSize;
     
-    OrganizeByFolderWorker(RomList list, int folderSize)
+    OrganizeByFolderWorker(RomList list)
     {
       this.list = list;
       total = list.count();
-      this.folderSize = folderSize;
     }
 
     @Override

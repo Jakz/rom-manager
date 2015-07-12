@@ -6,13 +6,16 @@ import jack.rm.data.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Frame;
 import java.util.*;
+import java.util.function.*;
 import java.util.stream.Collectors;
 
 import jack.rm.data.ScanResult;
+import jack.rm.files.Organizer;
 
 public class ClonesDialog extends JDialog
 {
@@ -55,6 +58,7 @@ public class ClonesDialog extends JDialog
       
       clones.stream().filter( c -> c.rom == result.rom && c != result ).forEach( c -> keep.put(c, false) );
       fireChanges();
+      updateStatus();
     }
     
     public void fireChanges() { this.fireTableDataChanged(); }
@@ -109,6 +113,39 @@ public class ClonesDialog extends JDialog
     }
   }
   
+  private enum ClonePolicy
+  {
+    AUTO_SELECT_ALL("Auto-select all"),
+    AUTO_SELECT_MISSING("Auto-select missing"),
+    ;
+    
+    ClonePolicy(String caption) { this.caption = caption; }
+    public String toString() { return caption; }
+    
+    public final String caption;
+  }
+  
+  private enum ClonePriority
+  {
+    ANY("Any", null),
+    ARCHIVE("Archive", RomType.ZIP),
+    BINARY("Binary", RomType.BIN)
+    ;
+    
+    ClonePriority(String caption, RomType type) { this.caption = caption; this.type = type; }
+    public String toString() { return caption; }
+    
+    public final String caption;
+    public final RomType type;
+  }
+  
+  private final JComboBox<ClonePolicy> clonePolicy = new JComboBox<>(ClonePolicy.values());
+  private final JComboBox<ClonePriority> clonePriority = new JComboBox<>(ClonePriority.values());
+  private final JLabel status = new JLabel();
+  private final JButton autoSelect = new JButton("Auto-select");
+  private final JButton apply = new JButton("Apply");
+  private final JButton reset = new JButton("Reset");
+  
   public ClonesDialog(Frame frame, String title)
   {
     super(frame, title);
@@ -116,15 +153,75 @@ public class ClonesDialog extends JDialog
     model = new CloneTableModel();
     table = new JTable(model);
     JScrollPane pane = new JScrollPane(table);
+    pane.setPreferredSize(new java.awt.Dimension(800,600));
     
     table.setDefaultRenderer(Boolean.class, model.new Renderer(model.new BooleanTableCellRenderer()));
     table.setDefaultRenderer(String.class, model.new Renderer(new DefaultTableCellRenderer()));
     
+    autoSelect.addActionListener( e -> autoChoose(clonePolicy.getItemAt(clonePolicy.getSelectedIndex()), clonePriority.getItemAt(clonePriority.getSelectedIndex())));
+    reset.addActionListener( e -> {
+      this.keep = this.clones.stream().collect(Collectors.toMap( c -> c, c -> false));
+      model.fireChanges();
+      updateStatus();
+    });
+    apply.addActionListener( e -> {
+      int total = colors.size();
+      int selected = keep.values().stream().mapToInt( ee -> ee ? 1 : 0).sum();
+      
+      // if all clones have been assigned
+      if (total == selected)
+      {
+        apply();
+        setVisible(false);
+      }
+      else
+      {
+        Dialogs.showQuestionDialog("Missing rom", (total-selected)+" roms have no specific clone to keep set,\ndo you want to auto-complete them?", this, 
+          () -> {
+            autoChoose(clonePolicy.getItemAt(clonePolicy.getSelectedIndex()), clonePriority.getItemAt(clonePriority.getSelectedIndex()));
+            apply();
+            setVisible(false);
+          }
+        );
+        
+      }
+      
+    });
+    
     //pane.setPreferredSize(new Dimension());
     
-    this.add(pane);
+    JPanel panel = new JPanel(new BorderLayout());
+    panel.add(pane, BorderLayout.CENTER);
+    
+    JPanel options = new JPanel();
+    options.setLayout(new BoxLayout(options, BoxLayout.LINE_AXIS));
+    options.add(new JLabel("Policy: "));
+    options.add(clonePolicy);
+    options.add(new JLabel("Priority: "));
+    options.add(clonePriority);
+    options.add(autoSelect);
+    options.add(reset);
+    options.add(apply);
+    status.setBorder(BorderFactory.createLoweredBevelBorder());
+    options.add(status);
+    
+    panel.add(options,BorderLayout.SOUTH);
+    
+    this.add(panel);
     
     pack();
+  }
+  
+  public void updateStatus()
+  {
+    int total = colors.size();
+    int selected = keep.values().stream().mapToInt( e -> e ? 1 : 0).sum();
+    status.setText("Selected "+selected+" of "+total);
+  }
+  
+  public void apply()
+  {
+    keep.forEach( (k, v) -> { if (v) k.rom.entry = k.entry; });
   }
   
   public void activate(RomList roms, Set<ScanResult> clones)
@@ -144,35 +241,80 @@ public class ClonesDialog extends JDialog
     this.keep = this.clones.stream().collect(Collectors.toMap( c -> c, c -> false));
     this.colors = romClones.stream().collect(Collectors.toMap( c -> c, c -> GUI.randomColor()));
     
+    updateStatus();
+    
     model.fireChanges();
     this.setLocationRelativeTo(null);
     this.setVisible(true);
+    Dialogs.showWarningDialog("Clones Found", colors.size()+" clones have been found,\nplease specify which entries you want to keep", this);
   }
   
-  public void autoChoose(boolean reset)
+  public void autoChoose(ClonePolicy policy, ClonePriority priority)
   {
-    if (reset)
+    if (policy == ClonePolicy.AUTO_SELECT_ALL)
       this.keep = this.clones.stream().collect(Collectors.toMap( c -> c, c -> false));
     
     List<List<ScanResult>> results = new ArrayList<>();
     LinkedList<ScanResult> current = null;
     
     /* create a list for each rom with clones */
+    boolean alreadySet = false;
     for (ScanResult result : this.clones)
     {
-      if (current == null)
+      if (current == null || !current.peekLast().rom.equals(result.rom))
       {
+        if (current != null && !alreadySet)
+          results.add(current);
+        
+        alreadySet = false;
         current = new LinkedList<>();
-        current.add(result);
       }
-      else if (current.peekLast().rom.equals(result.rom))
-        current.add(result);
-      else
-      {
-        results.add(current);
-        current = null;
-      }
+
+      current.add(result);
+      alreadySet |= keep.get(result);
+    } 
+    
+    if (current != null && !alreadySet)
+      results.add(current);
+    
+    for (List<ScanResult> list : results)
+    {
+      ScanResult result = chooseBestClone(list, policy, priority);
+      keep.put(result, true);
     }
     
+    model.fireChanges();
+    updateStatus();
+  }
+  
+  public ScanResult chooseBestClone(List<ScanResult> results, ClonePolicy policy, ClonePriority priority)
+  {
+    if (priority != ClonePriority.ANY)
+    {
+      List<ScanResult> filtered = results.stream().filter(r -> r.entry.type == priority.type).collect(Collectors.toList());
+      if (!filtered.isEmpty())
+        results = filtered;
+    }
+    
+    Predicate<ScanResult> predicateAny = e -> true;
+    Predicate<ScanResult> predicateCorrectFolder = e -> Organizer.getCorrectFolder(e.rom).equals(e.entry.file().getParent());
+    Predicate<ScanResult> predicateCorrectName = e -> Organizer.getCorrectName(e.rom).equals(e.entry.file().getFileName());
+    Predicate<ScanResult> predicateCorrectNameAndFolder = predicateCorrectName.and(predicateCorrectFolder);
+    
+    List<Predicate<ScanResult>> predicates = Arrays.asList(
+      predicateCorrectNameAndFolder,
+      predicateCorrectName,
+      predicateCorrectFolder,
+      predicateAny
+    );
+    
+    Optional<ScanResult> optional = Optional.empty();
+     for (Predicate<ScanResult> predicate : predicates)
+       if ((optional = results.stream().filter(predicate).findFirst()).isPresent())
+         break;
+
+    ScanResult chosen = optional.get();
+    
+    return chosen;
   }
 }
