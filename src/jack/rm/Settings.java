@@ -126,7 +126,6 @@ public class Settings
 	public boolean checkImageCRC;
 		
 	public OrganizerDetails organizer;
-	public int folderSize;
 	
 	Settings()
 	{
@@ -148,7 +147,6 @@ public class Settings
 		this.set = set;
 		
 		checkImageCRC = true;
-		folderSize = 100;
 		
 		organizer = new OrganizerDetails();
 		renamingPattern = "%n - %t [%S]";

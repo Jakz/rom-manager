@@ -9,13 +9,22 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 
-public class JsonPluginAdapter<T extends Jsonnable> implements JsonSerializer<T>, JsonDeserializer<T>
+public class JsonPluginAdapter<T extends JsonnableContext> implements JsonSerializer<T>, JsonDeserializer<T>
 {
 
   @Override
   public JsonElement serialize(T src, Type type, JsonSerializationContext context)
   {
-    return src.serialize();
+    try
+    {
+      return src.serialize(context);
+    }
+    catch (IllegalAccessException e)
+    {
+      e.printStackTrace();
+    }
+    
+    return null;
   }
 
   @SuppressWarnings("unchecked")
@@ -28,7 +37,7 @@ public class JsonPluginAdapter<T extends Jsonnable> implements JsonSerializer<T>
     {
       Class<?> clazz = Class.forName(name);
       T instance = (T)clazz.newInstance();
-      instance.unserialize(json);
+      instance.unserialize(json, context);
       return instance;
     }
     catch (ClassNotFoundException e)

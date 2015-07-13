@@ -17,92 +17,92 @@ import java.io.*;
 
 public class Downloader
 {
-	public ThreadPoolExecutor pool;
-	int totalTasks;
-	int missingTasks;
-	boolean started;
+  public ThreadPoolExecutor pool;
+  int totalTasks;
+  int missingTasks;
+  boolean started;
 
-	public Downloader()
-	{
-	}
-	
-	public void start()
-	{
-		if (started)
-			return;
-		
+  public Downloader()
+  {
+  }
+  
+  public void start()
+  {
+    if (started)
+      return;
+    
     pool = (ThreadPoolExecutor)Executors.newFixedThreadPool(10);
-		started = true;
-		
-		Asset[] assets = RomSet.current.getSupportedAssets();
-		
-		for (int i = 0; i < Main.romList.count(); ++i)
-		{
-			Rom r = Main.romList.get(i);
-			
-			for (Asset asset : assets)
-			  if (!r.hasAsset(asset))
-		      pool.submit(new ArtDownloaderTask(r, asset));
-		}
-				
-		ProgressDialog.init(Main.mainFrame, "Asset Download", () -> { pool.shutdownNow(); started = false; });
-	}
-	
-	public void downloadArt(final Rom r)
-	{
-	  new Thread()
-	  {
-	    @Override
+    started = true;
+    
+    Asset[] assets = RomSet.current.getSupportedAssets();
+    
+    for (int i = 0; i < Main.romList.count(); ++i)
+    {
+      Rom r = Main.romList.get(i);
+      
+      for (Asset asset : assets)
+        if (!r.hasAsset(asset))
+          pool.submit(new ArtDownloaderTask(r, asset));
+    }
+        
+    ProgressDialog.init(Main.mainFrame, "Asset Download", () -> { pool.shutdownNow(); started = false; });
+  }
+  
+  public void downloadArt(final Rom r)
+  {
+    new Thread()
+    {
+      @Override
       public void run()
-	    {
-	      Asset[] assets = RomSet.current.getSupportedAssets();
+      {
+        Asset[] assets = RomSet.current.getSupportedAssets();
 
-	      for (Asset asset : assets)
-	        if (!r.hasAsset(asset))
-	          new ArtDownloaderTask(r, asset).call();
-	      
-	      Main.infoPanel.updateFields(r);
-	    }
-	  }.run();
-	}
-	
-	public class ArtDownloaderTask implements Callable<Boolean>
-	{
-		URL url;
-		Path path;
-		Asset asset;
-		Rom rom;
-		
-		public ArtDownloaderTask(Rom rom, Asset asset)
-		{	
-			path = RomSet.current.assetPath(asset, rom);
-			url = RomSet.current.assetURL(asset, rom);
-			
-			System.out.println(url+" -> "+path.toAbsolutePath());
-					
-			this.rom = rom;
-			this.asset = asset;
-		}
-		
-		@Override
+        for (Asset asset : assets)
+          if (!r.hasAsset(asset))
+            new ArtDownloaderTask(r, asset).call();
+        
+        Main.infoPanel.updateFields(r);
+      }
+    }.run();
+  }
+  
+  public class ArtDownloaderTask implements Callable<Boolean>
+  {
+    URL url;
+    Path path;
+    Asset asset;
+    Rom rom;
+    
+    public ArtDownloaderTask(Rom rom, Asset asset)
+    {  
+      path = RomSet.current.assetPath(asset, rom);
+      url = RomSet.current.assetURL(asset, rom);
+      
+      System.out.println(url+" -> "+path.toAbsolutePath());
+          
+      this.rom = rom;
+      this.asset = asset;
+    }
+    
+    @Override
     public Boolean call()
-		{
-		  try
-			{
-				ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-				FileChannel channel = FileChannel.open(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
-				channel.transferFrom(rbc, 0, 1 << 24);
-				channel.close();
-			}
-			catch (FileNotFoundException e)
-			{
-			  Log.log(LogType.ERROR, LogSource.DOWNLOADER, LogTarget.rom(rom), "Asset not found at "+url);
-				Main.infoPanel.updateFields(rom);
-				return false;
-			}
-		  catch (java.nio.channels.ClosedByInterruptException e)
-		  {
-		    try
+    {
+      try
+      {
+        ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+        FileChannel channel = FileChannel.open(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+        channel.transferFrom(rbc, 0, 1 << 24);
+        channel.close();
+      }
+      catch (FileNotFoundException e)
+      {
+        Log.log(LogType.ERROR, LogSource.DOWNLOADER, LogTarget.rom(rom), "Asset not found at "+url);
+        Main.infoPanel.updateFields(rom);
+        return false;
+      }
+      catch (java.nio.channels.ClosedByInterruptException e)
+      {
+        try
         {
           if (Files.exists(path))
             Files.delete(path);
@@ -111,25 +111,25 @@ public class Downloader
         {
           ee.printStackTrace();
         }
-		  }
-			catch (Exception e)
-			{
-				e.printStackTrace();
+      }
+      catch (Exception e)
+      {
+        e.printStackTrace();
 
-				return false;
-			}
-			
-			//Main.logln("Downloaded art for "+Renamer.formatNumber(rom.number)+" ("+type+").");
-			
-		  if (pool != null)
-		  {
-		    long completed = pool.getCompletedTaskCount();
-		    long total = pool.getTaskCount(); 
-			
-		    ProgressDialog.update(completed/(float)total, completed+" of "+total);
-		  }
+        return false;
+      }
+      
+      //Main.logln("Downloaded art for "+Renamer.formatNumber(rom.number)+" ("+type+").");
+      
+      if (pool != null)
+      {
+        long completed = pool.getCompletedTaskCount();
+        long total = pool.getTaskCount(); 
+      
+        ProgressDialog.update(completed/(float)total, completed+" of "+total);
+      }
 
-	    return true;
-		}
-	}
+      return true;
+    }
+  }
 }
