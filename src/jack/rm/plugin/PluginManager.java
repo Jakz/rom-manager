@@ -70,7 +70,7 @@ public class PluginManager
   static
   {
     instance = new PluginManager();
-    instance.register(PluginRealType.FOLDER_ORGANIZER, jack.rm.plugin.folder.NumericalOrganizer.class);
-    instance.register(PluginRealType.ROMSET_CLEANUP, jack.rm.plugin.cleanup.DeleteEmptyFoldersPlugin.class);
+    instance.register(PluginRealType.FOLDER_ORGANIZER, jack.rm.plugins.folder.NumericalOrganizer.class);
+    instance.register(PluginRealType.ROMSET_CLEANUP, jack.rm.plugins.cleanup.DeleteEmptyFoldersPlugin.class);
   }
 }

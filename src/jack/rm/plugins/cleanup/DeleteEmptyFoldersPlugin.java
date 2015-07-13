@@ -1,4 +1,4 @@
-package jack.rm.plugin.cleanup;
+package jack.rm.plugins.cleanup;
 
 import java.io.File;
 import java.util.LinkedList;

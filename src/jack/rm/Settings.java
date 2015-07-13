@@ -10,9 +10,10 @@ import jack.rm.data.Rom;
 import jack.rm.data.set.*;
 import jack.rm.files.OrganizerDetails;
 import jack.rm.json.Json;
-import jack.rm.plugin.folder.FolderPlugin;
 import jack.rm.plugin.PluginRealType;
 import jack.rm.plugin.PluginSet;
+import jack.rm.plugins.PluginWithIgnorePaths;
+import jack.rm.plugins.folder.FolderPlugin;
 
 public class Settings
 {
@@ -99,9 +100,11 @@ public class Settings
 	{
 	  Set<Path> paths = new HashSet<>();
 	  
-	  if (organizer.shouldMoveUnknownFiled() && unknownPath != null)
-	    paths.add(unknownPath);
-	  
+	  plugins.stream().filter( p -> p instanceof PluginWithIgnorePaths ).forEach( p -> {
+	    Set<Path> ipaths = ((PluginWithIgnorePaths)p).getIgnoredPaths();
+	    ipaths.stream().filter(Objects::nonNull).forEach(paths::add);
+	  });
+
 	  return paths;
 	}
 	

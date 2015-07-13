@@ -1,4 +1,4 @@
-package jack.rm.plugin.folder;
+package jack.rm.plugins.folder;
 
 import jack.rm.data.Rom;
 import jack.rm.plugin.*;

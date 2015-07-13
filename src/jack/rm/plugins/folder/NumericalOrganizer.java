@@ -1,4 +1,4 @@
-package jack.rm.plugin.folder;
+package jack.rm.plugins.folder;
 
 import java.nio.file.Paths;
 

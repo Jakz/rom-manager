@@ -1,6 +1,6 @@
 package jack.rm.files;
 
-import jack.rm.plugin.folder.*;
+import jack.rm.plugins.folder.*;
 
 public class OrganizerDetails
 {

@@ -12,8 +12,8 @@ public class PluginSet
   {
     plugins = new HashSet<>();
     
-    add(PluginManager.getInstance().build(jack.rm.plugin.folder.NumericalOrganizer.class));
-    add(PluginManager.getInstance().build(jack.rm.plugin.cleanup.DeleteEmptyFoldersPlugin.class));
+    add(PluginManager.getInstance().build(jack.rm.plugins.folder.NumericalOrganizer.class));
+    add(PluginManager.getInstance().build(jack.rm.plugins.cleanup.DeleteEmptyFoldersPlugin.class));
   }
   
   public void add(Plugin plugin)
