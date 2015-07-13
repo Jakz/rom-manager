@@ -2,7 +2,6 @@ package jack.rm.gui;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -11,6 +10,7 @@ import java.util.List;
 import javax.swing.TransferHandler;
 
 public class FileTransferHandler extends TransferHandler {
+  @FunctionalInterface
   public static interface Listener
   {
     public void filesDropped(Path[] files);
@@ -19,12 +19,10 @@ public class FileTransferHandler extends TransferHandler {
   private static final DataFlavor FILE_FLAVOR = DataFlavor.javaFileListFlavor;
   
   private final Listener listener;
-  private final Component component;
 
-  public FileTransferHandler(Component component, Listener listener)
+  public FileTransferHandler(Listener listener)
   {
     this.listener = listener;
-    this.component = component;
   }
 
   @SuppressWarnings("unchecked")
@@ -39,13 +37,9 @@ public class FileTransferHandler extends TransferHandler {
     try
     {
       List<File> files = (List<File>)t.getTransferData(FILE_FLAVOR);
-      Path[] paths = new Path[files.size()];
-      
-      for (int i = 0; i < paths.length; ++i)
-        paths[i] = files.get(i).toPath();
-
       support.setDropAction(LINK);
-      
+
+      Path[] paths = files.stream().map( f -> f.toPath() ).toArray(Path[]::new);
       listener.filesDropped(paths);
     } 
     catch (IOException e)

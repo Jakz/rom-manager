@@ -1,6 +1,8 @@
 package jack.rm.gui;
 
 import jack.rm.Main;
+import jack.rm.data.RomList;
+import jack.rm.data.set.RomSet;
 
 import java.awt.*;
 import javax.swing.*;
@@ -29,9 +31,10 @@ public class CountPanel extends JPanel
 	
 	public void update()
 	{	  
-	  counters[0].setText(""+Main.romList.getCountCorrect());
-		counters[1].setText(""+Main.romList.getCountBadName());
-		counters[2].setText(""+Main.romList.getCountMissing());
-		counters[3].setText(""+Main.romList.count());
+	  RomList list = RomSet.current.list;
+    counters[0].setText(""+list.getCountCorrect());
+    counters[1].setText(""+list.getCountBadName());
+    counters[2].setText(""+list.getCountMissing());
+    counters[3].setText(""+list.count());
 	}
 }

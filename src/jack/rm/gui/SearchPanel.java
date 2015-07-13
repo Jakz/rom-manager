@@ -1,6 +1,7 @@
 package jack.rm.gui;
 
 import jack.rm.data.*;
+import jack.rm.data.set.RomSet;
 import jack.rm.i18n.Text;
 import jack.rm.*;
 
@@ -174,7 +175,8 @@ public class SearchPanel extends JPanel
 				RomSize size = sizes.getItemAt(sizes.getSelectedIndex());
 				Location location = locations.getItemAt(locations.getSelectedIndex());
 				Language language = languages.getItemAt(languages.getSelectedIndex());
-				Main.romList.search(romName.getText(),size,location,language);
+
+				RomSet.current.list.search(romName.getText(),size,location,language);
 			}
 				
 		}
@@ -190,7 +192,8 @@ public class SearchPanel extends JPanel
 				RomSize size = sizes.getItemAt(sizes.getSelectedIndex());
         Location location = locations.getItemAt(locations.getSelectedIndex());
         Language language = languages.getItemAt(languages.getSelectedIndex());
-				Main.romList.search(romName.getText(),size,location,language);
+
+        RomSet.current.list.search(romName.getText(),size,location,language);
 			}
 		}
 	}

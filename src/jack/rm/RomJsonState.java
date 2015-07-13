@@ -8,6 +8,7 @@ import java.util.*;
 
 import jack.rm.data.*;
 import jack.rm.data.set.RomSet;
+import jack.rm.json.Json;
 import jack.rm.log.*;
 
 public class RomJsonState
@@ -51,7 +52,7 @@ public class RomJsonState
 			
 			DataOutputStream dos = new DataOutputStream(new FileOutputStream(folder+"/status.json"));
 
-			dos.writeBytes(Settings.loader.toJson(romsa, RomJsonState[].class));
+			dos.writeBytes(Json.build().toJson(romsa, RomJsonState[].class));
 			
 			dos.close();
 		}
@@ -63,19 +64,19 @@ public class RomJsonState
 		Log.log(LogType.MESSAGE, LogSource.STATUS, LogTarget.romset(RomSet.current), "Romset status saved on json");
 	}
 	
-	public static boolean load(RomSet<?> set)
+	public static boolean load(RomList list)
 	{
 		try
 		{
-			String fileName = "data/"+set.ident()+"/"+"status.json";
+			String fileName = "data/"+list.set.ident()+"/"+"status.json";
 			
 			if (new File(fileName).exists())
 			{
-				RomJsonState[] proms = Settings.loader.fromJson(new FileReader(fileName), RomJsonState[].class);
+				RomJsonState[] proms = Json.build().fromJson(new FileReader(fileName), RomJsonState[].class);
 				
 				for (RomJsonState prom : proms)
 				{
-					Rom rom = Main.romList.getByNumber(prom.number);
+					Rom rom = list.getByNumber(prom.number);
 					
 					if (rom != null)
 					{

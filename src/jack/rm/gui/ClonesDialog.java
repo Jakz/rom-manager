@@ -16,6 +16,7 @@ import java.util.function.*;
 import java.util.stream.Collectors;
 
 import jack.rm.data.ScanResult;
+import jack.rm.data.set.RomSet;
 import jack.rm.files.Organizer;
 
 public class ClonesDialog extends JDialog
@@ -223,8 +224,8 @@ public class ClonesDialog extends JDialog
   public void apply()
   {
     keep.forEach( (k, v) -> { if (v) k.rom.entry = k.entry; });
-    Main.romList.checkNames();
-    Main.romList.updateStatus();
+    RomSet.current.list.checkNames();
+    RomSet.current.list.updateStatus();
     Main.mainFrame.updateTable();
   }
   

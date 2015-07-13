@@ -2,6 +2,7 @@ package jack.rm.gui;
 
 import jack.rm.Main;
 import jack.rm.Settings;
+import jack.rm.data.set.RomSet;
 import jack.rm.files.Organizer;
 import jack.rm.i18n.Text;
 
@@ -113,6 +114,6 @@ public class OrganizerPanel extends JPanel implements CaretListener
   public void caretUpdate(CaretEvent e)
 	{
 		Settings.current().renamingPattern = patternField.getText();
-		exampleField.setText(Organizer.getCorrectName(Main.romList.get(0)));
+		exampleField.setText(Organizer.getCorrectName(RomSet.current.list.get(0)));
 	}
 }

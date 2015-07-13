@@ -21,9 +21,12 @@ public class Downloader
   int totalTasks;
   int missingTasks;
   boolean started;
+  
+  private final RomSet<? extends Rom> set;
 
-  public Downloader()
+  public Downloader(RomSet<? extends Rom> set)
   {
+    this.set = set;
   }
   
   public void start()
@@ -36,9 +39,9 @@ public class Downloader
     
     Asset[] assets = RomSet.current.getSupportedAssets();
     
-    for (int i = 0; i < Main.romList.count(); ++i)
+    for (int i = 0; i < set.list.count(); ++i)
     {
-      Rom r = Main.romList.get(i);
+      Rom r = set.list.get(i);
       
       for (Asset asset : assets)
         if (!r.hasAsset(asset))

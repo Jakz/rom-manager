@@ -3,6 +3,7 @@ package jack.rm.gui;
 import jack.rm.Main;
 import jack.rm.Settings;
 import jack.rm.data.*;
+import jack.rm.data.set.RomSet;
 import jack.rm.files.Organizer;
 import jack.rm.log.*;
 
@@ -58,7 +59,7 @@ public class FileDropperListener implements FileTransferHandler.Listener
               
               Organizer.organizeRomIfNeeded(rom, true, true);
               
-              Main.romList.updateStatus();
+              RomSet.current.list.updateStatus();
               Main.mainFrame.updateTable();
               
               Log.log(LogType.MESSAGE, LogSource.IMPORTER, LogTarget.rom(result.rom), "Successfully imported new rom");

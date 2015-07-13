@@ -123,16 +123,16 @@ public class Scanner
 		if (total)
 		{
 			Log.log(LogType.MESSAGE, LogSource.SCANNER, LogTarget.romset(RomSet.current), "Scanning for roms");
-			Main.romList.resetStatus();
+			list.resetStatus();
 		}
 		else
 		{
 	    Log.log(LogType.MESSAGE, LogSource.SCANNER, LogTarget.romset(RomSet.current), "Scanning for new roms");
 
-			int c = Main.romList.count();
+			int c = list.count();
 			for (int j = 0; j < c; ++j)
 			{
-				Rom r = Main.romList.get(j);
+				Rom r = list.get(j);
 				
 				if (r.status != RomStatus.NOT_FOUND)
 					existing.add(r.entry.file());
@@ -182,7 +182,7 @@ public class Scanner
 	      ScanResult result = scanFile(f);
 	      	      
 	      foundRom(result);
-	      Main.romList.updateStatus();
+	      list.updateStatus();
 	      
 	      publish(i);
 	    }
@@ -210,7 +210,7 @@ public class Scanner
 	    ProgressDialog.finished();
 	    
 	    if (!clones.isEmpty())
-	      Main.clonesDialog.activate(Main.romList, clones);
+	      Main.clonesDialog.activate(list, clones);
 	  }
 	  
 	}

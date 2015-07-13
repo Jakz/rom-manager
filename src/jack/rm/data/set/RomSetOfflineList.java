@@ -81,7 +81,7 @@ public abstract class RomSetOfflineList extends RomSet<NumberedRom>
 	@Override
   public void load()
 	{
-		loadDat(new OfflineListXMLParser(Main.romList), datPath());
+		loadDat(new OfflineListXMLParser(list), datPath());
 	}
 	
 	@Override

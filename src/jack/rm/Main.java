@@ -11,9 +11,7 @@ import jack.rm.gui.*;
 import jack.rm.net.Downloader;
 
 public class Main
-{	
-	public static final RomList romList = new RomList();
-	
+{		
 	public static MainFrame mainFrame;
 	public static SearchPanel searchPanel;
 	public static InfoPanel infoPanel;
@@ -61,11 +59,12 @@ public class Main
 		
 		optionsFrame = new OptionsFrame();
 		
-		
-		scanner = new Scanner(romList);
-		downloader = new Downloader();
+    RomSetManager.loadSet(Console.GBA);
+		scanner = new Scanner(RomSet.current.list);
+    scanner.scanForRoms(!RomJsonState.load(RomSet.current.list));
 
-		RomSetManager.loadSet(Console.GBA);
+		downloader = new Downloader(RomSet.current);
+
 		
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setVisible(true);

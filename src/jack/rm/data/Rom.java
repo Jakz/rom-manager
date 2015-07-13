@@ -110,7 +110,7 @@ public class Rom implements Comparable<Rom>
 	public boolean isOrganized()
 	{
 	  boolean nameIsOrganized = !Settings.current().organizer.hasRenamePolicy() || hasCorrectName();
-	  boolean positionIsOrganized = !Settings.current().organizer.hasFolderOrganizer() || hasCorrectFolder();
+	  boolean positionIsOrganized = Settings.current().getFolderOrganizer() == null || hasCorrectFolder();
 	  return nameIsOrganized && positionIsOrganized;
 	}
 	

@@ -1,6 +1,8 @@
 package jack.rm.gui;
 
 import jack.rm.*;
+import jack.rm.data.RomList;
+import jack.rm.data.set.RomSet;
 import jack.rm.files.Organizer;
 
 import java.awt.event.*;
@@ -16,6 +18,8 @@ class MenuListener implements ActionListener
 		Object source = e.getSource();
 		JMenuItem item = (JMenuItem)source;
 		MenuElement tag = MenuElement.elementForItem(item);
+		
+		RomList list = RomSet.current.list;
 
 		if (tag == MenuElement.ROMS_SCAN_FOR_ROMS)
 		{
@@ -42,26 +46,26 @@ class MenuListener implements ActionListener
 		}
 		else if (tag == MenuElement.ROMS_RENAME)
 		{
-			Main.romList.renameRoms();
+		  list.renameRoms();
 			Main.mainFrame.updateTable();
 		}
 		else if (tag == MenuElement.VIEW_SHOW_CORRECT)
 		{
 			Main.mainFrame.romListModel.isCorrect = !Main.mainFrame.romListModel.isCorrect;
 			Main.mainFrame.romListModel.clear();
-			Main.romList.showAll();
+			list.showAll();
 		}
 		else if (tag == MenuElement.VIEW_SHOW_NOT_FOUND)
 		{
 			Main.mainFrame.romListModel.isMissing = !Main.mainFrame.romListModel.isMissing;
 			Main.mainFrame.romListModel.clear();
-			Main.romList.showAll();
+			list.showAll();
 		}
 		else if (tag == MenuElement.VIEW_SHOW_BADLY_NAMED)
 		{
 			Main.mainFrame.romListModel.isBadlyNamed = !Main.mainFrame.romListModel.isBadlyNamed;
 			Main.mainFrame.romListModel.clear();
-			Main.romList.showAll();
+			list.showAll();
 		}
 		else if (tag == MenuElement.TOOLS_DOWNLOAD_ART)
 		{
@@ -69,7 +73,7 @@ class MenuListener implements ActionListener
 		}
     else if (tag == MenuElement.TOOLS_MOVE_UNKNOWN_FILES)
     {
-      Organizer.moveUnknownFiles(Main.romList);
+      Organizer.moveUnknownFiles(list);
     }
 		else if (tag == MenuElement.TOOLS_OPTIONS)
 		{

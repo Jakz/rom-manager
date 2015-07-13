@@ -2,6 +2,7 @@ package jack.rm.gui;
 
 import jack.rm.Main;
 import jack.rm.Settings;
+import jack.rm.data.set.RomSet;
 import jack.rm.i18n.Text;
 
 import java.awt.event.*;
@@ -80,7 +81,7 @@ public class OptionsFrame extends JFrame implements ActionListener, ComponentLis
 	@Override
   public void componentHidden(ComponentEvent e)
 	{
-	  Main.romList.checkNames();
+	  RomSet.current.list.checkNames();
 	  Settings.consolidate();
 	}
 }

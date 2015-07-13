@@ -1,6 +1,6 @@
 package jack.rm.plugin;
 
-public class PluginParameter
+public interface PluginType
 {
 
 }

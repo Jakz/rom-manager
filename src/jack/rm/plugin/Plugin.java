@@ -4,17 +4,11 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
-import com.google.gson.reflect.TypeToken;
-
 import jack.rm.StreamException;
 import jack.rm.json.JsonnableContext;
 
@@ -36,7 +30,7 @@ public abstract class Plugin implements JsonnableContext
   public void unserialize(JsonElement element, JsonDeserializationContext context) throws IllegalAccessException
   {     
     getFields().stream()
-    .forEach(StreamException.rethrowConsumer(f -> f.set(this, context.deserialize(element, f.getType()))) );    
+    .forEach(StreamException.rethrowConsumer(f -> f.set(this, context.deserialize(element.getAsJsonObject().get(f.getName()), f.getType()))) );    
   }
   
   List<Field> getFields()
@@ -56,4 +50,9 @@ public abstract class Plugin implements JsonnableContext
     
     return fields;
   }
+  
+  @Override public int hashCode() { return this.getClass().hashCode(); }
+  @Override public boolean equals(Object other) { return this.getClass().equals(other.getClass()); }
+
+  public abstract PluginType getType();
 }

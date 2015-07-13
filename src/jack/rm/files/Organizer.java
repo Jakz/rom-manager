@@ -13,10 +13,7 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.DecimalFormat;
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -50,7 +47,7 @@ public class Organizer
 	public static Path getCorrectFolder(Rom rom)
 	{
 	  Path base = Settings.current().romsPath;
-	  return base.resolve(Settings.current().organizer.getFolderPolicy().getFolderForRom(rom));
+	  return base.resolve(Settings.current().getFolderOrganizer().getFolderForRom(rom));
 	}
 	
 	public abstract static class Pattern {
@@ -155,12 +152,13 @@ public class Organizer
 	
 	public static void organizeRomIfNeeded(Rom rom, boolean renamePhase, boolean movePhase)
 	{
-	  OrganizerDetails details = Settings.current().organizer;
+	  Settings settings = Settings.current();
+	  OrganizerDetails details = settings.organizer;
 	  
 	  if (renamePhase && details.hasRenamePolicy() && !rom.hasCorrectName())
 	    renameRom(rom);
 	  
-	  if (movePhase && details.hasFolderOrganizer() && !rom.hasCorrectFolder())
+	  if (movePhase && settings.getFolderOrganizer() != null && !rom.hasCorrectFolder())
 	    moveRom(rom);
 	}
 	

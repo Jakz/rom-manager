@@ -15,6 +15,7 @@ public abstract class RomSet<R extends Rom>
 {
 	public static RomSet<? extends Rom> current = null;
 	
+	public final RomList list;
 	public final Console type;
 	public final Provider provider;
 	
@@ -23,7 +24,8 @@ public abstract class RomSet<R extends Rom>
 	
 	RomSet(Console type, Provider provider, Dimension screenTitle, Dimension screenGame)
 	{
-		this.type = type;
+		this.list = new RomList(this);
+	  this.type = type;
 		this.provider = provider;
 		this.screenTitle = screenTitle;
 		this.screenGame = screenGame;

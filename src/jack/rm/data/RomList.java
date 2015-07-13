@@ -7,20 +7,21 @@ import jack.rm.gui.ProgressDialog;
 
 import java.util.*;
 import java.util.stream.Stream;
-import java.io.*;
 import java.util.zip.*;
 import javax.swing.SwingWorker;
 
 public class RomList
 {
-	List<Rom> list;
+	public final RomSet<? extends Rom> set;
+  List<Rom> list;
 	Map<Long, Rom> crcs;
 	
 	private int countCorrect, countBadlyNamed, countNotFound, countTotal;
 	
-	public RomList()
+	public RomList(RomSet<? extends Rom> set)
 	{
-		list = new ArrayList<>();
+		this.set = set;
+	  list = new ArrayList<>();
 		crcs = new HashMap<>();
 	}
 	
@@ -205,8 +206,8 @@ public class RomList
         if (rom.status == RomStatus.INCORRECT_NAME)
         {        
           Organizer.renameRom(rom);  
-          ++Main.romList.countCorrect;
-          --Main.romList.countBadlyNamed; 
+          ++RomList.this.countCorrect;
+          --RomList.this.countBadlyNamed; 
         }
         
         publish(i);
@@ -228,7 +229,7 @@ public class RomList
     {
       ProgressDialog.finished();
       
-      if (Settings.current().organizer.hasFolderOrganizer())
+      if (Settings.current().getFolderOrganizer() != null)
       {
         new OrganizeByFolderWorker(list).execute();
         Organizer.deleteEmptyFolders(); // TODO: add check of settings

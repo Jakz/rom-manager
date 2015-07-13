@@ -47,12 +47,12 @@ public class RomSetManager
 		return sets.values();
 	}
 	
-	public static void loadSet(Console console)
+	public static RomSet<? extends Rom> loadSet(Console console)
 	{
-		loadSet(sets.get(console));
+		return loadSet(sets.get(console));
 	}
 	
-	public static void loadSet(RomSet<? extends Rom> set)
+	public static RomSet<? extends Rom> loadSet(RomSet<? extends Rom> set)
 	{
 		Log.log(LogType.MESSAGE, LogSource.STATUS, LogTarget.romset(set), "Loading romset");
 	  		
@@ -69,8 +69,6 @@ public class RomSetManager
 		  // TODO: log
 		}
 
-		Main.romList.clear();
-		
 		RomSize.mapping.clear();
 		set.load();
 			
@@ -78,9 +76,8 @@ public class RomSetManager
 		Main.mainFrame.romListModel.fireChanges();
 		Main.mainFrame.updateCbRomSet(set);
 		Main.infoPanel.setScreenSizes(set.screenTitle,set.screenGame);
-		
-		Main.scanner.scanForRoms(!RomJsonState.load(set));
-		
-		Main.romList.showAll();
+				
+		set.list.showAll();
+		return set;
 	}
 }

@@ -61,7 +61,7 @@ public class MainFrame extends JFrame implements WindowListener
 		list.getSelectionModel().addListSelectionListener(new ListListener());
 		listPane.setPreferredSize(new Dimension(230,500));		
 		
-		this.setTransferHandler(new FileTransferHandler(this, new FileDropperListener()));
+		this.setTransferHandler(new FileTransferHandler(new FileDropperListener()));
 		
 		//fileDropper = new FileDrop(list, new FileDropperListener());
 		
@@ -209,6 +209,6 @@ public class MainFrame extends JFrame implements WindowListener
 	@Override
   public void windowClosing(WindowEvent e)
 	{
-    RomJsonState.consolidate(Main.romList);
+    RomJsonState.consolidate(RomSet.current.list);
 	}
 }
