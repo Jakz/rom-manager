@@ -58,7 +58,7 @@ public class RomList
 	{
 		list.clear();
 	}
-	
+		
 	public Rom getByCRC(long crc)
 	{
 		return crcs.get(crc);

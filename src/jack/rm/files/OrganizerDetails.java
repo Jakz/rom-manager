@@ -4,18 +4,18 @@ import java.nio.file.Path;
 
 public class OrganizerDetails
 {
-  private RenamePolicy renamePolicy;
-  private FolderPolicy folderPolicy;
+  public RenamePolicy renamePolicy;
+  public FolderPolicy folderPolicy;
 
-  private boolean moveUnknown;  
-  private boolean deleteEmptyFolders;
+  public boolean moveUnknown;  
+  public boolean deleteEmptyFolders;
   
   public boolean shouldCleanup()
   {
     return moveUnknown || deleteEmptyFolders;
   }
   
-  OrganizerDetails()
+  public OrganizerDetails()
   {
     renamePolicy = RenamePolicy.FILES;
     folderPolicy = FolderPolicy.ROM_NUMBER;

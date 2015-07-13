@@ -1,5 +1,6 @@
 package jack.rm.gui;
 
+import jack.rm.Main;
 import jack.rm.Settings;
 import jack.rm.data.*;
 
@@ -176,7 +177,7 @@ public class ClonesDialog extends JDialog
       }
       else
       {
-        Dialogs.showQuestionDialog("Missing rom", (total-selected)+" roms have no specific clone to keep set,\ndo you want to auto-complete them?", this, 
+        Dialogs.showQuestion("Missing rom", (total-selected)+" roms have no specific clone to keep set,\ndo you want to auto-complete them?", this, 
           () -> {
             autoChoose(clonePolicy.getItemAt(clonePolicy.getSelectedIndex()), clonePriority.getItemAt(clonePriority.getSelectedIndex()));
             apply();
@@ -222,6 +223,9 @@ public class ClonesDialog extends JDialog
   public void apply()
   {
     keep.forEach( (k, v) -> { if (v) k.rom.entry = k.entry; });
+    Main.romList.checkNames();
+    Main.romList.updateStatus();
+    Main.mainFrame.updateTable();
   }
   
   public void activate(RomList roms, Set<ScanResult> clones)
@@ -246,7 +250,7 @@ public class ClonesDialog extends JDialog
     model.fireChanges();
     this.setLocationRelativeTo(null);
     this.setVisible(true);
-    Dialogs.showWarningDialog("Clones Found", colors.size()+" clones have been found,\nplease specify which entries you want to keep", this);
+    Dialogs.showWarning("Clones Found", colors.size()+" clones have been found,\nplease specify which entries you want to keep", this);
   }
   
   public void autoChoose(ClonePolicy policy, ClonePriority priority)

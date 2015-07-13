@@ -256,7 +256,7 @@ public class Organizer
 	      .map( r -> r.entry.file())
 	      .collect(Collectors.toSet());
 
-	    Set<Path> total = new FolderScanner(FileSystems.getDefault().getPathMatcher("glob:*.*")).scan(Settings.current().romsPath);
+	    Set<Path> total = new FolderScanner(FileSystems.getDefault().getPathMatcher("glob:*.*"), Settings.current().getIgnoredPaths()).scan(Settings.current().romsPath);
 	    
 	    total.removeAll(existing);
 	    

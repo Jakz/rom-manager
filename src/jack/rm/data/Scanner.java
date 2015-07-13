@@ -5,6 +5,7 @@ import jack.rm.PersistenceRom;
 import jack.rm.Settings;
 import jack.rm.data.set.RomSet;
 import jack.rm.files.*;
+import jack.rm.gui.Dialogs;
 import jack.rm.gui.ProgressDialog;
 import jack.rm.log.*;
 
@@ -64,7 +65,7 @@ public class Scanner
 	  
 	  rom.entry = result.entry;
 
-	  if (rom.hasCorrectName())
+	  if (rom.isOrganized())
 	    rom.status = RomStatus.FOUND;
 	  else
 	    rom.status = RomStatus.INCORRECT_NAME;
@@ -138,22 +139,20 @@ public class Scanner
 			}
 		}
 
-		try
-		{		
-			Path folder = RomSet.current.romPath();
-			foundFiles = new FolderScanner(RomSet.current.getFileMatcher()).scan(folder);
-			ScannerWorker worker = new ScannerWorker(foundFiles);
-			worker.execute();
-		}
-		catch (NullPointerException e)
+		Path folder = RomSet.current.romPath();
+			
+		if (folder == null || !Files.exists(folder) || !Files.isDirectory(folder))
 		{
-			Log.log(LogType.ERROR, LogSource.SCANNER, LogTarget.romset(RomSet.current), "Roms path doesn't exist! Scanning interrupted");
-			return;
+		  Log.log(LogType.ERROR, LogSource.SCANNER, LogTarget.romset(RomSet.current), "Roms path doesn't exist! Scanning interrupted");
+		  Dialogs.showError("Romset Path", "Romset path is not set, or it doesn't exists as a folder.\nPlease set one.", Main.mainFrame);
+		  list.resetStatus();
+		  Main.mainFrame.updateTable();
+		  return;
 		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+			
+		foundFiles = new FolderScanner(RomSet.current.getFileMatcher(), Settings.current().getIgnoredPaths()).scan(folder);
+		ScannerWorker worker = new ScannerWorker(foundFiles);
+		worker.execute();
 	}
 
 	public class ScannerWorker extends SwingWorker<Void, Integer>

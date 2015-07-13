@@ -6,12 +6,17 @@ import java.util.function.Function;
 
 public class Dialogs
 {
-  public static void showWarningDialog(String title, String message, Component parent)
+  public static void showWarning(String title, String message, Component parent)
   {
     JOptionPane.showMessageDialog(parent, message, title, JOptionPane.WARNING_MESSAGE);
   }
   
-  public static void showQuestionDialog(String title, String message, Component parent, Runnable callback)
+  public static void showError(String title, String message, Component parent)
+  {
+    JOptionPane.showMessageDialog(parent, message, title, JOptionPane.ERROR_MESSAGE);
+  }
+  
+  public static void showQuestion(String title, String message, Component parent, Runnable callback)
   {
     if (JOptionPane.showConfirmDialog(parent, message, title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
       callback.run();

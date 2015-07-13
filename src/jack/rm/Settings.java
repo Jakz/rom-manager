@@ -128,6 +128,16 @@ public class Settings
 
 	}
 	
+	public Set<Path> getIgnoredPaths()
+	{
+	  Set<Path> paths = new HashSet<>();
+	  
+	  if (organizer.shouldMoveUnknownFiled() && unknownPath != null)
+	    paths.add(unknownPath);
+	  
+	  return paths;
+	}
+	
 	Settings(RomSet set)
 	{
 		this.set = set;
@@ -135,6 +145,7 @@ public class Settings
 		checkImageCRC = true;
 		folderSize = 100;
 		
+		organizer = new OrganizerDetails();
 		renamingPattern = "%n - %t [%S]";
 		romsPath = null;
 		unknownPath = null;

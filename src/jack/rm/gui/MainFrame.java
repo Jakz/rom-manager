@@ -180,7 +180,9 @@ public class MainFrame extends JFrame implements WindowListener
 	
 	public void updateTable()
 	{
-		romListModel.fireChanges();
+		Rom current = list.getSelectedValue();
+	  romListModel.fireChanges();
+	  list.setSelectedValue(current, true);
 		Main.countPanel.update();
 	}
 	
