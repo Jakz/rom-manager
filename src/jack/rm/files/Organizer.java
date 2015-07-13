@@ -49,27 +49,8 @@ public class Organizer
 	
 	public static Path getCorrectFolder(Rom rom)
 	{
-	  FolderPolicy type = Settings.current().organizer.getFolderPolicy();
-	  int folderSize = Settings.current().folderSize;
 	  Path base = Settings.current().romsPath;
-	  Path folder = null;
-	  
-	  if (type == FolderPolicy.ROM_NUMBER)
-	  {
-	    int which = (((NumberedRom)rom).number - 1) / folderSize;
-	    String first = Organizer.formatNumber(folderSize*which+1);
-	    String last = Organizer.formatNumber(folderSize*(which+1));
-	    folder = Paths.get(first+"-"+last+java.io.File.separator);
-	  }
-	  else if (type == FolderPolicy.ALPHABETICAL)
-	  {
-	    String normalizedName = Normalizer.normalize(rom.title, Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-	    folder = Paths.get(normalizedName.toUpperCase().charAt(0)+java.io.File.separator);
-	  }
-	  else
-	    return null;
-	  
-	  return base.resolve(folder);
+	  return base.resolve(Settings.current().organizer.getFolderPolicy().getFolderForRom(rom));
 	}
 	
 	public abstract static class Pattern {
@@ -179,7 +160,7 @@ public class Organizer
 	  if (renamePhase && details.hasRenamePolicy() && !rom.hasCorrectName())
 	    renameRom(rom);
 	  
-	  if (movePhase && details.hasFolderPolicy() && !rom.hasCorrectFolder())
+	  if (movePhase && details.hasFolderOrganizer() && !rom.hasCorrectFolder())
 	    moveRom(rom);
 	}
 	

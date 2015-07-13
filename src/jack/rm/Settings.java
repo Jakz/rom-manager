@@ -14,6 +14,8 @@ import jack.rm.data.RomFileEntry;
 import jack.rm.data.set.*;
 import jack.rm.files.FolderPolicy;
 import jack.rm.files.OrganizerDetails;
+import jack.rm.json.JsonPluginAdapter;
+import jack.rm.plugin.folder.FolderPlugin;
 
 public class Settings
 {
@@ -25,7 +27,8 @@ public class Settings
 		GsonBuilder builder = new GsonBuilder()
 		.registerTypeAdapter(RomSet.class, new RomSetSerializer())
 		.registerTypeAdapter(RomFileEntry.class, new RomFileEntry.Adapter())
-		.registerTypeAdapter(Path.class, new PathSerializer());
+		.registerTypeAdapter(Path.class, new PathSerializer())
+		.registerTypeAdapter(FolderPlugin.class, new JsonPluginAdapter<FolderPlugin>());
 		
 		loader = builder.setPrettyPrinting().create();
 	}

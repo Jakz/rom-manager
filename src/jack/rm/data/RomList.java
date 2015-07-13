@@ -228,7 +228,7 @@ public class RomList
     {
       ProgressDialog.finished();
       
-      if (Settings.current().organizer.hasFolderPolicy())
+      if (Settings.current().organizer.hasFolderOrganizer())
       {
         new OrganizeByFolderWorker(list).execute();
         Organizer.deleteEmptyFolders(); // TODO: add check of settings

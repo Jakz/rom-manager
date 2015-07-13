@@ -2,11 +2,13 @@ package jack.rm.files;
 
 import java.nio.file.Path;
 
+import jack.rm.plugin.folder.*;
+
 public class OrganizerDetails
 {
   public RenamePolicy renamePolicy;
-  public FolderPolicy folderPolicy;
-
+  public FolderPlugin folderPlugin;
+  
   public boolean moveUnknown;  
   public boolean deleteEmptyFolders;
   
@@ -18,18 +20,18 @@ public class OrganizerDetails
   public OrganizerDetails()
   {
     renamePolicy = RenamePolicy.FILES;
-    folderPolicy = FolderPolicy.ROM_NUMBER;
+    folderPlugin = new NumericalOrganizer();
     
     moveUnknown = true;
     deleteEmptyFolders = true;
   }
   
   public RenamePolicy getRenamePolicy() { return renamePolicy; }
-  public FolderPolicy getFolderPolicy() { return folderPolicy; }
+  public FolderPlugin getFolderPolicy() { return folderPlugin; }
   
-  public boolean hasFolderPolicy() { return folderPolicy != FolderPolicy.NONE;}
+  public boolean hasFolderOrganizer() { return folderPlugin != null;}
   public boolean hasRenamePolicy() { return renamePolicy != RenamePolicy.NONE; }
-  public boolean shouldOrganize() { return hasFolderPolicy() || hasRenamePolicy(); }
+  public boolean shouldOrganize() { return hasFolderOrganizer() || hasRenamePolicy(); }
 
   public boolean shouldMoveUnknownFiled() { return moveUnknown; }
   public boolean shouldDeleteEmptyFolders() { return deleteEmptyFolders; }
