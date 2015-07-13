@@ -8,6 +8,7 @@ import java.awt.Desktop;
 import jack.rm.data.*;
 import jack.rm.data.set.*;
 import jack.rm.gui.*;
+import jack.rm.net.Downloader;
 
 public class Main
 {	

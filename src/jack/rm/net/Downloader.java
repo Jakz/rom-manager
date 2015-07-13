@@ -1,9 +1,9 @@
-package jack.rm;
+package jack.rm.net;
 
+import jack.rm.Main;
 import jack.rm.data.*;
 import jack.rm.data.set.RomSet;
 import jack.rm.gui.ProgressDialog;
-import jack.rm.gui.Callback;
 
 import java.util.concurrent.*;
 import java.nio.channels.*;
@@ -41,8 +41,7 @@ public class Downloader
 			
 		}
 				
-		ProgressDialog.init(Main.mainFrame, "Art Download", new Callback() { @Override
-    public void call() { pool.shutdownNow(); started = false; } });
+		ProgressDialog.init(Main.mainFrame, "Art Download", () -> { pool.shutdownNow(); started = false; });
 	}
 	
 	public void downloadArt(final Rom r)

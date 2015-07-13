@@ -11,9 +11,9 @@ public class ProgressDialog extends JDialog
 	JLabel title;
 	JLabel desc;
 	JProgressBar progress;
-	Callback callback;
+	Runnable callback;
 	
-	public ProgressDialog(Frame frame, String title, Callback cb)
+	public ProgressDialog(Frame frame, String title, Runnable cb)
 	{
 		super(frame, title);
 		this.callback = cb;
@@ -37,7 +37,7 @@ public class ProgressDialog extends JDialog
 		{
 		  JButton cancelButton = new JButton("Cancel");
 		  panel.add(cancelButton, BorderLayout.SOUTH);
-		  cancelButton.addActionListener( e -> { callback.call(); finished(); });
+		  cancelButton.addActionListener( e -> { callback.run(); finished(); });
 		}
 		
 		panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -55,7 +55,7 @@ public class ProgressDialog extends JDialog
 
 	private static ProgressDialog dialog;
 	
-	public static void init(Frame parent, String title, Callback callback)
+	public static void init(Frame parent, String title, Runnable callback)
 	{
 	  dialog = new ProgressDialog(parent, title, callback);
 	  dialog.progress.setMaximum(100);

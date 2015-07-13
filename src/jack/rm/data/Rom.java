@@ -1,9 +1,7 @@
 package jack.rm.data;
 
 import jack.rm.Settings;
-import jack.rm.files.FolderPolicy;
 import jack.rm.files.Organizer;
-import jack.rm.files.RenamePolicy;
 
 import java.nio.file.*;
 
