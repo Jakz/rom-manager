@@ -5,12 +5,12 @@ import java.nio.file.Files;
 import java.util.*;
 
 import jack.rm.*;
-import jack.rm.data.RomSize;
+import jack.rm.data.*;
 import jack.rm.log.*;
 
 public class RomSetManager
 {
-	private static Map<Console, RomSet> sets = new HashMap<Console, RomSet>();
+	private static Map<Console, RomSet<? extends Rom>> sets = new HashMap<>();
 	
 	static
 	{
@@ -31,9 +31,9 @@ public class RomSetManager
 		Settings.load();
 	}
 	
-	public static RomSet byIdent(String ident)
+	public static RomSet<?> byIdent(String ident)
 	{
-		for (RomSet rs : sets.values())
+		for (RomSet<?> rs : sets.values())
 		{
 			if (rs.ident().equals(ident))
 				return rs;
@@ -42,7 +42,7 @@ public class RomSetManager
 		return null;
 	}
 	
-	public static Collection<RomSet> sets()
+	public static Collection<RomSet<? extends Rom>> sets()
 	{
 		return sets.values();
 	}
@@ -52,7 +52,7 @@ public class RomSetManager
 		loadSet(sets.get(console));
 	}
 	
-	public static void loadSet(RomSet set)
+	public static void loadSet(RomSet<? extends Rom> set)
 	{
 		Log.log(LogType.MESSAGE, LogSource.STATUS, LogTarget.romset(set), "Loading romset");
 	  		
@@ -60,8 +60,8 @@ public class RomSetManager
 		
 		try
 		{
-		  Files.createDirectories(Settings.screensTitle());
-		  Files.createDirectories(Settings.screensGame());
+		  for (Asset asset : set.getSupportedAssets())
+		    Files.createDirectories(Settings.getAssetPath(asset));
 		}
 		catch (IOException e)
 		{
@@ -79,7 +79,7 @@ public class RomSetManager
 		Main.mainFrame.updateCbRomSet(set);
 		Main.infoPanel.setScreenSizes(set.screenTitle,set.screenGame);
 		
-		Main.scanner.scanForRoms(!PersistenceRom.load(set));
+		Main.scanner.scanForRoms(!RomJsonState.load(set));
 		
 		Main.romList.showAll();
 	}

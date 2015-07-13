@@ -20,8 +20,8 @@ public class RomList
 	
 	public RomList()
 	{
-		list = new ArrayList<Rom>();
-		crcs = new HashMap<Long, Rom>();
+		list = new ArrayList<>();
+		crcs = new HashMap<>();
 	}
 	
 	public void add(Rom rom)
@@ -38,7 +38,7 @@ public class RomList
 	public Rom getByNumber(int number)
 	{
 	  for (Rom r : list)
-	    if (r.number == number)
+	    if (((NumberedRom)r).number == number)
 	      return r;
 	  
 	  return null;
@@ -234,7 +234,7 @@ public class RomList
         Organizer.deleteEmptyFolders(); // TODO: add check of settings
       }
       else
-        PersistenceRom.consolidate(list);
+        RomJsonState.consolidate(list);
     }
     
   }
@@ -280,7 +280,7 @@ public class RomList
     {
       ProgressDialog.finished();
       Organizer.deleteEmptyFolders(); // TODO: add check of settings
-      PersistenceRom.consolidate(list);
+      RomJsonState.consolidate(list);
       
       
       //if (Main.pref.organizeRomsDeleteEmptyFolders)
@@ -294,13 +294,11 @@ public class RomList
   {
     private int total = 0;
     private final RomList list;
-    private final int folderSize;
     
-    RenameInsizeZipsWorker(RomList list, int folderSize)
+    RenameInsizeZipsWorker(RomList list)
     {
       this.list = list;
       total = list.count();
-      this.folderSize = folderSize;
     }
 
     @Override

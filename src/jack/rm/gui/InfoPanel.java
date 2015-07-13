@@ -66,7 +66,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	final private JLabel imgTitle, imgScreen;
 	
 	final private JButton downloadButton = new JButton("Download ROM");
-	final private JButton artButton = new JButton("Download Art");
+	final private JButton assetsButton = new JButton("Download Assets");
 	final private JButton openFolderButton = new JButton("Open Folder");
 	final private JButton openArchiveButton = new JButton("Open Archive");
 	final private JPanel buttons = new JPanel();
@@ -157,11 +157,11 @@ public class InfoPanel extends JPanel implements ActionListener
 		
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.LINE_AXIS));
 		//buttons.add(downloadButton);
-		buttons.add(artButton);
+		buttons.add(assetsButton);
 		buttons.add(openFolderButton);
 		buttons.add(openArchiveButton);
 		downloadButton.addActionListener(this);
-		artButton.addActionListener(this);
+		assetsButton.addActionListener(this);
 		openFolderButton.addActionListener(this);
 		openArchiveButton.addActionListener(this);
 		
@@ -197,7 +197,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		if (type.equals("title"))
 		{
 			if (path == null)
-				path = RomSet.current.titleImage(rom);
+				path = RomSet.current.assetPath(Asset.SCREEN_TITLE, rom);
 			w = RomSet.current.screenTitle.width;
 			h = RomSet.current.screenTitle.height;
 			
@@ -207,7 +207,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		else
 		{
 			if (path == null)
-				path = RomSet.current.gameImage(rom);
+				path = RomSet.current.assetPath(Asset.SCREEN_GAMEPLAY, rom);
 			w = RomSet.current.screenGame.width;
 			h = RomSet.current.screenGame.height;
 			
@@ -291,10 +291,8 @@ public class InfoPanel extends JPanel implements ActionListener
 		  downloadButton.setEnabled(false);
 		}
 		
-		if (rom.hasTitleArt() && rom.hasGameArt())
-			artButton.setEnabled(false);
-		else
-			artButton.setEnabled(true);
+		assetsButton.setEnabled(!rom.hasAllAssets());
+
 	}
 	
 	@Override
@@ -321,7 +319,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	  {
 	    Main.openFolder(rom.entry.file().toFile());
 	  }
-		else if (src == artButton)
+		else if (src == assetsButton)
 		{
 			Rom r = rom;
 			Main.downloader.downloadArt(r);

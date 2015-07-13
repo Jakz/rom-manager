@@ -41,9 +41,9 @@ public abstract class LogTarget
   
   public static class RomSet extends LogTarget
   {
-    private final jack.rm.data.set.RomSet set;
+    private final jack.rm.data.set.RomSet<?> set;
     
-    RomSet(jack.rm.data.set.RomSet set)
+    RomSet(jack.rm.data.set.RomSet<?> set)
     {
       super(Type.ROM_SET);
       this.set = set;
@@ -70,6 +70,6 @@ public abstract class LogTarget
   public static LogTarget none() { return new None(); }
   public static LogTarget file(java.nio.file.Path file) { return new File(file); }
   public static LogTarget rom(jack.rm.data.Rom rom) { return new Rom(rom); }
-  public static LogTarget romset(jack.rm.data.set.RomSet set) { return new RomSet(set); }
+  public static LogTarget romset(jack.rm.data.set.RomSet<?> set) { return new RomSet(set); }
 
 }

@@ -2,7 +2,6 @@ package jack.rm.gui;
 
 import javax.swing.JOptionPane;
 import java.awt.Component;
-import java.util.function.Function;
 
 public class Dialogs
 {

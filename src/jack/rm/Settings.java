@@ -8,6 +8,8 @@ import java.util.*;
 
 import com.google.gson.*;
 
+import jack.rm.data.Asset;
+import jack.rm.data.Rom;
 import jack.rm.data.RomFileEntry;
 import jack.rm.data.set.*;
 import jack.rm.files.FolderPolicy;
@@ -15,7 +17,7 @@ import jack.rm.files.OrganizerDetails;
 
 public class Settings
 {
-	private static Map<RomSet, Settings> settings = new HashMap<RomSet, Settings>(); 
+	private static Map<RomSet<? extends Rom>, Settings> settings = new HashMap<>(); 
 	public final static Gson loader;
 	
 	static
@@ -28,14 +30,14 @@ public class Settings
 		loader = builder.setPrettyPrinting().create();
 	}
 	
-	private static class RomSetSerializer implements JsonSerializer<RomSet>, JsonDeserializer<RomSet> {
+	private static class RomSetSerializer implements JsonSerializer<RomSet<? extends Rom>>, JsonDeserializer<RomSet<? extends Rom>> {
 		  @Override
-      public JsonElement serialize(RomSet src, Type typeOfSrc, JsonSerializationContext context) {
+      public JsonElement serialize(RomSet<? extends Rom> src, Type typeOfSrc, JsonSerializationContext context) {
 		    return new JsonPrimitive(src.ident());
 		  }
 		  
 		  @Override
-      public RomSet deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+      public RomSet<?> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			  	return RomSetManager.byIdent(json.getAsJsonPrimitive().getAsString());
 			  }
 		}
@@ -54,7 +56,7 @@ public class Settings
 	  }
 	}
 	
-	public static Settings get(RomSet set)
+	public static Settings get(RomSet<?> set)
 	{
 		Settings s = settings.get(set);
 		
@@ -113,7 +115,7 @@ public class Settings
 		}
 	}
 	
-	public RomSet set;
+	public RomSet<?> set;
 	public String renamingPattern;
 	public Path romsPath;
 	public Path unknownPath;
@@ -138,7 +140,7 @@ public class Settings
 	  return paths;
 	}
 	
-	Settings(RomSet set)
+	Settings(RomSet<?> set)
 	{
 		this.set = set;
 		
@@ -151,14 +153,9 @@ public class Settings
 		unknownPath = null;
 	}
 	
-  public static Path screensTitle()
+  public static Path getAssetPath(Asset asset)
   {
-  	return Paths.get("screens/").resolve(RomSet.current.ident()).resolve("title/");
+  	Path path = Paths.get("screens/").resolve(RomSet.current.ident());	
+  	return path.resolve(asset == Asset.SCREEN_GAMEPLAY ? "game/" : "title/");
   }
-
-  public static Path screensGame()
-  {
-    return Paths.get("screens/").resolve(RomSet.current.ident()).resolve("game/");
-  }
-
 }

@@ -38,7 +38,7 @@ public class MainFrame extends JFrame implements WindowListener
 	final public JList<Rom> list = new JList<>();
 	final private JScrollPane listPane = new JScrollPane(list);
 	
-	public final JComboBox<RomSet> cbRomSets = new JComboBox<RomSet>();
+	public final JComboBox<RomSet<? extends Rom>> cbRomSets = new JComboBox<>();
 	public final RomSetListener rsListener = new RomSetListener();
 	
 	final MenuListener menuListener = new MenuListener();
@@ -74,7 +74,7 @@ public class MainFrame extends JFrame implements WindowListener
 		
 		setJMenuBar(menu);
 		
-		for (RomSet rs : RomSetManager.sets())
+		for (RomSet<? extends Rom> rs : RomSetManager.sets())
 			cbRomSets.addItem(rs);
 		cbRomSets.addActionListener(rsListener);
 		
@@ -163,7 +163,7 @@ public class MainFrame extends JFrame implements WindowListener
 		@Override
     public void actionPerformed(ActionEvent e)
 		{
-			RomSetManager.loadSet((RomSet)cbRomSets.getSelectedItem());
+			RomSetManager.loadSet(cbRomSets.getItemAt(cbRomSets.getSelectedIndex()));
 		}
 	}
 	
@@ -186,7 +186,7 @@ public class MainFrame extends JFrame implements WindowListener
 		Main.countPanel.update();
 	}
 	
-	public void updateCbRomSet(RomSet set)
+	public void updateCbRomSet(RomSet<?> set)
 	{
 		cbRomSets.removeActionListener(rsListener);
 		cbRomSets.setSelectedItem(set);
@@ -209,6 +209,6 @@ public class MainFrame extends JFrame implements WindowListener
 	@Override
   public void windowClosing(WindowEvent e)
 	{
-    PersistenceRom.consolidate(Main.romList);
+    RomJsonState.consolidate(Main.romList);
 	}
 }

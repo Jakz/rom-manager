@@ -11,9 +11,9 @@ import java.util.*;
 import java.util.stream.*;
 import java.awt.Dimension;
 
-public abstract class RomSet
+public abstract class RomSet<R extends Rom>
 {
-	public static RomSet current = null;
+	public static RomSet<? extends Rom> current = null;
 	
 	public final Console type;
 	public final Provider provider;
@@ -31,13 +31,14 @@ public abstract class RomSet
 		Settings.get(this);
 	}
 	
-	public abstract URL titleImageURL(Rom rom);
-	public abstract URL gameImageURL(Rom rom);
-	public abstract Path titleImage(Rom rom);
-	public abstract Path gameImage(Rom rom);
+	public abstract URL assetURL(Asset asset, Rom rom);
+	public abstract Path assetPath(Asset asset, Rom rom);
+	
 	public abstract String downloadURL(Rom rom);
 	
 	public abstract void load();
+	
+	public abstract Asset[] getSupportedAssets();
 	
 	@Override
   public String toString()

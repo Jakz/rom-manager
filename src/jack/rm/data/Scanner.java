@@ -1,7 +1,7 @@
 package jack.rm.data;
 
 import jack.rm.Main;
-import jack.rm.PersistenceRom;
+import jack.rm.RomJsonState;
 import jack.rm.Settings;
 import jack.rm.data.set.RomSet;
 import jack.rm.files.*;
@@ -206,7 +206,7 @@ public class Scanner
 	    if (isCancelled())
 	      return;
 
-	    PersistenceRom.consolidate(list);
+	    RomJsonState.consolidate(list);
 	    ProgressDialog.finished();
 	    
 	    if (!clones.isEmpty())

@@ -9,7 +9,7 @@ public class OfflineListXMLParser extends DefaultHandler
 {
 	CharArrayWriter buffer = new CharArrayWriter();
 	
-	Rom rom;
+	NumberedRom rom;
 	int curString;
 	
 	boolean started = false;
@@ -27,7 +27,7 @@ public class OfflineListXMLParser extends DefaultHandler
 	{			
 		if (localName.equals("game"))
 		{
-			rom = new Rom();
+			rom = new NumberedRom();
 		}
 		else if (localName.equals("games"))
 		{

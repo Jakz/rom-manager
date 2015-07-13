@@ -2,7 +2,7 @@ package jack.rm.data.set;
 
 import jack.rm.Main;
 import jack.rm.Settings;
-import jack.rm.data.Rom;
+import jack.rm.data.*;
 import jack.rm.data.parser.*;
 import jack.rm.files.Organizer;
 
@@ -15,7 +15,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-public abstract class RomSetOfflineList extends RomSet
+public abstract class RomSetOfflineList extends RomSet<NumberedRom>
 {
 	URL artDownloadURL;
 	
@@ -30,13 +30,19 @@ public abstract class RomSetOfflineList extends RomSet
 		this.artDownloadURL = artDownloadURL;
 	}
 	
+	private final Asset[] assets = new Asset[] { Asset.SCREEN_TITLE, Asset.SCREEN_GAMEPLAY };
+	@Override public Asset[] getSupportedAssets() { return assets; }
+	
 	@Override
-  public URL titleImageURL(Rom rom)
+  public URL assetURL(Asset asset, Rom rom)
 	{
 		try
 		{
-		  String partial = ((((rom.number-1)/500)*500)+1)+"-"+((((rom.number-1)/500+1)*500))+"/";
-		  return new URL(artDownloadURL, partial+(rom.imageNumber)+"a.png");
+		  int first = (((((NumberedRom)rom).number-1)/500)*500) + 1;
+      int last = (((((NumberedRom)rom).number-1)/500+1)*500);
+		  String partial = first+"-"+last+"/";
+		  String suffix = asset == Asset.SCREEN_TITLE ? "a.png" : "b.png";
+		  return new URL(artDownloadURL, partial+(rom.imageNumber)+suffix);
 		}
 		catch (MalformedURLException e)
 		{
@@ -44,34 +50,13 @@ public abstract class RomSetOfflineList extends RomSet
 		  return null;
 		}
 	}
-	
+
 	@Override
-  public URL gameImageURL(Rom rom)
+  public Path assetPath(Asset asset, Rom rom)
 	{
-    try
-    {
-      String partial = ((((rom.number-1)/500)*500)+1)+"-"+((((rom.number-1)/500+1)*500))+"/";
-		  return new URL(artDownloadURL, partial+(rom.imageNumber)+"b.png");
-    }
-    catch (MalformedURLException e)
-    {
-      e.printStackTrace();
-      return null;
-    }
+		return Settings.getAssetPath(asset).resolve(Organizer.formatNumber(rom.imageNumber)+".png");
 	}
-	
-	@Override
-  public Path titleImage(Rom rom)
-	{
-		return Settings.screensTitle().resolve(Organizer.formatNumber(rom.imageNumber)+".png");
-	}
-	
-	@Override
-  public Path gameImage(Rom rom)
-	{
-		return Settings.screensGame().resolve(Organizer.formatNumber(rom.imageNumber)+".png");
-	}
-	
+
 	@Override
   public String ident()
 	{

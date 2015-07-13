@@ -10,15 +10,15 @@ import jack.rm.data.*;
 import jack.rm.data.set.RomSet;
 import jack.rm.log.*;
 
-public class PersistenceRom
+public class RomJsonState
 {
 	int number;
 	RomFileEntry file;
 	RomStatus status;
 	
-	public PersistenceRom() { }
+	public RomJsonState() { }
 	
-	public PersistenceRom(int number, RomStatus status, RomFileEntry file)
+	public RomJsonState(int number, RomStatus status, RomFileEntry file)
 	{
 	  this.number = number;
 	  this.status = status;
@@ -27,7 +27,7 @@ public class PersistenceRom
 	
 	public static void consolidate(RomList list)
 	{
-		List<PersistenceRom> roms = new ArrayList<PersistenceRom>();
+		List<RomJsonState> roms = new ArrayList<RomJsonState>();
 		
 		int s = list.count();
 		
@@ -37,12 +37,12 @@ public class PersistenceRom
 			
 			if (r.status != RomStatus.NOT_FOUND)
 			{
-				PersistenceRom pr = new PersistenceRom(r.number, r.status, r.entry);	
+				RomJsonState pr = new RomJsonState(((NumberedRom)r).number, r.status, r.entry);	
 				roms.add(pr);
 			}
 		}
 		
-		PersistenceRom[] romsa = roms.toArray(new PersistenceRom[roms.size()]);
+		RomJsonState[] romsa = roms.toArray(new RomJsonState[roms.size()]);
 		
 		try
 		{
@@ -51,7 +51,7 @@ public class PersistenceRom
 			
 			DataOutputStream dos = new DataOutputStream(new FileOutputStream(folder+"/status.json"));
 
-			dos.writeBytes(Settings.loader.toJson(romsa, PersistenceRom[].class));
+			dos.writeBytes(Settings.loader.toJson(romsa, RomJsonState[].class));
 			
 			dos.close();
 		}
@@ -63,7 +63,7 @@ public class PersistenceRom
 		Log.log(LogType.MESSAGE, LogSource.STATUS, LogTarget.romset(RomSet.current), "Romset status saved on json");
 	}
 	
-	public static boolean load(RomSet set)
+	public static boolean load(RomSet<?> set)
 	{
 		try
 		{
@@ -71,9 +71,9 @@ public class PersistenceRom
 			
 			if (new File(fileName).exists())
 			{
-				PersistenceRom[] proms = Settings.loader.fromJson(new FileReader(fileName), PersistenceRom[].class);
+				RomJsonState[] proms = Settings.loader.fromJson(new FileReader(fileName), RomJsonState[].class);
 				
-				for (PersistenceRom prom : proms)
+				for (RomJsonState prom : proms)
 				{
 					Rom rom = Main.romList.getByNumber(prom.number);
 					
@@ -89,19 +89,6 @@ public class PersistenceRom
 			}
 			else
 				return false;
-				
-			/*File file = new File("data/settings.json");
-			
-			if (file.exists())
-			{
-				
-				Settings[] sts = loader.fromJson(new FileReader(file), Settings[].class);
-				
-				for (Settings s : sts)
-				{
-					settings.put(s.set, s);
-				}
-			}*/
 		}
 		catch (Exception e )
 		{

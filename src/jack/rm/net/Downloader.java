@@ -4,6 +4,10 @@ import jack.rm.Main;
 import jack.rm.data.*;
 import jack.rm.data.set.RomSet;
 import jack.rm.gui.ProgressDialog;
+import jack.rm.log.Log;
+import jack.rm.log.LogSource;
+import jack.rm.log.LogTarget;
+import jack.rm.log.LogType;
 
 import java.util.concurrent.*;
 import java.nio.channels.*;
@@ -18,7 +22,7 @@ public class Downloader
 	int missingTasks;
 	boolean started;
 
-	Downloader()
+	public Downloader()
 	{
 	}
 	
@@ -30,18 +34,18 @@ public class Downloader
     pool = (ThreadPoolExecutor)Executors.newFixedThreadPool(10);
 		started = true;
 		
+		Asset[] assets = RomSet.current.getSupportedAssets();
+		
 		for (int i = 0; i < Main.romList.count(); ++i)
 		{
 			Rom r = Main.romList.get(i);
 			
-			if (!r.hasTitleArt())
-				pool.submit(new ArtDownloaderTask(r, "title"));
-			if (!r.hasGameArt())
-				pool.submit(new ArtDownloaderTask(r, "game"));
-			
+			for (Asset asset : assets)
+			  if (!r.hasAsset(asset))
+		      pool.submit(new ArtDownloaderTask(r, asset));
 		}
 				
-		ProgressDialog.init(Main.mainFrame, "Art Download", () -> { pool.shutdownNow(); started = false; });
+		ProgressDialog.init(Main.mainFrame, "Asset Download", () -> { pool.shutdownNow(); started = false; });
 	}
 	
 	public void downloadArt(final Rom r)
@@ -51,88 +55,33 @@ public class Downloader
 	    @Override
       public void run()
 	    {
-	      if (!r.hasTitleArt())
-	        new ArtDownloaderTask(r, "title").call();
-	      if (!r.hasGameArt())
-	        new ArtDownloaderTask(r, "game").call();
+	      Asset[] assets = RomSet.current.getSupportedAssets();
+
+	      for (Asset asset : assets)
+	        if (!r.hasAsset(asset))
+	          new ArtDownloaderTask(r, asset).call();
 	      
 	      Main.infoPanel.updateFields(r);
 	    }
 	  }.run();
 	}
 	
-	public static class TwinArtDownloaderTask implements Callable<Boolean>
-	{
-		URL urlt, urlg;
-		Path patht, pathg;
-		Rom rom;
-		
-		public TwinArtDownloaderTask(Rom rom)
-		{
-			patht = RomSet.current.titleImage(rom);
-			urlt = RomSet.current.titleImageURL(rom);
-
-			pathg = RomSet.current.gameImage(rom);
-			urlg = RomSet.current.gameImageURL(rom);
-
-			this.rom = rom;
-		}
-		
-		@Override
-    public Boolean call()
-		{
-			try
-			{
-				ReadableByteChannel rbc = Channels.newChannel(urlt.openStream());
-				FileChannel channel = FileChannel.open(patht, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
-				channel.transferFrom(rbc, 0, 1 << 24);
-				channel.close();
-				
-				rbc = Channels.newChannel(urlg.openStream());
-				channel = FileChannel.open(pathg);
-				channel.transferFrom(rbc, 0, 1 << 24);
-				channel.close();
-			}
-			catch (FileNotFoundException e)
-			{
-				//Main.logln("Downloaded art for "+Renamer.formatNumber(rom.number)+".");
-				Main.infoPanel.updateFields(rom);
-				return false;
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-				return false;
-			}
-
-			//Main.logln("Downloaded art for "+Renamer.formatNumber(rom.number)+".");
-			Main.infoPanel.updateFields(rom);
-			return true;
-		}
-	}
-	
 	public class ArtDownloaderTask implements Callable<Boolean>
 	{
 		URL url;
 		Path path;
-		String type;
+		Asset asset;
 		Rom rom;
 		
-		public ArtDownloaderTask(Rom rom, String type)
+		public ArtDownloaderTask(Rom rom, Asset asset)
 		{	
-			if (type.equals("title"))
-			{
-				path = RomSet.current.titleImage(rom);
-				url = RomSet.current.titleImageURL(rom);
-			}
-			else
-			{
-				path = RomSet.current.gameImage(rom);
-				url = RomSet.current.gameImageURL(rom);
-			}
+			path = RomSet.current.assetPath(asset, rom);
+			url = RomSet.current.assetURL(asset, rom);
+			
+			System.out.println(url+" -> "+path.toAbsolutePath());
 					
 			this.rom = rom;
-			this.type = type;
+			this.asset = asset;
 		}
 		
 		@Override
@@ -147,13 +96,13 @@ public class Downloader
 			}
 			catch (FileNotFoundException e)
 			{
-				//Main.logln("Downloaded art for "+Renamer.formatNumber(rom.number)+".");
+			  Log.log(LogType.ERROR, LogSource.DOWNLOADER, LogTarget.rom(rom), "Asset not found at "+url);
 				Main.infoPanel.updateFields(rom);
 				return false;
 			}
 		  catch (java.nio.channels.ClosedByInterruptException e)
 		  {
-        try
+		    try
         {
           if (Files.exists(path))
             Files.delete(path);

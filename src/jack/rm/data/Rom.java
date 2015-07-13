@@ -1,6 +1,7 @@
 package jack.rm.data;
 
 import jack.rm.Settings;
+import jack.rm.data.set.RomSet;
 import jack.rm.files.Organizer;
 
 import java.nio.file.*;
@@ -9,7 +10,6 @@ public class Rom implements Comparable<Rom>
 {
 	public RomStatus status;
 	
-	public int number;
 	public int imageNumber;
 	
 	public String title;
@@ -39,16 +39,8 @@ public class Rom implements Comparable<Rom>
 	public Rom()
 	{
 		status = RomStatus.NOT_FOUND;
-	}
-	
-	public Rom(int number)
-	{
-		this();
-		this.number = number;
-		
-		imgCRC1 = -1L;
-		imgCRC2 = -1L;
-		
+    imgCRC1 = -1L;
+    imgCRC2 = -1L;
 	}
 	
 	@Override
@@ -84,40 +76,37 @@ public class Rom implements Comparable<Rom>
 			return "";
 	}
 	
-	public boolean hasTitleArt()
+	public long getCRCforAsset(Asset asset)
 	{
-		Path f = Settings.screensTitle().resolve(Organizer.formatNumber(imageNumber)+".png");
-
-		if (!Files.exists(f)) return false;
-		else
-		{
-			if (Settings.current().checkImageCRC)
-			{
-				long icrc = Scanner.computeCRC(f);
-				return icrc == imgCRC1;
-			}
-			else
-				return true;
-		}
+	  return asset == Asset.SCREEN_GAMEPLAY ? imgCRC2 : imgCRC1;
 	}
 	
-	public boolean hasGameArt()
+	public boolean hasAsset(Asset asset)
 	{
-    Path f = Settings.screensGame().resolve(Organizer.formatNumber(imageNumber)+".png");
-    
+	  Path f = Settings.getAssetPath(asset).resolve(Organizer.formatNumber(imageNumber)+".png");
+	   
     if (!Files.exists(f)) return false;
-		else
-		{
-			if (Settings.current().checkImageCRC)
-			{
-				long icrc = Scanner.computeCRC(f);
-				return icrc == imgCRC2;
-			}
-			else
-				return true;
-		}
+    else
+    {
+      if (Settings.current().checkImageCRC)
+      {
+        long icrc = Scanner.computeCRC(f);
+        return icrc == getCRCforAsset(asset);
+      }
+      else
+        return true;
+    }
 	}
 	
+	public boolean hasAllAssets()
+	{
+	  for (Asset asset : RomSet.current.getSupportedAssets())
+	    if (!hasAsset(asset))
+	      return false;
+	  
+	  return true;
+	}
+
 	public boolean isOrganized()
 	{
 	  boolean nameIsOrganized = !Settings.current().organizer.hasRenamePolicy() || hasCorrectName();
@@ -138,12 +127,12 @@ public class Rom implements Comparable<Rom>
 	@Override
 	public boolean equals(Object other)
 	{
-	  return other instanceof Rom && ((Rom)other).number == number;
+	  return other instanceof Rom && ((Rom)other).title.equals(title);
 	}
 	
 	@Override
   public int compareTo(Rom rom)
 	{
-		return number - rom.number;
+		return title.compareTo(rom.title);
 	}
 }

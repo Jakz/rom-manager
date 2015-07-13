@@ -56,7 +56,7 @@ public class Organizer
 	  
 	  if (type == FolderPolicy.ROM_NUMBER)
 	  {
-	    int which = (rom.number - 1) / folderSize;
+	    int which = (((NumberedRom)rom).number - 1) / folderSize;
 	    String first = Organizer.formatNumber(folderSize*which+1);
 	    String last = Organizer.formatNumber(folderSize*(which+1));
 	    folder = Paths.get(first+"-"+last+java.io.File.separator);
@@ -100,7 +100,7 @@ public class Organizer
 	static class NumberPattern extends Pattern {
 		NumberPattern() { super("%n", "Release number in format 1234"); }
 		@Override
-    public String apply(String name, Rom rom) { return name.replace(code,format.format(rom.number)); }
+    public String apply(String name, Rom rom) { return name.replace(code,format.format(((NumberedRom)rom).number)); }
 	}
 	
 	static class TitlePattern extends Pattern {
