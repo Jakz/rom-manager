@@ -10,6 +10,8 @@ import com.google.gson.*;
 
 import jack.rm.data.RomFileEntry;
 import jack.rm.data.set.*;
+import jack.rm.files.FolderPolicy;
+import jack.rm.files.OrganizerDetails;
 
 public class Settings
 {
@@ -117,15 +119,9 @@ public class Settings
 	public Path unknownPath;
 	
 	public boolean checkImageCRC;
-	public boolean checkInsideArchives;
-	public boolean moveUnknownFiles;
 		
-	public boolean useRenamer;
-	public OrganizerType organizerType;
-	public boolean organizeByDeletingEmptyFolders;
+	public OrganizerDetails organizer;
 	public int folderSize;
-	public boolean renameInsideZips;
-	public boolean stripUselessFilesInZips;
 	
 	Settings()
 	{
@@ -137,13 +133,6 @@ public class Settings
 		this.set = set;
 		
 		checkImageCRC = true;
-		checkInsideArchives = true;
-		moveUnknownFiles = false;
-		renameInsideZips = false;
-		stripUselessFilesInZips = false;
-		useRenamer = true;
-		organizerType = OrganizerType.ALPHABETICAL;
-		organizeByDeletingEmptyFolders = false;
 		folderSize = 100;
 		
 		renamingPattern = "%n - %t [%S]";
@@ -151,8 +140,6 @@ public class Settings
 		unknownPath = null;
 	}
 	
-	public boolean shouldOrganize() { return organizerType != OrganizerType.UNTOUCH; }
-
   public static Path screensTitle()
   {
   	return Paths.get("screens/").resolve(RomSet.current.ident()).resolve("title/");

@@ -167,15 +167,13 @@ public class RomList
     {
       if (rom.status != RomStatus.NOT_FOUND)
       {  
-        String filename = rom.entry.plainName();
-        
         if (rom.status == RomStatus.FOUND)
         {
-          if (!Organizer.isCorrectlyNamed(filename, rom))
+          if (!rom.hasCorrectName())
             rom.status = RomStatus.INCORRECT_NAME;
         }
         else if (rom.status == RomStatus.INCORRECT_NAME)
-          if (Organizer.isCorrectlyNamed(filename, rom))
+          if (rom.hasCorrectName())
             rom.status = RomStatus.FOUND;
       }
     }
@@ -230,7 +228,7 @@ public class RomList
     {
       ProgressDialog.finished();
       
-      if (Settings.current().shouldOrganize())
+      if (Settings.current().organizer.hasFolderPolicy())
       {
         new OrganizeByFolderWorker(list).execute();
         Organizer.deleteEmptyFolders(); // TODO: add check of settings
@@ -262,7 +260,7 @@ public class RomList
         setProgress((int)((((float)i)/total)*100));
 
         Rom rom = list.get(i); 
-        Organizer.organizeRom(rom);
+        Organizer.moveRom(rom);
 
         publish(i);
       }
@@ -355,9 +353,6 @@ public class RomList
 	
 	public void renameRoms()
 	{
-		if (!Settings.current().useRenamer)
-			return;
-		
 		new RenamerWorker(this).execute();
 	}
 }

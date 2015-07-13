@@ -1,7 +1,9 @@
 package jack.rm.data;
 
 import jack.rm.Settings;
+import jack.rm.files.FolderPolicy;
 import jack.rm.files.Organizer;
+import jack.rm.files.RenamePolicy;
 
 import java.nio.file.*;
 
@@ -116,6 +118,23 @@ public class Rom implements Comparable<Rom>
 			else
 				return true;
 		}
+	}
+	
+	public boolean isOrganized()
+	{
+	  boolean nameIsOrganized = !Settings.current().organizer.hasRenamePolicy() || hasCorrectName();
+	  boolean positionIsOrganized = !Settings.current().organizer.hasFolderPolicy() || hasCorrectFolder();
+	  return nameIsOrganized && positionIsOrganized;
+	}
+	
+	public boolean hasCorrectFolder()
+	{
+	  return Organizer.getCorrectFolder(this).equals(entry.file().getParent());
+	}
+	
+	public boolean hasCorrectName()
+	{
+	  return Organizer.getCorrectName(this).equals(entry.plainName());
 	}
 	
 	@Override

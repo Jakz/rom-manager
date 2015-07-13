@@ -1,6 +1,5 @@
 package jack.rm.files;
 
-import jack.rm.OrganizerType;
 import jack.rm.Settings;
 import jack.rm.data.*;
 import jack.rm.data.set.*;
@@ -37,16 +36,6 @@ public class Organizer
 	{
 		return format.format(index);
 	}
-	
-	public static boolean isCorrectlyNamed(String name, Rom rom)
-	{	  
-	  return !Settings.current().useRenamer || name.equals(getCorrectName(rom));
-	}
-	
-	public static boolean isCorrectlyPlaced(Rom rom)
-	{
-	  return getCorrectFolder(rom).equals(rom.entry.file().getParent());
-	}
 		
 	public static String getCorrectName(Rom rom)
 	{
@@ -60,19 +49,19 @@ public class Organizer
 	
 	public static Path getCorrectFolder(Rom rom)
 	{
-	  OrganizerType type = Settings.current().organizerType;
+	  FolderPolicy type = Settings.current().organizer.getFolderPolicy();
 	  int folderSize = Settings.current().folderSize;
 	  Path base = Settings.current().romsPath;
 	  Path folder = null;
 	  
-	  if (type == OrganizerType.ROM_NUMBER)
+	  if (type == FolderPolicy.ROM_NUMBER)
 	  {
 	    int which = (rom.number - 1) / folderSize;
 	    String first = Organizer.formatNumber(folderSize*which+1);
 	    String last = Organizer.formatNumber(folderSize*(which+1));
 	    folder = Paths.get(first+"-"+last+java.io.File.separator);
 	  }
-	  else if (type == OrganizerType.ALPHABETICAL)
+	  else if (type == FolderPolicy.ALPHABETICAL)
 	  {
 	    String normalizedName = Normalizer.normalize(rom.title, Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
 	    folder = Paths.get(normalizedName.toUpperCase().charAt(0)+java.io.File.separator);
@@ -183,6 +172,17 @@ public class Organizer
 		}
 	}
 	
+	public static void organizeRomIfNeeded(Rom rom, boolean renamePhase, boolean movePhase)
+	{
+	  OrganizerDetails details = Settings.current().organizer;
+	  
+	  if (renamePhase && details.hasRenamePolicy() && !rom.hasCorrectName())
+	    renameRom(rom);
+	  
+	  if (movePhase && details.hasFolderPolicy() && !rom.hasCorrectFolder())
+	    moveRom(rom);
+	}
+	
 	public static void renameRom(Rom rom)
 	{
     Path renameTo = rom.entry.file().getParent();
@@ -207,7 +207,7 @@ public class Organizer
     }
 	}
 	
-	public static void organizeRom(Rom rom)
+	public static void moveRom(Rom rom)
 	{
 	  if (rom.status != RomStatus.NOT_FOUND)
     {     

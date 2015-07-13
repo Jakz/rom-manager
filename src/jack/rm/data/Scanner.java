@@ -61,12 +61,13 @@ public class Scanner
 	    Log.log(LogType.WARNING, LogSource.SCANNER, LogTarget.file(Settings.current().romsPath.relativize(result.entry.file())), "File contains a rom already present in romset: "+rom.entry);
 	    return;
 	  }
-	  else if (Organizer.isCorrectlyNamed(result.entry.plainName(), rom))
+	  
+	  rom.entry = result.entry;
+
+	  if (rom.hasCorrectName())
 	    rom.status = RomStatus.FOUND;
 	  else
 	    rom.status = RomStatus.INCORRECT_NAME;
-	  
-	  rom.entry = result.entry;
 	}
 	
 	public ScanResult scanFile(Path file)
