@@ -27,4 +27,10 @@ public class NumericalOrganizer extends FolderPlugin
     String last = Organizer.formatNumber(folderSize*(which+1));
     return Paths.get(first+"-"+last+java.io.File.separator);
   }
+  
+  @Override
+  public String getDescription()
+  {
+    return "This plugin organizes ROMs which have a number by splitting into folders of a specified size.";
+  }
 }

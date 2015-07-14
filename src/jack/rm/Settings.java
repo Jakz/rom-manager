@@ -5,13 +5,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+import com.google.gson.JsonParseException;
+
 import jack.rm.data.Asset;
 import jack.rm.data.Rom;
 import jack.rm.data.set.*;
 import jack.rm.files.OrganizerDetails;
 import jack.rm.json.Json;
-import jack.rm.plugin.PluginRealType;
+import jack.rm.log.Log;
+import jack.rm.log.LogSource;
+import jack.rm.log.LogType;
 import jack.rm.plugin.PluginSet;
+import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.PluginWithIgnorePaths;
 import jack.rm.plugins.folder.FolderPlugin;
 
@@ -53,6 +58,13 @@ public class Settings
 					settings.put(s.set, s);
 				}
 			}
+		}
+		catch (JsonParseException e)
+		{
+		  if (e.getCause() instanceof ClassNotFoundException)
+		    Log.log(LogType.ERROR, LogSource.PLUGINS, null, "Error while loading plugin state: "+e.getCause().toString());
+		  
+		  e.printStackTrace();
 		}
 		catch (Exception e )
 		{

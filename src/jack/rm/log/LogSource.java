@@ -6,5 +6,6 @@ public enum LogSource
   DOWNLOADER,
   ORGANIZER,
   SCANNER,
-  IMPORTER
+  IMPORTER,
+  PLUGINS
 }

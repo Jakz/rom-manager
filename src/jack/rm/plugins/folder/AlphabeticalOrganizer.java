@@ -15,4 +15,10 @@ public class AlphabeticalOrganizer extends FolderPlugin
     String normalizedName = Normalizer.normalize(rom.title, Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     return Paths.get(normalizedName.toUpperCase().charAt(0)+java.io.File.separator);
   }
+  
+  @Override
+  public String getDescription()
+  {
+    return "This plugin organizes ROMs by folders named with the first letter of the rom title";
+  }
 }

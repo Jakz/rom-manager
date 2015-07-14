@@ -9,6 +9,7 @@ import jack.rm.data.*;
 import jack.rm.data.set.*;
 import jack.rm.gui.*;
 import jack.rm.net.Downloader;
+import jack.rm.plugin.PluginManager;
 
 public class Main
 {		
@@ -19,6 +20,7 @@ public class Main
 	
 	public static ManagerPanel romsetPanel;
 	public static OrganizerPanel renamerPanel;
+	public static PluginsPanel pluginsPanel;
 	public static OptionsFrame optionsFrame;
 	
 	public static ClonesDialog clonesDialog;
@@ -56,6 +58,7 @@ public class Main
 		
 		romsetPanel = new ManagerPanel();
 		renamerPanel = new OrganizerPanel();
+		pluginsPanel = new PluginsPanel(PluginManager.getInstance());
 		
 		optionsFrame = new OptionsFrame();
 		

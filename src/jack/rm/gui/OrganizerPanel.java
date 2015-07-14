@@ -70,7 +70,8 @@ public class OrganizerPanel extends JPanel implements CaretListener
 							
 							if (r != -1)
 							{
-								String code = Organizer.patterns.get(r).code;
+								r = patterns.convertRowIndexToModel(r);
+							  String code = Organizer.patterns.get(r).code;
 								int p = patternField.getCaretPosition();
 								String before = patternField.getText().substring(0, p);
 								String after = patternField.getText().substring(p);

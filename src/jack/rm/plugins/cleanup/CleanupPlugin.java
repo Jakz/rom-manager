@@ -2,6 +2,7 @@ package jack.rm.plugins.cleanup;
 
 import jack.rm.data.RomList;
 import jack.rm.plugin.*;
+import jack.rm.plugins.PluginRealType;
 
 public abstract class CleanupPlugin extends Plugin
 {

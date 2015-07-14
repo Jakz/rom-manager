@@ -10,6 +10,7 @@ import jack.rm.data.RomFileEntry;
 import jack.rm.data.set.RomSet;
 import jack.rm.plugin.Plugin;
 import jack.rm.plugin.PluginSet;
+import jack.rm.plugin.json.JsonPluginSetAdapter;
 
 public class Json
 {

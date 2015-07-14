@@ -11,7 +11,8 @@ public class Log
   
   public static void log(LogMessage msg) { 
     messages.add(msg); 
-    Main.mainFrame.cardConsole.populate();
+    if (Main.mainFrame != null)
+      Main.mainFrame.cardConsole.populate();
   }
   
   public static void log(LogType type, LogSource source, LogTarget target, String message) { log(new LogMessage(type, source, target, message)); }

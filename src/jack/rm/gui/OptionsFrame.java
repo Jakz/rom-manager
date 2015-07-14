@@ -23,6 +23,7 @@ public class OptionsFrame extends JFrame implements ActionListener, ComponentLis
 		
 		tabs.addTab(Text.OPTION_ROMSET.text(), Main.romsetPanel);
 		tabs.addTab(Text.OPTION_RENAMER.text(), Main.renamerPanel);
+		tabs.addTab(Text.OPTION_PLUGINS.text(), Main.pluginsPanel);
 	
 		JPanel all = new JPanel();
 		all.setLayout(new BorderLayout());
@@ -48,8 +49,10 @@ public class OptionsFrame extends JFrame implements ActionListener, ComponentLis
 		
 		Main.romsetPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		Main.renamerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+    Main.pluginsPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		lower.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		
+		setPreferredSize(new Dimension(600,600));
 		pack();
 	}
 	
@@ -60,6 +63,7 @@ public class OptionsFrame extends JFrame implements ActionListener, ComponentLis
 		
 		Main.romsetPanel.updateFields();
 		Main.renamerPanel.updateFields();
+		Main.pluginsPanel.populate();
 		setLocationRelativeTo(Main.mainFrame);
 		
 		setVisible(true);

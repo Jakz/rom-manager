@@ -5,6 +5,7 @@ import java.lang.reflect.Type;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
@@ -29,7 +30,7 @@ public class JsonPluginAdapter<T extends JsonnableContext> implements JsonSerial
 
   @SuppressWarnings("unchecked")
   @Override
-  public T deserialize(JsonElement json, Type type, JsonDeserializationContext context)
+  public T deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException
   {
     String name = json.getAsJsonObject().get("class").getAsString();
     
@@ -42,7 +43,7 @@ public class JsonPluginAdapter<T extends JsonnableContext> implements JsonSerial
     }
     catch (ClassNotFoundException e)
     {
-      e.printStackTrace();
+      throw new JsonParseException(e);
     }
     catch (IllegalAccessException|InstantiationException e)
     {

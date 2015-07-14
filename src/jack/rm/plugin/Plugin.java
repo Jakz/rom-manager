@@ -54,5 +54,9 @@ public abstract class Plugin implements JsonnableContext
   @Override public int hashCode() { return this.getClass().hashCode(); }
   @Override public boolean equals(Object other) { return this.getClass().equals(other.getClass()); }
 
+  public String getName() { return getClass().getSimpleName(); }
+  public String getAuthor() { return "Author"; }
+  public String getDescription() { return "Description"; }
+  public PluginVersion getVersion() { return new PluginVersion(1,0); }
   public abstract PluginType getType();
 }

@@ -1,4 +1,4 @@
-package jack.rm.json;
+package jack.rm.plugin.json;
 
 import java.lang.reflect.Type;
 import java.util.stream.Stream;

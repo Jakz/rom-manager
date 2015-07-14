@@ -38,5 +38,10 @@ public class PluginSet
     return stream().anyMatch( p -> p.getType() == type );
   }
   
+  public boolean hasPlugin(PluginBuilder builder)
+  {
+    return stream().anyMatch( p -> p.getClass().equals(builder.getPluginClass()));
+  }
+  
   public Stream<Plugin> stream() { return plugins.stream(); }
 }
