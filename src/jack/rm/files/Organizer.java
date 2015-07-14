@@ -100,15 +100,15 @@ public class Organizer
 	}
 	
 	static class MegabyteSizePattern extends Pattern {
-		MegabyteSizePattern() { super("%s", "Size of the game dump in megabytes"); }
+		MegabyteSizePattern() { super("%s", "Size of the game dump in bytes (long)"); }
 		@Override
-    public String apply(String name, Rom rom) { return name.replace(code,rom.size.mbytesAsString()); }
+    public String apply(String name, Rom rom) { return name.replace(code,rom.size.toString(RomSize.PrintStyle.LONG, RomSize.PrintUnit.BYTES)); }
 	}
 	
 	static class MegabitSizePattern extends Pattern {
-		MegabitSizePattern() { super("%S", "Size of the game dump in megabits"); }
+		MegabitSizePattern() { super("%S", "Size of the game dump in bits (short)"); }
 		@Override
-    public String apply(String name, Rom rom) { return name.replace(code,rom.size.bitesAsStringShort()); }
+    public String apply(String name, Rom rom) { return name.replace(code,rom.size.toString(RomSize.PrintStyle.SHORT, RomSize.PrintUnit.BITS)); }
 	}
 	
 	static class FullLocationPattern extends Pattern {

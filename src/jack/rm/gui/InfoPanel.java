@@ -259,7 +259,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		fields[Field.PUBLISHER.index].setText(rom.publisher);
 		fields[Field.GROUP.index].setText(rom.group);
 		fields[Field.DUMP_DATE.index].setText(rom.date);
-		fields[Field.SIZE.index].setText(rom.size.bitesAsStringLong()+" ("+rom.size.mbytesAsString()+")");
+		fields[Field.SIZE.index].setText(rom.size.toString(RomSize.PrintStyle.LONG, RomSize.PrintUnit.BITS)+" ("+rom.size.toString(RomSize.PrintStyle.LONG, RomSize.PrintUnit.BYTES)+")");
 		//fields[5].setText(StringManager.getGenre(rom.genre));
 		fields[Field.LOCATION.index].setText(rom.location.fullName);
 		fields[Field.INTERNAL_NAME.index].setText(rom.internalName);

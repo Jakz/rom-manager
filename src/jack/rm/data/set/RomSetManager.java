@@ -22,6 +22,7 @@ public class RomSetManager
 		  sets.put(Console.NES, new NES());
 		  sets.put(Console.GB, new GB());
 		  sets.put(Console.WS, new WS());
+		  sets.put(Console._3DS, new _3DS());
 		}
 		catch (Exception e)
 		{

@@ -83,9 +83,9 @@ public class OrganizerPanel extends JPanel implements CaretListener
 						}
 					}
 				});
-		/*patterns.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		patterns.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-		patterns.getColumnModel().getColumn(0).setWidth(80);*/
+		patterns.getColumnModel().getColumn(0).setMinWidth(50);
+		patterns.getColumnModel().getColumn(0).setMaxWidth(50);
+		
 		JScrollPane scrollPane = new JScrollPane(patterns);
 		
 		

@@ -47,6 +47,11 @@ public class OfflineListXMLParser extends DefaultHandler
 		return Integer.parseInt(asString());
 	}
 	
+	public long asLong()
+	{
+	  return Long.parseLong(asString());
+	}
+	
 	@Override
   public void endElement(String namespaceURI, String localName, String qName) throws SAXException
 	{
@@ -70,7 +75,7 @@ public class OfflineListXMLParser extends DefaultHandler
 					rom.saveType = s;
 		}
 		else if (localName.equals("romSize")) {
-			rom.size = RomSize.forBytes(asInt());
+			rom.size = RomSize.forBytes(asLong());
 		}
 		else if (localName.equals("publisher"))
 		{

@@ -144,7 +144,7 @@ public class Scanner
 		if (folder == null || !Files.exists(folder) || !Files.isDirectory(folder))
 		{
 		  Log.log(LogType.ERROR, LogSource.SCANNER, LogTarget.romset(RomSet.current), "Roms path doesn't exist! Scanning interrupted");
-		  Dialogs.showError("Romset Path", "Romset path is not set, or it doesn't exists as a folder.\nPlease set one.", Main.mainFrame);
+		  Dialogs.showError("Romset Path", "Romset path is not set, or it doesn't exists as a folder.\nPlease set one in Options.", Main.mainFrame);
 		  list.resetStatus();
 		  Main.mainFrame.updateTable();
 		  return;

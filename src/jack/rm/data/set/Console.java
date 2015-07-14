@@ -7,6 +7,7 @@ public enum Console
 	GBC("gbc", "GameBoy Color", new String[] {"gbc"}, true),
 	GBA("gba", "GameBoy Advance",new String[] {"gba", "agb", "bin"}, true),
 	NDS("nds", "Nintendo DS", new String[] {"nds", "dsi"}, true),
+	_3DS("3ds", "Nintendo 3DS", new String[] {"3ds"}, true),
 	WS("ws", "WonderSwan", new String[] {"ws"}, true),
 	C64("c64", "Commodore 64", null, false)
 	;
