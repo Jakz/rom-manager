@@ -46,9 +46,9 @@ public class PluginSet<P extends Plugin>
     return stream().anyMatch( p -> p.getClass().equals(builder.getPluginClass()));
   }
   
-  public P getPlugin(PluginBuilder<P> builder)
+  public Optional<P> getPlugin(PluginBuilder<P> builder)
   {
-    return stream().filter( p -> p.getClass().equals(builder.getPluginClass())).findFirst().get();
+    return stream().filter( p -> p.getClass().equals(builder.getPluginClass())).findFirst();
   }
   
   public Stream<P> stream() { return plugins.stream(); }

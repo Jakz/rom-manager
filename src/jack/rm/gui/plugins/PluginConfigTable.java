@@ -2,6 +2,7 @@ package jack.rm.gui.plugins;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JTable;
@@ -14,6 +15,7 @@ import jack.rm.plugin.PluginArgument;
 
 class PluginConfigTable extends JTable
 {
+  private List<Class<?>> types;
   private List<TableCellEditor> editors;
   private List<TableCellRenderer> renderers;
   private final PluginArgumentTableModel model;
@@ -34,6 +36,15 @@ class PluginConfigTable extends JTable
       PluginArgument arg = arguments.get(r);
       return c == 0 ? arg.getName() : arg.get();
     }
+    
+    @Override public void setValueAt(Object v, int r, int c)
+    {
+      if (v != null)
+      {
+        PluginArgument arg = arguments.get(r);
+        arg.set(v);
+      }
+    }
   }
   
   PluginConfigTable()
@@ -51,7 +62,9 @@ class PluginConfigTable extends JTable
     if (c == 0)
       return null;
     else
+    {
       return editors.get(r);
+    }
   }
   
   @Override public TableCellRenderer getCellRenderer(int r, int c)
@@ -66,21 +79,37 @@ class PluginConfigTable extends JTable
   {
     renderers.clear();
     editors.clear();
-    
-    model.arguments = plugin.getArguments();
-    
-    model.arguments.stream().map( a -> {
-      if (a.getType().equals(Integer.class))
-        return this.getDefaultEditor(Integer.class);
-      else
-        return this.getDefaultEditor(Object.class);
-    }).forEach(editors::add);
-    
-    model.arguments.stream().map( a -> {
-      if (a.getType().equals(Integer.class))
-        return this.getDefaultRenderer(Integer.class);
-      else
-        return this.getDefaultRenderer(Object.class);
-    }).forEach(renderers::add);
+  
+    if (plugin == null)
+    {
+      model.arguments.clear();
+      setEnabled(false);
+    }
+    else
+    {
+      setEnabled(true);
+
+      model.arguments = plugin.getArguments();
+      
+      types = model.arguments.stream().map( a -> a.getType() ).collect(Collectors.toList());
+ 
+      types.stream().map( t -> {
+        if (t.equals(Integer.class) || t.equals(Integer.TYPE))
+          return new PluginArgumentEditor(t, this.getDefaultEditor(Integer.class));
+        else if (t.equals(java.nio.file.Path.class))
+          return new PathArgumentEditor();
+        else
+          return this.getDefaultEditor(Object.class);
+      }).forEach(editors::add);
+      
+      types.stream().map( t -> {
+        if (t.equals(Integer.class) || t.equals(Integer.TYPE))
+          return this.getDefaultRenderer(Integer.class);
+        else
+          return this.getDefaultRenderer(Object.class);
+      }).forEach(renderers::add);
+      
+      model.fireTableDataChanged();
+    }
   }
 }

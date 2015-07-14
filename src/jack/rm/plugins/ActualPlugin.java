@@ -11,5 +11,6 @@ public abstract class ActualPlugin extends Plugin
   {
     manager.register(PluginRealType.FOLDER_ORGANIZER, jack.rm.plugins.folder.NumericalOrganizer.class);
     manager.register(PluginRealType.ROMSET_CLEANUP, jack.rm.plugins.cleanup.DeleteEmptyFoldersPlugin.class);
+    manager.register(PluginRealType.ROMSET_CLEANUP, jack.rm.plugins.cleanup.MoveUnknownFilesPlugin.class);
   }
 }

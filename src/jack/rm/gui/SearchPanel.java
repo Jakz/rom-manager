@@ -2,6 +2,7 @@ package jack.rm.gui;
 
 import jack.rm.data.*;
 import jack.rm.data.set.RomSet;
+import jack.rm.gui.parts.JPlaceHolderTextField;
 import jack.rm.i18n.Text;
 import jack.rm.*;
 

@@ -20,7 +20,7 @@ public class AlphabeticalOrganizer extends FolderPlugin
   
   public PluginInfo getInfo()
   { 
-    return new PluginInfo(getClass().getName(), new PluginVersion(1,0), "Jack",
+    return new PluginInfo("Alphabetical Organizer", new PluginVersion(1,0), "Jack",
         "This plugin organizes ROMs by folders named with the first letter of the rom title");
   }
 }

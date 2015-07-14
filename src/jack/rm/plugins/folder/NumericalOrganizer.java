@@ -13,7 +13,7 @@ import jack.rm.plugin.PluginVersion;
 
 public class NumericalOrganizer extends FolderPlugin
 {
-  @ExposedParameter
+  @ExposedParameter(name="Folder Size")
   private int folderSize = 100;
   
   public NumericalOrganizer()
@@ -33,7 +33,7 @@ public class NumericalOrganizer extends FolderPlugin
   @Override
   public PluginInfo getInfo()
   { 
-    return new PluginInfo(getClass().getName(), new PluginVersion(1,0), "Jack",
+    return new PluginInfo("Numerical Organizer", new PluginVersion(1,0), "Jack",
         "This plugin organizes ROMs which have a number by splitting into folders of a specified size.");
   }
 

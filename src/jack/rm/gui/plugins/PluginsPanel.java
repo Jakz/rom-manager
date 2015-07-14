@@ -5,7 +5,10 @@ import java.util.List;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
+
+import net.miginfocom.swing.MigLayout;
 
 import jack.rm.Settings;
 import jack.rm.plugin.*;
@@ -61,47 +64,20 @@ public class PluginsPanel extends JPanel
     }
   }
   
-  class PluginInfoPanel extends JPanel
-  {
-    private final JLabel[] labels;
-    private final JTextArea desc;
-    
-    PluginInfoPanel()
-    {
-      labels = new JLabel[3];
-      labels[0] = new JLabel("Name: Bla");
-      labels[1] = new JLabel("Category: Category");
-      labels[2] = new JLabel("Author: Author");
-      
-      desc = new JTextArea(3, 80);
-      desc.setLineWrap(true);
-      desc.setWrapStyleWord(true);
-      desc.setEditable(false);
-      
-      desc.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.)");
-      
-      JScrollPane descPane = new JScrollPane(desc);
-      descPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-      descPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-      
-      this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-      this.add(labels[0]);
-      this.add(labels[1]);
-      this.add(labels[2]);
-      this.add(descPane);
-    }
-    
-    public void updateFields(PluginBuilder<ActualPlugin> builder)
-    {
-      labels[0].setText("Name: "+builder.info.getSimpleName());
-      labels[1].setText("Category: "+builder.type);
-      labels[2].setText("Author: "+builder.info.author);
-      desc.setText(builder.info.description);
-    }
-  }
-  
-  PluginInfoPanel infoPanel;
   PluginConfigTable configTable;
+  
+  MigLayout layout;
+  
+  private final JLabel[] labels;
+  private final JTextArea desc;
+  
+  public void updateFields(PluginBuilder<ActualPlugin> builder)
+  {
+    labels[0].setText("Name: "+builder.info.getSimpleName());
+    labels[1].setText("Category: "+builder.type);
+    labels[2].setText("Author: "+builder.info.author);
+    desc.setText(builder.info.description);
+  }
   
   public PluginsPanel(PluginManager<ActualPlugin> manager)
   {
@@ -110,6 +86,14 @@ public class PluginsPanel extends JPanel
     this.table = new JTable(model);
     this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     
+    this.table.getColumnModel().getColumn(2).setMinWidth(40);
+    this.table.getColumnModel().getColumn(2).setMaxWidth(40);
+    
+    ((JComponent)this.table.getDefaultRenderer(Boolean.class)).setOpaque(true);
+    
+    JTableHeader header = table.getTableHeader();
+    header.setFont(header.getFont().deriveFont(header.getFont().getSize2D()-4));
+
     this.table.getSelectionModel().addListSelectionListener( e -> {
       if (!e.getValueIsAdjusting())
       {
@@ -117,31 +101,46 @@ public class PluginsPanel extends JPanel
         if (r != -1)
         {
           r = table.convertRowIndexToModel(r);
-          infoPanel.updateFields(model.plugins.get(r));
+          updateFields(model.plugins.get(r));
           
-          Plugin plugin = Settings.current().plugins.getPlugin(model.plugins.get(r));
+          if (configTable.isEditing())
+            configTable.getCellEditor().stopCellEditing();
           
-          if (plugin != null)
-            configTable.prepare(plugin);
+          Optional<ActualPlugin> plugin = Settings.current().plugins.getPlugin(model.plugins.get(r));
+          configTable.prepare(plugin.orElse(null));    
         }
       }
     });
     
+    labels = new JLabel[3];
+    labels[0] = new JLabel("Name:");
+    labels[1] = new JLabel("Category:");
+    labels[2] = new JLabel("Author:");
+    
+    desc = new JTextArea();
+    desc.setLineWrap(true);
+    desc.setWrapStyleWord(true);
+    desc.setEditable(false);
+    
+    
     configTable = new PluginConfigTable();
     JScrollPane configPane = new JScrollPane(configTable);
     
-    JScrollPane pane = new JScrollPane(table);
+    JScrollPane tablePane = new JScrollPane(table);
+
+    JScrollPane descPane = new JScrollPane(desc);
+    descPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    descPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);    
     
-    infoPanel = new PluginInfoPanel();
-    
-    this.setLayout(new BorderLayout());
-    this.add(pane, BorderLayout.CENTER);
-    
-    JPanel lowerPanel = new JPanel();
-    
-    lowerPanel.add(infoPanel, BorderLayout.NORTH);
-    lowerPanel.add(configPane, BorderLayout.CENTER);
-    this.add(lowerPanel, BorderLayout.SOUTH);
+    layout = new MigLayout();
+    this.setLayout(new MigLayout("wrap 8, fill"));
+    this.add(tablePane, "span 6 11, grow");
+    this.add(labels[0], "spanx 2");
+    this.add(labels[1], "spanx 2");
+    this.add(labels[2], "spanx 2");
+    this.add(new JLabel("Description:"), "spanx 2");
+    this.add(descPane, "span 2 2, width 10:300:, height 80:100:150, growprio 50, grow");
+    this.add(configPane, "span 2 2, height 100:150:200, grow");
   }
   
   public void populate()

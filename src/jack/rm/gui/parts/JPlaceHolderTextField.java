@@ -1,4 +1,4 @@
-package jack.rm.gui;
+package jack.rm.gui.parts;
 
 import jack.rm.i18n.Text;
 
@@ -9,7 +9,7 @@ public class JPlaceHolderTextField extends JTextField
 {
 	private static final long serialVersionUID = 1L;
 	
-	JPlaceHolderTextField(int s)
+	public JPlaceHolderTextField(int s)
 	{
 		super(s);
 	}
