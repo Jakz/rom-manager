@@ -21,7 +21,7 @@ public abstract class Plugin implements JsonnableContext
   public Plugin()
   {
     id = new PluginID(this);
-    enabled = true;
+    enabled = false;
   }
   
   public boolean isEnabled() { return enabled; }

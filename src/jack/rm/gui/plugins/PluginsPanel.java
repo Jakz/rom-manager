@@ -33,6 +33,7 @@ public class PluginsPanel extends JPanel
     @Override public String getColumnName(int i) { return columnNames[i]; }
     @Override public Class<?> getColumnClass(int i) { return columnClasses[i]; }
     @Override public int getRowCount() { return plugins.size(); }
+    @Override public boolean isCellEditable(int r, int c) { return c == 2; }
     
     @Override public Object getValueAt(int r, int c)
     {
@@ -42,9 +43,27 @@ public class PluginsPanel extends JPanel
       {
         case 0: return builder.info.getSimpleName();
         case 1: return builder.type;
-        case 2: return Settings.current().plugins.hasPlugin(builder);
+        case 2:
+        {
+          Optional<ActualPlugin> plugin = Settings.current().plugins.getPlugin(builder.getID());
+          return plugin.isPresent() && plugin.get().isEnabled();
+        }
         default: return null;
       }
+    }
+    
+    @Override public void setValueAt(Object o, int r, int c)
+    {
+      updateFields(plugins.get(r));
+      
+      Boolean b = (Boolean)o;
+      
+      if (b)
+        Settings.current().plugins.enable(manager, plugins.get(r).getID());
+      else
+        Settings.current().plugins.disable(plugins.get(r).getID());
+      
+      fireChanges();
     }
     
     public void clear() { plugins.clear(); }
@@ -54,7 +73,7 @@ public class PluginsPanel extends JPanel
       clear();
       
       manager.stream()
-        .filter( b -> !showOnlyEnabled || Settings.current().plugins.hasPlugin(b))
+        .filter( b -> !showOnlyEnabled || Settings.current().plugins.hasPlugin(b.getID()))
         .forEach(plugins::add);
     }
     
@@ -106,7 +125,7 @@ public class PluginsPanel extends JPanel
           if (configTable.isEditing())
             configTable.getCellEditor().stopCellEditing();
           
-          Optional<ActualPlugin> plugin = Settings.current().plugins.getPlugin(model.plugins.get(r));
+          Optional<ActualPlugin> plugin = Settings.current().plugins.getPlugin(model.plugins.get(r).getID());
           configTable.prepare(plugin.orElse(null));    
         }
       }

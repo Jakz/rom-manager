@@ -19,6 +19,34 @@ public class PluginSet<P extends Plugin>
   }
   
   @SuppressWarnings("unchecked")
+  public void enable(PluginManager<P> manager, PluginID id)
+  {
+    P plugin = getPlugin(id).orElse(manager.build((Class<? extends P>)id.getType()));
+    
+    if (plugin.isEnabled())
+      return;
+    
+    /* if plugin is mutually exclusive we need to disable all others of same type */
+    if (plugin.getPluginType().isMutuallyExclusive())
+    {
+      getEnabledPlugins(plugin.getPluginType()).stream()
+      .filter( p -> p.isEnabled() )
+      .forEach( p -> p.setEnabled(false) );
+    }
+    
+    plugins.add(plugin);
+    plugin.setEnabled(true);
+  }
+  
+  public void disable(PluginID id)
+  {
+    Optional<P> plugin = getPlugin(id);
+    
+    if (plugin.isPresent())
+      plugin.get().setEnabled(false);
+  }
+  
+  @SuppressWarnings("unchecked")
   public <T extends Plugin> Set<T> getPlugins(PluginType type)
   {
     return (Set<T>)(Set<?>)stream().filter( p -> p.getPluginType() == type).collect(Collectors.toSet()); 
@@ -41,14 +69,14 @@ public class PluginSet<P extends Plugin>
     return stream().anyMatch( p -> p.getPluginType() == type );
   }
   
-  public boolean hasPlugin(PluginBuilder<?> builder)
+  public boolean hasPlugin(PluginID id)
   {
-    return getPlugin(builder).isPresent();
+    return getPlugin(id).isPresent();
   }
   
-  public Optional<P> getPlugin(PluginBuilder<?> builder)
+  public Optional<P> getPlugin(PluginID id)
   {
-    return stream().filter( p -> p.getID().equals(builder.getID()) ).findFirst();
+    return stream().filter( p -> p.getID().equals(id) ).findFirst();
   }
   
   public Stream<P> stream() { return plugins.stream(); }

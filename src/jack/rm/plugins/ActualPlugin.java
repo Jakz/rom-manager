@@ -13,6 +13,7 @@ public abstract class ActualPlugin extends Plugin
   static
   {
     manager.register(jack.rm.plugins.folder.NumericalOrganizer.class);
+    manager.register(jack.rm.plugins.folder.AlphabeticalOrganizer.class);
     manager.register(jack.rm.plugins.cleanup.DeleteEmptyFoldersPlugin.class);
     manager.register(jack.rm.plugins.cleanup.MoveUnknownFilesPlugin.class);
   }

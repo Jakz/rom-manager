@@ -107,8 +107,9 @@ public class Settings
 	{
 	  plugins = new PluginSet<ActualPlugin>();
 	  plugins.add(ActualPlugin.manager.build(jack.rm.plugins.folder.NumericalOrganizer.class));
+	  plugins.add(ActualPlugin.manager.build(jack.rm.plugins.folder.AlphabeticalOrganizer.class));
 	  plugins.add(ActualPlugin.manager.build(jack.rm.plugins.cleanup.DeleteEmptyFoldersPlugin.class));
-	  plugins.add(ActualPlugin.manager.build(jack.rm.plugins.cleanup.MoveUnknownFilesPlugin.class));
+	  plugins.add(ActualPlugin.manager.build(jack.rm.plugins.cleanup.MoveUnknownFilesPlugin.class));  
 	}
 	
 	public FolderPlugin getFolderOrganizer() { return plugins.getPlugin(PluginRealType.FOLDER_ORGANIZER); }
