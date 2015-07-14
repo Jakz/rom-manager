@@ -39,6 +39,6 @@ public class DeleteEmptyFoldersPlugin extends CleanupPlugin
       }
     }
     
-    Log.log(LogType.MESSAGE, LogSource.PLUGINS, LogTarget.plugin(this), "Deleted "+counter+" empty folders");
+    message("Deleted "+counter+" empty folders");
   }
 }

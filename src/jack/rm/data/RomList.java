@@ -232,7 +232,6 @@ public class RomList
       if (Settings.current().getFolderOrganizer() != null)
       {
         new OrganizeByFolderWorker(list).execute();
-        Organizer.deleteEmptyFolders(); // TODO: add check of settings
       }
       else
         RomJsonState.consolidate(list);
@@ -280,7 +279,7 @@ public class RomList
     public void done()
     {
       ProgressDialog.finished();
-      Organizer.deleteEmptyFolders(); // TODO: add check of settings
+      RomSet.current.cleanup();
       RomJsonState.consolidate(list);
       
       

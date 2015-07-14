@@ -25,9 +25,9 @@ public class PluginManager<T extends Plugin>
     plugins.clear();
   }
   
-  public boolean register(PluginType type, Class<? extends T> clazz)
+  public boolean register(Class<? extends T> clazz)
   { 
-    boolean alreadyRegistered = stream().anyMatch( p -> p.getPluginClass().equals(clazz));
+    boolean alreadyRegistered = stream().anyMatch( p -> p.getID().getType().equals(clazz));
     
     if (alreadyRegistered)
       return false; // TODO: throw exception: plugin already loaded, should add plugin version to comparison and discard less recent if found

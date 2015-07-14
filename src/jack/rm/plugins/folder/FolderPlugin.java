@@ -11,5 +11,5 @@ public abstract class FolderPlugin extends ActualPlugin
 {
   public abstract Path getFolderForRom(Rom rom);
     
-  @Override public PluginType getType() { return PluginRealType.FOLDER_ORGANIZER; }
+  @Override public PluginType getPluginType() { return PluginRealType.FOLDER_ORGANIZER; }
 }

@@ -1,19 +1,21 @@
 package jack.rm.plugin;
 
 public class PluginBuilder<T extends Plugin>
-{
-  private final Class<? extends T> clazz;
+{  
+  private final PluginID id;
   
   public final PluginType type;
   public final PluginInfo info;
   
-  @SuppressWarnings("unchecked")
   PluginBuilder(T dummy)
   {
-    this.clazz = (Class<? extends T>) dummy.getClass();
-    this.type = dummy.getType();
+    this.id = new PluginID((Class<? extends Plugin>)dummy.getClass());
+    this.type = dummy.getPluginType();
     this.info = dummy.getInfo();
   }
   
-  Class<? extends Plugin> getPluginClass() { return clazz; }
+  @SuppressWarnings("unchecked")
+  @Override public boolean equals(Object object) { return object instanceof PluginBuilder && ((PluginBuilder<T>)object).id.equals(id); }
+  @Override public int hashCode() { return id.hashCode(); }
+  public PluginID getID() { return id; }
  }

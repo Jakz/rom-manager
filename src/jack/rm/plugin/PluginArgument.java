@@ -6,19 +6,22 @@ public class PluginArgument
 {
   private final Class<?> type;
   private final String name;
+  private final String description;
   private final Field field;
   private final Plugin plugin;
   
-  PluginArgument(Plugin plugin, Field field, String name, Class<?> type)
+  PluginArgument(Plugin plugin, Field field, String name, Class<?> type, String description)
   {
     this.plugin = plugin;
     this.field = field;
     this.name = name;
     this.type = type;
+    this.description = description;
   }
   
   public Class<?> getType() { return type; }
   public String getName() { return name; }
+  public String getDescription() { return description; }
   
   public Object get()
   {

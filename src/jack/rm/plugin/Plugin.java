@@ -15,15 +15,21 @@ import jack.rm.json.JsonnableContext;
 
 public abstract class Plugin implements JsonnableContext
 {
+  private final PluginID id;
   boolean enabled;
   
   public Plugin()
   {
+    id = new PluginID(this);
     enabled = true;
   }
   
   public boolean isEnabled() { return enabled; }
   public void setEnabled(boolean enabled) { this.enabled = enabled; }
+  
+  @Override public boolean equals(Object object) { return object instanceof Plugin && ((Plugin)object).id.equals(id); }
+  @Override public int hashCode() { return id.hashCode(); }
+  public PluginID getID() { return id; }
 
   @Override
   public JsonElement serialize(JsonSerializationContext context) throws IllegalAccessException
@@ -70,17 +76,15 @@ public abstract class Plugin implements JsonnableContext
     return getFields().stream().map( f -> {
       ExposedParameter annotation = f.getAnnotation(ExposedParameter.class);
       String name = !annotation.name().isEmpty() ? annotation.name() : f.getName();  
-      return new PluginArgument(this, f, name, f.getType());
+      String description = !annotation.description().isEmpty() ? annotation.description() : null;  
+      return new PluginArgument(this, f, name, f.getType(), description);
     }).collect(Collectors.toList());
   }
-
-  @Override public int hashCode() { return this.getClass().hashCode(); }
-  @Override public boolean equals(Object other) { return this.getClass().equals(other.getClass()); }
 
   public PluginInfo getInfo()
   { 
     return new PluginInfo(getClass().getSimpleName(), new PluginVersion(1,0), "", "None");
   }
  
-  public abstract PluginType getType();
+  public abstract PluginType getPluginType();
 }

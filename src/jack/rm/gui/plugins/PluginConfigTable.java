@@ -1,5 +1,6 @@
 package jack.rm.gui.plugins;
 
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -73,6 +74,15 @@ class PluginConfigTable extends JTable
       return this.getDefaultRenderer(String.class);
     else
       return renderers.get(r);
+  }
+  
+  @Override public String getToolTipText(MouseEvent e)
+  {
+    int r = this.rowAtPoint(e.getPoint());
+    if (r != -1)
+      return model.arguments.get(r).getDescription();
+    else
+      return null;
   }
   
   void prepare(Plugin plugin)

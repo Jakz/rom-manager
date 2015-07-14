@@ -9,5 +9,5 @@ public abstract class CleanupPlugin extends ActualPlugin
 {
   public abstract void execute(RomList list);
   
-  @Override public PluginType getType() { return PluginRealType.ROMSET_CLEANUP; }
+  @Override public PluginType getPluginType() { return PluginRealType.ROMSET_CLEANUP; }
 }

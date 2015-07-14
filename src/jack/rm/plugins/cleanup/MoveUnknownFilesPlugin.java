@@ -20,7 +20,7 @@ import jack.rm.plugins.PluginWithIgnorePaths;
 
 public class MoveUnknownFilesPlugin extends CleanupPlugin implements PluginWithIgnorePaths
 {
-  @ExposedParameter(name="Unknown Path") Path path;
+  @ExposedParameter(name="Unknown Path", description="The folder to move unknown file into, can be inside the romset path") Path path;
   
   int counter;
  
@@ -55,7 +55,7 @@ public class MoveUnknownFilesPlugin extends CleanupPlugin implements PluginWithI
    
         }); 
       
-      Log.log(LogType.MESSAGE, LogSource.PLUGINS, LogTarget.plugin(this), "Moved "+counter+" unknown files");
+      message("Moved "+counter+" unknown files");
     }
     catch (IOException e)
     {

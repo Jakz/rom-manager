@@ -21,7 +21,7 @@ public class PluginSet<P extends Plugin>
   @SuppressWarnings("unchecked")
   public <T extends Plugin> Set<T> getPlugins(PluginType type)
   {
-    return (Set<T>)(Set<?>)stream().filter( p -> p.getType() == type).collect(Collectors.toSet()); 
+    return (Set<T>)(Set<?>)stream().filter( p -> p.getPluginType() == type).collect(Collectors.toSet()); 
   }
   
   @SuppressWarnings("unchecked")
@@ -33,22 +33,22 @@ public class PluginSet<P extends Plugin>
   @SuppressWarnings("unchecked")
   public <T extends Plugin> T getPlugin(PluginType type)
   {
-    return (T)stream().filter( p -> p.getType() == type).findFirst().get();
+    return (T)stream().filter( p -> p.getPluginType() == type).findFirst().get();
   }
   
   public boolean hasPlugin(PluginType type)
   {
-    return stream().anyMatch( p -> p.getType() == type );
+    return stream().anyMatch( p -> p.getPluginType() == type );
   }
   
-  public boolean hasPlugin(PluginBuilder<P> builder)
+  public boolean hasPlugin(PluginBuilder<?> builder)
   {
-    return stream().anyMatch( p -> p.getClass().equals(builder.getPluginClass()));
+    return getPlugin(builder).isPresent();
   }
   
-  public Optional<P> getPlugin(PluginBuilder<P> builder)
+  public Optional<P> getPlugin(PluginBuilder<?> builder)
   {
-    return stream().filter( p -> p.getClass().equals(builder.getPluginClass())).findFirst();
+    return stream().filter( p -> p.getID().equals(builder.getID()) ).findFirst();
   }
   
   public Stream<P> stream() { return plugins.stream(); }

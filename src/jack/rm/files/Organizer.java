@@ -197,20 +197,21 @@ public class Organizer
         if (!Files.exists(finalPath) || !Files.isDirectory(finalPath))
         {
           Files.createDirectories(finalPath);
-          Log.log(LogType.MESSAGE, LogSource.ORGANIZER, "Creating folder "+finalPath);
+          Log.message(LogSource.ORGANIZER, LogTarget.none(), "Creating folder "+finalPath);
         }
         
         Path newFile = finalPath.resolve(rom.entry.file().getFileName());
                 
         if (!newFile.equals(rom.entry.file()) && Files.exists(newFile))
         {
-          Log.log(LogType.ERROR, LogSource.ORGANIZER, LogTarget.rom(rom), "Cannot rename to "+newFile.toString()+", file exists");
+          
+          Log.error(LogSource.ORGANIZER, LogTarget.rom(rom), "Cannot rename to "+newFile.toString()+", file exists");
         }
         else if (!newFile.equals(rom.entry.file()))
         {  
           Files.move(rom.entry.file(), newFile);
           rom.entry = rom.entry.build(newFile);
-          Log.log(LogType.MESSAGE, LogSource.ORGANIZER, LogTarget.rom(rom), "Moved rom to "+finalPath);
+          Log.message(LogSource.ORGANIZER, LogTarget.rom(rom), "Moved rom to "+finalPath);
         }    
       }
       catch (Exception e)
@@ -220,7 +221,7 @@ public class Organizer
       }   
     } 
 	}
-	
+	/*
 	public static void moveUnknownFiles(RomList list)
 	{
 	  try
@@ -249,7 +250,11 @@ public class Organizer
 	          dest = path.resolve(f.getFileName().toString()+(i++));
 
 	        try { Files.move(f, dest); }
-	        catch (IOException e) { e.printStackTrace(); /* TODO: log */ }
+	        catch (IOException e) { 
+	          e.printStackTrace(); 
+	          // TODO: log 
+	
+          }
    
 	      });
 	    
@@ -284,5 +289,5 @@ public class Organizer
         }
       }
     }
-  }
+  }*/
 }
