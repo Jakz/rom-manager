@@ -38,8 +38,8 @@ public class MainFrame extends JFrame implements WindowListener
 	final public JList<Rom> list = new JList<>();
 	final private JScrollPane listPane = new JScrollPane(list);
 	
-	public final JComboBox<RomSet<? extends Rom>> cbRomSets = new JComboBox<>();
-	public final RomSetListener rsListener = new RomSetListener();
+	private final JComboBox<RomSet<? extends Rom>> cbRomSets = new JComboBox<>();
+	private final RomSetListener rsListener = new RomSetListener();
 	
 	final MenuListener menuListener = new MenuListener();
 		
@@ -119,7 +119,7 @@ public class MainFrame extends JFrame implements WindowListener
     romsMenu.add(MenuElement.ROMS_EXIT.item);
     
     viewMenu.add(MenuElement.VIEW_SHOW_CORRECT.item);
-    viewMenu.add(MenuElement.VIEW_SHOW_BADLY_NAMED.item);
+    viewMenu.add(MenuElement.VIEW_SHOW_UNORGANIZED.item);
     viewMenu.add(MenuElement.VIEW_SHOW_NOT_FOUND.item);
     
     toolsMenu.add(MenuElement.TOOLS_DOWNLOAD_ART.item);

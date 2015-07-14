@@ -2,6 +2,9 @@ package jack.rm.data.set;
 
 import jack.rm.Settings;
 import jack.rm.data.*;
+import jack.rm.plugin.Plugin;
+import jack.rm.plugins.PluginRealType;
+import jack.rm.plugins.cleanup.CleanupPlugin;
 
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -83,5 +86,13 @@ public abstract class RomSet<R extends Rom>
 	  String pattern = stream.collect(Collectors.joining(",", "glob:*.{", "}"));
 	  	  
 	  return FileSystems.getDefault().getPathMatcher(pattern);
+	}
+	
+	public void cleanup()
+	{
+	  Settings settings = Settings.current();
+	  
+	  Set<CleanupPlugin> plugins = settings.plugins.getEnabledPlugins(PluginRealType.ROMSET_CLEANUP);
+	  plugins.stream().forEach( p -> p.execute(this.list) );
 	}
 }

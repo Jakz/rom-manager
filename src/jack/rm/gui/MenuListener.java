@@ -61,7 +61,7 @@ class MenuListener implements ActionListener
 			Main.mainFrame.romListModel.clear();
 			list.showAll();
 		}
-		else if (tag == MenuElement.VIEW_SHOW_BADLY_NAMED)
+		else if (tag == MenuElement.VIEW_SHOW_UNORGANIZED)
 		{
 			Main.mainFrame.romListModel.isBadlyNamed = !Main.mainFrame.romListModel.isBadlyNamed;
 			Main.mainFrame.romListModel.clear();

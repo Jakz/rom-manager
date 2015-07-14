@@ -5,6 +5,10 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import jack.rm.data.RomList;
+import jack.rm.log.Log;
+import jack.rm.log.LogSource;
+import jack.rm.log.LogTarget;
+import jack.rm.log.LogType;
 
 public class DeleteEmptyFoldersPlugin extends CleanupPlugin
 {
@@ -12,6 +16,8 @@ public class DeleteEmptyFoldersPlugin extends CleanupPlugin
   {
     Queue<File> files = new LinkedList<File>();
     files.add(list.set.romPath().toFile());
+    
+    int counter = 0;
     
     while (!files.isEmpty())
     {
@@ -23,11 +29,16 @@ public class DeleteEmptyFoldersPlugin extends CleanupPlugin
         if (ff.isDirectory())
         {
           if (ff.listFiles().length == 0)
+          {
             ff.delete();
+            ++counter;
+          }
           else
             files.add(ff);
         }
       }
     }
+    
+    Log.log(LogType.MESSAGE, LogSource.PLUGINS, LogTarget.plugin(this), "Deleted "+counter+" empty folders");
   }
 }

@@ -1,6 +1,9 @@
 package jack.rm.gui;
 
 import jack.rm.i18n.Text;
+
+import java.awt.event.KeyEvent;
+
 import javax.swing.*;
 
 public enum MenuElement {
@@ -12,9 +15,9 @@ public enum MenuElement {
   ROMS_EXIT(Text.MENU_ROMS_EXIT, false),
   ROMS_RENAME(Text.MENU_ROMS_RENAME, false),
   
-  VIEW_SHOW_CORRECT(Text.MENU_VIEW_SHOW_CORRECT, true),
-  VIEW_SHOW_NOT_FOUND(Text.MENU_VIEW_SHOW_NOT_FOUND, true),
-  VIEW_SHOW_BADLY_NAMED(Text.MENU_VIEW_SHOW_BADLY_NAMED, true),
+  VIEW_SHOW_CORRECT(Text.MENU_VIEW_SHOW_CORRECT, true, KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0)),
+  VIEW_SHOW_UNORGANIZED(Text.MENU_VIEW_SHOW_UNORGANIZED, true, KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0)),
+  VIEW_SHOW_NOT_FOUND(Text.MENU_VIEW_SHOW_NOT_FOUND, true, KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0)),
   
   TOOLS_DOWNLOAD_ART(Text.MENU_TOOLS_DOWNLOAD_ART, false),
   TOOLS_MOVE_UNKNOWN_FILES(Text.MENU_TOOLS_MOVE_UNKNOWN_FILES, false),
@@ -22,15 +25,23 @@ public enum MenuElement {
   TOOLS_SHOW_CONSOLE(Text.MENU_TOOLS_SHOW_CONSOLE, true)
   ;
   
-  MenuElement(Text title, boolean checkbox) {
+  MenuElement(Text title, boolean checkbox)
+  {
+    this(title, checkbox, null);
+  }
+  
+  MenuElement(Text title, boolean checkbox, KeyStroke keyStroke) {
     if (checkbox) {
       item = new JCheckBoxMenuItem(title.text());
     }
     else {
       item = new JMenuItem(title.text());
     }
-
+    
     item.addActionListener(MenuListener.listener);
+    
+    if (keyStroke != null)
+      item.setAccelerator(keyStroke);
   }
   
   public JMenuItem item;

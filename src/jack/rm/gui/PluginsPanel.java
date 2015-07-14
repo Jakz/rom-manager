@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 
 import jack.rm.Settings;
 import jack.rm.plugin.*;
@@ -95,6 +97,49 @@ public class PluginsPanel extends JPanel
       labels[1].setText("Category: "+builder.type);
       labels[2].setText("Author: "+builder.author);
       desc.setText(builder.description);
+    }
+  }
+  
+  class PluginConfigTable extends JTable
+  {
+    private List<TableCellEditor> editors;
+    private final PluginArgumentTableModel model;
+    
+    class PluginArgumentTableModel extends AbstractTableModel
+    {
+      private final String[] names = { "Name", "Value" };
+      
+      List<PluginArgument> arguments;
+      
+      @Override public int getColumnCount() { return 2; }
+      @Override public String getColumnName(int i) { return names[i]; }
+      @Override public int getRowCount() { return arguments.size(); }
+      
+      @Override public Object getValueAt(int r, int c)
+      {
+        PluginArgument arg = arguments.get(r);
+        return c == 0 ? arg.getName() : arg.get();
+      }
+    }
+    
+    PluginConfigTable()
+    {
+      super();
+      editors = new ArrayList<>();
+      model = new PluginArgumentTableModel();
+      setModel(model);
+    }
+    
+    @Override public TableCellEditor getCellEditor(int r, int c)
+    {
+      return editors.get(r);
+    }
+    
+    void prepare(Plugin plugin)
+    {
+      model.arguments = plugin.getArguments();
+      
+      
     }
   }
   

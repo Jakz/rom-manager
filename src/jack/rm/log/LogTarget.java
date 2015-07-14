@@ -7,6 +7,7 @@ public abstract class LogTarget
     FILE,
     ROM,
     ROM_SET,
+    PLUGIN,
     NONE
   };
   
@@ -67,9 +68,24 @@ public abstract class LogTarget
     public String toString() { return path.toString(); }
   }
   
+  public static class Plugin extends LogTarget
+  {
+    private final jack.rm.plugin.Plugin plugin;
+    
+    Plugin(jack.rm.plugin.Plugin plugin)
+    {
+      super(Type.PLUGIN);
+      this.plugin = plugin;
+    }
+    
+    @Override
+    public String toString() { return plugin.getPrettyName(); }
+  }
+  
   public static LogTarget none() { return new None(); }
   public static LogTarget file(java.nio.file.Path file) { return new File(file); }
   public static LogTarget rom(jack.rm.data.Rom rom) { return new Rom(rom); }
   public static LogTarget romset(jack.rm.data.set.RomSet<?> set) { return new RomSet(set); }
+  public static LogTarget plugin(jack.rm.plugin.Plugin plugin) { return new Plugin(plugin); }
 
 }

@@ -28,6 +28,12 @@ public class PluginSet
   }
   
   @SuppressWarnings("unchecked")
+  public <T extends Plugin> Set<T> getEnabledPlugins(PluginType type)
+  {
+    return (Set<T>)(Set<?>)getPlugins(type).stream().filter(p -> p.isEnabled()).collect(Collectors.toSet());
+  }
+  
+  @SuppressWarnings("unchecked")
   public <T extends Plugin> T getPlugin(PluginType type)
   {
     return (T)stream().filter( p -> p.getType() == type).findFirst().get();

@@ -11,18 +11,24 @@ import jack.rm.Settings;
 import jack.rm.data.RomList;
 import jack.rm.data.RomStatus;
 import jack.rm.files.FolderScanner;
+import jack.rm.log.Log;
+import jack.rm.log.LogSource;
+import jack.rm.log.LogTarget;
+import jack.rm.log.LogType;
 import jack.rm.plugin.ExposedParameter;
 import jack.rm.plugins.PluginWithIgnorePaths;
 
 public class MoveUnknownFilesPlugin extends CleanupPlugin implements PluginWithIgnorePaths
 {
-  @ExposedParameter
-  Path path;
+  @ExposedParameter(name="Unknown Path") Path path;
   
+  int counter;
+ 
   @Override public void execute(RomList list)
   {
     try
     {  
+      counter = 0; 
       if (!Files.exists(path) || !Files.isDirectory(path))
         Files.createDirectory(path);
   
@@ -44,10 +50,12 @@ public class MoveUnknownFilesPlugin extends CleanupPlugin implements PluginWithI
           while (Files.exists(dest))
             dest = path.resolve(f.getFileName().toString()+(i++));
   
-          try { Files.move(f, dest); }
+          try { Files.move(f, dest); ++counter; }
           catch (IOException e) { e.printStackTrace(); /* TODO: log */ }
    
         }); 
+      
+      Log.log(LogType.MESSAGE, LogSource.PLUGINS, LogTarget.plugin(this), "Moved "+counter+" unknown files");
     }
     catch (IOException e)
     {
