@@ -11,6 +11,7 @@ import jack.rm.data.set.RomSet;
 import jack.rm.plugin.Plugin;
 import jack.rm.plugin.PluginSet;
 import jack.rm.plugin.json.JsonPluginSetAdapter;
+import jack.rm.plugins.ActualPlugin;
 
 public class Json
 {
@@ -27,7 +28,7 @@ public class Json
     registerTypeAdapter(RomFileEntry.class, new RomFileEntry.Adapter());
     registerTypeAdapter(Path.class, new PathSerializer());
     registerTypeAdapter(Plugin.class, new JsonPluginAdapter<Plugin>());
-    registerTypeAdapter(PluginSet.class, new JsonPluginSetAdapter());
+    registerTypeAdapter(PluginSet.class, new JsonPluginSetAdapter<ActualPlugin>());
   }
   
   public static Gson build()

@@ -5,7 +5,7 @@ public class PluginVersion implements Comparable<PluginVersion>
   final int major;
   final int minor;
   
-  PluginVersion(int major, int minor)
+  public PluginVersion(int major, int minor)
   {
     this.major = major;
     this.minor = minor;

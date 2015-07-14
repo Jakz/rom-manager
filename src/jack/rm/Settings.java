@@ -15,7 +15,9 @@ import jack.rm.json.Json;
 import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogType;
+import jack.rm.plugin.PluginManager;
 import jack.rm.plugin.PluginSet;
+import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.PluginWithIgnorePaths;
 import jack.rm.plugins.folder.FolderPlugin;
@@ -97,13 +99,15 @@ public class Settings
 	
 	public boolean checkImageCRC;
 	
-	public PluginSet plugins;
+	public PluginSet<ActualPlugin> plugins;
 		
 	public OrganizerDetails organizer;
 	
 	public Settings()
 	{
-	  plugins = new PluginSet();
+	  plugins = new PluginSet<ActualPlugin>();
+	  plugins.add(ActualPlugin.manager.build(jack.rm.plugins.folder.NumericalOrganizer.class));
+	  plugins.add(ActualPlugin.manager.build(jack.rm.plugins.cleanup.DeleteEmptyFoldersPlugin.class));
 	}
 	
 	public FolderPlugin getFolderOrganizer() { return plugins.getPlugin(PluginRealType.FOLDER_ORGANIZER); }

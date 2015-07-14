@@ -8,8 +8,10 @@ import java.awt.Desktop;
 import jack.rm.data.*;
 import jack.rm.data.set.*;
 import jack.rm.gui.*;
+import jack.rm.gui.plugins.PluginsPanel;
 import jack.rm.net.Downloader;
 import jack.rm.plugin.PluginManager;
+import jack.rm.plugins.ActualPlugin;
 
 public class Main
 {		
@@ -58,7 +60,7 @@ public class Main
 		
 		romsetPanel = new ManagerPanel();
 		renamerPanel = new OrganizerPanel();
-		pluginsPanel = new PluginsPanel(PluginManager.getInstance());
+		pluginsPanel = new PluginsPanel(ActualPlugin.manager);
 		
 		optionsFrame = new OptionsFrame();
 		

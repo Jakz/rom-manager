@@ -8,6 +8,8 @@ import jack.rm.data.Rom;
 import jack.rm.data.NumberedRom;
 import jack.rm.files.Organizer;
 import jack.rm.plugin.ExposedParameter;
+import jack.rm.plugin.PluginInfo;
+import jack.rm.plugin.PluginVersion;
 
 public class NumericalOrganizer extends FolderPlugin
 {
@@ -29,8 +31,10 @@ public class NumericalOrganizer extends FolderPlugin
   }
   
   @Override
-  public String getDescription()
-  {
-    return "This plugin organizes ROMs which have a number by splitting into folders of a specified size.";
+  public PluginInfo getInfo()
+  { 
+    return new PluginInfo(getClass().getName(), new PluginVersion(1,0), "Jack",
+        "This plugin organizes ROMs which have a number by splitting into folders of a specified size.");
   }
+
 }

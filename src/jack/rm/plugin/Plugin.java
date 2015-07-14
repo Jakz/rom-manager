@@ -24,7 +24,7 @@ public abstract class Plugin implements JsonnableContext
   
   public boolean isEnabled() { return enabled; }
   public void setEnabled(boolean enabled) { this.enabled = enabled; }
-  
+
   @Override
   public JsonElement serialize(JsonSerializationContext context) throws IllegalAccessException
   {
@@ -77,10 +77,10 @@ public abstract class Plugin implements JsonnableContext
   @Override public int hashCode() { return this.getClass().hashCode(); }
   @Override public boolean equals(Object other) { return this.getClass().equals(other.getClass()); }
 
-  public String getPrettyName() { return getName() + " " + getVersion(); }
-  public String getName() { return getClass().getSimpleName(); }
-  public String getAuthor() { return "Author"; }
-  public String getDescription() { return "Description"; }
-  public PluginVersion getVersion() { return new PluginVersion(1,0); }
+  public PluginInfo getInfo()
+  { 
+    return new PluginInfo(getClass().getName(), new PluginVersion(1,0), "Author", "Description");
+  }
+ 
   public abstract PluginType getType();
 }

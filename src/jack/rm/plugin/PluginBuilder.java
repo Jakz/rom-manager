@@ -1,23 +1,18 @@
 package jack.rm.plugin;
 
-public class PluginBuilder
+public class PluginBuilder<T extends Plugin>
 {
-  private final Class<? extends Plugin> clazz;
+  private final Class<? extends T> clazz;
   
   public final PluginType type;
-  public final String name;
-  public final String author;
-  public final String description;
-  public final PluginVersion version;
+  public final PluginInfo info;
   
-  PluginBuilder(Plugin dummy)
+  @SuppressWarnings("unchecked")
+  PluginBuilder(T dummy)
   {
-    this.clazz = dummy.getClass();
+    this.clazz = (Class<? extends T>) dummy.getClass();
     this.type = dummy.getType();
-    this.name = dummy.getName();
-    this.author = dummy.getAuthor();
-    this.description = dummy.getDescription();
-    this.version = dummy.getVersion();
+    this.info = dummy.getInfo();
   }
   
   Class<? extends Plugin> getPluginClass() { return clazz; }

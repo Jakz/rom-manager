@@ -8,10 +8,10 @@ import com.google.gson.*;
 import jack.rm.plugin.Plugin;
 import jack.rm.plugin.PluginSet;
 
-public class JsonPluginSetAdapter implements JsonSerializer<PluginSet>, JsonDeserializer<PluginSet>
+public class JsonPluginSetAdapter<T extends Plugin> implements JsonSerializer<PluginSet<T>>, JsonDeserializer<PluginSet<T>>
 {
   @Override
-  public JsonElement serialize(PluginSet src, Type type, JsonSerializationContext context)
+  public JsonElement serialize(PluginSet<T> src, Type type, JsonSerializationContext context)
   {
     JsonArray array = new JsonArray();
     src.stream().forEach( p -> array.add(context.serialize(p)) );
@@ -19,10 +19,10 @@ public class JsonPluginSetAdapter implements JsonSerializer<PluginSet>, JsonDese
   }
 
   @Override
-  public PluginSet deserialize(JsonElement json, Type type, JsonDeserializationContext context)
+  public PluginSet<T> deserialize(JsonElement json, Type type, JsonDeserializationContext context)
   {
     JsonArray array = json.getAsJsonArray();
-    PluginSet set = new PluginSet();
+    PluginSet<T> set = new PluginSet<T>();
     array.forEach( a -> set.add(context.deserialize(a, Plugin.class)) );
     return set;
   }

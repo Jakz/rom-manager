@@ -1,15 +1,15 @@
-package jack.rm.gui;
+package jack.rm.gui.plugins;
 
 import java.util.*;
 import java.util.List;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
 import jack.rm.Settings;
 import jack.rm.plugin.*;
+import jack.rm.plugins.ActualPlugin;
 
 import java.awt.*;
 
@@ -17,11 +17,11 @@ public class PluginsPanel extends JPanel
 {
   private final JTable table;
   private final PluginTableModel model;
-  private final PluginManager manager;
+  private final PluginManager<ActualPlugin> manager;
   
   class PluginTableModel extends AbstractTableModel
   {
-    final List<PluginBuilder> plugins = new ArrayList<>();
+    final List<PluginBuilder<ActualPlugin>> plugins = new ArrayList<>();
     
     private final String[] columnNames = { "Name", "Category", "Enabled" };
     private final Class<?>[] columnClasses = { String.class, String.class, Boolean.class };
@@ -33,11 +33,11 @@ public class PluginsPanel extends JPanel
     
     @Override public Object getValueAt(int r, int c)
     {
-      PluginBuilder builder = plugins.get(r);
+      PluginBuilder<ActualPlugin> builder = plugins.get(r);
       
       switch (c)
       {
-        case 0: return builder.name+" "+builder.version;
+        case 0: return builder.info.getSimpleName();
         case 1: return builder.type;
         case 2: return Settings.current().plugins.hasPlugin(builder);
         default: return null;
@@ -91,61 +91,19 @@ public class PluginsPanel extends JPanel
       this.add(descPane);
     }
     
-    public void updateFields(PluginBuilder builder)
+    public void updateFields(PluginBuilder<ActualPlugin> builder)
     {
-      labels[0].setText("Name: "+builder.name+" "+builder.version);
+      labels[0].setText("Name: "+builder.info.getSimpleName());
       labels[1].setText("Category: "+builder.type);
-      labels[2].setText("Author: "+builder.author);
-      desc.setText(builder.description);
-    }
-  }
-  
-  class PluginConfigTable extends JTable
-  {
-    private List<TableCellEditor> editors;
-    private final PluginArgumentTableModel model;
-    
-    class PluginArgumentTableModel extends AbstractTableModel
-    {
-      private final String[] names = { "Name", "Value" };
-      
-      List<PluginArgument> arguments;
-      
-      @Override public int getColumnCount() { return 2; }
-      @Override public String getColumnName(int i) { return names[i]; }
-      @Override public int getRowCount() { return arguments.size(); }
-      
-      @Override public Object getValueAt(int r, int c)
-      {
-        PluginArgument arg = arguments.get(r);
-        return c == 0 ? arg.getName() : arg.get();
-      }
-    }
-    
-    PluginConfigTable()
-    {
-      super();
-      editors = new ArrayList<>();
-      model = new PluginArgumentTableModel();
-      setModel(model);
-    }
-    
-    @Override public TableCellEditor getCellEditor(int r, int c)
-    {
-      return editors.get(r);
-    }
-    
-    void prepare(Plugin plugin)
-    {
-      model.arguments = plugin.getArguments();
-      
-      
+      labels[2].setText("Author: "+builder.info.author);
+      desc.setText(builder.info.description);
     }
   }
   
   PluginInfoPanel infoPanel;
+  PluginConfigTable configTable;
   
-  public PluginsPanel(PluginManager manager)
+  public PluginsPanel(PluginManager<ActualPlugin> manager)
   {
     this.manager = manager;
     this.model = new PluginTableModel();
@@ -160,10 +118,17 @@ public class PluginsPanel extends JPanel
         {
           r = table.convertRowIndexToModel(r);
           infoPanel.updateFields(model.plugins.get(r));
+          
+          Plugin plugin = Settings.current().plugins.getPlugin(model.plugins.get(r));
+          
+          if (plugin != null)
+            configTable.prepare(plugin);
         }
       }
     });
     
+    configTable = new PluginConfigTable();
+    JScrollPane configPane = new JScrollPane(configTable);
     
     JScrollPane pane = new JScrollPane(table);
     
@@ -171,7 +136,12 @@ public class PluginsPanel extends JPanel
     
     this.setLayout(new BorderLayout());
     this.add(pane, BorderLayout.CENTER);
-    this.add(infoPanel, BorderLayout.SOUTH);
+    
+    JPanel lowerPanel = new JPanel();
+    
+    lowerPanel.add(infoPanel, BorderLayout.NORTH);
+    lowerPanel.add(configPane, BorderLayout.CENTER);
+    this.add(lowerPanel, BorderLayout.SOUTH);
   }
   
   public void populate()

@@ -79,7 +79,7 @@ public abstract class LogTarget
     }
     
     @Override
-    public String toString() { return plugin.getPrettyName(); }
+    public String toString() { return plugin.getInfo().getSimpleName(); }
   }
   
   public static LogTarget none() { return new None(); }

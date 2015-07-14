@@ -5,13 +5,15 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import com.google.gson.GsonBuilder;
+
 import jack.rm.plugins.PluginRealType;
 
 import java.util.Map;
 
-public class PluginManager
+public class PluginManager<T extends Plugin>
 {
-  private final Set<PluginBuilder> plugins;
+  private final Set<PluginBuilder<T>> plugins;
   
   public PluginManager()
   {
@@ -23,7 +25,7 @@ public class PluginManager
     plugins.clear();
   }
   
-  public boolean register(PluginType type, Class<? extends Plugin> clazz)
+  public boolean register(PluginType type, Class<? extends T> clazz)
   { 
     boolean alreadyRegistered = stream().anyMatch( p -> p.getPluginClass().equals(clazz));
     
@@ -33,8 +35,8 @@ public class PluginManager
     {
       try
       {
-        Plugin plugin = clazz.newInstance();
-        PluginBuilder builder = new PluginBuilder(plugin);
+        T plugin = clazz.newInstance();
+        PluginBuilder<T> builder = new PluginBuilder<T>(plugin);
         plugins.add(builder);
         return true;
       }
@@ -47,13 +49,13 @@ public class PluginManager
     }
   }
   
-  public Stream<PluginBuilder> stream() { return plugins.stream(); }
+  public Stream<PluginBuilder<T>> stream() { return plugins.stream(); }
   
-  public Plugin build(Class<? extends Plugin> clazz)
+  public T build(Class<? extends T> clazz)
   {
     try
     {   
-      Plugin plugin = clazz.newInstance();
+      T plugin = clazz.newInstance();
       return plugin;
     }
     catch (IllegalAccessException|InstantiationException e)
@@ -62,19 +64,5 @@ public class PluginManager
     }
     
     return null;
-  }
-    
-  private static PluginManager instance = null;
-  
-  public static PluginManager getInstance() {
-    return instance;
-  }
-  
-  
-  static
-  {
-    instance = new PluginManager();
-    instance.register(PluginRealType.FOLDER_ORGANIZER, jack.rm.plugins.folder.NumericalOrganizer.class);
-    instance.register(PluginRealType.ROMSET_CLEANUP, jack.rm.plugins.cleanup.DeleteEmptyFoldersPlugin.class);
   }
 }

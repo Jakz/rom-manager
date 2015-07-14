@@ -4,19 +4,16 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class PluginSet
+public class PluginSet<P extends Plugin>
 {
-  private final Set<Plugin> plugins;
+  private final Set<P> plugins;
   
   public PluginSet()
   {
     plugins = new HashSet<>();
-    
-    add(PluginManager.getInstance().build(jack.rm.plugins.folder.NumericalOrganizer.class));
-    add(PluginManager.getInstance().build(jack.rm.plugins.cleanup.DeleteEmptyFoldersPlugin.class));
   }
   
-  public void add(Plugin plugin)
+  public void add(P plugin)
   {
     plugins.add(plugin);
   }
@@ -44,10 +41,15 @@ public class PluginSet
     return stream().anyMatch( p -> p.getType() == type );
   }
   
-  public boolean hasPlugin(PluginBuilder builder)
+  public boolean hasPlugin(PluginBuilder<P> builder)
   {
     return stream().anyMatch( p -> p.getClass().equals(builder.getPluginClass()));
   }
   
-  public Stream<Plugin> stream() { return plugins.stream(); }
+  public P getPlugin(PluginBuilder<P> builder)
+  {
+    return stream().filter( p -> p.getClass().equals(builder.getPluginClass())).findFirst().get();
+  }
+  
+  public Stream<P> stream() { return plugins.stream(); }
 }
