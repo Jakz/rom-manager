@@ -36,7 +36,7 @@ public class PluginsPanel extends JPanel
     @Override public String getColumnName(int i) { return columnNames[i]; }
     @Override public Class<?> getColumnClass(int i) { return columnClasses[i]; }
     @Override public int getRowCount() { return plugins.size(); }
-    @Override public boolean isCellEditable(int r, int c) { return plugins.get(r).isCompatible(RomSet.current); }
+    @Override public boolean isCellEditable(int r, int c) { return c == 2 && plugins.get(r).isCompatible(RomSet.current); }
     
     @Override public Object getValueAt(int r, int c)
     {

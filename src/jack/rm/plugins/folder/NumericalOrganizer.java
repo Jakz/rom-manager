@@ -34,7 +34,7 @@ public class NumericalOrganizer extends FolderPlugin
   public PluginInfo getInfo()
   { 
     return new PluginInfo("Numerical Organizer", new PluginVersion(1,0), "Jack",
-        "This plugin organizes ROMs which have a number by splitting into folders of a specified size.");
+        "This plugin organizes ROMs which have a number by splitting them into folders of a specified size.");
   }
 
 }
