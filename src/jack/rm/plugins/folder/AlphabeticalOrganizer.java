@@ -4,7 +4,9 @@ import java.nio.file.Paths;
 import java.nio.file.Path;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
+import java.util.function.Predicate;
 
+import jack.rm.data.set.RomSet;
 import jack.rm.data.Rom;
 import jack.rm.plugin.PluginInfo;
 import jack.rm.plugin.PluginVersion;
@@ -17,7 +19,7 @@ public class AlphabeticalOrganizer extends FolderPlugin
     String normalizedName = Normalizer.normalize(rom.title, Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     return Paths.get(normalizedName.toUpperCase().charAt(0)+java.io.File.separator);
   }
-  
+    
   public PluginInfo getInfo()
   { 
     return new PluginInfo("Alphabetical Organizer", new PluginVersion(1,0), "Jack",

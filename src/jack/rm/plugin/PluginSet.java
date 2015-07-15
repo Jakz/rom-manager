@@ -19,7 +19,7 @@ public class PluginSet<P extends Plugin>
   }
   
   @SuppressWarnings("unchecked")
-  public void enable(PluginManager<P> manager, PluginID id)
+  public void enable(PluginManager<P, ?> manager, PluginID id)
   {
     P plugin = getPlugin(id).orElse(manager.build((Class<? extends P>)id.getType()));
     

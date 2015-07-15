@@ -7,7 +7,7 @@ public class PluginBuilder<T extends Plugin>
   public final PluginType type;
   public final PluginInfo info;
   
-  PluginBuilder(T dummy)
+  public PluginBuilder(T dummy)
   {
     this.id = new PluginID((Class<? extends Plugin>)dummy.getClass());
     this.type = dummy.getPluginType();

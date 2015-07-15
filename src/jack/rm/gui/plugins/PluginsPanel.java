@@ -11,20 +11,23 @@ import javax.swing.table.TableCellRenderer;
 import net.miginfocom.swing.MigLayout;
 
 import jack.rm.Settings;
+import jack.rm.data.set.RomSet;
 import jack.rm.plugin.*;
 import jack.rm.plugins.ActualPlugin;
+import jack.rm.plugins.ActualPluginBuilder;
 
 import java.awt.*;
+import java.awt.event.ItemEvent;
 
 public class PluginsPanel extends JPanel
 {
   private final JTable table;
   private final PluginTableModel model;
-  private final PluginManager<ActualPlugin> manager;
+  private final PluginManager<ActualPlugin, ActualPluginBuilder> manager;
   
   class PluginTableModel extends AbstractTableModel
   {
-    final List<PluginBuilder<ActualPlugin>> plugins = new ArrayList<>();
+    final List<ActualPluginBuilder> plugins = new ArrayList<>();
     
     private final String[] columnNames = { "Name", "Category", "Enabled" };
     private final Class<?>[] columnClasses = { String.class, String.class, Boolean.class };
@@ -33,7 +36,7 @@ public class PluginsPanel extends JPanel
     @Override public String getColumnName(int i) { return columnNames[i]; }
     @Override public Class<?> getColumnClass(int i) { return columnClasses[i]; }
     @Override public int getRowCount() { return plugins.size(); }
-    @Override public boolean isCellEditable(int r, int c) { return c == 2; }
+    @Override public boolean isCellEditable(int r, int c) { return plugins.get(r).isCompatible(RomSet.current); }
     
     @Override public Object getValueAt(int r, int c)
     {
@@ -68,13 +71,15 @@ public class PluginsPanel extends JPanel
     
     public void clear() { plugins.clear(); }
     
-    public void populate(boolean showOnlyEnabled)
+    public void populate()
     {
       clear();
-      
+            
       manager.stream()
-        .filter( b -> !showOnlyEnabled || Settings.current().plugins.hasPlugin(b.getID()))
+        .filter(filter.getItemAt(filter.getSelectedIndex())::test)
         .forEach(plugins::add);
+      
+      fireChanges();
     }
     
     public void fireChanges()
@@ -87,8 +92,34 @@ public class PluginsPanel extends JPanel
   
   MigLayout layout;
   
+  private enum PluginFilter
+  {
+    ALL
+    { 
+      public String toString() { return "Show All"; } 
+      public boolean test(ActualPluginBuilder builder) { return true; }
+    },
+    COMPATIBLE
+    {
+      public String toString() { return "Show Compatible"; }
+      public boolean test(ActualPluginBuilder builder) { return builder.isCompatible(RomSet.current); }
+    },
+    ENABLED
+    {
+      public String toString() { return "Show Enabled"; }
+      public boolean test(ActualPluginBuilder builder) { 
+        Optional<ActualPlugin> plugin = Settings.current().plugins.getPlugin(builder.getID());
+        return plugin.isPresent() && plugin.get().isEnabled();
+      }
+    };
+    
+    public abstract boolean test(ActualPluginBuilder builder);
+    
+  }
+  
   private final JLabel[] labels;
   private final JTextArea desc;
+  private final JComboBox<PluginFilter> filter;
   
   public void updateFields(PluginBuilder<ActualPlugin> builder)
   {
@@ -98,7 +129,7 @@ public class PluginsPanel extends JPanel
     desc.setText(builder.info.description);
   }
   
-  public PluginsPanel(PluginManager<ActualPlugin> manager)
+  public PluginsPanel(PluginManager<ActualPlugin, ActualPluginBuilder> manager)
   {
     this.manager = manager;
     this.model = new PluginTableModel();
@@ -141,6 +172,9 @@ public class PluginsPanel extends JPanel
     desc.setWrapStyleWord(true);
     desc.setEditable(false);
     
+    filter = new JComboBox<>(PluginFilter.values());
+    filter.addItemListener( e -> { if (e.getStateChange() == ItemEvent.SELECTED) populate(); });
+    
     
     configTable = new PluginConfigTable();
     JScrollPane configPane = new JScrollPane(configTable);
@@ -153,17 +187,19 @@ public class PluginsPanel extends JPanel
     
     layout = new MigLayout();
     this.setLayout(new MigLayout("wrap 8, fill"));
-    this.add(tablePane, "span 6 11, grow");
+    this.add(tablePane, "span 6 10, grow");
     this.add(labels[0], "spanx 2");
     this.add(labels[1], "spanx 2");
     this.add(labels[2], "spanx 2");
     this.add(new JLabel("Description:"), "spanx 2");
     this.add(descPane, "span 2 2, width 10:300:, height 80:100:150, growprio 50, grow");
     this.add(configPane, "span 2 2, height 100:150:200, grow");
+    this.add(filter, "cell 3 10, spanx 2");
+
   }
   
   public void populate()
   {
-    model.populate(false);
+    model.populate();
   }
 }

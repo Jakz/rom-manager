@@ -1,10 +1,11 @@
 package jack.rm.plugins.folder;
 
 import java.nio.file.Paths;
-
+import java.util.function.Predicate;
 import java.nio.file.Path;
 
 import jack.rm.data.Rom;
+import jack.rm.data.set.RomSet;
 import jack.rm.data.NumberedRom;
 import jack.rm.files.Organizer;
 import jack.rm.plugin.ExposedParameter;
@@ -20,7 +21,7 @@ public class NumericalOrganizer extends FolderPlugin
   {
     folderSize = 100;
   }
-  
+    
   @Override 
   public Path getFolderForRom(Rom rom)
   {
