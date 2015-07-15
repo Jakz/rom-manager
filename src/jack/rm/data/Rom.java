@@ -4,6 +4,7 @@ import jack.rm.Settings;
 import jack.rm.data.set.RomSet;
 import jack.rm.files.Organizer;
 
+import java.io.IOException;
 import java.nio.file.*;
 
 public class Rom implements Comparable<Rom>
@@ -74,6 +75,12 @@ public class Rom implements Comparable<Rom>
 			return " ("+saveType.name+")";
 		else
 			return "";
+	}
+	
+	public void move(Path dest) throws IOException
+	{
+	  Files.move(entry.file(), dest);
+	  entry = entry.build(dest);
 	}
 	
 	public long getCRCforAsset(Asset asset)

@@ -2,10 +2,14 @@ package jack.rm.data;
 
 import jack.rm.*;
 import jack.rm.data.set.RomSet;
+import jack.rm.files.OrganizerWorker;
+import jack.rm.files.MoverWorker;
 import jack.rm.files.Organizer;
 import jack.rm.gui.ProgressDialog;
+import jack.rm.plugins.folder.FolderPlugin;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.zip.*;
 import javax.swing.SwingWorker;
@@ -229,9 +233,16 @@ public class RomList
     {
       ProgressDialog.finished();
       
-      if (Settings.current().getFolderOrganizer() != null)
+      FolderPlugin plugin = set.getSettings().getFolderOrganizer();
+      
+      if (plugin != null)
       {
-        new OrganizeByFolderWorker(list).execute();
+        Consumer<Boolean> callback = b -> {
+          set.cleanup();
+          RomJsonState.consolidate(list);
+        };
+        
+        new MoverWorker(RomList.this, plugin, callback).execute();
       }
       else
         RomJsonState.consolidate(list);
@@ -239,58 +250,7 @@ public class RomList
     
   }
 	
-	public class OrganizeByFolderWorker extends SwingWorker<Void, Integer>
-  {
-    private int total = 0;
-    private final RomList list;
-    
-    OrganizeByFolderWorker(RomList list)
-    {
-      this.list = list;
-      total = list.count();
-    }
-
-    @Override
-    public Void doInBackground()
-    {
-      ProgressDialog.init(Main.mainFrame, "Rom Organize", null);
-      
-      for (int i = 0; i < list.count(); ++i)
-      {
-        setProgress((int)((((float)i)/total)*100));
-
-        Rom rom = list.get(i); 
-        Organizer.moveRom(rom);
-
-        publish(i);
-      }
-  
-      return null;
-    }
-    
-    @Override
-    public void process(List<Integer> v)
-    {
-      ProgressDialog.update(this, "Organizing "+v.get(v.size()-1)+" of "+list.count()+"..");
-      Main.mainFrame.updateTable();
-    }
-    
-    @Override
-    public void done()
-    {
-      ProgressDialog.finished();
-      RomSet.current.cleanup();
-      RomJsonState.consolidate(list);
-      
-      
-      //if (Main.pref.organizeRomsDeleteEmptyFolders)
-      //  deleteEmptyFolders();
-    }
-    
-  }
-	
-	
-  public class RenameInsizeZipsWorker extends SwingWorker<Void, Integer>
+	public class RenameInsizeZipsWorker extends SwingWorker<Void, Integer>
   {
     private int total = 0;
     private final RomList list;

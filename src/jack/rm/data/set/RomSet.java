@@ -36,6 +36,8 @@ public abstract class RomSet<R extends Rom>
 		Settings.get(this);
 	}
 	
+	public Settings getSettings() { return Settings.get(this); }
+	
 	public abstract URL assetURL(Asset asset, Rom rom);
 	public abstract Path assetPath(Asset asset, Rom rom);
 	
