@@ -13,10 +13,6 @@ import jack.rm.Settings;
 import jack.rm.data.RomList;
 import jack.rm.data.RomStatus;
 import jack.rm.files.FolderScanner;
-import jack.rm.log.Log;
-import jack.rm.log.LogSource;
-import jack.rm.log.LogTarget;
-import jack.rm.log.LogType;
 import jack.rm.plugins.PluginWithIgnorePaths;
 
 public class MoveUnknownFilesPlugin extends CleanupPlugin implements PluginWithIgnorePaths

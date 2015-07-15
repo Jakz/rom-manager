@@ -5,10 +5,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import jack.rm.data.RomList;
-import jack.rm.log.Log;
-import jack.rm.log.LogSource;
-import jack.rm.log.LogTarget;
-import jack.rm.log.LogType;
 
 public class DeleteEmptyFoldersPlugin extends CleanupPlugin
 {

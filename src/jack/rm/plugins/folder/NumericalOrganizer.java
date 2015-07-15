@@ -1,8 +1,6 @@
 package jack.rm.plugins.folder;
 
 import java.nio.file.Paths;
-import java.util.function.Predicate;
-
 import com.pixbits.plugin.ExposedParameter;
 import com.pixbits.plugin.PluginInfo;
 import com.pixbits.plugin.PluginVersion;
@@ -10,7 +8,6 @@ import com.pixbits.plugin.PluginVersion;
 import java.nio.file.Path;
 
 import jack.rm.data.Rom;
-import jack.rm.data.set.RomSet;
 import jack.rm.data.NumberedRom;
 import jack.rm.files.Organizer;
 

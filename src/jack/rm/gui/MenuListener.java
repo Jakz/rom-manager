@@ -3,8 +3,6 @@ package jack.rm.gui;
 import jack.rm.*;
 import jack.rm.data.RomList;
 import jack.rm.data.set.RomSet;
-import jack.rm.files.Organizer;
-
 import java.awt.event.*;
 import javax.swing.*;
 

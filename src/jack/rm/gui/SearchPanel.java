@@ -3,8 +3,6 @@ package jack.rm.gui;
 import jack.rm.data.*;
 import jack.rm.data.set.RomSet;
 import jack.rm.i18n.Text;
-import jack.rm.*;
-
 import javax.swing.*;
 import javax.swing.event.*;
 

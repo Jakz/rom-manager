@@ -12,8 +12,6 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.*;
 
-import com.pixbits.plugin.Plugin;
-
 import java.awt.Dimension;
 
 public abstract class RomSet<R extends Rom>

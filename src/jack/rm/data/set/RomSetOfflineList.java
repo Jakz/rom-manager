@@ -1,6 +1,5 @@
 package jack.rm.data.set;
 
-import jack.rm.Main;
 import jack.rm.Settings;
 import jack.rm.data.*;
 import jack.rm.data.parser.*;

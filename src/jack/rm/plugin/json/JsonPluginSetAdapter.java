@@ -1,8 +1,6 @@
 package jack.rm.plugin.json;
 
 import java.lang.reflect.Type;
-import java.util.stream.Stream;
-
 import com.google.gson.*;
 import com.pixbits.plugin.Plugin;
 import com.pixbits.plugin.PluginSet;

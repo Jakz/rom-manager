@@ -3,16 +3,8 @@ package com.pixbits.plugin;
 import java.util.HashSet;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Set;
 import java.util.stream.Stream;
-
-import com.google.gson.GsonBuilder;
-
-import jack.rm.plugins.PluginRealType;
-
-import java.util.Map;
 
 public class PluginManager<T extends Plugin, B extends PluginBuilder<T>>
 {

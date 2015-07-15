@@ -4,12 +4,9 @@ import java.nio.file.Paths;
 import java.nio.file.Path;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
-import java.util.function.Predicate;
-
 import com.pixbits.plugin.PluginInfo;
 import com.pixbits.plugin.PluginVersion;
 
-import jack.rm.data.set.RomSet;
 import jack.rm.data.Rom;
 
 public class AlphabeticalOrganizer extends FolderPlugin

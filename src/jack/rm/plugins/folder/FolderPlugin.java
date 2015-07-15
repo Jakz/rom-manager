@@ -1,7 +1,6 @@
 package jack.rm.plugins.folder;
 
 import jack.rm.data.Rom;
-import jack.rm.plugin.*;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.PluginRealType;
 

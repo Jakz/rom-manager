@@ -1,7 +1,5 @@
 package jack.rm.files;
 
-import jack.rm.plugins.folder.*;
-
 public class OrganizerDetails
 {
   public RenamePolicy renamePolicy;

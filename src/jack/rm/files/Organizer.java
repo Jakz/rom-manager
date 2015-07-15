@@ -6,17 +6,12 @@ import jack.rm.data.set.*;
 import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
-import jack.rm.log.LogType;
 import jack.rm.plugins.folder.FolderPlugin;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Organizer
 {

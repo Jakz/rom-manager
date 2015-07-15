@@ -1,6 +1,5 @@
 package jack.rm.gui;
 
-import jack.rm.Main;
 import jack.rm.data.RomList;
 import jack.rm.data.set.RomSet;
 

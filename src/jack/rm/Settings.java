@@ -6,7 +6,6 @@ import java.nio.file.Paths;
 import java.util.*;
 
 import com.google.gson.JsonParseException;
-import com.pixbits.plugin.PluginManager;
 import com.pixbits.plugin.PluginSet;
 
 import jack.rm.data.Asset;
