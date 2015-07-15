@@ -2,8 +2,9 @@ package jack.rm.plugins;
 
 import java.util.function.Predicate;
 
+import com.pixbits.plugin.PluginBuilder;
+
 import jack.rm.data.set.RomSet;
-import jack.rm.plugin.PluginBuilder;
 
 public class ActualPluginBuilder extends PluginBuilder<ActualPlugin>
 {

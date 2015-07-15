@@ -6,6 +6,8 @@ import java.nio.file.Paths;
 import java.util.*;
 
 import com.google.gson.JsonParseException;
+import com.pixbits.plugin.PluginManager;
+import com.pixbits.plugin.PluginSet;
 
 import jack.rm.data.Asset;
 import jack.rm.data.Rom;
@@ -15,8 +17,6 @@ import jack.rm.json.Json;
 import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogType;
-import jack.rm.plugin.PluginManager;
-import jack.rm.plugin.PluginSet;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.PluginWithIgnorePaths;
@@ -112,7 +112,11 @@ public class Settings
 	  plugins.add(ActualPlugin.manager.build(jack.rm.plugins.cleanup.MoveUnknownFilesPlugin.class));  
 	}
 	
-	public FolderPlugin getFolderOrganizer() { return plugins.getPlugin(PluginRealType.FOLDER_ORGANIZER); }
+	public FolderPlugin getFolderOrganizer()
+	{ 
+	  FolderPlugin plugin = plugins.getPlugin(PluginRealType.FOLDER_ORGANIZER);
+	  return plugin != null && plugin.isEnabled() ? plugin : null;
+	}
 	
 	public Set<Path> getIgnoredPaths()
 	{

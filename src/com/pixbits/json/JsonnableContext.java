@@ -1,4 +1,4 @@
-package jack.rm.json;
+package com.pixbits.json;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;

@@ -1,4 +1,4 @@
-package jack.rm.plugin;
+package com.pixbits.plugin;
 
 import java.lang.reflect.Field;
 

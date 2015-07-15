@@ -7,6 +7,7 @@ import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.log.LogType;
+import jack.rm.plugins.folder.FolderPlugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,7 +48,14 @@ public class Organizer
 	public static Path getCorrectFolder(Rom rom)
 	{
 	  Path base = Settings.current().romsPath;
-	  return base.resolve(Settings.current().getFolderOrganizer().getFolderForRom(rom));
+	  
+	  FolderPlugin organizer = Settings.current().getFolderOrganizer();
+	  
+	  if (organizer != null)
+	    return base.resolve(organizer.getFolderForRom(rom));
+	  else if (rom.entry != null)
+	    return rom.entry.file().getParent();
+	  else return base;
 	}
 	
 	public abstract static class Pattern {

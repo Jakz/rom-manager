@@ -1,4 +1,4 @@
-package jack.rm;
+package com.pixbits.stream;
 
 import java.util.function.*;
 

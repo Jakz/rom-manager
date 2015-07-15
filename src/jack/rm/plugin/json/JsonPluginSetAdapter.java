@@ -4,9 +4,8 @@ import java.lang.reflect.Type;
 import java.util.stream.Stream;
 
 import com.google.gson.*;
-
-import jack.rm.plugin.Plugin;
-import jack.rm.plugin.PluginSet;
+import com.pixbits.plugin.Plugin;
+import com.pixbits.plugin.PluginSet;
 
 public class JsonPluginSetAdapter<T extends Plugin> implements JsonSerializer<PluginSet<T>>, JsonDeserializer<PluginSet<T>>
 {

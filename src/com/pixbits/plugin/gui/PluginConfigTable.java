@@ -1,4 +1,4 @@
-package jack.rm.gui.plugins;
+package com.pixbits.plugin.gui;
 
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -11,10 +11,10 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
-import jack.rm.plugin.Plugin;
-import jack.rm.plugin.PluginArgument;
+import com.pixbits.plugin.Plugin;
+import com.pixbits.plugin.PluginArgument;
 
-class PluginConfigTable extends JTable
+public class PluginConfigTable extends JTable
 {
   private List<Class<?>> types;
   private List<TableCellEditor> editors;
@@ -48,7 +48,7 @@ class PluginConfigTable extends JTable
     }
   }
   
-  PluginConfigTable()
+  public PluginConfigTable()
   {
     super();
     editors = new ArrayList<>();
@@ -85,7 +85,7 @@ class PluginConfigTable extends JTable
       return null;
   }
   
-  void prepare(Plugin plugin)
+  public void prepare(Plugin plugin)
   {
     renderers.clear();
     editors.clear();

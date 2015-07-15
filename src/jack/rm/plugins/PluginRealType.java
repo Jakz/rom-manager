@@ -1,6 +1,6 @@
 package jack.rm.plugins;
 
-import jack.rm.plugin.PluginType;
+import com.pixbits.plugin.PluginType;
 
 public enum PluginRealType implements PluginType
 {

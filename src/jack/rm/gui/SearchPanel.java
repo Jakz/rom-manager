@@ -2,12 +2,14 @@ package jack.rm.gui;
 
 import jack.rm.data.*;
 import jack.rm.data.set.RomSet;
-import jack.rm.gui.parts.JPlaceHolderTextField;
 import jack.rm.i18n.Text;
 import jack.rm.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
+
+import com.pixbits.gui.JPlaceHolderTextField;
+
 import java.awt.*;
 import java.awt.event.*;
 

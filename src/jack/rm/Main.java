@@ -3,6 +3,8 @@ package jack.rm;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
+import com.pixbits.plugin.PluginManager;
+
 import java.awt.Desktop;
 
 import jack.rm.data.*;
@@ -10,7 +12,6 @@ import jack.rm.data.set.*;
 import jack.rm.gui.*;
 import jack.rm.gui.plugins.PluginsPanel;
 import jack.rm.net.Downloader;
-import jack.rm.plugin.PluginManager;
 import jack.rm.plugins.ActualPlugin;
 
 public class Main

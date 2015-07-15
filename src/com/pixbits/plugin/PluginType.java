@@ -1,4 +1,4 @@
-package jack.rm.plugin;
+package com.pixbits.plugin;
 
 public interface PluginType
 {

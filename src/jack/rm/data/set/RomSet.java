@@ -2,7 +2,6 @@ package jack.rm.data.set;
 
 import jack.rm.Settings;
 import jack.rm.data.*;
-import jack.rm.plugin.Plugin;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.cleanup.CleanupPlugin;
 
@@ -12,6 +11,9 @@ import java.nio.file.PathMatcher;
 import java.net.URL;
 import java.util.*;
 import java.util.stream.*;
+
+import com.pixbits.plugin.Plugin;
+
 import java.awt.Dimension;
 
 public abstract class RomSet<R extends Rom>

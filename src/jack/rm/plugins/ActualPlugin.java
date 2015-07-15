@@ -2,12 +2,13 @@ package jack.rm.plugins;
 
 import java.util.function.Predicate;
 
+import com.pixbits.plugin.Plugin;
+import com.pixbits.plugin.PluginManager;
+
 import jack.rm.data.set.RomSet;
 import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
-import jack.rm.plugin.Plugin;
-import jack.rm.plugin.PluginManager;
 
 public abstract class ActualPlugin extends Plugin
 {

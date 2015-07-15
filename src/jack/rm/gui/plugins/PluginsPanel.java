@@ -8,6 +8,10 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
+import com.pixbits.plugin.PluginBuilder;
+import com.pixbits.plugin.PluginManager;
+import com.pixbits.plugin.gui.PluginConfigTable;
+
 import net.miginfocom.swing.MigLayout;
 
 import jack.rm.Settings;

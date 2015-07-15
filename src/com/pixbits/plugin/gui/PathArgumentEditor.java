@@ -1,4 +1,4 @@
-package jack.rm.gui.plugins;
+package com.pixbits.plugin.gui;
 
 import java.awt.Component;
 import java.io.File;
@@ -15,8 +15,7 @@ import javax.swing.JTable;
 import javax.swing.event.CellEditorListener;
 import javax.swing.table.TableCellEditor;
 
-import jack.rm.Settings;
-import jack.rm.gui.parts.ComponentBorder;
+import com.pixbits.gui.ComponentBorder;
 
 public class PathArgumentEditor implements TableCellEditor
 {

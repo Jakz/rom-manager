@@ -1,4 +1,4 @@
-package jack.rm.gui.parts;
+package com.pixbits.gui;
 
 import java.awt.*;
 import javax.swing.*;

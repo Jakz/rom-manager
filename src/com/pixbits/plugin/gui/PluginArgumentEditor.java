@@ -1,4 +1,4 @@
-package jack.rm.gui.plugins;
+package com.pixbits.plugin.gui;
 
 import java.awt.Component;
 import java.util.EventObject;
@@ -12,7 +12,7 @@ public class PluginArgumentEditor implements TableCellEditor
   private final TableCellEditor inner;
   private final Class<?> clazz;
   
-  PluginArgumentEditor(Class<?> clazz, TableCellEditor inner)
+  public PluginArgumentEditor(Class<?> clazz, TableCellEditor inner)
   {
     this.inner = inner;
     this.clazz = clazz;

@@ -6,10 +6,11 @@ import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.function.Predicate;
 
+import com.pixbits.plugin.PluginInfo;
+import com.pixbits.plugin.PluginVersion;
+
 import jack.rm.data.set.RomSet;
 import jack.rm.data.Rom;
-import jack.rm.plugin.PluginInfo;
-import jack.rm.plugin.PluginVersion;
 
 public class AlphabeticalOrganizer extends FolderPlugin
 {

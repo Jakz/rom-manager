@@ -7,6 +7,8 @@ import jack.rm.plugins.PluginRealType;
 
 import java.nio.file.Path;
 
+import com.pixbits.plugin.PluginType;
+
 public abstract class FolderPlugin extends ActualPlugin
 {
   public abstract Path getFolderForRom(Rom rom);

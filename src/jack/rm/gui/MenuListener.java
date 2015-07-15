@@ -71,10 +71,6 @@ class MenuListener implements ActionListener
 		{
 			Main.downloader.start();
 		}
-    else if (tag == MenuElement.TOOLS_MOVE_UNKNOWN_FILES)
-    {
-      //Organizer.moveUnknownFiles(list);
-    }
 		else if (tag == MenuElement.TOOLS_OPTIONS)
 		{
 			Main.optionsFrame.showMe();

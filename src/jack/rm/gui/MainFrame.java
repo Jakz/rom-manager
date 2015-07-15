@@ -123,7 +123,6 @@ public class MainFrame extends JFrame implements WindowListener
     viewMenu.add(MenuElement.VIEW_SHOW_NOT_FOUND.item);
     
     toolsMenu.add(MenuElement.TOOLS_DOWNLOAD_ART.item);
-    toolsMenu.add(MenuElement.TOOLS_MOVE_UNKNOWN_FILES.item);
     toolsMenu.add(MenuElement.TOOLS_OPTIONS.item);
     toolsMenu.add(MenuElement.TOOLS_SHOW_CONSOLE.item);
 		

@@ -1,4 +1,4 @@
-package jack.rm.plugin;
+package com.pixbits.plugin;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -10,8 +10,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
-import jack.rm.StreamException;
-import jack.rm.json.JsonnableContext;
+import com.pixbits.json.JsonnableContext;
+import com.pixbits.stream.StreamException;
 
 public abstract class Plugin implements JsonnableContext
 {

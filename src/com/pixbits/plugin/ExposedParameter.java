@@ -1,4 +1,4 @@
-package jack.rm.plugin;
+package com.pixbits.plugin;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
