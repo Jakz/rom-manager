@@ -59,7 +59,7 @@ public class RomSize implements Comparable<RomSize>
 	
 	public static RomSize forBytes(long size)
 	{
-	  return forBytes(size, false);
+	  return forBytes(size, true);
 	}
 	
 	public static RomSize forBytes(long size, boolean addToList)

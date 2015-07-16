@@ -72,13 +72,9 @@ public class RomSetManager
 
 		RomSize.mapping.clear();
 		set.load();
-			
-		Main.searchPanel.resetFields(RomSize.mapping.values().toArray(new RomSize[RomSize.mapping.size()]));
-		Main.mainFrame.romListModel.fireChanges();
-		Main.mainFrame.updateCbRomSet(set);
-		Main.infoPanel.setScreenSizes(set.screenTitle,set.screenGame);
+		
+		Main.mainFrame.romSetLoaded(set);
 				
-		set.list.showAll();
 		return set;
 	}
 }

@@ -1,21 +1,29 @@
 package jack.rm.gui;
 
 import jack.rm.data.RomList;
+import jack.rm.data.RomStatus;
 import jack.rm.data.set.RomSet;
 
 import java.awt.*;
+import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.HashMap;
+
 import javax.swing.*;
 
 public class CountPanel extends JPanel
 {
 	private static final long serialVersionUID = 1L;
 	
+	private final RomListModel model;
 	JLabel[] counters = new JLabel[4];
 	Icon[] icons = new Icon[]{Icon.STATUS_CORRECT, Icon.STATUS_BADLY_NAMED, Icon.STATUS_NOT_FOUND, Icon.STATUS_ALL};
 	
-	public CountPanel()
+	public CountPanel(RomListModel model)
 	{
-		JPanel inner = new JPanel();
+		this.model = model;
+	  
+	  JPanel inner = new JPanel();
 		for (int i = 0; i < counters.length; ++i)
 		{
 			counters[i] = new JLabel("1234");
@@ -30,10 +38,11 @@ public class CountPanel extends JPanel
 	
 	public void update()
 	{	  
-	  RomList list = RomSet.current.list;
-    counters[0].setText(""+list.getCountCorrect());
-    counters[1].setText(""+list.getCountBadName());
-    counters[2].setText(""+list.getCountMissing());
-    counters[3].setText(""+list.count());
+	  Map<RomStatus, Long> status = model.stream().collect(Collectors.groupingBy( r -> r.status, HashMap::new, Collectors.counting()));
+	    
+    counters[0].setText(""+status.getOrDefault(RomStatus.FOUND, 0L));
+    counters[1].setText(""+status.getOrDefault(RomStatus.INCORRECT_NAME, 0L));
+    counters[2].setText(""+status.getOrDefault(RomStatus.NOT_FOUND, 0L));
+    counters[3].setText(""+model.getSize());
 	}
 }

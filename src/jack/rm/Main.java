@@ -13,9 +13,7 @@ import jack.rm.plugins.ActualPlugin;
 public class Main
 {		
 	public static MainFrame mainFrame;
-	public static SearchPanel searchPanel;
 	public static InfoPanel infoPanel;
-	public static CountPanel countPanel;
 	
 	public static ManagerPanel romsetPanel;
 	public static PatternRenamerPanel renamerPanel;
@@ -52,9 +50,7 @@ public class Main
 	  setOS();
 	  setLNF();
 		
-		searchPanel = new SearchPanel();
 		infoPanel = new InfoPanel();
-		countPanel = new CountPanel();
 		mainFrame = new MainFrame();
 		
 		romsetPanel = new ManagerPanel();

@@ -5,13 +5,13 @@ import java.util.*;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.pixbits.plugin.JsonPluginSetAdapter;
 import com.pixbits.plugin.Plugin;
 import com.pixbits.plugin.PluginSet;
 
 import jack.rm.data.RomPath;
 import jack.rm.data.RomID;
 import jack.rm.data.set.RomSet;
-import jack.rm.plugin.json.JsonPluginSetAdapter;
 import jack.rm.plugins.ActualPlugin;
 
 public class Json

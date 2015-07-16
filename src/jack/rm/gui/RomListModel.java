@@ -6,6 +6,8 @@ import javax.swing.AbstractListModel;
 import javax.swing.SwingUtilities;
 
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public class RomListModel extends AbstractListModel<Rom>
 {
@@ -56,6 +58,9 @@ public class RomListModel extends AbstractListModel<Rom>
 	{
 		list.clear();
 	}
+	
+	public Consumer<Rom> collector() { return list::add; }
+	public Stream<Rom> stream() { return list.stream(); }
 	
 	public void fireChanges()
 	{

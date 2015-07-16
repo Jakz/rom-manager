@@ -1,9 +1,7 @@
-package jack.rm.plugin.json;
+package com.pixbits.plugin;
 
 import java.lang.reflect.Type;
 import com.google.gson.*;
-import com.pixbits.plugin.Plugin;
-import com.pixbits.plugin.PluginSet;
 
 public class JsonPluginSetAdapter<T extends Plugin> implements JsonSerializer<PluginSet<T>>, JsonDeserializer<PluginSet<T>>
 {

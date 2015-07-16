@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.event.*;
 import java.util.Arrays;
+import java.util.function.Predicate;
 import java.awt.*;
 
 public class MainFrame extends JFrame implements WindowListener
@@ -35,18 +36,25 @@ public class MainFrame extends JFrame implements WindowListener
 	//menu Tools
 	final JMenuItem miTools[] = new JMenuItem[3];
 	
-	public final RomListModel romListModel = new RomListModel();
+	final RomListModel romListModel = new RomListModel();
 	final public JList<Rom> list = new JList<>();
 	final private JScrollPane listPane = new JScrollPane(list);
 	
 	private final JComboBox<RomSet<? extends Rom>> cbRomSets = new JComboBox<>();
-	private final RomSetListener rsListener = new RomSetListener();
 	
 	final MenuListener menuListener = new MenuListener();
 		
 	final private CardLayout layout = new CardLayout();
 	final private JPanel cardMain = new JPanel(new BorderLayout());
 	final public ConsolePanel cardConsole = new ConsolePanel();
+	
+	final private CountPanel countPanel = new CountPanel(romListModel);
+	final private SearchPanel searchPanel = new SearchPanel(this);
+	
+	final private ItemListener romSetListener = e -> {
+    if (e.getStateChange() == ItemEvent.SELECTED)
+      RomSetManager.loadSet(cbRomSets.getItemAt(cbRomSets.getSelectedIndex()));
+	};
 		
 	public MainFrame()
 	{
@@ -77,8 +85,9 @@ public class MainFrame extends JFrame implements WindowListener
 		
 		for (RomSet<? extends Rom> rs : RomSetManager.sets())
 			cbRomSets.addItem(rs);
-		cbRomSets.addActionListener(rsListener);
 		
+		cbRomSets.addItemListener(romSetListener);
+
 		JPanel romListPanel = new JPanel(new BorderLayout());
 		romListPanel.add(cbRomSets, BorderLayout.NORTH);
 		romListPanel.add(listPane, BorderLayout.CENTER);
@@ -90,8 +99,8 @@ public class MainFrame extends JFrame implements WindowListener
 		
 		cardMain.add(split, BorderLayout.CENTER);
 		JPanel south = new JPanel(new GridLayout(1,2));
-		south.add(Main.countPanel);
-		south.add(Main.searchPanel);
+		south.add(countPanel);
+		south.add(searchPanel);
 		cardMain.add(south, BorderLayout.SOUTH);
 		
 		setLayout(layout);
@@ -163,16 +172,7 @@ public class MainFrame extends JFrame implements WindowListener
 			Main.infoPanel.updateFields(rom);
 		}
 	}
-	
-	class RomSetListener implements ActionListener
-	{
-		@Override
-    public void actionPerformed(ActionEvent e)
-		{
-			RomSetManager.loadSet(cbRomSets.getItemAt(cbRomSets.getSelectedIndex()));
-		}
-	}
-	
+
 	void toggleConsole(boolean flag)
 	{
 		if (flag)
@@ -184,29 +184,33 @@ public class MainFrame extends JFrame implements WindowListener
 			layout.first(this.getContentPane());
 	}
 	
+	public void romSetLoaded(RomSet<?> set)
+	{
+	  searchPanel.activate(false);
+	  searchPanel.resetFields(RomSize.mapping.values().toArray(new RomSize[RomSize.mapping.size()]));
+	  searchPanel.activate(true);
+	  
+    cbRomSets.removeItemListener(romSetListener);
+    cbRomSets.setSelectedItem(set);
+    cbRomSets.addItemListener(romSetListener);
+    
+    Main.infoPanel.setScreenSizes(set.screenTitle,set.screenGame);
+  
+	  updateTable();
+	}
+	
 	public void updateTable()
 	{
-		Rom current = list.getSelectedValue();
-		System.out.println(current);
-	  romListModel.fireChanges();
+		StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+		Arrays.stream(stack).forEach(s -> System.out.println(s));
 	  
-	  if (current != null)
-	  {
-	    System.out.println("update table");
-	    list.setSelectedValue(current, true);
-	    Main.infoPanel.updateFields(current);
-	  }
+	  System.out.println("updated table");
+	  romListModel.clear();
+		RomSet.current.list.stream().filter(searchPanel.buildSearchPredicate()).forEach(romListModel.collector());
+	  romListModel.fireChanges();
+		countPanel.update();
+	}
 
-		Main.countPanel.update();
-	}
-	
-	public void updateCbRomSet(RomSet<?> set)
-	{
-		cbRomSets.removeActionListener(rsListener);
-		cbRomSets.setSelectedItem(set);
-		cbRomSets.addActionListener(rsListener);
-	}
-	
 	@Override
   public void windowActivated(WindowEvent e) { }
 	@Override
@@ -223,6 +227,6 @@ public class MainFrame extends JFrame implements WindowListener
 	@Override
   public void windowClosing(WindowEvent e)
 	{
-    RomSet.current.list.save();;
+    RomSet.current.list.save();
 	}
 }

@@ -10,6 +10,13 @@ import com.pixbits.gui.JPlaceHolderTextField;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class SearchPanel extends JPanel
 {
@@ -17,6 +24,7 @@ public class SearchPanel extends JPanel
 	
 	final JLabel[] labels = new JLabel[4];
 	final JPlaceHolderTextField romName = new JPlaceHolderTextField(10);
+	final MainFrame mainFrame;
 	
 	final JComboBox<RomSize> sizes = new JComboBox<>();
 	//final JComboBox genres = new JComboBox();
@@ -95,6 +103,11 @@ public class SearchPanel extends JPanel
     }
   }
   
+  void activate(boolean active)
+  {
+    this.active = active;
+  }
+  
   private void setComboBoxSelectedBackground(JComboBox<?> comboBox)
   {
     Object child = comboBox.getAccessibleContext().getAccessibleChild(0);
@@ -103,9 +116,11 @@ public class SearchPanel extends JPanel
     list.setSelectionBackground(new Color(164,171,184)); //TODO: hacked
   }
 	  
-	public SearchPanel()
+	public SearchPanel(MainFrame mainFrame)
 	{
-		labels[0] = new JLabel();
+		this.mainFrame = mainFrame;
+	  
+	  labels[0] = new JLabel();
 		labels[1] = new JLabel();
 		labels[2] = new JLabel();
 		labels[3] = new JLabel();		
@@ -148,6 +163,34 @@ public class SearchPanel extends JPanel
 		active = true;
 	}
 	
+	public Predicate<Rom> buildSearchPredicate()
+	{
+	  Predicate<Rom> predicate = r -> true;
+	  
+	  if (!romName.getText().isEmpty())
+	  {
+      String[] tokens = romName.getText().split(" ");
+	    Map<Boolean, List<String>> ptokens = Arrays.stream(tokens).collect(Collectors.partitioningBy( t -> !t.startsWith("-")));
+	    
+	    for (String token : ptokens.get(true))
+	      predicate = predicate.and(r -> r.title.toLowerCase().contains(token));
+	    
+	    for (String token : ptokens.get(false))
+        predicate = predicate.and(r -> !r.title.toLowerCase().contains(token));
+	  }
+	  
+	  Location location = locations.getItemAt(locations.getSelectedIndex());
+    Language language = languages.getItemAt(languages.getSelectedIndex());
+
+    if (location != null)
+      predicate = predicate.and(r -> r.location.equals(location));
+    
+    if (language != null)
+      predicate = predicate.and(r -> (r.languages & language.code) != 0); // TODO: refactor language to avoid it being coupled to OL format
+	  
+	  return predicate;
+	}
+	
 	public void resetFields(final RomSize[] nsizes)
 	{
 		SwingUtilities.invokeLater(new Runnable() {
@@ -172,13 +215,7 @@ public class SearchPanel extends JPanel
     public void actionPerformed(ActionEvent e)
 		{
 			if (active)
-			{
-				RomSize size = sizes.getItemAt(sizes.getSelectedIndex());
-				Location location = locations.getItemAt(locations.getSelectedIndex());
-				Language language = languages.getItemAt(languages.getSelectedIndex());
-
-				RomSet.current.list.search(romName.getText(),size,location,language);
-			}
+				mainFrame.updateTable();
 				
 		}
 	}
@@ -190,11 +227,7 @@ public class SearchPanel extends JPanel
 		{
 			if (active)
 			{
-				RomSize size = sizes.getItemAt(sizes.getSelectedIndex());
-        Location location = locations.getItemAt(locations.getSelectedIndex());
-        Language language = languages.getItemAt(languages.getSelectedIndex());
-
-        RomSet.current.list.search(romName.getText(),size,location,language);
+        mainFrame.updateTable();
 			}
 		}
 	}

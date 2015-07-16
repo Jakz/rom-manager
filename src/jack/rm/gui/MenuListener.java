@@ -50,20 +50,17 @@ class MenuListener implements ActionListener
 		else if (tag == MenuElement.VIEW_SHOW_CORRECT)
 		{
 			Main.mainFrame.romListModel.isCorrect = !Main.mainFrame.romListModel.isCorrect;
-			Main.mainFrame.romListModel.clear();
-			list.showAll();
+			Main.mainFrame.updateTable();
 		}
 		else if (tag == MenuElement.VIEW_SHOW_NOT_FOUND)
 		{
 			Main.mainFrame.romListModel.isMissing = !Main.mainFrame.romListModel.isMissing;
-			Main.mainFrame.romListModel.clear();
-			list.showAll();
+      Main.mainFrame.updateTable();
 		}
 		else if (tag == MenuElement.VIEW_SHOW_UNORGANIZED)
 		{
 			Main.mainFrame.romListModel.isBadlyNamed = !Main.mainFrame.romListModel.isBadlyNamed;
-			Main.mainFrame.romListModel.clear();
-			list.showAll();
+      Main.mainFrame.updateTable();
 		}
 		else if (tag == MenuElement.TOOLS_DOWNLOAD_ART)
 		{

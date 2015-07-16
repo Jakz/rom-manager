@@ -115,74 +115,7 @@ public class RomList
 	    }
 	  }
 	}
-	
-	public void search(String name, RomSize size, Location loc, Language lang)
-	{
-		Main.mainFrame.romListModel.clear();
-		countCorrect = 0;
-		countBadlyNamed = 0;
-		countNotFound = 0;
-		countTotal = 0;
 
-		for (int t = 0; t < list.size(); ++t)
-		{
-			Rom r = list.get(t);
-			String romName = r.title.toLowerCase();
-			
-			if (!name.equals(""))
-			{
-  			String[] tokens = name.toLowerCase().split(" ");
-  			boolean[] include = new boolean[tokens.length];
-  			
-  			for (int i = 0; i < tokens.length; ++i)
-  			{
-  			  include[i] = !(tokens[i].startsWith("-") && tokens[i].length() > 1);
-          if (!include[i])
-            tokens[i] = tokens[i].substring(1);
-  			}
-  
-  			boolean found = true;
-  	    for (int i = 0; i < tokens.length; ++i)
-  	    {
-  	      if (romName.contains(tokens[i]) != include[i])
-  	      {
-  	        found = false;
-  	        break;
-  	      }
-  	    }
-  
-  		  if (!found)
-  		    continue;
-			}
-		  
-		  if (size == null || r.size == size)
-			{
-				if (loc == null || r.location == loc)
-				{
-					if (lang == null || (r.languages & lang.code) != 0)
-					{
-						Main.mainFrame.romListModel.addElement(r);
-					}
-				}
-			}
-			  
-			switch (r.status)
-			{
-				case FOUND: ++countCorrect; break;
-				case INCORRECT_NAME: ++countBadlyNamed; break;
-				case NOT_FOUND: ++countNotFound; break;
-			}	
-			++countTotal;
-		}
-		
-		Main.mainFrame.updateTable();
-	}
-	
-	public void showAll()
-	{
-		search("", null, null, null);
-	}
-	
 	public void checkNames()
 	{
     for (Rom rom : list)
