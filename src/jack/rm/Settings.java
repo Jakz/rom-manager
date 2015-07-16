@@ -93,9 +93,7 @@ public class Settings
 	
 	public RomSet<?> set;
 	public String renamingPattern;
-	public Path romsPath;
-	public Path unknownPath;
-	
+	public Path romsPath;	
 	public boolean checkImageCRC;
 	
 	public PluginSet<ActualPlugin> plugins;
@@ -140,7 +138,6 @@ public class Settings
 		organizer = new OrganizerDetails();
 		renamingPattern = "%n - %t [%S]";
 		romsPath = null;
-		unknownPath = null;
 	}
 	
   public static Path getAssetPath(Asset asset)

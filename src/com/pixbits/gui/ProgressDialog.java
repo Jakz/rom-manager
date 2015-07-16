@@ -1,4 +1,4 @@
-package jack.rm.gui;
+package com.pixbits.gui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,14 +12,13 @@ public class ProgressDialog extends JDialog
 	JProgressBar progress;
 	Runnable callback;
 	
-	public ProgressDialog(Frame frame, String title, Runnable cb)
+	public ProgressDialog(Frame parent, String title, Runnable cb)
 	{
-		super(frame, title);
+		super(parent, title);
 		this.callback = cb;
 		
 		this.setUndecorated(true);
-		
-		
+
 		JPanel panel = new JPanel();
 		
 		panel.setLayout(new BorderLayout());
@@ -44,7 +43,7 @@ public class ProgressDialog extends JDialog
 		this.add(panel);
 		
 		pack();
-		this.setLocationRelativeTo(frame);
+		this.setLocationRelativeTo(parent);
 	}
 	
 	public ProgressDialog()

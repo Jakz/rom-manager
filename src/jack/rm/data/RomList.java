@@ -5,7 +5,6 @@ import jack.rm.data.set.RomSet;
 import jack.rm.files.OrganizerWorker;
 import jack.rm.files.MoverWorker;
 import jack.rm.files.Organizer;
-import jack.rm.gui.ProgressDialog;
 import jack.rm.plugins.folder.FolderPlugin;
 
 import java.util.*;
@@ -13,6 +12,8 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.zip.*;
 import javax.swing.SwingWorker;
+
+import com.pixbits.gui.ProgressDialog;
 
 public class RomList
 {

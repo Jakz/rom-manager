@@ -1,4 +1,4 @@
-package jack.rm.gui.plugins;
+package jack.rm.gui;
 
 import java.util.*;
 import java.util.List;

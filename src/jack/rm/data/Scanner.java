@@ -6,13 +6,14 @@ import jack.rm.Settings;
 import jack.rm.data.set.RomSet;
 import jack.rm.files.*;
 import jack.rm.gui.Dialogs;
-import jack.rm.gui.ProgressDialog;
 import jack.rm.log.*;
 
 import java.nio.file.*;
 import java.util.*;
 import java.util.zip.*;
 import javax.swing.SwingWorker;
+
+import com.pixbits.gui.ProgressDialog;
 
 public class Scanner
 {

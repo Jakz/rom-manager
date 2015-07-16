@@ -3,13 +3,15 @@ package jack.rm.net;
 import jack.rm.Main;
 import jack.rm.data.*;
 import jack.rm.data.set.RomSet;
-import jack.rm.gui.ProgressDialog;
 import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.log.LogType;
 
 import java.util.concurrent.*;
+
+import com.pixbits.gui.ProgressDialog;
+
 import java.nio.channels.*;
 import java.nio.file.*;
 import java.net.*;

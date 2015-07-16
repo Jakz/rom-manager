@@ -1,4 +1,4 @@
-package jack.rm.plugins.rom.ips;
+package jack.rm.plugins.rom;
 
 import java.io.IOException;
 
