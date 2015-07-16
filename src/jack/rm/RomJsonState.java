@@ -4,7 +4,11 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
+
+import com.google.gson.reflect.TypeToken;
 
 import jack.rm.data.*;
 import jack.rm.data.set.RomSet;
@@ -28,40 +32,25 @@ public class RomJsonState
 	
 	public static void consolidate(RomList list)
 	{
-		List<RomJsonState> roms = new ArrayList<RomJsonState>();
-		
-		int s = list.count();
-		
-		for (int i = 0; i < s; ++i)
-		{
-			Rom r = list.get(i);
-			
-			if (r.status != RomStatus.NOT_FOUND)
-			{
-				RomJsonState pr = new RomJsonState(((NumberedRom)r).number, r.status, r.entry);	
-				roms.add(pr);
-			}
-		}
-		
-		RomJsonState[] romsa = roms.toArray(new RomJsonState[roms.size()]);
-		
-		try
-		{
-			File folder = new File("data/"+RomSet.current.ident()+"/");
-			folder.mkdirs();
-			
-			DataOutputStream dos = new DataOutputStream(new FileOutputStream(folder+"/status.json"));
+		RomJsonState[] roms = list.stream()
+		.filter( r -> r.status != RomStatus.NOT_FOUND)
+		.map( r -> new RomJsonState(((NumberedRom)r).number, r.status, r.entry) )
+		.toArray( size -> new RomJsonState[size]);
 
-			dos.writeBytes(Json.build().toJson(romsa, RomJsonState[].class));
-			
-			dos.close();
+    File folder = new File("data/"+RomSet.current.ident()+"/");
+    folder.mkdirs();
+		
+		try (FileWriter writer = new FileWriter(folder + "/status.json"))
+		{
+			writer.write(Json.build().toJson(roms));
+		  Log.log(LogType.MESSAGE, LogSource.STATUS, LogTarget.romset(RomSet.current), "Romset status saved on json");
+
 		}
-		catch (Exception e )
+		catch (IOException e )
 		{
 			e.printStackTrace();
 		}
 		
-		Log.log(LogType.MESSAGE, LogSource.STATUS, LogTarget.romset(RomSet.current), "Romset status saved on json");
 	}
 	
 	public static boolean load(RomList list)
@@ -72,9 +61,9 @@ public class RomJsonState
 			
 			if (new File(fileName).exists())
 			{
-				RomJsonState[] proms = Json.build().fromJson(new FileReader(fileName), RomJsonState[].class);
-				
-				for (RomJsonState prom : proms)
+				List<RomJsonState> jroms = Json.build().fromJson(new FileReader(fileName), new TypeToken<List<RomJsonState>>(){}.getType());
+
+				for (RomJsonState prom : jroms)
 				{
 					Rom rom = list.getByNumber(prom.number);
 					
@@ -91,7 +80,7 @@ public class RomJsonState
 			else
 				return false;
 		}
-		catch (Exception e )
+		catch (IOException e )
 		{
 			e.printStackTrace();
 		}

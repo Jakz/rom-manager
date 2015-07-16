@@ -9,8 +9,10 @@ public class BufferPosition
     this.position = position;
   }
   
-  public int getPosition()
+  public int get()
   {
     return position;
   }
+  
+  public String toString() { return Integer.toString(position); }
 }

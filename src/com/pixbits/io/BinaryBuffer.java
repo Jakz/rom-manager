@@ -19,9 +19,10 @@ import com.pixbits.algorithm.BoyerMooreByte;
 
 public class BinaryBuffer implements AutoCloseable
 {
-  private final ByteBuffer buffer;
+  private ByteBuffer buffer;
+  private final RandomAccessFile file;
+  private final MapMode mapMode;
   private ByteOrder order;
-  private int position;
   
   public BinaryBuffer(String fileName, Mode mode, ByteOrder order) throws FileNotFoundException, IOException
   {
@@ -29,12 +30,8 @@ public class BinaryBuffer implements AutoCloseable
   }
   
   public BinaryBuffer(Path fileName, Mode mode, ByteOrder order) throws FileNotFoundException, IOException
-  {
-    position = 0;
-    
-    String smode = null;
-    MapMode mapMode = null;
-    
+  {    
+    String smode = null;    
     
     switch (mode)
     {
@@ -50,12 +47,12 @@ public class BinaryBuffer implements AutoCloseable
         mapMode = MapMode.READ_WRITE;
         break;
       }
+      default:
+        mapMode = MapMode.READ_ONLY;
     }
     
-    try (RandomAccessFile file = new RandomAccessFile(fileName.toFile(), smode))
-    {
-      buffer = file.getChannel().map(mapMode, 0, file.length());
-    }
+    file = new RandomAccessFile(fileName.toFile(), smode);
+    buffer = file.getChannel().map(mapMode, 0, file.length());
     
     this.order = order;
   }
@@ -92,9 +89,72 @@ public class BinaryBuffer implements AutoCloseable
     buffer.position(buffer.position()+length);
   }
   
+  public void resize(long size) throws IOException
+  {
+    file.setLength(size);
+    buffer = file.getChannel().map(mapMode, 0, file.length());
+  }
+  
+  public void replace(byte[] bytes, int position)
+  {
+    buffer.position(position);
+    buffer.put(bytes, 0, bytes.length);
+  }
+  
+  public boolean replace(byte[] from, byte[] to) throws IOException
+  {
+    Optional<BufferPosition> position = this.scanForData(from);
+    
+    if (position.isPresent())
+    {
+      this.insert(to, position.get().get(), from.length);
+      return true;
+    }
+    
+    return false;
+  }
+  
+  public void insert(byte[] bytes, int position, int length) throws IOException
+  {
+    int adjust = bytes.length - length;
+    
+    if (adjust == 0)
+      replace(bytes, position);
+    /* must shift remaining to right */
+    else if (adjust > 0)
+    {
+      resize(file.length() + adjust);
+      shift(position, adjust, buffer.limit() - position - adjust);
+      write(bytes, position);
+    }
+    /* must shift remaining to left */
+    else
+    {
+      shift(position + length, adjust, buffer.limit() - position - length);
+      resize(file.length() + adjust);
+      write(bytes, position);
+    }
+  }
+  
+  public void shift(int position, int amount, int length)
+  {
+    byte[] tmp = new byte[length];
+    
+    buffer.position(position);
+    buffer.get(tmp);
+    buffer.position(position + amount);
+    buffer.put(tmp);
+  }
+  
   public void read(byte[] bytes)
   {
-    readOrdered(bytes);
+    buffer.get(bytes);
+  }
+  
+  public void read(byte[] bytes, int position)
+  {
+    buffer.position(position);
+    buffer.get(bytes);
   }
   
   public byte readByte()
@@ -129,6 +189,19 @@ public class BinaryBuffer implements AutoCloseable
     return new String(bbuffer);
   }
   
+  public void write(byte[] bytes)
+  {
+    buffer.put(bytes);
+  }
+  
+  public void write(byte[] bytes, int position)
+  {
+    buffer.position(position);
+    buffer.put(bytes);
+  }
+  
+
+  
   private Optional<BufferPosition> scanForDataWithCRC(byte[] data)
   {
     Checksum crc = new Adler32();
@@ -156,18 +229,18 @@ public class BinaryBuffer implements AutoCloseable
     return Optional.empty();
   }
   
-  private Optional<BufferPosition> scanForDataBayerMoore(byte[] data)
+  private Optional<BufferPosition> scanForDataBayerMoore(byte[] data, int startPosition)
   {
     BoyerMooreByte boyerMore = new BoyerMooreByte(data); 
     
-    int index = boyerMore.search(buffer);
+    int index = boyerMore.search(buffer, startPosition);
     
     return index != -1 ? Optional.of(new BufferPosition(index)) : Optional.empty();
   }
   
   public Optional<BufferPosition> scanForData(byte[] data)
   {
-    return scanForDataBayerMoore(data);
+    return scanForDataBayerMoore(data, 0);
   }
   
   public void close()

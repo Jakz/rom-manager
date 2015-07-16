@@ -7,6 +7,7 @@ import jack.rm.i18n.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.event.*;
+import java.util.Arrays;
 import java.awt.*;
 
 public class MainFrame extends JFrame implements WindowListener
@@ -142,6 +143,12 @@ public class MainFrame extends JFrame implements WindowListener
 		{	
 			if (e.getValueIsAdjusting())
 				return;
+			
+
+			System.out.println("event");
+			
+	     StackTraceElement[] asd = Thread.currentThread().getStackTrace();
+	      Arrays.stream(asd).forEach( ee -> System.out.println(ee.toString()));
 				
 			ListSelectionModel lsm = (ListSelectionModel)e.getSource();
 			
@@ -180,8 +187,16 @@ public class MainFrame extends JFrame implements WindowListener
 	public void updateTable()
 	{
 		Rom current = list.getSelectedValue();
+		System.out.println(current);
 	  romListModel.fireChanges();
-	  list.setSelectedValue(current, true);
+	  
+	  if (current != null)
+	  {
+	    System.out.println("update table");
+	    list.setSelectedValue(current, true);
+	    Main.infoPanel.updateFields(current);
+	  }
+
 		Main.countPanel.update();
 	}
 	

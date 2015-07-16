@@ -19,16 +19,16 @@ public class BoyerMooreByte
     
     Arrays.fill(right, -1);
     for (int i = 0; i < pattern.length; ++i)
-      right[pattern[i]] = i;
+      right[pattern[i] & 0xFF] = i;
   }
   
-  public int search(ByteBuffer buffer)
+  public int search(ByteBuffer buffer, int startPosition)
   {
     int M = pattern.length;
     int N = buffer.limit();
     int skip = 0;
     
-    for (int i = 0; i <= N - M; i += skip)
+    for (int i = startPosition; i <= N - M; i += skip)
     {
       skip = 0;
       
