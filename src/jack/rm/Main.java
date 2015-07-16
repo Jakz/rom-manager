@@ -7,6 +7,7 @@ import java.awt.Desktop;
 import jack.rm.data.*;
 import jack.rm.data.set.*;
 import jack.rm.gui.*;
+import jack.rm.json.RomSavedState;
 import jack.rm.net.Downloader;
 import jack.rm.plugins.ActualPlugin;
 
@@ -65,7 +66,7 @@ public class Main
 		
     RomSetManager.loadSet(Console.GBA);
 		scanner = new Scanner(RomSet.current.list);
-    scanner.scanForRoms(!RomJsonState.load(RomSet.current.list));
+    scanner.scanForRoms(!RomSet.current.list.load());
 
 		downloader = new Downloader(RomSet.current);
 

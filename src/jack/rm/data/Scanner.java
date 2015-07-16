@@ -1,11 +1,11 @@
 package jack.rm.data;
 
 import jack.rm.Main;
-import jack.rm.RomJsonState;
 import jack.rm.Settings;
 import jack.rm.data.set.RomSet;
 import jack.rm.files.*;
 import jack.rm.gui.Dialogs;
+import jack.rm.json.RomSavedState;
 import jack.rm.log.*;
 
 import java.nio.file.*;
@@ -60,7 +60,7 @@ public class Scanner
 	  if (rom.status != RomStatus.NOT_FOUND)
 	  {	    
 	    clones.add(result);
-	    Log.log(LogType.WARNING, LogSource.SCANNER, LogTarget.file(Settings.current().romsPath.relativize(result.entry.file())), "File contains a rom already present in romset: "+rom.entry);
+	    Log.warning(LogSource.SCANNER, LogTarget.file(Settings.current().romsPath.relativize(result.entry.file())), "File contains a rom already present in romset: "+rom.entry);
 	    return;
 	  }
 	  
@@ -92,7 +92,7 @@ public class Scanner
             Rom rom = list.getByCRC(curCrc);
             
             if (rom != null)
-              result = new ScanResult(rom, new RomFileEntry.Archive(file, entry.getName()));
+              result = new ScanResult(rom, new RomPath.Archive(file, entry.getName()));
           }
         }
         catch (Exception e)
@@ -110,7 +110,7 @@ public class Scanner
       Rom rom = list.getByCRC(crc);
       
       if (rom != null)
-        return new ScanResult(rom, new RomFileEntry.Bin(file));
+        return new ScanResult(rom, new RomPath.Bin(file));
       else return null;
     }
 	}
@@ -207,7 +207,7 @@ public class Scanner
 	    if (isCancelled())
 	      return;
 
-	    RomJsonState.consolidate(list);
+	    list.save();
 	    ProgressDialog.finished();
 	    
 	    if (!clones.isEmpty())

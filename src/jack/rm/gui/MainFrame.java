@@ -4,6 +4,8 @@ import jack.rm.*;
 import jack.rm.data.*;
 import jack.rm.data.set.*;
 import jack.rm.i18n.*;
+import jack.rm.json.RomSavedState;
+
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.event.*;
@@ -223,6 +225,6 @@ public class MainFrame extends JFrame implements WindowListener
 	@Override
   public void windowClosing(WindowEvent e)
 	{
-    RomJsonState.consolidate(RomSet.current.list);
+    RomSet.current.list.save();;
 	}
 }

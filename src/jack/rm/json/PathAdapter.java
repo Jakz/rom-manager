@@ -10,7 +10,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-class PathSerializer implements JsonSerializer<Path>, JsonDeserializer<Path> {
+class PathAdapter implements JsonSerializer<Path>, JsonDeserializer<Path> {
   @Override
   public JsonElement serialize(Path src, Type type, JsonSerializationContext context)
   {

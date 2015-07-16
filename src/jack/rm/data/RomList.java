@@ -4,14 +4,30 @@ import jack.rm.*;
 import jack.rm.data.set.RomSet;
 import jack.rm.files.MoverWorker;
 import jack.rm.files.Organizer;
+import jack.rm.json.Json;
+import jack.rm.json.RomSavedState;
+import jack.rm.log.Log;
+import jack.rm.log.LogSource;
+import jack.rm.log.LogTarget;
+import jack.rm.log.LogType;
+import jack.rm.json.RomListAdapter;
 import jack.rm.plugins.folder.FolderPlugin;
 
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.zip.*;
 import javax.swing.SwingWorker;
 
+import com.google.gson.Gson;
 import com.pixbits.gui.ProgressDialog;
 
 public class RomList
@@ -64,6 +80,11 @@ public class RomList
 		list.clear();
 	}
 		
+	public Rom getByID(RomID<?> id)
+	{
+	  return getByCRC(((RomID.CRC)id).value);
+	}
+	
 	public Rom getByCRC(long crc)
 	{
 		return crcs.get(crc);
@@ -239,13 +260,13 @@ public class RomList
       {
         Consumer<Boolean> callback = b -> {
           set.cleanup();
-          RomJsonState.consolidate(list);
+          set.list.save();
         };
         
         new MoverWorker(RomList.this, plugin, callback).execute();
       }
       else
-        RomJsonState.consolidate(list);
+        set.list.save();
     }
     
   }
@@ -313,4 +334,41 @@ public class RomList
 	{
 		new RenamerWorker(this).execute();
 	}
+	
+	public void save()
+	{
+    Path path = Paths.get("data/", set.ident(), "status.json");
+    Gson gson = Json.prebuild().registerTypeAdapter(RomList.class, new RomListAdapter(this)).create();
+    
+    try (FileWriter wrt = new FileWriter(path.toFile()))
+    {
+      wrt.write(gson.toJson(this));
+      Log.message(LogSource.STATUS, LogTarget.romset(RomSet.current), "Romset status saved on json");
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+	}
+	
+  public boolean load()
+  {
+    Path path = Paths.get("data/", set.ident(), "status.json");
+    Gson gson = Json.prebuild().registerTypeAdapter(RomList.class, new RomListAdapter(this)).create();
+    
+    try (FileReader rdr = new FileReader(path.toFile()) )
+    {
+      gson.fromJson(rdr, RomList.class);
+      return true;
+    }
+    catch (FileNotFoundException e)
+    {
+      return false;
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+      return false;
+    }
+  }
 }

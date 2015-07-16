@@ -3,9 +3,9 @@ package jack.rm.data;
 public class ScanResult implements Comparable<ScanResult>
 {
   public Rom rom;
-  public RomFileEntry entry;
+  public RomPath entry;
   
-  public ScanResult(Rom rom, RomFileEntry entry)
+  public ScanResult(Rom rom, RomPath entry)
   {
     this.rom = rom;
     this.entry = entry;

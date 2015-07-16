@@ -61,7 +61,7 @@ public class PluginSet<P extends Plugin>
   @SuppressWarnings("unchecked")
   public <T extends Plugin> T getPlugin(PluginType type)
   {
-    return (T)stream().filter( p -> p.getPluginType() == type).findFirst().get();
+    return (T)stream().filter( p -> p.getPluginType() == type).findFirst().orElse(null);
   }
   
   public boolean hasPlugin(PluginType type)

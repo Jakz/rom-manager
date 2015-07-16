@@ -14,7 +14,7 @@ import jack.rm.data.Rom;
 import jack.rm.data.set.RomSet;
 import jack.rm.data.set.RomSetManager;
 
-class RomSetSerializer implements JsonSerializer<RomSet<? extends Rom>>, JsonDeserializer<RomSet<? extends Rom>> {
+class RomSetAdapter implements JsonSerializer<RomSet<? extends Rom>>, JsonDeserializer<RomSet<? extends Rom>> {
   @Override
   public JsonElement serialize(RomSet<? extends Rom> src, Type typeOfSrc, JsonSerializationContext context) {
     return new JsonPrimitive(src.ident());

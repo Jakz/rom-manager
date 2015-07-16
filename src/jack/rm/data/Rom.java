@@ -32,7 +32,7 @@ public class Rom implements Comparable<Rom>
 	
 	public String info;
 	
-	public RomFileEntry entry;
+	public RomPath entry;
 	
 	public long imgCRC1;
 	public long imgCRC2;
@@ -43,6 +43,8 @@ public class Rom implements Comparable<Rom>
     imgCRC1 = -1L;
     imgCRC2 = -1L;
 	}
+	
+	public RomID<?> getID() { return new RomID.CRC(crc); }
 	
 	@Override
   public String toString()
