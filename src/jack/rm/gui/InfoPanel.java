@@ -267,7 +267,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		fields[Field.CRC.index].setText(Long.toHexString(rom.crc).toUpperCase());
 		fields[Field.LANGUAGES.index].setText(rom.languagesAsString());
 		//fields[11].setText(rom.getClonesString());
-		fields[Field.SAVE_TYPE.index].setText(rom.save+rom.saveType());
+		fields[Field.SAVE_TYPE.index].setText(rom.save.toString());
 		fields[Field.COMMENT.index].setText(rom.info);
     fields[Field.FILENAME.index].setText(rom.entry != null ? rom.entry.file().getFileName().toString() : "");
 		fields[Field.PATH.index].setText(rom.entry != null ? rom.entry.file().getParent().toString() : "");

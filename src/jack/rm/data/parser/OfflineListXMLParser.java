@@ -4,6 +4,10 @@ import jack.rm.data.*;
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
 import java.io.CharArrayWriter;
+import java.util.HashSet;
+import java.util.Set;
+
+import jack.rm.data.set.*;
 
 public class OfflineListXMLParser extends DefaultHandler
 {
@@ -52,71 +56,68 @@ public class OfflineListXMLParser extends DefaultHandler
 	  return Long.parseLong(asString());
 	}
 	
+	public GBA.Save parseSave(String string)
+	{
+	  String[] tokens = string.split("_");
+	  
+	  if (tokens.length == 1 && tokens[0].compareToIgnoreCase(GBA.Save.Type.NONE.toString()) == 0)
+	    return new GBA.Save(GBA.Save.Type.NONE);
+	  else if (tokens.length >= 2)
+	  {
+	    if (tokens.length > 2)
+	      tokens[1] = tokens[2];
+	    
+	    for (GBA.Save.Type type : GBA.Save.Type.values())
+	    {
+	      if (tokens[0].toLowerCase().contains(type.toString().toLowerCase()))
+	        return new GBA.Save(type, Integer.valueOf(tokens[1].substring(1)));
+	    }
+	  }
+	  
+	  return null;
+	}
+	
+  Set<String> saves = new HashSet<>();
+	
 	@Override
   public void endElement(String namespaceURI, String localName, String qName) throws SAXException
 	{
 		if (!started)
 			return;
 		
-		if (localName.equals("imageNumber")) {
-			rom.imageNumber = asInt();
-		}
-		else if (localName.equals("releaseNumber")) {
-			rom.number = asInt();
-		}
-		else if (localName.equals("title")) {
-			rom.title = asString();
-		}
-		else if (localName.equals("saveType")) {
-			rom.save = asString();
-			
-			for (RomSave s : RomSave.values())
-				if (rom.save.toLowerCase().contains(s.name.toLowerCase()))
-					rom.saveType = s;
-		}
-		else if (localName.equals("romSize")) {
-			rom.size = RomSize.forBytes(asLong());
-		}
-		else if (localName.equals("publisher"))
+		switch(localName)
 		{
-			rom.publisher = asString();
+		  case "imageNumber": rom.imageNumber = asInt(); break;
+		  case "releaseNumber": rom.number = asInt(); break;
+		  case "title": rom.title = asString(); break;
+		  case "saveType":
+		  {
+		    RomSave<?> save = parseSave(asString());
+		    
+		    rom.save = save;
+
+		    if (save == null)
+		      System.out.println("Save not found for "+asString());
+		    break;
+		  }
+		  case "romSize": rom.size = RomSize.forBytes(asLong()); break;
+		  case "publisher": rom.publisher = asString(); break;
+		  case "location": rom.location = Location.get(asInt()); break;
+		  case "language": rom.languages = asInt(); break;
+		  case "sourceRom": rom.group = asString(); break;
+		  case "romCRC": rom.crc = Long.parseLong(asString(), 16); break;
+      case "im1CRC": rom.imgCRC1 = Long.parseLong(asString(), 16); break;
+      case "im2CRC": rom.imgCRC2 = Long.parseLong(asString(), 16); break;
+      case "comment": rom.info = asString(); break;
+      case "game": romList.add(rom); break;
+      case "games":
+      {
+        romList.sort(); 
+        saves.forEach(s -> System.out.println(s));
+        break;
+      }
+
 		}
-		else if (localName.equals("location"))
-		{
-			rom.location = Location.get(asInt());
-		}
-		else if (localName.equals("language"))
-		{
-			rom.languages = asInt();
-		}
-		else if (localName.equals("sourceRom"))
-		{
-			rom.group = asString();
-		}
-		else if (localName.equals("romCRC"))
-		{
-			rom.crc = Long.parseLong(asString(), 16);
-		}
-		else if (localName.equals("im1CRC"))
-		{
-			rom.imgCRC1 = Long.parseLong(asString(), 16);
-		}
-		else if (localName.equals("im2CRC"))
-		{
-			rom.imgCRC2 = Long.parseLong(asString(), 16);
-		}
-		else if (localName.equals("comment"))
-		{
-			rom.info = asString();
-		}
-		else if (localName.equals("game"))
-		{
-			//if (rom.number > 0)
-				romList.add(rom);
-			
-			romList.sort();
-		}
-	
 	}
 	
 	@Override

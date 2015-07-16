@@ -59,6 +59,11 @@ public class RomSize implements Comparable<RomSize>
 	
 	public static RomSize forBytes(long size)
 	{
+	  return forBytes(size, false);
+	}
+	
+	public static RomSize forBytes(long size, boolean addToList)
+	{
 		long reminder = size % KBYTE;
 		
 		if (reminder != 0)
@@ -74,7 +79,9 @@ public class RomSize implements Comparable<RomSize>
 		if (m == null)
 		{
 			m = new RomSize(size);
-			mapping.put(size, m);
+			
+			if (addToList)
+			  mapping.put(size, m);
 		}
 		
 		return m;

@@ -1,18 +1,9 @@
 package jack.rm.data;
 
-public enum RomSave
+public interface RomSave<T extends RomSave.Type>
 {
-	EEPROM("EEPROM"),
-	FLASH("FLASH"),
-	SRAM("SRAM"),
-	NONE("NONE")
+	public static interface Type { }
+  
 	
-	;
-	
-	public final String name;
-	
-	RomSave(String name)
-	{
-		this.name = name;
-	}
+	public T getType();
 }

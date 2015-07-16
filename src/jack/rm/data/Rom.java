@@ -27,8 +27,7 @@ public class Rom implements Comparable<Rom>
 	public String serial;
 	public long crc;
 	
-	public String save;
-	public RomSave saveType;
+	public RomSave<?> save;
 	
 	public String info;
 	
@@ -69,14 +68,6 @@ public class Rom implements Comparable<Rom>
 			}
 				
 		return s;
-	}
-	
-	public String saveType()
-	{
-		if (saveType != null)
-			return " ("+saveType.name+")";
-		else
-			return "";
 	}
 	
 	public void move(Path dest) throws IOException
