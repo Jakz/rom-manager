@@ -25,4 +25,6 @@ class NES extends RomSetOfflineList
 	
 		return query1+name+query2;
 	}
+	
+	public boolean supportsNumberedRoms() { return false; }
 }

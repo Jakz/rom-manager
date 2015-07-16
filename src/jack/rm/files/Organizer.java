@@ -6,7 +6,9 @@ import jack.rm.data.set.*;
 import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
+import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.folder.FolderPlugin;
+import jack.rm.plugins.renamer.PatternSetPlugin;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,9 +16,7 @@ import java.text.DecimalFormat;
 import java.util.*;
 
 public class Organizer
-{
-	public final static ArrayList<Pattern> patterns = new ArrayList<Pattern>();
-	
+{	
 	private static DecimalFormat format;
 	
 	static
@@ -29,10 +29,22 @@ public class Organizer
 	{
 		return format.format(index);
 	}
+	
+	public static Set<Pattern> getPatterns(RomSet<?> set)
+	{
+	  Set<Pattern> patterns = new TreeSet<Pattern>();
+	  
+	  Set<PatternSetPlugin> plugins = set.getSettings().plugins.getPlugins(PluginRealType.PATTERN_SET);
+	  plugins.forEach( p -> p.getPatterns().forEach(patterns::add) );
+	  
+	  return patterns;
+	}
 		
 	public static String getCorrectName(Rom rom)
 	{
 		String temp = new String(Settings.current().renamingPattern);
+		
+		Set<Pattern> patterns = getPatterns(RomSet.current);
 		
 		for (Pattern p : patterns)
 			temp = p.apply(temp, rom);
@@ -52,107 +64,7 @@ public class Organizer
 	    return rom.entry.file().getParent();
 	  else return base;
 	}
-	
-	public abstract static class Pattern {
-		public final String code, desc;
-		public Pattern(String code, String desc) { 
-			this.code = code;
-			this.desc = desc;
-			patterns.add(this);
-		}
-		
-		public abstract String apply(String name, Rom rom);
-	}
-	
-	static
-	{
-		new NumberPattern();
-		new TitlePattern();
-		new PublisherPattern();
-		new MegabyteSizePattern();
-		new MegabitSizePattern();
-		new FullLocationPattern();
-		new ShortLocationPattern();
-		new TinyLocationPattern();
-		new ShortLanguagePattern();
-		new GroupPattern();
-	}
-	
-	static class NumberPattern extends Pattern {
-		NumberPattern() { super("%n", "Release number in format 1234"); }
-		@Override
-    public String apply(String name, Rom rom) { return name.replace(code,format.format(((NumberedRom)rom).number)); }
-	}
-	
-	static class TitlePattern extends Pattern {
-		TitlePattern() { super("%t", "Game title"); }
-		@Override
-    public String apply(String name, Rom rom) { return name.replace(code,rom.title); }
-	}
-	
-	static class PublisherPattern extends Pattern {
-		PublisherPattern() { super("%c", "Publisher"); }
-		@Override
-    public String apply(String name, Rom rom) { return name.replace(code,rom.publisher); }
-	}
-	
-	static class GroupPattern extends Pattern {
-		GroupPattern() { super("%g", "Releaser group"); }
-		@Override
-    public String apply(String name, Rom rom) { return name.replace(code,rom.group); }
-	}
-	
-	static class MegabyteSizePattern extends Pattern {
-		MegabyteSizePattern() { super("%s", "Size of the game dump in bytes (long)"); }
-		@Override
-    public String apply(String name, Rom rom) { return name.replace(code,rom.size.toString(RomSize.PrintStyle.LONG, RomSize.PrintUnit.BYTES)); }
-	}
-	
-	static class MegabitSizePattern extends Pattern {
-		MegabitSizePattern() { super("%S", "Size of the game dump in bits (short)"); }
-		@Override
-    public String apply(String name, Rom rom) { return name.replace(code,rom.size.toString(RomSize.PrintStyle.SHORT, RomSize.PrintUnit.BITS)); }
-	}
-	
-	static class FullLocationPattern extends Pattern {
-		FullLocationPattern() { super("%L", "Full location name"); }
-		@Override
-    public String apply(String name, Rom rom) { return name.replace(code,rom.location.fullName); }
-	}
-	
-	static class ShortLocationPattern extends Pattern {
-		ShortLocationPattern() { super("%a", "Short location name"); }
-		@Override
-    public String apply(String name, Rom rom) { return name.replace(code,rom.location.shortName); }
-	}
-	
-	static class TinyLocationPattern extends Pattern {
-		TinyLocationPattern() { super("%l", "Tiny location name"); }
-		@Override
-    public String apply(String name, Rom rom) { return name.replace(code,rom.location.tinyName); }
-	}
-	
-	static class ShortLanguagePattern extends Pattern {
-		ShortLanguagePattern() { super("%i", "Short language"); }
-		@Override
-    public String apply(String name, Rom rom) {
-			int c = 0;
-			Language l = null;
-			
-			for (Language l2 : Language.values())
-				if ((rom.languages & l2.code) != 0)
-				{
-					++c;
-					l = l2;
-				}
-			
-			if (c == 1)
-				return name.replace(code,l.iso639_1);
-			else 
-				return name.replace(code,"M"+c);
-		}
-	}
-	
+
 	public static void organizeRomIfNeeded(Rom rom, boolean renamePhase, boolean movePhase)
 	{
 	  Settings settings = Settings.current();

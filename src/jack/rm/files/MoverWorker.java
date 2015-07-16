@@ -3,8 +3,6 @@ package jack.rm.files;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
-import java.io.IOException;
-
 import jack.rm.data.Rom;
 import jack.rm.data.RomList;
 import jack.rm.data.RomStatus;

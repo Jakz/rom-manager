@@ -10,6 +10,16 @@ public enum PluginRealType implements PluginType
   },
   ROMSET_CLEANUP { 
     public String toString() { return "Romset Cleanup"; }
-    public boolean isMutuallyExclusive() { return false; }    
+  },
+  PATTERN_SET {
+    public String toString() { return "Renamer Pattern Set"; }
+  },
+  RENAMER {
+    public String toString() { return "Renamer"; }
+    public boolean isMutuallyExclusive() { return true; }
   }
+  
+  ;
+  
+  public boolean isMutuallyExclusive() { return false; }
 }

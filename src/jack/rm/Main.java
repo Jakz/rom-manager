@@ -3,20 +3,12 @@ package jack.rm;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-import com.pixbits.io.BinaryBuffer;
-import com.pixbits.io.BufferPosition;
-
 import java.awt.Desktop;
-import java.nio.ByteOrder;
-import java.nio.file.Paths;
-import java.util.Optional;
-
 import jack.rm.data.*;
 import jack.rm.data.set.*;
 import jack.rm.gui.*;
 import jack.rm.net.Downloader;
 import jack.rm.plugins.ActualPlugin;
-import jack.rm.plugins.rom.ips.IPSPatch;
 
 public class Main
 {		

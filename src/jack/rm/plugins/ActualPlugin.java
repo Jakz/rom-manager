@@ -20,6 +20,9 @@ public abstract class ActualPlugin extends Plugin
     manager.register(jack.rm.plugins.folder.AlphabeticalOrganizer.class);
     manager.register(jack.rm.plugins.cleanup.DeleteEmptyFoldersPlugin.class);
     manager.register(jack.rm.plugins.cleanup.MoveUnknownFilesPlugin.class);
+    manager.register(jack.rm.plugins.renamer.BasicPatternSet.class);
+    manager.register(jack.rm.plugins.renamer.NumberedRomPattern.class);
+    //manager.register(jack.rm.plugins.renamer.PatternRenamerPlugin.class);
   }
   
   protected Predicate<RomSet<?>> compatibility() { return rs -> true; }

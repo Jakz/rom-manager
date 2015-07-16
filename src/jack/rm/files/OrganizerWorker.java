@@ -8,10 +8,8 @@ import javax.swing.SwingWorker;
 import com.pixbits.gui.ProgressDialog;
 
 import jack.rm.Main;
-import jack.rm.RomJsonState;
 import jack.rm.data.Rom;
 import jack.rm.data.RomList;
-import jack.rm.data.set.RomSet;
 import jack.rm.plugins.OrganizerPlugin;
 
 public abstract class OrganizerWorker<T extends OrganizerPlugin> extends SwingWorker<Void, Integer>

@@ -12,11 +12,14 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.*;
 
+import com.pixbits.reflect.Reflection;
+
 import java.awt.Dimension;
 
 public abstract class RomSet<R extends Rom>
 {
-	public static RomSet<? extends Rom> current = null;
+  public static RomSet<? extends Rom> current = null;
+	
 	
 	public final RomList list;
 	public final Console type;
@@ -24,7 +27,7 @@ public abstract class RomSet<R extends Rom>
 	
 	public final Dimension screenTitle;
 	public final Dimension screenGame;
-	
+
 	RomSet(Console type, Provider provider, Dimension screenTitle, Dimension screenGame)
 	{
 		this.list = new RomList(this);
@@ -46,6 +49,11 @@ public abstract class RomSet<R extends Rom>
 	public abstract void load();
 	
 	public abstract Asset[] getSupportedAssets();
+	
+	public boolean supportsNumberedRoms()
+	{
+	  return true; //TODO: find an elegant way
+	}
 	
 	@Override
   public String toString()

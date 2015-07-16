@@ -2,7 +2,6 @@ package jack.rm.data;
 
 import jack.rm.*;
 import jack.rm.data.set.RomSet;
-import jack.rm.files.OrganizerWorker;
 import jack.rm.files.MoverWorker;
 import jack.rm.files.Organizer;
 import jack.rm.plugins.folder.FolderPlugin;

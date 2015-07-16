@@ -3,6 +3,7 @@ package jack.rm.gui;
 import jack.rm.Settings;
 import jack.rm.data.set.RomSet;
 import jack.rm.files.Organizer;
+import jack.rm.files.Pattern;
 import jack.rm.i18n.Text;
 
 import javax.swing.*;
@@ -10,6 +11,9 @@ import javax.swing.event.*;
 import javax.swing.table.*;
 import java.awt.event.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class OrganizerPanel extends JPanel implements CaretListener
 {
@@ -18,18 +22,19 @@ public class OrganizerPanel extends JPanel implements CaretListener
 	private JTextField patternField = new JTextField(30);
 	private JTextField exampleField = new JTextField(30);
 
-	private JTable patterns;
+	private JTable patternsTable;
+	private List<Pattern> patterns = new ArrayList<Pattern>();
 	
 	public class TableModel extends AbstractTableModel
 	{
 		private static final long serialVersionUID = 1L;
 		
 		@Override public int getColumnCount() { return 2; }
-    @Override public int getRowCount() { return Organizer.patterns.size();}
+    @Override public int getRowCount() { return patterns.size();}
     @Override public String getColumnName(int col) { return col == 0 ? "Code" : "Description"; }
     
     @Override public Object getValueAt(int row, int col) {
-    	Organizer.Pattern p = Organizer.patterns.get(row);
+    	Pattern p = patterns.get(row);
     	return col == 0 ? p.code : p.desc;
     }
 	};
@@ -57,20 +62,20 @@ public class OrganizerPanel extends JPanel implements CaretListener
 		c.ipadx = 0;
 		fields.add(exampleField,c);
 		
-		patterns = new JTable(model);
-		patterns.setAutoCreateRowSorter(true);
-		patterns.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		patterns.addMouseListener(
+		patternsTable = new JTable(model);
+		patternsTable.setAutoCreateRowSorter(true);
+		patternsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		patternsTable.addMouseListener(
 				new MouseAdapter(){
 					@Override
           public void mouseClicked(MouseEvent e){
 						if (e.getClickCount() == 2){
-							int r = patterns.getSelectedRow();
+							int r = patternsTable.getSelectedRow();
 							
 							if (r != -1)
 							{
-								r = patterns.convertRowIndexToModel(r);
-							  String code = Organizer.patterns.get(r).code;
+								r = patternsTable.convertRowIndexToModel(r);
+							  String code = patterns.get(r).code;
 								int p = patternField.getCaretPosition();
 								String before = patternField.getText().substring(0, p);
 								String after = patternField.getText().substring(p);
@@ -82,10 +87,10 @@ public class OrganizerPanel extends JPanel implements CaretListener
 						}
 					}
 				});
-		patterns.getColumnModel().getColumn(0).setMinWidth(50);
-		patterns.getColumnModel().getColumn(0).setMaxWidth(50);
+		patternsTable.getColumnModel().getColumn(0).setMinWidth(50);
+		patternsTable.getColumnModel().getColumn(0).setMaxWidth(50);
 		
-		JScrollPane scrollPane = new JScrollPane(patterns);
+		JScrollPane scrollPane = new JScrollPane(patternsTable);
 		
 		
 		
@@ -108,6 +113,9 @@ public class OrganizerPanel extends JPanel implements CaretListener
 	public void updateFields()
 	{
 		patternField.setText(Settings.current().renamingPattern);
+		patterns.clear();
+		Organizer.getPatterns(RomSet.current).forEach(patterns::add);
+		// TODO: should be invoked even when plugins are changed
 	}
 
 	@Override
