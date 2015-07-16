@@ -7,7 +7,6 @@ import java.awt.Desktop;
 import jack.rm.data.*;
 import jack.rm.data.set.*;
 import jack.rm.gui.*;
-import jack.rm.json.RomSavedState;
 import jack.rm.net.Downloader;
 import jack.rm.plugins.ActualPlugin;
 

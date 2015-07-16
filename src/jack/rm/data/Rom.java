@@ -1,15 +1,24 @@
 package jack.rm.data;
 
 import jack.rm.Settings;
+import jack.rm.data.rom.RomAttribute;
+import jack.rm.data.rom.RomWithSaveMixin;
 import jack.rm.data.set.RomSet;
 import jack.rm.files.Organizer;
 
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Rom implements Comparable<Rom>
+public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 {
 	public RomStatus status;
+	
+	private Map<RomAttribute, Object> attributes = new HashMap<>();
+	
+	public void setAttribute(RomAttribute key, Object value) { attributes.put(key, value); }
+	@SuppressWarnings("unchecked") public <T> T getAttribute(RomAttribute key) { return (T)attributes.get(key); }
 	
 	public int imageNumber;
 	
@@ -26,9 +35,7 @@ public class Rom implements Comparable<Rom>
 	public String internalName;
 	public String serial;
 	public long crc;
-	
-	public RomSave<?> save;
-	
+		
 	public String info;
 	
 	public RomPath entry;

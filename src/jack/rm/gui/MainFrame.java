@@ -4,8 +4,6 @@ import jack.rm.*;
 import jack.rm.data.*;
 import jack.rm.data.set.*;
 import jack.rm.i18n.*;
-import jack.rm.json.RomSavedState;
-
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.event.*;

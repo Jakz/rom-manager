@@ -93,11 +93,7 @@ public class OfflineListXMLParser extends DefaultHandler
 		  case "saveType":
 		  {
 		    RomSave<?> save = parseSave(asString());
-		    
-		    rom.save = save;
-
-		    if (save == null)
-		      System.out.println("Save not found for "+asString());
+		    rom.setSave(save);
 		    break;
 		  }
 		  case "romSize": rom.size = RomSize.forBytes(asLong()); break;

@@ -1,10 +1,7 @@
 package jack.rm.json;
 
-import java.util.*;
 import java.util.List;
 import java.lang.reflect.Type;
-import java.nio.file.Path;
-
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -13,7 +10,6 @@ import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
 
 import jack.rm.data.Rom;
-import jack.rm.data.RomID;
 import jack.rm.data.RomList;
 import jack.rm.data.RomStatus;;
 

@@ -5,7 +5,6 @@ import jack.rm.Settings;
 import jack.rm.data.set.RomSet;
 import jack.rm.files.*;
 import jack.rm.gui.Dialogs;
-import jack.rm.json.RomSavedState;
 import jack.rm.log.*;
 
 import java.nio.file.*;
