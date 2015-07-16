@@ -18,7 +18,7 @@ public class Main
 	public static CountPanel countPanel;
 	
 	public static ManagerPanel romsetPanel;
-	public static OrganizerPanel renamerPanel;
+	public static PatternRenamerPanel renamerPanel;
 	public static PluginsPanel pluginsPanel;
 	public static OptionsFrame optionsFrame;
 	
@@ -58,7 +58,7 @@ public class Main
 		mainFrame = new MainFrame();
 		
 		romsetPanel = new ManagerPanel();
-		renamerPanel = new OrganizerPanel();
+		renamerPanel = new PatternRenamerPanel();
 		pluginsPanel = new PluginsPanel(ActualPlugin.manager);
 		
 		optionsFrame = new OptionsFrame();

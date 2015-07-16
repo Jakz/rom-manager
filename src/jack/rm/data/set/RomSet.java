@@ -49,12 +49,7 @@ public abstract class RomSet<R extends Rom>
 	public abstract void load();
 	
 	public abstract Asset[] getSupportedAssets();
-	
-	public boolean supportsNumberedRoms()
-	{
-	  return true; //TODO: find an elegant way
-	}
-	
+
 	@Override
   public String toString()
 	{

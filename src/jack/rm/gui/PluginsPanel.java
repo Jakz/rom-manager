@@ -5,7 +5,12 @@ import java.util.List;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
+import javax.swing.tree.DefaultTreeCellRenderer;
+
 import com.pixbits.plugin.PluginBuilder;
 import com.pixbits.plugin.PluginManager;
 import com.pixbits.plugin.gui.PluginConfigTable;
@@ -17,6 +22,8 @@ import jack.rm.data.set.RomSet;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ItemEvent;
 
 public class PluginsPanel extends JPanel
@@ -24,6 +31,30 @@ public class PluginsPanel extends JPanel
   private final JTable table;
   private final PluginTableModel model;
   private final PluginManager<ActualPlugin, ActualPluginBuilder> manager;
+  
+  class PluginCellRenderer implements TableCellRenderer
+  {
+    private final TableCellRenderer inner;
+    
+    PluginCellRenderer(TableCellRenderer inner)
+    {
+      this.inner = inner;
+    }
+    
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
+    {
+      JComponent component = (JComponent)inner.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+      ActualPluginBuilder builder = model.plugins.get(row);
+      
+      boolean compatible = builder.isCompatible(RomSet.current);
+      
+      component.setOpaque(true);
+      component.setEnabled(compatible);
+      component.setForeground(compatible ? Color.BLACK : Color.GRAY);
+      
+      return component;
+    }
+  }
   
   class PluginTableModel extends AbstractTableModel
   {
@@ -94,11 +125,6 @@ public class PluginsPanel extends JPanel
   
   private enum PluginFilter
   {
-    ALL
-    { 
-      public String toString() { return "Show All"; } 
-      public boolean test(ActualPluginBuilder builder) { return true; }
-    },
     COMPATIBLE
     {
       public String toString() { return "Show Compatible"; }
@@ -111,7 +137,13 @@ public class PluginsPanel extends JPanel
         Optional<ActualPlugin> plugin = Settings.current().plugins.getPlugin(builder.getID());
         return plugin.isPresent() && plugin.get().isEnabled();
       }
-    };
+    },
+    ALL
+    { 
+      public String toString() { return "Show All"; } 
+      public boolean test(ActualPluginBuilder builder) { return true; }
+    }
+    ;
     
     public abstract boolean test(ActualPluginBuilder builder);
     
@@ -136,10 +168,17 @@ public class PluginsPanel extends JPanel
     this.table = new JTable(model);
     this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     
-    this.table.getColumnModel().getColumn(2).setMinWidth(40);
-    this.table.getColumnModel().getColumn(2).setMaxWidth(40);
+    TableColumnModel columnModel = table.getColumnModel();
     
-    ((JComponent)this.table.getDefaultRenderer(Boolean.class)).setOpaque(true);
+    columnModel.getColumn(2).setMinWidth(40);
+    columnModel.getColumn(2).setMaxWidth(40);
+    
+    columnModel.getColumn(0).setCellRenderer(new PluginCellRenderer(new DefaultTableCellRenderer()));
+    columnModel.getColumn(1).setCellRenderer(new PluginCellRenderer(new DefaultTableCellRenderer()));
+    columnModel.getColumn(2).setCellRenderer(new PluginCellRenderer(table.getDefaultRenderer(Boolean.class)));
+
+ 
+    //((JComponent)this.table.getDefaultRenderer(Boolean.class)).setOpaque(true);
     
     JTableHeader header = table.getTableHeader();
     header.setFont(header.getFont().deriveFont(header.getFont().getSize2D()-4));

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class OrganizerPanel extends JPanel implements CaretListener
+public class PatternRenamerPanel extends JPanel implements CaretListener
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -41,7 +41,7 @@ public class OrganizerPanel extends JPanel implements CaretListener
 	
 	private TableModel model = new TableModel();
 	
-	public OrganizerPanel()
+	public PatternRenamerPanel()
 	{
 		JPanel fields = new JPanel(new GridBagLayout());
 		JPanel main = new JPanel(new BorderLayout());
@@ -89,15 +89,12 @@ public class OrganizerPanel extends JPanel implements CaretListener
 				});
 		patternsTable.getColumnModel().getColumn(0).setMinWidth(50);
 		patternsTable.getColumnModel().getColumn(0).setMaxWidth(50);
-		
-		JScrollPane scrollPane = new JScrollPane(patternsTable);
-		
-		
-		
+				
 		exampleField.setEnabled(false);
 		exampleField.setDisabledTextColor(Color.BLACK);  
 		patternField.addCaretListener(this);
 
+    JScrollPane scrollPane = new JScrollPane(patternsTable);
 		main.add(fields,BorderLayout.NORTH);
 		main.add(scrollPane,BorderLayout.CENTER);
 		this.add(main);

@@ -41,6 +41,6 @@ public class NumericalOrganizer extends FolderPlugin
   }
   
   @Override
-  public Predicate<RomSet<?>> compatibility() { return rs -> rs.supportsNumberedRoms(); }
+  public Predicate<RomSet<?>> compatibility() { return rs -> rs instanceof NumberedSet<?>; }
 
 }
