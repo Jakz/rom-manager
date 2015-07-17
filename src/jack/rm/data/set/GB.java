@@ -1,6 +1,7 @@
 package jack.rm.data.set;
 
 import jack.rm.data.Rom;
+import jack.rm.data.console.Console;
 
 import java.awt.Dimension;
 import java.net.MalformedURLException;

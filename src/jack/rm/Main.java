@@ -4,11 +4,18 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import java.awt.Desktop;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
+
 import jack.rm.data.*;
+import jack.rm.data.console.Console;
 import jack.rm.data.set.*;
 import jack.rm.gui.*;
 import jack.rm.net.Downloader;
 import jack.rm.plugins.ActualPlugin;
+
+import com.pixbits.workflow.*;
+import com.pixbits.workflow.base.*;
 
 public class Main
 {		
@@ -42,8 +49,51 @@ public class Main
 		}
 	}
 	
+	static class IntHolder implements Data
+	{
+	  public int value;
+	  
+	  IntHolder(int value) { this.value = value; }
+	  
+	  int get() { return value; }
+	}
+	
+	static class IntFetcher extends Fetcher<IntHolder>
+	{
+	  int size = 20;
+	  int counter = 0;
+	  
+	  IntFetcher()
+	  {
+	    super(20);
+	  }
+	  
+	  @Override public boolean tryAdvance(Consumer<? super IntHolder> action)
+	  {
+	    if (counter < size)
+	    {
+	      action.accept(new IntHolder(counter));
+	      ++counter;
+	      return true;
+	    }
+	    return false;
+	  } 
+	}
+	
+	static class IntDumper extends Dumper<IntHolder>
+	{
+	  @Override public void accept(IntHolder holder) { System.out.println(holder.get()); }
+	}
+	
 	public static void main(String[] args)
 	{
+	  /*IntFetcher fetcher = new IntFetcher();
+	  IntDumper dumper = new IntDumper();
+	  Workflow<IntHolder> workflow = new Workflow<>(fetcher, dumper);
+	  workflow.addStep( i -> {i.value *= 2; return i; } );
+	  workflow.addStep( i -> {i.value += 17; return i; } );
+	  workflow.execute();*/
+	  
 	  if (true)
 	  {
 	  setOS();

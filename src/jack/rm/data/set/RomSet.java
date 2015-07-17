@@ -2,6 +2,8 @@ package jack.rm.data.set;
 
 import jack.rm.Settings;
 import jack.rm.data.*;
+import jack.rm.data.console.Console;
+import jack.rm.net.AssetDownloader;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.cleanup.CleanupPlugin;
 
@@ -39,7 +41,7 @@ public abstract class RomSet<R extends Rom>
 	
 	public Settings getSettings() { return Settings.get(this); }
 	
-	public abstract URL assetURL(Asset asset, Rom rom);
+	public abstract AssetDownloader getAssetDownloader();
 	public abstract Path assetPath(Asset asset, Rom rom);
 	
 	public abstract String downloadURL(Rom rom);
@@ -91,7 +93,7 @@ public abstract class RomSet<R extends Rom>
 	  return FileSystems.getDefault().getPathMatcher(pattern);
 	}
 	
-	public void cleanup()
+	public final void cleanup()
 	{
 	  Settings settings = Settings.current();
 	  

@@ -6,6 +6,7 @@ import java.util.*;
 
 import jack.rm.*;
 import jack.rm.data.*;
+import jack.rm.data.console.Console;
 import jack.rm.log.*;
 
 public class RomSetManager

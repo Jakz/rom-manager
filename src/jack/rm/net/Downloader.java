@@ -81,7 +81,7 @@ public class Downloader
     public ArtDownloaderTask(Rom rom, Asset asset)
     {  
       path = RomSet.current.assetPath(asset, rom);
-      url = RomSet.current.assetURL(asset, rom);
+      url = RomSet.current.getAssetDownloader().assetURL(asset, rom);
       
       //System.out.println(url+" -> "+path.toAbsolutePath());
           
