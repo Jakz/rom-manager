@@ -7,7 +7,7 @@ import java.io.CharArrayWriter;
 import java.util.HashSet;
 import java.util.Set;
 
-import jack.rm.data.set.*;
+import jack.rm.data.console.GBA;
 
 public class OfflineListXMLParser extends DefaultHandler
 {
