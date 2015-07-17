@@ -64,12 +64,6 @@ public class RomListModel extends AbstractListModel<Rom>
 	
 	public void fireChanges()
 	{
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-      public void run() {
-				Main.mainFrame.list.clearSelection();
-				fireIntervalRemoved(this,0,list.size());
-			}
-		});
+		RomListModel.this.fireContentsChanged(RomListModel.this, 0, list.size());
 	}
 }

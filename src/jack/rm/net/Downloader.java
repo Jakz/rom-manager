@@ -66,7 +66,7 @@ public class Downloader
           if (!r.hasAsset(asset))
             new ArtDownloaderTask(r, asset).call();
         
-        Main.infoPanel.updateFields(r);
+        Main.mainFrame.updateInfoPanel(r);
       }
     }.run();
   }
@@ -83,7 +83,7 @@ public class Downloader
       path = RomSet.current.assetPath(asset, rom);
       url = RomSet.current.assetURL(asset, rom);
       
-      System.out.println(url+" -> "+path.toAbsolutePath());
+      //System.out.println(url+" -> "+path.toAbsolutePath());
           
       this.rom = rom;
       this.asset = asset;
@@ -102,7 +102,7 @@ public class Downloader
       catch (FileNotFoundException e)
       {
         Log.log(LogType.ERROR, LogSource.DOWNLOADER, LogTarget.rom(rom), "Asset not found at "+url);
-        Main.infoPanel.updateFields(rom);
+        Main.mainFrame.updateInfoPanel(rom);
         return false;
       }
       catch (java.nio.channels.ClosedByInterruptException e)
@@ -123,9 +123,7 @@ public class Downloader
 
         return false;
       }
-      
-      //Main.logln("Downloaded art for "+Renamer.formatNumber(rom.number)+" ("+type+").");
-      
+
       if (pool != null)
       {
         long completed = pool.getCompletedTaskCount();

@@ -156,7 +156,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		pTotal.add(pFields2);
 		
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.LINE_AXIS));
-		//buttons.add(downloadButton);
+		buttons.add(downloadButton);
 		buttons.add(assetsButton);
 		buttons.add(openFolderButton);
 		buttons.add(openArchiveButton);

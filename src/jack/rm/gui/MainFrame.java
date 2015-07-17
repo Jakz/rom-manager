@@ -38,6 +38,7 @@ public class MainFrame extends JFrame implements WindowListener
 	
 	final RomListModel romListModel = new RomListModel();
 	final public JList<Rom> list = new JList<>();
+	final private ListListener listListener = new ListListener();
 	final private JScrollPane listPane = new JScrollPane(list);
 	
 	private final JComboBox<RomSet<? extends Rom>> cbRomSets = new JComboBox<>();
@@ -50,6 +51,7 @@ public class MainFrame extends JFrame implements WindowListener
 	
 	final private CountPanel countPanel = new CountPanel(romListModel);
 	final private SearchPanel searchPanel = new SearchPanel(this);
+	final private InfoPanel infoPanel = new InfoPanel();
 	
 	final private ItemListener romSetListener = e -> {
     if (e.getStateChange() == ItemEvent.SELECTED)
@@ -67,13 +69,14 @@ public class MainFrame extends JFrame implements WindowListener
 		list.setLayoutOrientation(JList.VERTICAL);
 		list.setFixedCellHeight(16);
 		list.setBackground(Color.WHITE);
-		list.getSelectionModel().addListSelectionListener(new ListListener());
+		list.getSelectionModel().addListSelectionListener(listListener);
+    list.setSelectedIndex(0);
+
 		listPane.setPreferredSize(new Dimension(230,500));		
 		
+		
 		this.setTransferHandler(new FileTransferHandler(new FileDropperListener()));
-		
-		//fileDropper = new FileDrop(list, new FileDropperListener());
-		
+				
 		menu.add(romsMenu);
 		menu.add(viewMenu);
 		menu.add(toolsMenu);
@@ -94,7 +97,7 @@ public class MainFrame extends JFrame implements WindowListener
 		
 		JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		split.add(romListPanel);
-		split.add(Main.infoPanel);
+		split.add(infoPanel);
 		split.setDividerLocation(400);
 		
 		cardMain.add(split, BorderLayout.CENTER);
@@ -107,7 +110,6 @@ public class MainFrame extends JFrame implements WindowListener
 		this.add(cardMain,"Main");
 		this.add(cardConsole,"Console");
 		
-		list.setSelectedIndex(0);
 
 		this.setPreferredSize(new Dimension(1280,700));
 		this.addWindowListener(this);
@@ -128,50 +130,38 @@ public class MainFrame extends JFrame implements WindowListener
     romsMenu.addSeparator();
     romsMenu.add(MenuElement.ROMS_EXIT.item);
     
-    viewMenu.add(MenuElement.VIEW_SHOW_CORRECT.item);
-    viewMenu.add(MenuElement.VIEW_SHOW_UNORGANIZED.item);
-    viewMenu.add(MenuElement.VIEW_SHOW_NOT_FOUND.item);
-    
+    JMenuItem[] filters = { MenuElement.VIEW_SHOW_CORRECT.item, MenuElement.VIEW_SHOW_UNORGANIZED.item, MenuElement.VIEW_SHOW_NOT_FOUND.item };
+    Arrays.stream(filters).forEach( mi -> {
+      viewMenu.add(mi);
+      mi.setSelected(true);
+    });
+
     toolsMenu.add(MenuElement.TOOLS_DOWNLOAD_ART.item);
     toolsMenu.add(MenuElement.TOOLS_OPTIONS.item);
     toolsMenu.add(MenuElement.TOOLS_SHOW_CONSOLE.item);
-		
-		/*miRoms[0].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
-		miRoms[4].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0));
-		//miRoms[3].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.ALT_MASK));
-		
-		miView[0].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
-		miView[1].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
-		miView[2].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0));*/
 	}
 			
-	class ListListener implements ListSelectionListener
-	{
-		@Override
+  class ListListener implements ListSelectionListener
+  {
+    @Override
     public void valueChanged(ListSelectionEvent e)
-		{	
-			if (e.getValueIsAdjusting())
-				return;
-			
+    {
+      if (e.getValueIsAdjusting())
+        return;
 
-			System.out.println("event");
-			
-	     StackTraceElement[] asd = Thread.currentThread().getStackTrace();
-	      Arrays.stream(asd).forEach( ee -> System.out.println(ee.toString()));
-				
-			ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-			
-			if (lsm.getMinSelectionIndex() == -1)
-			{
-				Main.infoPanel.resetFields();
-				return;
-			}
-			
-			Rom rom = Main.mainFrame.romListModel.getElementAt(lsm.getMinSelectionIndex());
-			
-			Main.infoPanel.updateFields(rom);
-		}
-	}
+      ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+
+      if (lsm.getMinSelectionIndex() == -1)
+      {
+        infoPanel.resetFields();
+        return;
+      }
+
+      Rom rom = Main.mainFrame.romListModel.getElementAt(lsm.getMinSelectionIndex());
+
+      infoPanel.updateFields(rom);
+    }
+  }
 
 	void toggleConsole(boolean flag)
 	{
@@ -194,20 +184,51 @@ public class MainFrame extends JFrame implements WindowListener
     cbRomSets.setSelectedItem(set);
     cbRomSets.addItemListener(romSetListener);
     
-    Main.infoPanel.setScreenSizes(set.screenTitle,set.screenGame);
+    infoPanel.setScreenSizes(set.screenTitle,set.screenGame);
   
 	  updateTable();
 	}
 	
+	public void updateInfoPanel(Rom rom)
+	{
+	  infoPanel.updateFields(rom);
+	}
+	
 	public void updateTable()
 	{
-		StackTraceElement[] stack = Thread.currentThread().getStackTrace();
-		Arrays.stream(stack).forEach(s -> System.out.println(s));
+		Rom current = list.getSelectedValue();
+		int index = list.getSelectedIndex();
+	  
+	  /*StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+		Arrays.stream(stack).forEach(s -> System.out.println(s));*/
 	  
 	  System.out.println("updated table");
 	  romListModel.clear();
-		RomSet.current.list.stream().filter(searchPanel.buildSearchPredicate()).forEach(romListModel.collector());
-	  romListModel.fireChanges();
+	  
+	  Predicate<Rom> predicate = searchPanel.buildSearchPredicate().and( r ->
+	    r.status == RomStatus.FOUND && MenuElement.VIEW_SHOW_CORRECT.item.isSelected() ||
+	    r.status == RomStatus.NOT_FOUND && MenuElement.VIEW_SHOW_NOT_FOUND.item.isSelected() ||
+	    r.status == RomStatus.INCORRECT_NAME && MenuElement.VIEW_SHOW_UNORGANIZED.item.isSelected()
+	  );
+	  
+		RomSet.current.list.stream().filter(predicate).forEach(romListModel.collector());
+
+    if (current != null)     
+    {      
+      list.clearSelection();
+      list.setSelectedValue(current, true);
+      
+      if (list.getSelectedValue() == null && index != -1)
+      {
+        list.setSelectedIndex(index);
+        list.ensureIndexIsVisible(index);
+      }
+    }
+		
+    SwingUtilities.invokeLater( () -> {
+      romListModel.fireChanges();
+    });
+
 		countPanel.update();
 	}
 
