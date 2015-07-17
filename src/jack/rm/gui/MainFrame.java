@@ -4,10 +4,15 @@ import jack.rm.*;
 import jack.rm.data.*;
 import jack.rm.data.set.*;
 import jack.rm.i18n.*;
+import jack.rm.plugins.PluginRealType;
+import jack.rm.plugins.cleanup.*;
+
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.event.*;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.awt.*;
 
@@ -60,9 +65,6 @@ public class MainFrame extends JFrame implements WindowListener
 		
 	public MainFrame()
 	{
-		initMenu();
-		
-		
 		list.setModel(romListModel);
 		list.setCellRenderer(new RomCellRenderer());
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -118,12 +120,17 @@ public class MainFrame extends JFrame implements WindowListener
 		pack();
 		setTitle("Rom Manager v0.6 - build 51");
 	}
-	
-	private void initMenu()
+
+	private void buildMenu(RomSet<?> set)
 	{	
-		romsMenu.add(MenuElement.ROMS_SCAN_FOR_ROMS.item);
+		toolsMenu.removeAll();
+	  
+	  romsMenu.add(MenuElement.ROMS_SCAN_FOR_ROMS.item);
     romsMenu.add(MenuElement.ROMS_SCAN_FOR_NEW_ROMS.item);
+    romsMenu.addSeparator();
     romsMenu.add(MenuElement.ROMS_RENAME.item);
+    romsMenu.add(MenuElement.ROMS_CLEANUP.item);
+    romsMenu.addSeparator();
     romsMenu.add(romsExportSubmenu);
     romsExportSubmenu.add(MenuElement.ROMS_EXPORT_FOUND.item);
     romsExportSubmenu.add(MenuElement.ROMS_EXPORT_MISSING.item);
@@ -136,9 +143,34 @@ public class MainFrame extends JFrame implements WindowListener
       mi.setSelected(true);
     });
 
+    
+    toolsMenu.removeAll();
+    
     toolsMenu.add(MenuElement.TOOLS_DOWNLOAD_ART.item);
     toolsMenu.add(MenuElement.TOOLS_OPTIONS.item);
     toolsMenu.add(MenuElement.TOOLS_SHOW_CONSOLE.item);
+    
+    JMenu pluginsMenu = new JMenu("Plugins"); // TODO: localize
+    
+    Set<CleanupPlugin> plugins = set.getSettings().plugins.getEnabledPlugins(PluginRealType.ROMSET_CLEANUP);
+    if (!plugins.isEmpty())
+    {
+      JMenu cleanupMenu = new JMenu("Cleanup");
+      
+      plugins.forEach( p -> {
+        JMenuItem item = new JMenuItem(p.getMenuCaption());
+        item.addActionListener( e -> p.execute(set.list));
+        cleanupMenu.add(item);
+      });
+      
+      pluginsMenu.add(cleanupMenu);
+    }
+    
+    if (pluginsMenu.getItemCount() != 0)
+    {
+      toolsMenu.addSeparator();
+      toolsMenu.add(pluginsMenu);
+    }
 	}
 			
   class ListListener implements ListSelectionListener
@@ -176,6 +208,8 @@ public class MainFrame extends JFrame implements WindowListener
 	
 	public void romSetLoaded(RomSet<?> set)
 	{
+	  buildMenu(set);
+	  
 	  searchPanel.activate(false);
 	  searchPanel.resetFields(RomSize.mapping.values().toArray(new RomSize[RomSize.mapping.size()]));
 	  searchPanel.activate(true);

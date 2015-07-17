@@ -66,4 +66,7 @@ public class MoveUnknownFilesPlugin extends CleanupPlugin implements PluginWithI
   {
     return new HashSet<Path>(Arrays.asList(path));
   }
+  
+  @Override public String getMenuCaption() { return "Move unrecognized files"; }
+
 }

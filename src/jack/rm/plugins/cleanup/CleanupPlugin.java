@@ -11,4 +11,6 @@ public abstract class CleanupPlugin extends ActualPlugin
   public abstract void execute(RomList list);
   
   @Override public PluginType getPluginType() { return PluginRealType.ROMSET_CLEANUP; }
+  
+  public abstract String getMenuCaption();
 }

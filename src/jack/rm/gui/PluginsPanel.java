@@ -97,6 +97,8 @@ public class PluginsPanel extends JPanel
       else
         Settings.current().plugins.disable(plugins.get(r).getID());
       
+      //TODO: enabling or disabling a plugin should have an effect in multiple parts of the UI
+      
       fireChanges();
     }
     

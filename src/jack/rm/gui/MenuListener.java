@@ -37,6 +37,10 @@ class MenuListener implements ActionListener
 		{
 			//export correct
 		}
+		else if (tag == MenuElement.ROMS_CLEANUP)
+		{
+		  RomSet.current.cleanup();
+		}
 		else if (tag == MenuElement.ROMS_EXIT)
 		{
 			//Main.romList.saveStatus();
