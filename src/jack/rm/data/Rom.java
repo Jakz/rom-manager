@@ -38,7 +38,7 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 		
 	public String info;
 	
-	public RomPath entry;
+	private RomPath path;
 	
 	public long imgCRC1;
 	public long imgCRC2;
@@ -51,6 +51,9 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 	}
 	
 	public RomID<?> getID() { return new RomID.CRC(crc); }
+	
+	public RomPath getPath() { return path; }
+	public void setPath(RomPath path) { this.path = path; }
 	
 	@Override
   public String toString()
@@ -79,8 +82,8 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 	
 	public void move(Path dest) throws IOException
 	{
-	  Files.move(entry.file(), dest);
-	  entry = entry.build(dest);
+	  Files.move(path.file(), dest);
+	  path = path.build(dest);
 	}
 	
 	public long getCRCforAsset(Asset asset)
@@ -123,12 +126,12 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 	
 	public boolean hasCorrectFolder()
 	{
-	  return Organizer.getCorrectFolder(this).equals(entry.file().getParent());
+	  return Organizer.getCorrectFolder(this).equals(path.file().getParent());
 	}
 	
 	public boolean hasCorrectName()
 	{
-	  return Organizer.getCorrectName(this).equals(entry.plainName());
+	  return Organizer.getCorrectName(this).equals(path.plainName());
 	}
 	
 	@Override

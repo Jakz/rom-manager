@@ -5,12 +5,14 @@ import jack.rm.plugins.OrganizerPlugin;
 import jack.rm.plugins.PluginRealType;
 
 import java.nio.file.Path;
+import java.util.function.Function;
 
 import com.pixbits.plugin.PluginType;
 
-public abstract class FolderPlugin extends OrganizerPlugin
+public abstract class FolderPlugin extends OrganizerPlugin implements Function<Rom, Path>
 {
   public abstract Path getFolderForRom(Rom rom);
+  public final Path apply(Rom rom) { return getFolderForRom(rom); }
     
   @Override public PluginType getPluginType() { return PluginRealType.FOLDER_ORGANIZER; }
 }

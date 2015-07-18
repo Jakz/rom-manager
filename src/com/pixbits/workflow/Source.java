@@ -1,4 +1,4 @@
-package com.pixbits.workflow.base;
+package com.pixbits.workflow;
 
 import java.util.function.Supplier;
 

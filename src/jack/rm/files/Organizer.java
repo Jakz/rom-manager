@@ -60,8 +60,8 @@ public class Organizer
 	  
 	  if (organizer != null)
 	    return base.resolve(organizer.getFolderForRom(rom));
-	  else if (rom.entry != null)
-	    return rom.entry.file().getParent();
+	  else if (rom.getPath() != null)
+	    return rom.getPath().file().getParent();
 	  else return base;
 	}
 
@@ -79,20 +79,15 @@ public class Organizer
 	
 	public static void renameRom(Rom rom)
 	{
-    Path renameTo = rom.entry.file().getParent();
-    
-    if (rom.entry.type != RomType.BIN)
-      renameTo = renameTo.resolve(Organizer.getCorrectName(rom).toString()+"."+rom.entry.type.ext);
-    else
-      renameTo = renameTo.resolve(Organizer.getCorrectName(rom).toString()+"."+RomSet.current.type.exts[0]);
+    RomPath romPath = rom.getPath();
+	  Path renameTo = romPath.file().getParent();
+	  
+	  //TODO: should fix extensions if wrong and crc is verified but now just keeps them
+    renameTo = renameTo.resolve(Organizer.getCorrectName(rom).toString()+"."+romPath.getExtension());
 
-    Path tmp = rom.entry.file();
-  
     try
     {
-      Files.move(tmp, renameTo);
-      rom.status = RomStatus.FOUND;
-      rom.entry = rom.entry.build(renameTo);
+      rom.move(renameTo);
     }
     catch (Exception e)
     {
@@ -115,17 +110,16 @@ public class Organizer
           Log.message(LogSource.ORGANIZER, LogTarget.none(), "Creating folder "+finalPath);
         }
         
-        Path newFile = finalPath.resolve(rom.entry.file().getFileName());
+        RomPath romPath = rom.getPath();
+        Path newFile = finalPath.resolve(romPath.file().getFileName());
                 
-        if (!newFile.equals(rom.entry.file()) && Files.exists(newFile))
+        if (!newFile.equals(romPath.file()) && Files.exists(newFile))
         {
-          
           Log.error(LogSource.ORGANIZER, LogTarget.rom(rom), "Cannot rename to "+newFile.toString()+", file exists");
         }
-        else if (!newFile.equals(rom.entry.file()))
+        else if (!newFile.equals(romPath.file()))
         {  
-          Files.move(rom.entry.file(), newFile);
-          rom.entry = rom.entry.build(newFile);
+          rom.move(newFile);
           Log.message(LogSource.ORGANIZER, LogTarget.rom(rom), "Moved rom to "+finalPath);
         }    
       }

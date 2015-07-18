@@ -33,14 +33,15 @@ public class MoverWorker extends OrganizerWorker<FolderPlugin>
           Log.message(LogSource.ORGANIZER, LogTarget.none(), "Creating folder "+finalPath);
         }
         
-        Path newFile = finalPath.resolve(rom.entry.file().getFileName());
+        Path currentFile = rom.getPath().file();
+        Path newFile = finalPath.resolve(currentFile.getFileName());
                 
-        if (!newFile.equals(rom.entry.file()) && Files.exists(newFile))
+        if (!newFile.equals(currentFile) && Files.exists(newFile))
         {
           
           Log.error(LogSource.ORGANIZER, LogTarget.rom(rom), "Cannot rename to "+newFile.toString()+", file exists");
         }
-        else if (!newFile.equals(rom.entry.file()))
+        else if (!newFile.equals(currentFile))
         {  
           rom.move(newFile);
           Log.message(LogSource.ORGANIZER, LogTarget.rom(rom), "Moved rom to "+finalPath);

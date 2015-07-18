@@ -1,4 +1,4 @@
-package com.pixbits.workflow.base;
+package com.pixbits.workflow;
 
 import java.util.stream.Stream;
 import java.util.function.Consumer;

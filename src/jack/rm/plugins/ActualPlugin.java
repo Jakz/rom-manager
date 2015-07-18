@@ -16,6 +16,8 @@ public abstract class ActualPlugin extends Plugin
   
   static
   {
+    manager.register(jack.rm.plugins.renamer.BasicRenamerPlugin.class);
+    
     manager.register(jack.rm.plugins.folder.NumericalOrganizer.class);
     manager.register(jack.rm.plugins.folder.AlphabeticalOrganizer.class);
     manager.register(jack.rm.plugins.cleanup.DeleteEmptyFoldersPlugin.class);
@@ -26,6 +28,7 @@ public abstract class ActualPlugin extends Plugin
   }
   
   protected Predicate<RomSet<?>> compatibility() { return rs -> true; }
+  protected boolean isHidden() { return false; }
     
   protected void message(String message) { Log.message(LogSource.PLUGINS, LogTarget.plugin(this), message); }
   protected void warning(String message) { Log.warning(LogSource.PLUGINS, LogTarget.plugin(this), message); }

@@ -41,18 +41,15 @@ public class FileDropperListener implements FileTransferHandler.Listener
             // a missing rom has been dropped on list
             if (result.rom.status == RomStatus.NOT_FOUND)
             {
-              result.rom.entry = result.entry;
+              result.assign();
               Rom rom = result.rom;
               
               // first let's copy the file in the rompath
-              Path romFile = rom.entry.file();
+              Path romFile = rom.getPath().file();
               if (!romFile.getParent().equals(romsPath))
               {
                 Path destFile = romsPath.resolve(romFile);
-
-                Files.move(romFile, destFile);
-                
-                rom.entry = rom.entry.build(destFile);
+                rom.move(destFile);
               }
               
               rom.status = RomStatus.FOUND;

@@ -223,9 +223,9 @@ public class RomList
         setProgress((int)((((float)i)/total)*100));
 
         try {
-          if (rom.status != RomStatus.NOT_FOUND && rom.entry.type == RomType.ZIP)
+          if (rom.status != RomStatus.NOT_FOUND && rom.getPath().isArchive())
           {
-            ZipFile zfile = new ZipFile(rom.entry.file().toFile());
+            ZipFile zfile = new ZipFile(rom.getPath().file().toFile());
           } 
         }
         catch (Exception e) {

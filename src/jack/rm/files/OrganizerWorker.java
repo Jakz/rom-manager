@@ -37,7 +37,7 @@ public abstract class OrganizerWorker<T extends OrganizerPlugin> extends SwingWo
       setProgress((int)((((float)i)/total)*100));
 
       Rom rom = list.get(i); 
-      Organizer.moveRom(rom);
+      execute(rom);
 
       publish(i);
     }

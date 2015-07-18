@@ -3,12 +3,12 @@ package jack.rm.data;
 public class ScanResult implements Comparable<ScanResult>
 {
   public Rom rom;
-  public RomPath entry;
+  public RomPath path;
   
-  public ScanResult(Rom rom, RomPath entry)
+  public ScanResult(Rom rom, RomPath path)
   {
     this.rom = rom;
-    this.entry = entry;
+    this.path = path;
   }
   
   @Override public boolean equals(Object other)
@@ -19,6 +19,11 @@ public class ScanResult implements Comparable<ScanResult>
   @Override public int compareTo(ScanResult other)
   {
     int i = rom.compareTo(other.rom);
-    return i == 0 ? entry.file().compareTo(other.entry.file()) : i;
+    return i == 0 ? path.file().compareTo(other.path.file()) : i;
+  }
+  
+  public void assign()
+  {
+    rom.setPath(path);
   }
 }

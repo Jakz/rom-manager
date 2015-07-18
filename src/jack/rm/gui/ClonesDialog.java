@@ -44,7 +44,7 @@ public class ClonesDialog extends JDialog
       {
         case 0: return keep.get(clones.get(r));
         case 1: return clones.get(r).rom;
-        case 2: return Settings.current().romsPath.relativize(clones.get(r).entry.file());
+        case 2: return Settings.current().romsPath.relativize(clones.get(r).path.file());
         default: return null;
       }
     }
@@ -223,7 +223,7 @@ public class ClonesDialog extends JDialog
   
   public void apply()
   {
-    keep.forEach( (k, v) -> { if (v) k.rom.entry = k.entry; });
+    keep.forEach( (k, v) -> { if (v) k.assign(); });
     RomSet.current.list.checkNames();
     RomSet.current.list.updateStatus();
     Main.mainFrame.updateTable();
@@ -239,7 +239,7 @@ public class ClonesDialog extends JDialog
     this.clones = new ArrayList<>(clones);
     this.clones.addAll(roms.stream()
         .filter( r -> romClones.contains(r))
-        .map( r -> new ScanResult(r, r.entry) )
+        .map( r -> new ScanResult(r, r.getPath()) )
         .collect(Collectors.toList()));
     
     Collections.sort(this.clones);
@@ -296,14 +296,14 @@ public class ClonesDialog extends JDialog
   {
     if (priority != ClonePriority.ANY)
     {
-      List<ScanResult> filtered = results.stream().filter(r -> r.entry.type == priority.type).collect(Collectors.toList());
+      List<ScanResult> filtered = results.stream().filter(r -> r.path.type == priority.type).collect(Collectors.toList());
       if (!filtered.isEmpty())
         results = filtered;
     }
     
     Predicate<ScanResult> predicateAny = e -> true;
-    Predicate<ScanResult> predicateCorrectFolder = e -> Organizer.getCorrectFolder(e.rom).equals(e.entry.file().getParent());
-    Predicate<ScanResult> predicateCorrectName = e -> Organizer.getCorrectName(e.rom).equals(e.entry.file().getFileName());
+    Predicate<ScanResult> predicateCorrectFolder = e -> Organizer.getCorrectFolder(e.rom).equals(e.path.file().getParent());
+    Predicate<ScanResult> predicateCorrectName = e -> Organizer.getCorrectName(e.rom).equals(e.path.file().getFileName());
     Predicate<ScanResult> predicateCorrectNameAndFolder = predicateCorrectName.and(predicateCorrectFolder);
     
     List<Predicate<ScanResult>> predicates = Arrays.asList(

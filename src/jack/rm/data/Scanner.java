@@ -59,11 +59,11 @@ public class Scanner
 	  if (rom.status != RomStatus.NOT_FOUND)
 	  {	    
 	    clones.add(result);
-	    Log.warning(LogSource.SCANNER, LogTarget.file(Settings.current().romsPath.relativize(result.entry.file())), "File contains a rom already present in romset: "+rom.entry);
+	    Log.warning(LogSource.SCANNER, LogTarget.file(Settings.current().romsPath.relativize(result.path.file())), "File contains a rom already present in romset: "+rom.getPath());
 	    return;
 	  }
 	  
-	  rom.entry = result.entry;
+	  result.assign();
 
 	  if (rom.isOrganized())
 	    rom.status = RomStatus.FOUND;
@@ -135,7 +135,7 @@ public class Scanner
 				Rom r = list.get(j);
 				
 				if (r.status != RomStatus.NOT_FOUND)
-					existing.add(r.entry.file());
+					existing.add(r.getPath().file());
 			}
 		}
 

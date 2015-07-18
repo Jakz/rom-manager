@@ -27,7 +27,7 @@ public class RomListAdapter implements JsonSerializer<RomList>, JsonDeserializer
   {
     RomSavedState[] roms = list.stream()
       .filter( r -> r.status != RomStatus.NOT_FOUND)
-      .map( r -> new RomSavedState(r.getID(), r.status, r.entry) )
+      .map( r -> new RomSavedState(r.getID(), r.status, r.getPath()) )
       .toArray( size -> new RomSavedState[size]);
     
     return context.serialize(roms);
@@ -44,7 +44,7 @@ public class RomListAdapter implements JsonSerializer<RomList>, JsonDeserializer
       
       if (rom != null)
       {
-        rom.entry = prom.file;
+        rom.setPath(prom.file);
         rom.status = prom.status;
       }
     }

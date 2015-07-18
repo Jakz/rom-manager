@@ -269,8 +269,11 @@ public class InfoPanel extends JPanel implements ActionListener
 		//fields[11].setText(rom.getClonesString());
 		fields[Field.SAVE_TYPE.index].setText(rom.getSave().toString());
 		fields[Field.COMMENT.index].setText(rom.info);
-    fields[Field.FILENAME.index].setText(rom.entry != null ? rom.entry.file().getFileName().toString() : "");
-		fields[Field.PATH.index].setText(rom.entry != null ? rom.entry.file().getParent().toString() : "");
+		
+		RomPath romPath = rom.getPath();
+		
+    fields[Field.FILENAME.index].setText(romPath != null ? romPath.file().getFileName().toString() : "");
+		fields[Field.PATH.index].setText(romPath != null ? romPath.file().getParent().toString() : "");
 		
 		imgTitle.setIcon(loadImage(rom,"title"));
 		imgScreen.setIcon(loadImage(rom,"game"));
@@ -285,7 +288,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		else
 		{
 	    openFolderButton.setEnabled(true);
-	    if (rom.entry.type == RomType.ZIP)
+	    if (rom.getPath().isArchive())
 	      openArchiveButton.setEnabled(true);
 	      
 		  downloadButton.setEnabled(false);
@@ -313,11 +316,11 @@ public class InfoPanel extends JPanel implements ActionListener
 		}
 	  else if (src == openFolderButton)
 	  {
-	    Main.openFolder(rom.entry.file().getParent().toFile());
+	    Main.openFolder(rom.getPath().file().getParent().toFile());
 	  }
 	  else if (src == openArchiveButton)
 	  {
-	    Main.openFolder(rom.entry.file().toFile());
+	    Main.openFolder(rom.getPath().file().toFile());
 	  }
 		else if (src == assetsButton)
 		{
