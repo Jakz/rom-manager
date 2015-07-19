@@ -112,8 +112,6 @@ public abstract class RomSet<R extends Rom>
 	
 	public final void cleanup()
 	{
-	  Settings settings = Settings.current();
-	  
 	  Set<CleanupPlugin> plugins = settings.plugins.getEnabledPlugins(PluginRealType.ROMSET_CLEANUP);
 	  plugins.stream().forEach( p -> p.execute(this.list) );
 	}
@@ -149,7 +147,13 @@ public abstract class RomSet<R extends Rom>
 	  }
 	}
 	
-	public void loadStatus()
+  public Path getAssetPath(Asset asset)
+  {
+    Path path = Paths.get("screens",ident());  
+    return path.resolve(asset == Asset.SCREEN_GAMEPLAY ? "game/" : "title/");
+  }
+	
+	public boolean loadStatus()
 	{
 	  try
 	  {
@@ -157,8 +161,22 @@ public abstract class RomSet<R extends Rom>
   	    
   	  Path settingsPath = basePath.resolve("settings.json");
   	  
+  	  try
+  	  {
+  	    for (Asset asset : getSupportedAssets())
+  	      Files.createDirectories(getAssetPath(asset));
+  	  }
+  	  catch (IOException e)
+  	  {
+  	    e.printStackTrace();
+  	    // TODO: log
+  	  }
+  	  
   	  if (!Files.exists(settingsPath))
+  	  {
   	    settings = new Settings(Main.manager);
+  	    return false;
+  	  }
   	  else
   	  {
   	    try (BufferedReader rdr = Files.newBufferedReader(settingsPath))
@@ -181,11 +199,14 @@ public abstract class RomSet<R extends Rom>
   	    {
   	      gson.fromJson(rdr, RomList.class);
   	    }
+  	    
+  	    return true;
   	  }
 	  }
 	  catch (IOException e)
 	  {
 	    e.printStackTrace();
+	    return false;
 	  }
 	}
 }

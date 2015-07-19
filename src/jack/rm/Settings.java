@@ -5,7 +5,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-import com.google.gson.JsonParseException;
 import com.pixbits.plugin.PluginManager;
 import com.pixbits.plugin.PluginSet;
 
@@ -19,6 +18,7 @@ import jack.rm.log.LogSource;
 import jack.rm.log.LogType;
 import jack.rm.plugins.*;
 import jack.rm.plugins.folder.FolderPlugin;
+import jack.rm.plugins.renamer.RenamerPlugin;
 
 public class Settings
 {	
@@ -41,10 +41,16 @@ public class Settings
 	  romsPath = null;
 	}
 	
+	public RenamerPlugin getRenamer()
+	{
+	  RenamerPlugin plugin = plugins.getEnabledPlugin(PluginRealType.RENAMER);
+	  return plugin;
+	}
+	
 	public FolderPlugin getFolderOrganizer()
 	{ 
-	  FolderPlugin plugin = plugins.getPlugin(PluginRealType.FOLDER_ORGANIZER);
-	  return plugin != null && plugin.isEnabled() ? plugin : null;
+	  FolderPlugin plugin = plugins.getEnabledPlugin(PluginRealType.FOLDER_ORGANIZER);
+	  return plugin != null ? plugin : null;
 	}
 	
 	public Set<Path> getIgnoredPaths()
@@ -63,10 +69,4 @@ public class Settings
 	{
     plugins = new PluginSet<ActualPlugin>();
 	}
-	
-  public static Path getAssetPath(Asset asset)
-  {
-  	Path path = Paths.get("screens/").resolve(RomSet.current.ident());	
-  	return path.resolve(asset == Asset.SCREEN_GAMEPLAY ? "game/" : "title/");
-  }
 }

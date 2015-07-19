@@ -9,6 +9,7 @@ import jack.rm.log.LogTarget;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.PatternSetPlugin;
+import jack.rm.plugins.renamer.RenamerPlugin;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -42,14 +43,9 @@ public class Organizer
 		
 	public static String getCorrectName(Rom rom)
 	{
-		String temp = new String(RomSet.current.getSettings().renamingPattern);
-		
-		Set<Pattern> patterns = getPatterns(RomSet.current);
-		
-		for (Pattern p : patterns)
-			temp = p.apply(temp, rom);
-		
-		return temp;
+	  RenamerPlugin plugin = RomSet.current.getSettings().getRenamer();
+	  
+	  return plugin.getCorrectName(rom);
 	}
 	
 	public static Path getCorrectFolder(Rom rom)

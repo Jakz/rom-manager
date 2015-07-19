@@ -55,25 +55,10 @@ public class RomSetManager
 	public static RomSet<? extends Rom> loadSet(RomSet<? extends Rom> set)
 	{
 		Log.log(LogType.MESSAGE, LogSource.STATUS, LogTarget.romset(set), "Loading romset");
-	  		
-		RomSet.current = set;
-		
-		try
-		{
-		  for (Asset asset : set.getSupportedAssets())
-		    Files.createDirectories(Settings.getAssetPath(asset));
-		}
-		catch (IOException e)
-		{
-		  e.printStackTrace();
-		  // TODO: log
-		}
-
+	  			
 		RomSize.mapping.clear();
 		set.load();
-		
-		Main.mainFrame.romSetLoaded(set);
-				
+						
 		return set;
 	}
 }

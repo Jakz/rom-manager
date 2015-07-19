@@ -69,7 +69,7 @@ public abstract class RomSetOfflineList extends RomSet<NumberedRom>
 	@Override
   public Path assetPath(Asset asset, Rom rom)
 	{
-		return Settings.getAssetPath(asset).resolve(Organizer.formatNumber(rom.imageNumber)+".png");
+		return getAssetPath(asset).resolve(Organizer.formatNumber(rom.imageNumber)+".png");
 	}
 
 	@Override

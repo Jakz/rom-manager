@@ -95,7 +95,7 @@ public class PluginsPanel extends JPanel
       
       if (b)
         romset.getSettings().plugins.enable(manager, plugins.get(r).getID());
-      else
+      else if (!plugins.get(r).type.isRequired())
         romset.getSettings().plugins.disable(plugins.get(r).getID());
       
       //TODO: enabling or disabling a plugin should have an effect in multiple parts of the UI

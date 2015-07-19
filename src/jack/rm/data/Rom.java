@@ -83,12 +83,12 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 	
 	public boolean hasAsset(Asset asset)
 	{
-	  Path f = Settings.getAssetPath(asset).resolve(Organizer.formatNumber(imageNumber)+".png");
+	  Path f = RomSet.current.getAssetPath(asset).resolve(Organizer.formatNumber(imageNumber)+".png");
 	   
     if (!Files.exists(f)) return false;
     else
     {
-      if (Settings.current().checkImageCRC)
+      if (RomSet.current.getSettings().checkImageCRC)
       {
         long icrc = Scanner.computeCRC(f);
         return icrc == getCRCforAsset(asset);
@@ -109,8 +109,8 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 
 	public boolean isOrganized()
 	{
-	  boolean nameIsOrganized = !Settings.current().organizer.hasRenamePolicy() || hasCorrectName();
-	  boolean positionIsOrganized = Settings.current().getFolderOrganizer() == null || hasCorrectFolder();
+	  boolean nameIsOrganized = !RomSet.current.getSettings().organizer.hasRenamePolicy() || hasCorrectName();
+	  boolean positionIsOrganized = RomSet.current.getSettings().getFolderOrganizer() == null || hasCorrectFolder();
 	  return nameIsOrganized && positionIsOrganized;
 	}
 	

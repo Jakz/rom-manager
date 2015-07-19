@@ -35,10 +35,13 @@ public class PluginManager<T extends Plugin, B extends PluginBuilder<T>>
       if (k.isRequired())
       {
         Optional<B> nativePlugin = v.stream().filter(p -> p.isNative).findFirst();
-        
+                
         // TODO: if existing set check if not already enabled for type if mutually exclusive
         
-        set.add(this.build((Class<? extends T>)nativePlugin.get().getID().getType()));
+        T plugin = this.build((Class<? extends T>)nativePlugin.get().getID().getType()); 
+        
+        set.add(plugin);
+        set.enable(this, plugin.getID());
       }
     });
   }

@@ -99,6 +99,9 @@ public class Main
     manager.register(jack.rm.plugins.cleanup.MoveUnknownFilesPlugin.class);
     manager.register(jack.rm.plugins.renamer.BasicPatternSet.class);
     manager.register(jack.rm.plugins.renamer.NumberedRomPattern.class);
+    manager.register(jack.rm.plugins.renamer.BasicRenamerPlugin.class);
+    manager.register(jack.rm.plugins.renamer.PatternRenamerPlugin.class);
+
 	}
 	
 	public static void main(String[] args)
@@ -114,6 +117,8 @@ public class Main
 	  {
 	  setOS();
 	  setLNF();
+	  
+	  loadPlugins();
 		
 		mainFrame = new MainFrame();
 		
@@ -123,9 +128,13 @@ public class Main
 		
 		optionsFrame = new OptionsFrame();
 		
-    RomSetManager.loadSet(System.GBA);
-		scanner = new Scanner(RomSet.current);
-    scanner.scanForRoms(!RomSet.current.list.load());
+    RomSet<?> set = RomSetManager.loadSet(System.GBA);
+    RomSet.current = set;
+    boolean wasInit = set.loadStatus();
+		scanner = new Scanner(set);
+    scanner.scanForRoms(!wasInit);
+    mainFrame.romSetLoaded(set);
+
 
 		downloader = new Downloader(RomSet.current);
 
