@@ -4,22 +4,24 @@ import com.pixbits.plugin.PluginType;
 
 public enum PluginRealType implements PluginType
 {
-  FOLDER_ORGANIZER { 
-    public String toString() { return "Folder Organizer"; }
-    public boolean isMutuallyExclusive() { return true; }
-  },
-  ROMSET_CLEANUP { 
-    public String toString() { return "Romset Cleanup"; }
-  },
-  PATTERN_SET {
-    public String toString() { return "Renamer Pattern Set"; }
-  },
-  RENAMER {
-    public String toString() { return "Renamer"; }
-    public boolean isMutuallyExclusive() { return true; }
-  }
-  
+  FOLDER_ORGANIZER("Folder Organizer", true, false),
+  ROMSET_CLEANUP("Romset Cleanup", false, false),
+  PATTERN_SET("Renamer Pattern Set", false, false),
+  RENAMER("Renamer", true, true)
   ;
   
-  public boolean isMutuallyExclusive() { return false; }
+  public final String caption;
+  public final boolean isMutuallyExclusive;
+  public final boolean isRequired;
+  
+  PluginRealType(String name, boolean isMutuallyExclusive, boolean isRequired)
+  {
+    this.caption = name;
+    this.isMutuallyExclusive = isMutuallyExclusive;
+    this.isRequired = isRequired;
+  }
+  
+  public String toString() { return caption; }
+  public boolean isMutuallyExclusive() { return isMutuallyExclusive; }
+  public boolean isRequired() { return isRequired; }
 }

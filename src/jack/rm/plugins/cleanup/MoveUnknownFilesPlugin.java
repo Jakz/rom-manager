@@ -34,7 +34,8 @@ public class MoveUnknownFilesPlugin extends CleanupPlugin implements PluginWithI
         .map( r -> r.getPath().file())
         .collect(Collectors.toSet());
   
-      Set<Path> total = new FolderScanner(FileSystems.getDefault().getPathMatcher("glob:*.*"), Settings.current().getIgnoredPaths()).scan(Settings.current().romsPath);
+      Settings settings = list.set.getSettings();
+      Set<Path> total = new FolderScanner(FileSystems.getDefault().getPathMatcher("glob:*.*"), settings.getIgnoredPaths()).scan(settings.romsPath);
       
       total.removeAll(existing);
       

@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 import com.google.gson.JsonParseException;
+import com.pixbits.plugin.PluginManager;
 import com.pixbits.plugin.PluginSet;
 
 import jack.rm.data.Asset;
@@ -16,82 +17,11 @@ import jack.rm.json.Json;
 import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogType;
-import jack.rm.plugins.ActualPlugin;
-import jack.rm.plugins.PluginRealType;
-import jack.rm.plugins.PluginWithIgnorePaths;
+import jack.rm.plugins.*;
 import jack.rm.plugins.folder.FolderPlugin;
 
 public class Settings
-{
-	private static Map<RomSet<? extends Rom>, Settings> settings = new HashMap<>(); 
-
-	public static Settings get(RomSet<?> set)
-	{
-		Settings s = settings.get(set);
-		
-		if (s == null)
-		{
-			s = new Settings(set);
-			settings.put(set, s);
-		}
-		
-		return s;
-	}
-	
-	public static Settings current()
-	{
-		return settings.get(RomSet.current);
-	}
-	
-	public static void load()
-	{
-		try
-		{
-			File file = new File("data/settings.json");
-			
-			if (file.exists())
-			{
-				
-				Settings[] sts = Json.build().fromJson(new FileReader(file), Settings[].class);
-				
-				for (Settings s : sts)
-				{
-					settings.put(s.set, s);
-				}
-			}
-		}
-		catch (JsonParseException e)
-		{
-		  if (e.getCause() instanceof ClassNotFoundException)
-		    Log.log(LogType.ERROR, LogSource.PLUGINS, null, "Error while loading plugin state: "+e.getCause().toString());
-		  
-		  e.printStackTrace();
-		}
-		catch (Exception e )
-		{
-			e.printStackTrace();
-		}
-	}
-	
-	public static void consolidate()
-	{
-		try
-		{			
-			DataOutputStream dos = new DataOutputStream(new FileOutputStream("data/settings.json"));
-			
-			Settings[] sts = settings.values().toArray(new Settings[settings.values().size()]);
-
-			dos.writeBytes(Json.build().toJson(sts, Settings[].class));
-			
-			dos.close();
-		}
-		catch (Exception e )
-		{
-			e.printStackTrace();
-		}
-	}
-	
-	public RomSet<?> set;
+{	
 	public String renamingPattern;
 	public Path romsPath;	
 	public boolean checkImageCRC;
@@ -100,9 +30,15 @@ public class Settings
 		
 	public OrganizerDetails organizer;
 	
-	public Settings()
+	
+	public Settings(PluginManager<ActualPlugin, ActualPluginBuilder> manager)
 	{
 	  plugins = new PluginSet<ActualPlugin>();
+	  manager.setup(plugins);
+	  checkImageCRC = true;   
+	  organizer = new OrganizerDetails();
+	  renamingPattern = "%n - %t [%S]";
+	  romsPath = null;
 	}
 	
 	public FolderPlugin getFolderOrganizer()
@@ -123,17 +59,9 @@ public class Settings
 	  return paths;
 	}
 	
-	Settings(RomSet<?> set)
+	Settings()
 	{
-		this();
-		
-	  this.set = set;
-		
-		checkImageCRC = true;
-		
-		organizer = new OrganizerDetails();
-		renamingPattern = "%n - %t [%S]";
-		romsPath = null;
+    plugins = new PluginSet<ActualPlugin>();
 	}
 	
   public static Path getAssetPath(Asset asset)

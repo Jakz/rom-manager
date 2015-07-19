@@ -21,7 +21,7 @@ public class FileDropperListener implements FileTransferHandler.Listener
     @Override
     public void run()
     {
-      Path romsPath = Settings.current().romsPath;
+      Path romsPath = RomSet.current.getSettings().romsPath;
       
       for (Path file : files)
       {

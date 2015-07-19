@@ -4,6 +4,10 @@ import java.util.HashSet;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class PluginManager<T extends Plugin, B extends PluginBuilder<T>>
@@ -22,12 +26,27 @@ public class PluginManager<T extends Plugin, B extends PluginBuilder<T>>
     plugins.clear();
   }
   
+  @SuppressWarnings("unchecked")
+  public void setup(PluginSet<T> set)
+  {
+    Map<PluginType, Set<B>> map = plugins.stream().collect(Collectors.groupingBy(b -> b.type, HashMap::new, Collectors.toSet()));
+    
+    map.forEach( (k, v) -> {
+      if (k.isRequired())
+      {
+        Optional<B> nativePlugin = v.stream().filter(p -> p.isNative).findFirst();
+        
+        // TODO: if existing set check if not already enabled for type if mutually exclusive
+        
+        set.add(this.build((Class<? extends T>)nativePlugin.get().getID().getType()));
+      }
+    });
+  }
+  
   public boolean register(Class<? extends T> clazz)
   { 
     boolean alreadyRegistered = stream().anyMatch( p -> p.getID().getType().equals(clazz));
-    
 
-    
     if (alreadyRegistered)
       return false; // TODO: throw exception: plugin already loaded, should add plugin version to comparison and discard less recent if found
     else

@@ -9,5 +9,5 @@ public class BasicRenamerPlugin extends RenamerPlugin
     return rom.title;
   }
   
-  protected boolean isHidden() { return true; }
+  @Override public boolean isNative() { return true; }
 }

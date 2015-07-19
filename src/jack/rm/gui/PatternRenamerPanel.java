@@ -108,7 +108,7 @@ public class PatternRenamerPanel extends JPanel implements CaretListener
 
 	public void updateFields()
 	{
-		patternField.setText(Settings.current().renamingPattern);
+		patternField.setText(RomSet.current.getSettings().renamingPattern);
 		patterns.clear();
 		Organizer.getPatterns(RomSet.current).forEach(patterns::add);
 		// TODO: should be invoked even when plugins are changed
@@ -117,7 +117,7 @@ public class PatternRenamerPanel extends JPanel implements CaretListener
 	@Override
   public void caretUpdate(CaretEvent e)
 	{
-		Settings.current().renamingPattern = patternField.getText();
+	  RomSet.current.getSettings().renamingPattern = patternField.getText();
 		exampleField.setText(Organizer.getCorrectName(RomSet.current.list.get(0)));
 	}
 }

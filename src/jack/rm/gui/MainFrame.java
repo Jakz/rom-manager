@@ -282,6 +282,6 @@ public class MainFrame extends JFrame implements WindowListener
 	@Override
   public void windowClosing(WindowEvent e)
 	{
-    RomSet.current.list.save();
+    RomSet.current.saveStatus();
 	}
 }

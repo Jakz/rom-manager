@@ -16,7 +16,7 @@ import com.pixbits.gui.ProgressDialog;
 
 public class Scanner
 {
-	RomList list;
+	RomSet<?> set;
 	
 	private Set<Path> existing = new HashSet<>();
 	private Set<Path> foundFiles = new HashSet<>();
@@ -24,9 +24,9 @@ public class Scanner
 	
 	private PathMatcher archiveMatcher = FileSystems.getDefault().getPathMatcher("glob:*.{zip}");
 	
-	public Scanner(RomList list)
+	public Scanner(RomSet<?> set)
 	{
-		this.list = list;
+		this.set = set;
 	}
 	
 	public static long computeCRC(Path file)
@@ -59,7 +59,7 @@ public class Scanner
 	  if (rom.status != RomStatus.NOT_FOUND)
 	  {	    
 	    clones.add(result);
-	    Log.warning(LogSource.SCANNER, LogTarget.file(Settings.current().romsPath.relativize(result.path.file())), "File contains a rom already present in romset: "+rom.getPath());
+	    Log.warning(LogSource.SCANNER, LogTarget.file(set.getSettings().romsPath.relativize(result.path.file())), "File contains a rom already present in romset: "+rom.getPath());
 	    return;
 	  }
 	  
@@ -88,7 +88,7 @@ public class Scanner
             ZipEntry entry = enu.nextElement();
             long curCrc = entry.getCrc();
             
-            Rom rom = list.getByCRC(curCrc);
+            Rom rom = set.list.getByCRC(curCrc);
             
             if (rom != null)
               result = new ScanResult(rom, new RomPath.Archive(file, entry.getName()));
@@ -106,7 +106,7 @@ public class Scanner
     {
       long crc = computeCRC(file);
       
-      Rom rom = list.getByCRC(crc);
+      Rom rom = set.list.getByCRC(crc);
       
       if (rom != null)
         return new ScanResult(rom, new RomPath.Bin(file));
@@ -123,20 +123,16 @@ public class Scanner
 		if (total)
 		{
 			Log.log(LogType.MESSAGE, LogSource.SCANNER, LogTarget.romset(RomSet.current), "Scanning for roms");
-			list.resetStatus();
+			set.list.resetStatus();
 		}
 		else
 		{
 	    Log.log(LogType.MESSAGE, LogSource.SCANNER, LogTarget.romset(RomSet.current), "Scanning for new roms");
 
-			int c = list.count();
-			for (int j = 0; j < c; ++j)
-			{
-				Rom r = list.get(j);
-				
-				if (r.status != RomStatus.NOT_FOUND)
-					existing.add(r.getPath().file());
-			}
+	    set.list.stream()
+	    .filter(r -> r.status != RomStatus.NOT_FOUND)
+	    .map(r -> r.getPath().file())
+	    .forEach(existing::add);
 		}
 
 		Path folder = RomSet.current.romPath();
@@ -145,12 +141,12 @@ public class Scanner
 		{
 		  Log.log(LogType.ERROR, LogSource.SCANNER, LogTarget.romset(RomSet.current), "Roms path doesn't exist! Scanning interrupted");
 		  Dialogs.showError("Romset Path", "Romset path is not set, or it doesn't exists as a folder.\nPlease set one in Options.", Main.mainFrame);
-		  list.resetStatus();
+		  set.list.resetStatus();
 		  Main.mainFrame.updateTable();
 		  return;
 		}
 			
-		foundFiles = new FolderScanner(RomSet.current.getFileMatcher(), Settings.current().getIgnoredPaths()).scan(folder);
+		foundFiles = new FolderScanner(RomSet.current.getFileMatcher(), set.getSettings().getIgnoredPaths()).scan(folder);
 		ScannerWorker worker = new ScannerWorker(foundFiles);
 		worker.execute();
 	}
@@ -182,7 +178,7 @@ public class Scanner
 	      ScanResult result = scanFile(f);
 	      	      
 	      foundRom(result);
-	      list.updateStatus();
+	      set.list.updateStatus();
 	      
 	      publish(i);
 	    }
@@ -206,11 +202,13 @@ public class Scanner
 	    if (isCancelled())
 	      return;
 
-	    list.save();
+	    
 	    ProgressDialog.finished();
 	    
 	    if (!clones.isEmpty())
-	      Main.clonesDialog.activate(list, clones);
+	      Main.clonesDialog.activate(set.list, clones);
+	    else
+	      set.saveStatus();
 	  }
 	  
 	}

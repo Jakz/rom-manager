@@ -44,7 +44,7 @@ public class ClonesDialog extends JDialog
       {
         case 0: return keep.get(clones.get(r));
         case 1: return clones.get(r).rom;
-        case 2: return Settings.current().romsPath.relativize(clones.get(r).path.file());
+        case 2: return RomSet.current.getSettings().romsPath.relativize(clones.get(r).path.file());
         default: return null;
       }
     }

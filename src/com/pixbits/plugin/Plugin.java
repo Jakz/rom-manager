@@ -27,6 +27,8 @@ public abstract class Plugin implements JsonnableContext
   public boolean isEnabled() { return enabled; }
   public void setEnabled(boolean enabled) { this.enabled = enabled; }
   
+  public boolean isNative() { return false; }
+  
   @Override public boolean equals(Object object) { return object instanceof Plugin && ((Plugin)object).id.equals(id); }
   @Override public int hashCode() { return id.hashCode(); }
   public PluginID getID() { return id; }

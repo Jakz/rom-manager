@@ -9,7 +9,7 @@ public class PluginInfo
   
   public final String author;
   public final String description;
-  
+    
   public PluginInfo(String name, PluginVersion version, String author, String description)
   {
     this.name = name;

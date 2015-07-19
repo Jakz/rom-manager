@@ -189,13 +189,13 @@ public class RomList
       {
         Consumer<Boolean> callback = b -> {
           set.cleanup();
-          set.list.save();
+          set.saveStatus();
         };
         
         new MoverWorker(RomList.this, plugin, callback).execute();
       }
       else
-        set.list.save();
+        set.saveStatus();
     }
     
   }
@@ -263,41 +263,4 @@ public class RomList
 	{
 		new RenamerWorker(this).execute();
 	}
-	
-	public void save()
-	{
-    Path path = Paths.get("data/", set.ident(), "status.json");
-    Gson gson = Json.prebuild().registerTypeAdapter(RomList.class, new RomListAdapter(this)).create();
-    
-    try (FileWriter wrt = new FileWriter(path.toFile()))
-    {
-      wrt.write(gson.toJson(this));
-      Log.message(LogSource.STATUS, LogTarget.romset(RomSet.current), "Romset status saved on json");
-    }
-    catch (IOException e)
-    {
-      e.printStackTrace();
-    }
-	}
-	
-  public boolean load()
-  {
-    Path path = Paths.get("data/", set.ident(), "status.json");
-    Gson gson = Json.prebuild().registerTypeAdapter(RomList.class, new RomListAdapter(this)).create();
-    
-    try (FileReader rdr = new FileReader(path.toFile()) )
-    {
-      gson.fromJson(rdr, RomList.class);
-      return true;
-    }
-    catch (FileNotFoundException e)
-    {
-      return false;
-    }
-    catch (IOException e)
-    {
-      e.printStackTrace();
-      return false;
-    }
-  }
 }

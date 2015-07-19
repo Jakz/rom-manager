@@ -29,8 +29,6 @@ public class RomSetManager
 		{
 		  e.printStackTrace();
 		}
-		
-		Settings.load();
 	}
 	
 	public static RomSet<?> byIdent(String ident)

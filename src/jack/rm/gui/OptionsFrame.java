@@ -63,7 +63,7 @@ public class OptionsFrame extends JFrame implements ActionListener, ComponentLis
 		
 		Main.romsetPanel.updateFields();
 		Main.renamerPanel.updateFields();
-		Main.pluginsPanel.populate();
+		Main.pluginsPanel.populate(RomSet.current);
 		setLocationRelativeTo(Main.mainFrame);
 		
 		setVisible(true);

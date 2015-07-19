@@ -1,6 +1,7 @@
 package jack.rm.gui;
 
 import jack.rm.Settings;
+import jack.rm.data.set.RomSet;
 import jack.rm.i18n.Text;
 
 import java.awt.*;
@@ -46,7 +47,7 @@ public class ManagerPanel extends JPanel implements ActionListener
 	
 	public void updateFields()
 	{
-		Settings s = Settings.current();
+		Settings s = RomSet.current.getSettings();
 		
 		//unknownPath.setEnabled(s.moveUnknownFiles);
 		//unknownPathButton.setEnabled(s.moveUnknownFiles);
@@ -71,7 +72,7 @@ public class ManagerPanel extends JPanel implements ActionListener
 				
 				
 				romsPath.setText(f.getPath());
-				Settings.current().romsPath = f.toPath();
+				RomSet.current.getSettings().romsPath = f.toPath();
 			}
 		}
 	}

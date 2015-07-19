@@ -13,13 +13,17 @@ import jack.rm.data.set.*;
 import jack.rm.gui.*;
 import jack.rm.net.Downloader;
 import jack.rm.plugins.ActualPlugin;
+import jack.rm.plugins.ActualPluginBuilder;
 
+import com.pixbits.plugin.PluginManager;
 import com.pixbits.workflow.*;
 import com.pixbits.workflow.base.*;
 
 public class Main
 {		
-	public static MainFrame mainFrame;
+	public static PluginManager<ActualPlugin, ActualPluginBuilder> manager = new PluginManager<>(ActualPluginBuilder.class);
+
+  public static MainFrame mainFrame;
 	//public static InfoPanel infoPanel;
 	
 	public static ManagerPanel romsetPanel;
@@ -85,6 +89,18 @@ public class Main
 	  @Override public void accept(IntHolder holder) { /*System.out.println(holder.get());*/ }
 	}
 	
+	public static void loadPlugins()
+	{
+    manager.register(jack.rm.plugins.renamer.BasicRenamerPlugin.class);
+    
+    manager.register(jack.rm.plugins.folder.NumericalOrganizer.class);
+    manager.register(jack.rm.plugins.folder.AlphabeticalOrganizer.class);
+    manager.register(jack.rm.plugins.cleanup.DeleteEmptyFoldersPlugin.class);
+    manager.register(jack.rm.plugins.cleanup.MoveUnknownFilesPlugin.class);
+    manager.register(jack.rm.plugins.renamer.BasicPatternSet.class);
+    manager.register(jack.rm.plugins.renamer.NumberedRomPattern.class);
+	}
+	
 	public static void main(String[] args)
 	{
 	  /*IntFetcher fetcher = new IntFetcher();
@@ -103,12 +119,12 @@ public class Main
 		
 		romsetPanel = new ManagerPanel();
 		renamerPanel = new PatternRenamerPanel();
-		pluginsPanel = new PluginsPanel(ActualPlugin.manager);
+		pluginsPanel = new PluginsPanel(manager);
 		
 		optionsFrame = new OptionsFrame();
 		
     RomSetManager.loadSet(System.GBA);
-		scanner = new Scanner(RomSet.current.list);
+		scanner = new Scanner(RomSet.current);
     scanner.scanForRoms(!RomSet.current.list.load());
 
 		downloader = new Downloader(RomSet.current);
@@ -118,9 +134,6 @@ public class Main
 		mainFrame.setVisible(true);
 		
     clonesDialog = new ClonesDialog(mainFrame, "Rom Clones");
-		
-	
-		Settings.consolidate();
 	  }
 	}
 

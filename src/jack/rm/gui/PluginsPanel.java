@@ -31,6 +31,7 @@ public class PluginsPanel extends JPanel
   private final JTable table;
   private final PluginTableModel model;
   private final PluginManager<ActualPlugin, ActualPluginBuilder> manager;
+  private RomSet<?> romset;
   
   class PluginCellRenderer implements TableCellRenderer
   {
@@ -46,7 +47,7 @@ public class PluginsPanel extends JPanel
       JComponent component = (JComponent)inner.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
       ActualPluginBuilder builder = model.plugins.get(row);
       
-      boolean compatible = builder.isCompatible(RomSet.current);
+      boolean compatible = builder.isCompatible(romset);
       
       component.setOpaque(true);
       component.setEnabled(compatible);
@@ -67,7 +68,7 @@ public class PluginsPanel extends JPanel
     @Override public String getColumnName(int i) { return columnNames[i]; }
     @Override public Class<?> getColumnClass(int i) { return columnClasses[i]; }
     @Override public int getRowCount() { return plugins.size(); }
-    @Override public boolean isCellEditable(int r, int c) { return c == 2 && plugins.get(r).isCompatible(RomSet.current); }
+    @Override public boolean isCellEditable(int r, int c) { return c == 2 && plugins.get(r).isCompatible(romset); }
     
     @Override public Object getValueAt(int r, int c)
     {
@@ -79,7 +80,7 @@ public class PluginsPanel extends JPanel
         case 1: return builder.type;
         case 2:
         {
-          Optional<ActualPlugin> plugin = Settings.current().plugins.getPlugin(builder.getID());
+          Optional<ActualPlugin> plugin = romset.getSettings().plugins.getPlugin(builder.getID());
           return plugin.isPresent() && plugin.get().isEnabled();
         }
         default: return null;
@@ -93,9 +94,9 @@ public class PluginsPanel extends JPanel
       Boolean b = (Boolean)o;
       
       if (b)
-        Settings.current().plugins.enable(manager, plugins.get(r).getID());
+        romset.getSettings().plugins.enable(manager, plugins.get(r).getID());
       else
-        Settings.current().plugins.disable(plugins.get(r).getID());
+        romset.getSettings().plugins.disable(plugins.get(r).getID());
       
       //TODO: enabling or disabling a plugin should have an effect in multiple parts of the UI
       
@@ -109,7 +110,7 @@ public class PluginsPanel extends JPanel
       clear();
             
       manager.stream()
-        .filter(filter.getItemAt(filter.getSelectedIndex())::test)
+        .filter(b -> filter.getItemAt(filter.getSelectedIndex()).test(b, romset))
         .forEach(plugins::add);
       
       fireChanges();
@@ -130,24 +131,24 @@ public class PluginsPanel extends JPanel
     COMPATIBLE
     {
       public String toString() { return "Show Compatible"; }
-      public boolean test(ActualPluginBuilder builder) { return builder.isCompatible(RomSet.current); }
+      public boolean test(ActualPluginBuilder builder, RomSet<?> romset) { return builder.isCompatible(romset); }
     },
     ENABLED
     {
       public String toString() { return "Show Enabled"; }
-      public boolean test(ActualPluginBuilder builder) { 
-        Optional<ActualPlugin> plugin = Settings.current().plugins.getPlugin(builder.getID());
+      public boolean test(ActualPluginBuilder builder, RomSet<?> romset) { 
+        Optional<ActualPlugin> plugin = romset.getSettings().plugins.getPlugin(builder.getID());
         return plugin.isPresent() && plugin.get().isEnabled();
       }
     },
     ALL
     { 
       public String toString() { return "Show All"; } 
-      public boolean test(ActualPluginBuilder builder) { return true; }
+      public boolean test(ActualPluginBuilder builder, RomSet<?> romset) { return true; }
     }
     ;
     
-    public abstract boolean test(ActualPluginBuilder builder);
+    public abstract boolean test(ActualPluginBuilder builder, RomSet<?> romset);
     
   }
   
@@ -197,7 +198,7 @@ public class PluginsPanel extends JPanel
           if (configTable.isEditing())
             configTable.getCellEditor().stopCellEditing();
           
-          Optional<ActualPlugin> plugin = Settings.current().plugins.getPlugin(model.plugins.get(r).getID());
+          Optional<ActualPlugin> plugin = romset.getSettings().plugins.getPlugin(model.plugins.get(r).getID());
           configTable.prepare(plugin.orElse(null));    
         }
       }
@@ -214,7 +215,7 @@ public class PluginsPanel extends JPanel
     desc.setEditable(false);
     
     filter = new JComboBox<>(PluginFilter.values());
-    filter.addItemListener( e -> { if (e.getStateChange() == ItemEvent.SELECTED) populate(); });
+    filter.addItemListener( e -> { if (e.getStateChange() == ItemEvent.SELECTED) populate(romset); });
     
     
     configTable = new PluginConfigTable();
@@ -239,8 +240,9 @@ public class PluginsPanel extends JPanel
 
   }
   
-  public void populate()
+  public void populate(RomSet<?> romset)
   {
+    this.romset = romset;
     model.populate();
   }
 }

@@ -42,7 +42,7 @@ public class Organizer
 		
 	public static String getCorrectName(Rom rom)
 	{
-		String temp = new String(Settings.current().renamingPattern);
+		String temp = new String(RomSet.current.getSettings().renamingPattern);
 		
 		Set<Pattern> patterns = getPatterns(RomSet.current);
 		
@@ -54,9 +54,10 @@ public class Organizer
 	
 	public static Path getCorrectFolder(Rom rom)
 	{
-	  Path base = Settings.current().romsPath;
+	  Settings settings = RomSet.current.getSettings();
+	  Path base = settings.romsPath;
 	  
-	  FolderPlugin organizer = Settings.current().getFolderOrganizer();
+	  FolderPlugin organizer = settings.getFolderOrganizer();
 	  
 	  if (organizer != null)
 	    return base.resolve(organizer.getFolderForRom(rom));
@@ -67,7 +68,7 @@ public class Organizer
 
 	public static void organizeRomIfNeeded(Rom rom, boolean renamePhase, boolean movePhase)
 	{
-	  Settings settings = Settings.current();
+	  Settings settings = RomSet.current.getSettings();
 	  OrganizerDetails details = settings.organizer;
 	  
 	  if (renamePhase && details.hasRenamePolicy() && !rom.hasCorrectName())
