@@ -4,7 +4,9 @@ import jack.rm.data.*;
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
 import java.io.CharArrayWriter;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import jack.rm.data.console.GBA;
@@ -12,6 +14,29 @@ import jack.rm.data.console.GBA;
 public class OfflineListXMLParser extends DefaultHandler
 {
 	CharArrayWriter buffer = new CharArrayWriter();
+	
+	static final private Map<Integer, Language> languageMap = new HashMap<>();
+	
+	static
+	{
+	  languageMap.put(1, Language.FRENCH);
+	  languageMap.put(2, Language.ENGLISH);
+	  languageMap.put(4, Language.CHINESE);
+	  languageMap.put(8, Language.DANISH);
+	  languageMap.put(16, Language.DUTCH);
+	  languageMap.put(32, Language.FINNISH);
+	  languageMap.put(64, Language.GERMAN);
+	  languageMap.put(128, Language.ITALIAN);
+	  languageMap.put(256, Language.JAPANESE);
+	  languageMap.put(512, Language.NORWEGIAN);
+	  languageMap.put(1024, Language.POLISH);
+	  languageMap.put(2048, Language.PORTUGUESE);
+	  languageMap.put(4096, Language.SPANISH);
+	  languageMap.put(8192, Language.SWEDISH);
+	  languageMap.put(16384, Language.ENGLISH_UK);
+	  languageMap.put(32768, Language.PORTUGUESE_BR);
+	  languageMap.put(65536, Language.KOREAN);
+	}
 	
 	NumberedRom rom;
 	int curString;
@@ -99,7 +124,12 @@ public class OfflineListXMLParser extends DefaultHandler
 		  case "romSize": rom.size = RomSize.forBytes(asLong()); break;
 		  case "publisher": rom.publisher = asString(); break;
 		  case "location": rom.location = Location.get(asInt()); break;
-		  case "language": rom.languages = asInt(); break;
+		  case "language":
+		  {
+		    int values = asInt();
+		    languageMap.forEach( (k, v) -> { if ((values & k) != 0) rom.languages.add(v); });
+		    break;
+		  }
 		  case "sourceRom": rom.group = asString(); break;
 		  case "romCRC": rom.crc = Long.parseLong(asString(), 16); break;
       case "im1CRC": rom.imgCRC1 = Long.parseLong(asString(), 16); break;

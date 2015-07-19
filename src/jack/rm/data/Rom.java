@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 {
@@ -29,7 +32,7 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 	public RomSize size;
 	
 	public Location location;
-	public int languages;
+	public Set<Language> languages;
 	public Genre genre;
 	
 	public String internalName;
@@ -46,6 +49,7 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 	public Rom()
 	{
 		status = RomStatus.NOT_FOUND;
+		languages = new TreeSet<>();
     imgCRC1 = -1L;
     imgCRC2 = -1L;
 	}
@@ -63,21 +67,7 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 	
 	public String languagesAsString()
 	{
-		String s = "";
-		boolean first = true;
-		
-		for (Language l : Language.values())
-			if ((languages & l.code) != 0)
-			{
-				if (!first)
-					s += ", ";
-				else
-					first = false;
-				
-				s += l.fullName;
-			}
-				
-		return s;
+		return languages.stream().map( l -> l.fullName).collect(Collectors.joining(", "));
 	}
 	
 	public void move(Path dest) throws IOException

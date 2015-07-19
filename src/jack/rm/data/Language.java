@@ -6,28 +6,27 @@ import jack.rm.gui.Icon;
 public enum Language
 {
 	
-	FRENCH("French", "FR", 1, Icon.FLAG_FRANCE),
-	ENGLISH("English", "EN", 2, Icon.FLAG_USA),
-	CHINESE("Chinese", "ZH", 4, Icon.FLAG_CHINA),
-	DANISH("Danish", "DA", 4, Icon.FLAG_DENMARK),
-	DUTCH("Dutch", "NL", 16, Icon.FLAG_NETHERLANDS),
-	FINNISH("Finnish", "FI", 32, Icon.FLAG_FINLAND),
-	GERMAN("German", "DE", 64, Icon.FLAG_GERMANY),
-	ITALIAN("Italian", "IT", 128, Icon.FLAG_ITALY),
-	JAPANESE("Japanese", "JA", 256, Icon.FLAG_JAPAN),
-	NORWEGIAN("Norwegian", "NO", 512, Icon.FLAG_NORWAY),
-	POLISH("Polish", "PL", 1024, Icon.FLAG_POLAND),
-	PORTUGUESE("Portuguese", "PT", 2048, Icon.FLAG_PORTUGAL),
-	SPANISH("Spanish", "ES", 4096, Icon.FLAG_SPAIN),
-	SWEDISH("Swedish", "SV", 8192, Icon.FLAG_SWEDEN),
-	ENGLISH_UK("English (UK)", "EN", 16384, Icon.FLAG_UNITED_KINGDOM),
-	PORTUGUESE_BR("Portuguese (BR)", "PT", 32768, Icon.FLAG_BRAZIL),
-	KOREAN("Korean", "KO", 65536, Icon.FLAG_KOREA)
+	FRENCH("French", "FR", Icon.FLAG_FRANCE),
+	ENGLISH("English", "EN", Icon.FLAG_USA),
+	CHINESE("Chinese", "ZH", Icon.FLAG_CHINA),
+	DANISH("Danish", "DA", Icon.FLAG_DENMARK),
+	DUTCH("Dutch", "NL",  Icon.FLAG_NETHERLANDS),
+	FINNISH("Finnish", "FI", Icon.FLAG_FINLAND),
+	GERMAN("German", "DE", Icon.FLAG_GERMANY),
+	ITALIAN("Italian", "IT", Icon.FLAG_ITALY),
+	JAPANESE("Japanese", "JA", Icon.FLAG_JAPAN),
+	NORWEGIAN("Norwegian", "NO", Icon.FLAG_NORWAY),
+	POLISH("Polish", "PL", Icon.FLAG_POLAND),
+	PORTUGUESE("Portuguese", "PT", Icon.FLAG_PORTUGAL),
+	SPANISH("Spanish", "ES", Icon.FLAG_SPAIN),
+	SWEDISH("Swedish", "SV", Icon.FLAG_SWEDEN),
+	ENGLISH_UK("English (UK)", "EN", Icon.FLAG_UNITED_KINGDOM),
+	PORTUGUESE_BR("Portuguese (BR)", "PT", Icon.FLAG_BRAZIL),
+	KOREAN("Korean", "KO", Icon.FLAG_KOREA)
 	;
 	
 	public final String fullName;
 	public final String iso639_1;
-	public final int code;
 	public final Icon icon;
 	
 	
@@ -41,17 +40,16 @@ public enum Language
 		}
 	}
 	
-	Language(String name, String iso639_1, int code, Icon icon)
+	Language(String name, String iso639_1, Icon icon)
 	{
     this.fullName = name;
     this.iso639_1 = iso639_1;
-    this.code = code;
 	  this.icon = icon;
 	}
 	
-	Language(String name, String iso639_1, int code)
+	Language(String name, String iso639_1)
 	{
-		this(name, iso639_1, code, null);
+		this(name, iso639_1, null);
 	}
 	
 	@Override

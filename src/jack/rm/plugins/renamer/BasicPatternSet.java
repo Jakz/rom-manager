@@ -2,6 +2,7 @@ package jack.rm.plugins.renamer;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import jack.rm.data.Language;
 import jack.rm.data.Rom;
@@ -77,20 +78,13 @@ public class BasicPatternSet extends PatternSetPlugin
     ShortLanguagePattern() { super("%i", "Short language"); }
     @Override
     public String apply(String name, Rom rom) {
-      int c = 0;
-      Language l = null;
-      
-      for (Language l2 : Language.values())
-        if ((rom.languages & l2.code) != 0)
-        {
-          ++c;
-          l = l2;
-        }
-      
-      if (c == 1)
-        return name.replace(code,l.iso639_1);
+      Stream<Language> stream = rom.languages.stream();
+      long langCount = rom.languages.size();
+
+      if (langCount == 1)
+        return name.replace(code,stream.findFirst().get().iso639_1);
       else 
-        return name.replace(code,"M"+c);
+        return name.replace(code,"M"+langCount);
     }
   }
   

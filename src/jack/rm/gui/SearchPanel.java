@@ -186,7 +186,7 @@ public class SearchPanel extends JPanel
       predicate = predicate.and(r -> r.location.equals(location));
     
     if (language != null)
-      predicate = predicate.and(r -> (r.languages & language.code) != 0); // TODO: refactor language to avoid it being coupled to OL format
+      predicate = predicate.and(r -> r.languages.contains(language));
 	  
 	  return predicate;
 	}

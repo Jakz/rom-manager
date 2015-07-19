@@ -42,13 +42,14 @@ public abstract class RomSet<R extends Rom>
 	public Settings getSettings() { return Settings.get(this); }
 	
 	public abstract AssetDownloader getAssetDownloader();
+  public abstract Asset[] getSupportedAssets();
+	
 	public abstract Path assetPath(Asset asset, Rom rom);
 	
 	public abstract String downloadURL(Rom rom);
 	
 	public abstract void load();
 	
-	public abstract Asset[] getSupportedAssets();
 
 	@Override
   public String toString()
