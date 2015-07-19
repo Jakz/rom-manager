@@ -6,24 +6,24 @@ import java.util.*;
 
 import jack.rm.*;
 import jack.rm.data.*;
-import jack.rm.data.console.Console;
+import jack.rm.data.console.System;
 import jack.rm.log.*;
 
 public class RomSetManager
 {
-	private static Map<Console, RomSet<? extends Rom>> sets = new HashMap<>();
+	private static Map<System, RomSet<? extends Rom>> sets = new HashMap<>();
 	
 	static
 	{
 		try
 		{
-		  sets.put(Console.GBA, new GBA());
-		  sets.put(Console.NDS, new NDS());
-		  sets.put(Console.GBC, new GBC());
-		  sets.put(Console.NES, new NES());
-		  sets.put(Console.GB, new GB());
-		  sets.put(Console.WS, new WS());
-		  sets.put(Console._3DS, new _3DS());
+		  sets.put(System.GBA, new GBA());
+		  sets.put(System.NDS, new NDS());
+		  sets.put(System.GBC, new GBC());
+		  sets.put(System.NES, new NES());
+		  sets.put(System.GB, new GB());
+		  sets.put(System.WS, new WS());
+		  sets.put(System._3DS, new _3DS());
 		}
 		catch (Exception e)
 		{
@@ -49,7 +49,7 @@ public class RomSetManager
 		return sets.values();
 	}
 	
-	public static RomSet<? extends Rom> loadSet(Console console)
+	public static RomSet<? extends Rom> loadSet(System console)
 	{
 		return loadSet(sets.get(console));
 	}

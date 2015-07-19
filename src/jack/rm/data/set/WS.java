@@ -1,7 +1,7 @@
 package jack.rm.data.set;
 
 import jack.rm.data.Rom;
-import jack.rm.data.console.Console;
+import jack.rm.data.console.System;
 
 import java.awt.Dimension;
 import java.net.URL;
@@ -11,7 +11,7 @@ class WS extends RomSetOfflineList
 {
 	public WS() throws MalformedURLException
 	{
-		super(Console.WS, Provider.NOINTRO, new Dimension(448,448), new Dimension(448,448), new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Bandai%20WonderSwan/"));
+		super(System.WS, ProviderID.NOINTRO, new Dimension(448,448), new Dimension(448,448), new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Bandai%20WonderSwan/"));
 	}
 
 	@Override

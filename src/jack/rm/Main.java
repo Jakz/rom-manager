@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import jack.rm.data.*;
-import jack.rm.data.console.Console;
+import jack.rm.data.console.System;
 import jack.rm.data.set.*;
 import jack.rm.gui.*;
 import jack.rm.net.Downloader;
@@ -82,7 +82,7 @@ public class Main
 	
 	static class IntDumper extends Dumper<IntHolder>
 	{
-	  @Override public void accept(IntHolder holder) { System.out.println(holder.get()); }
+	  @Override public void accept(IntHolder holder) { /*System.out.println(holder.get());*/ }
 	}
 	
 	public static void main(String[] args)
@@ -107,7 +107,7 @@ public class Main
 		
 		optionsFrame = new OptionsFrame();
 		
-    RomSetManager.loadSet(Console.GBA);
+    RomSetManager.loadSet(System.GBA);
 		scanner = new Scanner(RomSet.current.list);
     scanner.scanForRoms(!RomSet.current.list.load());
 
@@ -133,7 +133,7 @@ public class Main
 	
 	private static void setOS()
 	{
-	  String system = System.getProperty("os.name").toLowerCase();
+	  String system = java.lang.System.getProperty("os.name").toLowerCase();
 	  
 	  if (system.indexOf("win") >= 0)
 	    os = OS.WIN;

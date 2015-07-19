@@ -2,7 +2,7 @@ package jack.rm.data.set;
 
 import jack.rm.Settings;
 import jack.rm.data.*;
-import jack.rm.data.console.Console;
+import jack.rm.data.console.System;
 import jack.rm.net.AssetDownloader;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.cleanup.CleanupPlugin;
@@ -22,13 +22,13 @@ public abstract class RomSet<R extends Rom>
 	
 	
 	public final RomList list;
-	public final Console type;
-	public final Provider provider;
+	public final System type;
+	public final ProviderID provider;
 	
 	public final Dimension screenTitle;
 	public final Dimension screenGame;
 
-	RomSet(Console type, Provider provider, Dimension screenTitle, Dimension screenGame)
+	RomSet(System type, ProviderID provider, Dimension screenTitle, Dimension screenGame)
 	{
 		this.list = new RomList(this);
 	  this.type = type;

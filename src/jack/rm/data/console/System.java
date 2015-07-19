@@ -1,6 +1,6 @@
 package jack.rm.data.console;
 
-public enum Console
+public enum System
 {
 	NES("nes", "NES", new String[] {"nes", "rom", "unf"}, true),
 	GB("gb", "GameBoy", new String[] {"gb"}, true),
@@ -17,7 +17,7 @@ public enum Console
 	public final boolean acceptsArchives;
 	public final String[] exts;
 	
-	Console(String tag, String name, String[] exts, boolean acceptsArchives)
+	System(String tag, String name, String[] exts, boolean acceptsArchives)
 	{
 		this.tag = tag;
 		this.name = name;

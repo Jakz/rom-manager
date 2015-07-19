@@ -2,7 +2,7 @@ package jack.rm.data.set;
 
 import jack.rm.Settings;
 import jack.rm.data.*;
-import jack.rm.data.console.Console;
+import jack.rm.data.console.System;
 import jack.rm.data.parser.*;
 import jack.rm.files.Organizer;
 import jack.rm.net.AssetDownloader;
@@ -47,12 +47,12 @@ public abstract class RomSetOfflineList extends RomSet<NumberedRom>
 	
 	private final AssetDownloader assetDownloader;
 	
-	public RomSetOfflineList(Console type, Provider provider, Dimension screenTitle, Dimension screenGame)
+	public RomSetOfflineList(System type, ProviderID provider, Dimension screenTitle, Dimension screenGame)
 	{
 		this(type,provider,screenTitle,screenGame,null);
 	}
 	
-	public RomSetOfflineList(Console type, Provider provider, Dimension screenTitle, Dimension screenGame, URL artDownloadURL)
+	public RomSetOfflineList(System type, ProviderID provider, Dimension screenTitle, Dimension screenGame, URL artDownloadURL)
 	{
 		super(type,provider,screenTitle,screenGame);
 		

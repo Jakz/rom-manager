@@ -1,17 +1,17 @@
 package jack.rm.data.set;
 
-public enum Provider
+import jack.rm.data.Asset;
+import jack.rm.data.console.System;
+import jack.rm.data.set.RomSetOfflineList.AssetDownloader;
+
+public interface Provider
 {
-	ADVANSCENE("as","AdvanScene"),
-	OFFLINELIST("ol","OfflineList"),
-	NOINTRO("ni","NoIntro");
-	
-	public final String tag;
-	public final String name;
-	
-	Provider(String tag, String name)
-	{
-		this.tag = tag;
-		this.name = name;
-	}
+  public String getTag();
+  public String getName();
+  
+  public AssetDownloader getAssetDownloader();
+  public Asset[] getSupportedAssets();
+  
+  public RomSet<?> buildRomSet(System system);
+  public System[] getSupportedSystems(System system);
 }

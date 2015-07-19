@@ -1,7 +1,7 @@
 package jack.rm.data.set;
 
 import jack.rm.data.Rom;
-import jack.rm.data.console.Console;
+import jack.rm.data.console.System;
 
 import java.awt.Dimension;
 import java.net.URL;
@@ -11,7 +11,7 @@ class _3DS extends RomSetOfflineList
 {
 	_3DS() throws MalformedURLException
 	{
-		super(Console._3DS, Provider.ADVANSCENE, new Dimension(268,240), new Dimension(268,240), new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_3DS/"));
+		super(System._3DS, ProviderID.ADVANSCENE, new Dimension(268,240), new Dimension(268,240), new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_3DS/"));
 	}
 
 	/*
