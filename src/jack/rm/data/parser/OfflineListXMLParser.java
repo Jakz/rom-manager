@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import jack.rm.data.console.GBA;
+import jack.rm.data.rom.RomAttribute;
 
 public class OfflineListXMLParser extends DefaultHandler
 {
@@ -114,7 +115,7 @@ public class OfflineListXMLParser extends DefaultHandler
 		{
 		  case "imageNumber": rom.imageNumber = asInt(); break;
 		  case "releaseNumber": rom.number = asInt(); break;
-		  case "title": rom.title = asString(); break;
+		  case "title": rom.setTitle(asString()); break;
 		  case "saveType":
 		  {
 		    RomSave<?> save = parseSave(asString());
@@ -122,7 +123,7 @@ public class OfflineListXMLParser extends DefaultHandler
 		    break;
 		  }
 		  case "romSize": rom.size = RomSize.forBytes(asLong()); break;
-		  case "publisher": rom.publisher = asString(); break;
+		  case "publisher": rom.setAttribute(RomAttribute.PUBLISHER, asString()); break;
 		  case "location": rom.location = Location.get(asInt()); break;
 		  case "language":
 		  {
@@ -130,11 +131,11 @@ public class OfflineListXMLParser extends DefaultHandler
 		    languageMap.forEach( (k, v) -> { if ((values & k) != 0) rom.languages.add(v); });
 		    break;
 		  }
-		  case "sourceRom": rom.group = asString(); break;
+		  case "sourceRom": rom.setAttribute(RomAttribute.GROUP, asString()); break;
 		  case "romCRC": rom.crc = Long.parseLong(asString(), 16); break;
       case "im1CRC": rom.imgCRC1 = Long.parseLong(asString(), 16); break;
       case "im2CRC": rom.imgCRC2 = Long.parseLong(asString(), 16); break;
-      case "comment": rom.info = asString(); break;
+      case "comment": rom.setAttribute(RomAttribute.COMMENT, asString()); break;
       case "game": romList.add(rom); break;
       case "games":
       {

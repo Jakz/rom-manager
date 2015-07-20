@@ -23,7 +23,7 @@ public class GBA extends RomSetOfflineList implements NumberedSet<NumberedRom>
 		String query1 = "http://www.emuparadise.me/roms/search.php?query=";
 		String query2 = "&section=roms&sysid=31";
 		
-		String name = rom.title.replaceAll("\\W", " ").toLowerCase();
+		String name = rom.getTitle().replaceAll("\\W", " ").toLowerCase();
 		name = name.replace(" ","%20");
 		// Renamer.formatNumber(rom.imageNumber)
 	

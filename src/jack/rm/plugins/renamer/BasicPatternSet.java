@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 import jack.rm.data.Language;
 import jack.rm.data.Rom;
 import jack.rm.data.RomSize;
+import jack.rm.data.rom.RomAttribute;
 import jack.rm.files.Pattern;
 
 import com.pixbits.plugin.PluginInfo;
@@ -26,22 +27,19 @@ public class BasicPatternSet extends PatternSetPlugin
         "This plugin provides the basic renaming patterns for ROMs.");
   }
   
-  private static class TitlePattern extends Pattern {
-    TitlePattern() { super("%t", "Game title"); }
-    @Override
-    public String apply(String name, Rom rom) { return name.replace(code,rom.title); }
-  }
-  
-  private static class PublisherPattern extends Pattern {
-    PublisherPattern() { super("%c", "Publisher"); }
-    @Override
-    public String apply(String name, Rom rom) { return name.replace(code,rom.publisher); }
-  }
-  
-  private static class GroupPattern extends Pattern {
-    GroupPattern() { super("%g", "Releaser group"); }
-    @Override
-    public String apply(String name, Rom rom) { return name.replace(code,rom.group); }
+  private static class AttributePattern extends Pattern 
+  {
+    RomAttribute attribute;
+    AttributePattern(String code, String desc, RomAttribute attrib)
+    {
+      super(code, desc);
+      this.attribute = attrib;
+    }
+    
+    @Override public String apply(String name, Rom rom)
+    { 
+      return name.replace(code, attribute.prettyValue(rom.getAttribute(attribute)));
+    }
   }
   
   private static class MegabyteSizePattern extends Pattern {
@@ -90,14 +88,14 @@ public class BasicPatternSet extends PatternSetPlugin
   
   private final Pattern[] patterns = {
     new FullLocationPattern(),
-    new GroupPattern(),
+    new AttributePattern("%g", "Releaser group", RomAttribute.GROUP),
     new MegabitSizePattern(),
     new MegabyteSizePattern(),
-    new PublisherPattern(),
+    new AttributePattern("%c", "Publisher", RomAttribute.PUBLISHER),
     new ShortLanguagePattern(),
     new ShortLocationPattern(),
     new TinyLocationPattern(),
-    new TitlePattern()
+    new AttributePattern("%t", "Game title", RomAttribute.TITLE)
   };
   
   @Override

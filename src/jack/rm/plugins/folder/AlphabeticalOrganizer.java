@@ -14,7 +14,7 @@ public class AlphabeticalOrganizer extends FolderPlugin
   @Override
   public Path getFolderForRom(Rom rom)
   {
-    String normalizedName = Normalizer.normalize(rom.title, Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+    String normalizedName = Normalizer.normalize(rom.getTitle(), Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     return Paths.get(normalizedName.toUpperCase().charAt(0)+java.io.File.separator);
   }
     

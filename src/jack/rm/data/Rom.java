@@ -28,10 +28,6 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 
 	public int imageNumber;
 	
-	public String title;
-	public String publisher;
-	public String group;
-	public String date;
 	public RomSize size;
 	
 	public Location location;
@@ -40,9 +36,7 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 	
 	public String serial;
 	public long crc;
-		
-	public String info;
-	
+			
 	private RomPath path;
 	
 	public long imgCRC1;
@@ -60,6 +54,9 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 	
 	public RomPath getPath() { return path; }
 	public void setPath(RomPath path) { this.path = path; }
+	
+	public void setTitle(String title) { setAttribute(RomAttribute.TITLE, title); }
+	public String getTitle() { return getAttribute(RomAttribute.TITLE); }
 	
 	@Override
   public String toString()
@@ -141,13 +138,13 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 	@Override
 	public boolean equals(Object other)
 	{
-	  return other instanceof Rom && ((Rom)other).title.equals(title);
+	  return other instanceof Rom && ((Rom)other).getTitle().equals(getTitle());
 	}
 	
 	@Override
   public int compareTo(Rom rom)
 	{
-		return title.compareTo(rom.title);
+		return getTitle().compareTo(rom.getTitle());
 	}
 		
 	public boolean isFavourite() { return favourite; }

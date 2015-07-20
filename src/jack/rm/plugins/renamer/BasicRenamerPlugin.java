@@ -6,7 +6,7 @@ public class BasicRenamerPlugin extends RenamerPlugin
 {
   @Override public String getCorrectName(Rom rom)
   {
-    return rom.title;
+    return rom.getTitle();
   }
   
   @Override public boolean isNative() { return true; }

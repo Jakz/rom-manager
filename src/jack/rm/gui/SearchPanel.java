@@ -170,10 +170,10 @@ public class SearchPanel extends JPanel
 	    Map<Boolean, List<String>> ptokens = Arrays.stream(tokens).collect(Collectors.partitioningBy( t -> !t.startsWith("-")));
 	    
 	    for (String token : ptokens.get(true))
-	      predicate = predicate.and(r -> r.title.toLowerCase().contains(token));
+	      predicate = predicate.and(r -> r.getTitle().toLowerCase().contains(token));
 	    
 	    for (String token : ptokens.get(false))
-        predicate = predicate.and(r -> !r.title.toLowerCase().contains(token));
+        predicate = predicate.and(r -> !r.getTitle().toLowerCase().contains(token));
 	  }
 	  
 	  Location location = locations.getItemAt(locations.getSelectedIndex());

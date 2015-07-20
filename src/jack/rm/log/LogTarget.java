@@ -37,7 +37,7 @@ public abstract class LogTarget
     }
     
     @Override
-    public String toString() { return rom.title; }
+    public String toString() { return rom.getTitle(); }
   }
   
   public static class RomSet extends LogTarget
