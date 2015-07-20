@@ -48,7 +48,7 @@ class MenuListener implements ActionListener
 		}
 		else if (tag == MenuElement.ROMS_RENAME)
 		{
-		  list.renameRoms();
+		  list.organize();
 			Main.mainFrame.updateTable();
 		}
 		else if (tag == MenuElement.VIEW_SHOW_CORRECT)

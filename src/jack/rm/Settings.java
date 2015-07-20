@@ -44,6 +44,11 @@ public class Settings
 	  return plugin != null ? plugin : null;
 	}
 	
+	public boolean hasCleanupPlugins()
+	{
+	  return !plugins.getEnabledPlugins(PluginRealType.ROMSET_CLEANUP).isEmpty();
+	}
+	
 	public Set<Path> getIgnoredPaths()
 	{
 	  Set<Path> paths = new HashSet<>();

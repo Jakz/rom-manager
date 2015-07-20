@@ -28,6 +28,7 @@ import com.google.gson.JsonParseException;
 import java.awt.Dimension;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public abstract class RomSet<R extends Rom>
@@ -200,6 +201,10 @@ public abstract class RomSet<R extends Rom>
   	    
   	    return true;
   	  }
+	  }
+	  catch (FileNotFoundException e)
+	  {
+	    return false;
 	  }
 	  catch (IOException e)
 	  {

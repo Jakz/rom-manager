@@ -10,22 +10,23 @@ import com.pixbits.gui.ProgressDialog;
 import jack.rm.Main;
 import jack.rm.data.Rom;
 import jack.rm.data.RomList;
+import jack.rm.data.set.RomSet;
 import jack.rm.plugins.OrganizerPlugin;
 
 public abstract class OrganizerWorker<T extends OrganizerPlugin> extends SwingWorker<Void, Integer>
 {
   protected int total = 0;
-  protected final RomList list;
+  protected final RomSet<?> romSet;
   protected final T plugin;
   protected final Consumer<Boolean> callback;
   protected final String title;
   protected final String progressText;
   
-  public OrganizerWorker(RomList list, T plugin, Consumer<Boolean> callback)
+  public OrganizerWorker(RomSet<?> romSet, T plugin, Consumer<Boolean> callback)
   {
-    this.list = list;
+    this.romSet = romSet;
     this.plugin = plugin;
-    total = list.count();
+    total = romSet.list.count();
     this.callback = callback;
     
     this.title = plugin.getTitle();
@@ -37,11 +38,11 @@ public abstract class OrganizerWorker<T extends OrganizerPlugin> extends SwingWo
   {
     ProgressDialog.init(Main.mainFrame, title, null);
     
-    for (int i = 0; i < list.count(); ++i)
+    for (int i = 0; i < romSet.list.count(); ++i)
     {
       setProgress((int)((((float)i)/total)*100));
 
-      Rom rom = list.get(i); 
+      Rom rom = romSet.list.get(i); 
       execute(rom);
 
       publish(i);
@@ -53,7 +54,7 @@ public abstract class OrganizerWorker<T extends OrganizerPlugin> extends SwingWo
   @Override
   public void process(List<Integer> v)
   {
-    ProgressDialog.update(this, progressText+" "+v.get(v.size()-1)+" of "+list.count()+"..");
+    ProgressDialog.update(this, progressText+" "+v.get(v.size()-1)+" of "+romSet.list.count()+"..");
     Main.mainFrame.updateTable();
   }
   

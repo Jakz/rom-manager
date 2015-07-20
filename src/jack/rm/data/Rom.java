@@ -122,7 +122,7 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 	{
 	  return Organizer.getCorrectName(this).equals(path.plainName());
 	}
-	
+
 	@Override
 	public boolean equals(Object other)
 	{

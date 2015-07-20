@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 import jack.rm.data.Rom;
 import jack.rm.data.RomList;
 import jack.rm.data.RomStatus;
+import jack.rm.data.set.RomSet;
 import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
@@ -13,9 +14,9 @@ import jack.rm.plugins.folder.FolderPlugin;
 
 public class MoverWorker extends OrganizerWorker<FolderPlugin>
 {
-  public MoverWorker(RomList list, FolderPlugin plugin, Consumer<Boolean> callback)
+  public MoverWorker(RomSet<?> romSet, FolderPlugin plugin, Consumer<Boolean> callback)
   {
-    super(list, plugin, callback);
+    super(romSet, plugin, callback);
   }
 
   @Override
@@ -25,7 +26,7 @@ public class MoverWorker extends OrganizerWorker<FolderPlugin>
     {     
       try
       {      
-        Path finalPath = plugin.getFolderForRom(rom);
+        Path finalPath = romSet.getSettings().romsPath.resolve(plugin.getFolderForRom(rom));
   
         if (!Files.exists(finalPath) || !Files.isDirectory(finalPath))
         {
