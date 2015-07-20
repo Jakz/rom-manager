@@ -35,7 +35,6 @@ public abstract class RomSet<R extends Rom>
 {
   public static RomSet<? extends Rom> current = null;
 	
-	
 	public final RomList list;
 	public final System type;
 	public final ProviderID provider;

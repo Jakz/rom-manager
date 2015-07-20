@@ -1,6 +1,8 @@
 package jack.rm.gui;
 
 import jack.rm.data.*;
+import jack.rm.data.rom.RomAttribute;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -19,7 +21,8 @@ class CellRenderer extends JLabel implements ListCellRenderer<Rom>
 		setFont(new Font("Default",Font.PLAIN,12));
 		setText(rom.toString());
 		
-		setIcon(rom.location.icon.getIcon());
+		Location location = rom.getAttribute(RomAttribute.LOCATION);
+		setIcon(location.icon.getIcon());
 		
 		setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));
 		

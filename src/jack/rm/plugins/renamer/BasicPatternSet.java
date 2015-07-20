@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+import jack.rm.data.Location;
 import jack.rm.data.Language;
 import jack.rm.data.Rom;
 import jack.rm.data.RomSize;
@@ -57,19 +58,19 @@ public class BasicPatternSet extends PatternSetPlugin
   private static class FullLocationPattern extends Pattern {
     FullLocationPattern() { super("%L", "Full location name"); }
     @Override
-    public String apply(String name, Rom rom) { return name.replace(code,rom.location.fullName); }
+    public String apply(String name, Rom rom) { return name.replace(code,((Location)rom.getAttribute(RomAttribute.LOCATION)).fullName); }
   }
   
   private static class ShortLocationPattern extends Pattern {
     ShortLocationPattern() { super("%a", "Short location name"); }
     @Override
-    public String apply(String name, Rom rom) { return name.replace(code,rom.location.shortName); }
+    public String apply(String name, Rom rom) { return name.replace(code,((Location)rom.getAttribute(RomAttribute.LOCATION)).shortName); }
   }
   
   private static class TinyLocationPattern extends Pattern {
     TinyLocationPattern() { super("%l", "Tiny location name"); }
     @Override
-    public String apply(String name, Rom rom) { return name.replace(code,rom.location.tinyName); }
+    public String apply(String name, Rom rom) { return name.replace(code,((Location)rom.getAttribute(RomAttribute.LOCATION)).tinyName); }
   }
   
   private static class ShortLanguagePattern extends Pattern {

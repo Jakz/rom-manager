@@ -55,20 +55,25 @@ public class Downloader
   
   public void downloadArt(final Rom r)
   {
+    System.out.println(Thread.currentThread().getName());
+    
     new Thread()
     {
       @Override
       public void run()
       {
+        System.out.println(Thread.currentThread().getName());
+        
         Asset[] assets = set.getSupportedAssets();
 
         for (Asset asset : assets)
           if (!r.hasAsset(asset))
             new ArtDownloaderTask(r, asset).call();
         
+        // TODO: doesn't work if user changed the rom while it was downloading
         Main.mainFrame.updateInfoPanel(r);
       }
-    }.run();
+    }.start();
   }
   
   public class ArtDownloaderTask implements Callable<Boolean>

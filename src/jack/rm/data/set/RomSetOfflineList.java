@@ -28,7 +28,7 @@ public abstract class RomSetOfflineList extends RomSet<NumberedRom>
 	      int last = (((((NumberedRom)rom).number-1)/500+1)*500);
 	      String partial = first+"-"+last+"/";
 	      String suffix = asset == Asset.SCREEN_TITLE ? "a.png" : "b.png";
-	      return new URL(artDownloadURL, partial+(rom.imageNumber)+suffix);
+	      return new URL(url, partial+(rom.imageNumber)+suffix);
 	    }
 	    catch (MalformedURLException e)
 	    {
@@ -37,10 +37,6 @@ public abstract class RomSetOfflineList extends RomSet<NumberedRom>
 	    }
 	  }
 	}
-  
-  URL artDownloadURL;
-	
-	
 	
 	private final AssetDownloader assetDownloader;
 	

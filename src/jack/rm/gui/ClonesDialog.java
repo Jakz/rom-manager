@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 
 import jack.rm.data.ScanResult;
 import jack.rm.data.set.RomSet;
-import jack.rm.files.Organizer;
 
 public class ClonesDialog extends JDialog
 {

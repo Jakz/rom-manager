@@ -7,10 +7,7 @@ import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.plugins.PluginRealType;
-import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.PatternSetPlugin;
-import jack.rm.plugins.renamer.RenamerPlugin;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;

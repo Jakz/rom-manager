@@ -1,6 +1,7 @@
 package jack.rm.gui;
 
 import jack.rm.data.*;
+import jack.rm.data.rom.RomAttribute;
 import jack.rm.i18n.Text;
 import javax.swing.*;
 import javax.swing.event.*;
@@ -180,7 +181,7 @@ public class SearchPanel extends JPanel
     Language language = languages.getItemAt(languages.getSelectedIndex());
 
     if (location != null)
-      predicate = predicate.and(r -> r.location.equals(location));
+      predicate = predicate.and(r -> r.getAttribute(RomAttribute.LOCATION).equals(location));
     
     if (language != null)
       predicate = predicate.and(r -> r.languages.contains(language));

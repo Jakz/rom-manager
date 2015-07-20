@@ -124,7 +124,7 @@ public class OfflineListXMLParser extends DefaultHandler
 		  }
 		  case "romSize": rom.size = RomSize.forBytes(asLong()); break;
 		  case "publisher": rom.setAttribute(RomAttribute.PUBLISHER, asString()); break;
-		  case "location": rom.location = Location.get(asInt()); break;
+		  case "location": rom.setAttribute(RomAttribute.LOCATION, Location.get(asInt())); break;
 		  case "language":
 		  {
 		    int values = asInt();

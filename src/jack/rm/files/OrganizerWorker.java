@@ -9,7 +9,6 @@ import com.pixbits.gui.ProgressDialog;
 
 import jack.rm.Main;
 import jack.rm.data.Rom;
-import jack.rm.data.RomList;
 import jack.rm.data.set.RomSet;
 import jack.rm.plugins.OrganizerPlugin;
 

@@ -8,6 +8,7 @@ public enum RomAttribute
   GROUP,
   DATE,
   COMMENT,
+  LOCATION,
   
   SAVE_TYPE,
   

@@ -270,8 +270,11 @@ public class InfoPanel extends JPanel implements ActionListener
 		{
 			fields[t].setText("");
 		}
-		setImage(null, Asset.SCREEN_TITLE, imgTitle);
-		setImage(null, Asset.SCREEN_GAMEPLAY, imgScreen);
+		
+		imgTitle.setIcon(null);
+		imgScreen.setIcon(null);
+		imgTitle.setText("");
+		imgTitle.setText("");
 	}
 	
 	public void updateFields(Rom rom)
@@ -284,7 +287,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		fields[Field.GROUP.index].setText(rom.getAttribute(RomAttribute.GROUP));
 		fields[Field.DUMP_DATE.index].setText(rom.getAttribute(RomAttribute.DATE));
 		fields[Field.SIZE.index].setText(rom.size.toString(RomSize.PrintStyle.LONG, RomSize.PrintUnit.BITS)+" ("+rom.size.toString(RomSize.PrintStyle.LONG, RomSize.PrintUnit.BYTES)+")");
-		fields[Field.LOCATION.index].setText(rom.location.fullName);
+		fields[Field.LOCATION.index].setText(rom.getAttribute(RomAttribute.LOCATION).toString());
 		fields[Field.SERIAL.index].setText(rom.serial);
 		fields[Field.CRC.index].setText(Long.toHexString(rom.crc).toUpperCase());
 		fields[Field.LANGUAGES.index].setText(rom.languagesAsString());

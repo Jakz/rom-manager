@@ -30,7 +30,6 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 	
 	public RomSize size;
 	
-	public Location location;
 	public Set<Language> languages;
 	public Genre genre;
 	

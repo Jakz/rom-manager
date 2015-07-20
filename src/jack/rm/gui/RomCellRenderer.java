@@ -1,6 +1,8 @@
 package jack.rm.gui;
 
 import jack.rm.data.*;
+import jack.rm.data.rom.RomAttribute;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -28,7 +30,8 @@ class RomCellRenderer extends JPanel implements ListCellRenderer<Rom>
   public Component getListCellRendererComponent(JList<? extends Rom> list, Rom rom, int index, boolean iss, boolean chf)
 	{
 	  mainLabel.setText(rom.toString());
-	  mainLabel.setIcon(rom.location.icon.getIcon());
+	  Location location = rom.getAttribute(RomAttribute.LOCATION);
+	  mainLabel.setIcon(location.icon.getIcon());
 		
 	  if (rom.isFavourite())
 	    rightIcon.setIcon(Icon.FAVORITE.getIcon());

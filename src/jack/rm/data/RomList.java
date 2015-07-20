@@ -4,17 +4,12 @@ import jack.rm.*;
 import jack.rm.data.set.RomSet;
 import jack.rm.files.MoverWorker;
 import jack.rm.files.*;
-import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.RenamerPlugin;
 
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
-import java.util.zip.*;
-import javax.swing.SwingWorker;
-
-import com.pixbits.gui.ProgressDialog;
 
 public class RomList
 {
