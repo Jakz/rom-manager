@@ -18,6 +18,8 @@ public class InfoPanel extends JPanel implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
 	
+	private RomSet<?> set = null;
+	
   private static enum Field
   {
     TITLE        (0, Text.ROM_INFO_TITLE),
@@ -170,13 +172,15 @@ public class InfoPanel extends JPanel implements ActionListener
 		this.add(pTotal);
 	}
 	
-	public void setScreenSizes(final Dimension title, final Dimension game)
+	public void romSetLoaded(final RomSet<?> set)
 	{
-		SwingUtilities.invokeLater(new Runnable() {
+		this.set = set;
+	  
+	  SwingUtilities.invokeLater(new Runnable() {
 			@Override
       public void run() {
-				imgTitle.setPreferredSize(new Dimension(title.width+30,title.height));
-				imgScreen.setPreferredSize(new Dimension(game.width,game.height));
+				imgTitle.setPreferredSize(new Dimension(set.screenTitle.width+30,set.screenTitle.height));
+				imgScreen.setPreferredSize(new Dimension(set.screenGame.width,set.screenGame.height));
 				revalidate();
 				repaint();
 			}
@@ -197,9 +201,9 @@ public class InfoPanel extends JPanel implements ActionListener
 		if (type.equals("title"))
 		{
 			if (path == null)
-				path = RomSet.current.assetPath(Asset.SCREEN_TITLE, rom);
-			w = RomSet.current.screenTitle.width;
-			h = RomSet.current.screenTitle.height;
+				path = set.assetPath(Asset.SCREEN_TITLE, rom);
+			w = set.screenTitle.width;
+			h = set.screenTitle.height;
 			
 			if (rom != null)
 				crc = rom.imgCRC1;
@@ -207,16 +211,16 @@ public class InfoPanel extends JPanel implements ActionListener
 		else
 		{
 			if (path == null)
-				path = RomSet.current.assetPath(Asset.SCREEN_GAMEPLAY, rom);
-			w = RomSet.current.screenGame.width;
-			h = RomSet.current.screenGame.height;
+				path = set.assetPath(Asset.SCREEN_GAMEPLAY, rom);
+			w = set.screenGame.width;
+			h = set.screenGame.height;
 			
 			if (rom != null)
 				crc = rom.imgCRC2;
 		}
 		
 
-		if (Files.exists(path) && (!RomSet.current.getSettings().checkImageCRC || crc == Scanner.computeCRC(path)))
+		if (Files.exists(path) && (!set.getSettings().checkImageCRC || crc == Scanner.computeCRC(path)))
 		{
 			ImageIcon i = new ImageIcon(path.toString());
 			
@@ -307,7 +311,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		{
 			try
 			{
-				Desktop.getDesktop().browse(new URI(RomSet.current.downloadURL(rom)));
+				Desktop.getDesktop().browse(new URI(set.downloadURL(rom)));
 			}
 			catch (Exception ee)
 			{

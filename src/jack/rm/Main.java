@@ -5,8 +5,6 @@ import javax.swing.UIManager.LookAndFeelInfo;
 
 import java.awt.Desktop;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
-
 import jack.rm.data.*;
 import jack.rm.data.console.System;
 import jack.rm.data.set.*;
@@ -17,7 +15,6 @@ import jack.rm.plugins.ActualPluginBuilder;
 
 import com.pixbits.plugin.PluginManager;
 import com.pixbits.workflow.*;
-import com.pixbits.workflow.base.*;
 
 public class Main
 {		
@@ -29,7 +26,6 @@ public class Main
 	public static ManagerPanel romsetPanel;
 	public static PatternRenamerPanel renamerPanel;
 	public static PluginsPanel pluginsPanel;
-	public static OptionsFrame optionsFrame;
 	
 	public static ClonesDialog clonesDialog;
 	
@@ -104,6 +100,22 @@ public class Main
 
 	}
 	
+	public static void loadRomSet(RomSet<?> romSet)
+	{
+	  RomSet<?> set = RomSetManager.loadSet(romSet);
+    RomSet.current = set;
+    boolean wasInit = set.loadStatus();
+
+    mainFrame.romSetLoaded(set);
+    
+    scanner = new Scanner(set);
+    scanner.scanForRoms(!wasInit);
+
+
+    downloader = new Downloader(set);
+
+	}
+	
 	public static void main(String[] args)
 	{
 	  /*IntFetcher fetcher = new IntFetcher();
@@ -119,24 +131,14 @@ public class Main
 	  setLNF();
 	  
 	  loadPlugins();
+	  
+	  romsetPanel = new ManagerPanel();
+	  renamerPanel = new PatternRenamerPanel();
+	  pluginsPanel = new PluginsPanel(manager);
 		
 		mainFrame = new MainFrame();
-		
-		romsetPanel = new ManagerPanel();
-		renamerPanel = new PatternRenamerPanel();
-		pluginsPanel = new PluginsPanel(manager);
-		
-		optionsFrame = new OptionsFrame();
-		
-    RomSet<?> set = RomSetManager.loadSet(System.GBA);
-    RomSet.current = set;
-    boolean wasInit = set.loadStatus();
-		scanner = new Scanner(set);
-    scanner.scanForRoms(!wasInit);
-    mainFrame.romSetLoaded(set);
-
-
-		downloader = new Downloader(RomSet.current);
+	
+    loadRomSet(RomSetManager.bySystem(System.GBA));
 
 		
 		mainFrame.setLocationRelativeTo(null);

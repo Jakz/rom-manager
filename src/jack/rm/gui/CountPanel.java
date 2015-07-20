@@ -1,9 +1,6 @@
 package jack.rm.gui;
 
-import jack.rm.data.RomList;
 import jack.rm.data.RomStatus;
-import jack.rm.data.set.RomSet;
-
 import java.awt.*;
 import java.util.stream.Collectors;
 import java.util.Map;

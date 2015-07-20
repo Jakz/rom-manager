@@ -1,7 +1,6 @@
 package jack.rm.gui;
 
 import jack.rm.Main;
-import jack.rm.Settings;
 import jack.rm.data.*;
 import jack.rm.data.set.RomSet;
 import jack.rm.files.Organizer;

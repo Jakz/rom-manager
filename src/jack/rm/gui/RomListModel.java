@@ -1,10 +1,7 @@
 package jack.rm.gui;
 
-import jack.rm.Main;
 import jack.rm.data.*;
 import javax.swing.AbstractListModel;
-import javax.swing.SwingUtilities;
-
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;

@@ -19,7 +19,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
-import java.net.URL;
 import java.util.*;
 import java.util.stream.*;
 
@@ -29,7 +28,6 @@ import com.google.gson.JsonParseException;
 import java.awt.Dimension;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 
 public abstract class RomSet<R extends Rom>

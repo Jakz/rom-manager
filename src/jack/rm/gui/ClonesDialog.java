@@ -1,7 +1,6 @@
 package jack.rm.gui;
 
 import jack.rm.Main;
-import jack.rm.Settings;
 import jack.rm.data.*;
 
 import javax.swing.*;
@@ -21,6 +20,7 @@ import jack.rm.files.Organizer;
 
 public class ClonesDialog extends JDialog
 {
+  private RomSet<?> set;
   final JTable table;
   final CloneTableModel model;
   
@@ -224,20 +224,21 @@ public class ClonesDialog extends JDialog
   public void apply()
   {
     keep.forEach( (k, v) -> { if (v) k.assign(); });
-    RomSet.current.list.checkNames();
-    RomSet.current.list.updateStatus();
+    set.list.checkNames();
+    set.list.updateStatus();
     Main.mainFrame.updateTable();
   }
   
-  public void activate(RomList roms, Set<ScanResult> clones)
+  public void activate(RomSet<?> set, Set<ScanResult> clones)
   {
+    this.set = set;
     this.keep.clear();
     this.clones.clear();
     
     Set<Rom> romClones = clones.stream().map( c -> c.rom ).collect(Collectors.toSet());
    
     this.clones = new ArrayList<>(clones);
-    this.clones.addAll(roms.stream()
+    this.clones.addAll(set.list.stream()
         .filter( r -> romClones.contains(r))
         .map( r -> new ScanResult(r, r.getPath()) )
         .collect(Collectors.toList()));

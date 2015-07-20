@@ -18,6 +18,8 @@ public abstract class OrganizerWorker<T extends OrganizerPlugin> extends SwingWo
   protected final RomList list;
   protected final T plugin;
   protected final Consumer<Boolean> callback;
+  protected final String title;
+  protected final String progressText;
   
   public OrganizerWorker(RomList list, T plugin, Consumer<Boolean> callback)
   {
@@ -25,12 +27,15 @@ public abstract class OrganizerWorker<T extends OrganizerPlugin> extends SwingWo
     this.plugin = plugin;
     total = list.count();
     this.callback = callback;
+    
+    this.title = plugin.getTitle();
+    this.progressText = plugin.getProgressText();
   }
 
   @Override
   public Void doInBackground()
   {
-    ProgressDialog.init(Main.mainFrame, "Rom Organize", null);
+    ProgressDialog.init(Main.mainFrame, title, null);
     
     for (int i = 0; i < list.count(); ++i)
     {
@@ -48,7 +53,7 @@ public abstract class OrganizerWorker<T extends OrganizerPlugin> extends SwingWo
   @Override
   public void process(List<Integer> v)
   {
-    ProgressDialog.update(this, "Organizing "+v.get(v.size()-1)+" of "+list.count()+"..");
+    ProgressDialog.update(this, progressText+" "+v.get(v.size()-1)+" of "+list.count()+"..");
     Main.mainFrame.updateTable();
   }
   

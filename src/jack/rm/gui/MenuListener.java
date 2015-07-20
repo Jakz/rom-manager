@@ -70,14 +70,6 @@ class MenuListener implements ActionListener
 		{
 			Main.downloader.start();
 		}
-		else if (tag == MenuElement.TOOLS_OPTIONS)
-		{
-			Main.optionsFrame.showMe();
-		}
-		else if (tag == MenuElement.TOOLS_SHOW_CONSOLE)
-		{
-			Main.mainFrame.toggleConsole(item.isSelected());
-		}
 		else
 		{
 			//StringManager.loadLanguage(((JMenuItem)source).getText());

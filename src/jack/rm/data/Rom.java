@@ -1,6 +1,5 @@
 package jack.rm.data;
 
-import jack.rm.Settings;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.RomWithSaveMixin;
 import jack.rm.data.set.RomSet;

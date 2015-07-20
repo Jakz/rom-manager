@@ -1,10 +1,7 @@
 package jack.rm.data.set;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.*;
 
-import jack.rm.*;
 import jack.rm.data.*;
 import jack.rm.data.console.System;
 import jack.rm.log.*;
@@ -31,15 +28,14 @@ public class RomSetManager
 		}
 	}
 	
+	public static RomSet<?> bySystem(System system)
+	{
+	   return sets.values().stream().filter( rs -> rs.type == system).findFirst().orElse(null);
+	}
+	
 	public static RomSet<?> byIdent(String ident)
 	{
-		for (RomSet<?> rs : sets.values())
-		{
-			if (rs.ident().equals(ident))
-				return rs;
-		}
-		
-		return null;
+		return sets.values().stream().filter( rs -> rs.ident().equals(ident)).findFirst().orElse(null);
 	}
 	
 	public static Collection<RomSet<? extends Rom>> sets()

@@ -1,7 +1,6 @@
 package jack.rm.gui;
 
 import jack.rm.data.*;
-import jack.rm.data.set.RomSet;
 import jack.rm.i18n.Text;
 import javax.swing.*;
 import javax.swing.event.*;
@@ -12,9 +11,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Map;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 

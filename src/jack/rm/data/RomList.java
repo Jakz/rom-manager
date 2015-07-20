@@ -4,26 +4,14 @@ import jack.rm.*;
 import jack.rm.data.set.RomSet;
 import jack.rm.files.MoverWorker;
 import jack.rm.files.Organizer;
-import jack.rm.json.Json;
-import jack.rm.log.Log;
-import jack.rm.log.LogSource;
-import jack.rm.log.LogTarget;
-import jack.rm.json.RomListAdapter;
 import jack.rm.plugins.folder.FolderPlugin;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.zip.*;
 import javax.swing.SwingWorker;
 
-import com.google.gson.Gson;
 import com.pixbits.gui.ProgressDialog;
 
 public class RomList

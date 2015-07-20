@@ -13,6 +13,9 @@ public abstract class FolderPlugin extends OrganizerPlugin implements Function<R
 {
   public abstract Path getFolderForRom(Rom rom);
   public final Path apply(Rom rom) { return getFolderForRom(rom); }
+  
+  @Override public String getTitle() { return "Organizing by folder"; }
+  @Override public String getProgressText() { return "Moving"; }
     
   @Override public PluginType getPluginType() { return PluginRealType.FOLDER_ORGANIZER; }
 }

@@ -1,7 +1,6 @@
 package jack.rm.gui;
 
 import jack.rm.Main;
-import jack.rm.Settings;
 import jack.rm.data.set.RomSet;
 import jack.rm.i18n.Text;
 
@@ -12,10 +11,13 @@ import java.awt.*;
 public class OptionsFrame extends JFrame implements ActionListener, ComponentListener
 {
 	private static final long serialVersionUID = 1L;
+	
+	private RomSet<?> set;
 
 	JTabbedPane tabs = new JTabbedPane();
 	
 	JButton close = new JButton(Text.TEXT_CLOSE.text());
+
 		
 	public OptionsFrame()
 	{
@@ -56,6 +58,11 @@ public class OptionsFrame extends JFrame implements ActionListener, ComponentLis
 		pack();
 	}
 	
+	public void romSetLoaded(RomSet<?> set)
+	{
+	  this.set = set;
+	}
+	
 	public void showMe()
 	{
 		if (this.isVisible())
@@ -63,7 +70,7 @@ public class OptionsFrame extends JFrame implements ActionListener, ComponentLis
 		
 		Main.romsetPanel.updateFields();
 		Main.renamerPanel.updateFields();
-		Main.pluginsPanel.populate(RomSet.current);
+		Main.pluginsPanel.populate(set);
 		setLocationRelativeTo(Main.mainFrame);
 		
 		setVisible(true);

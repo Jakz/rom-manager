@@ -11,7 +11,6 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.event.*;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.awt.*;
@@ -19,6 +18,8 @@ import java.awt.*;
 public class MainFrame extends JFrame implements WindowListener
 {	
 	private static final long serialVersionUID = 1L;
+	
+	private RomSet<?> set = null;
 	
 	 //menu
   final private JMenuBar menu = new JMenuBar();
@@ -57,10 +58,11 @@ public class MainFrame extends JFrame implements WindowListener
 	final private CountPanel countPanel = new CountPanel(romListModel);
 	final private SearchPanel searchPanel = new SearchPanel(this);
 	final private InfoPanel infoPanel = new InfoPanel();
+	final private OptionsFrame optionsFrame = new OptionsFrame();
 	
 	final private ItemListener romSetListener = e -> {
     if (e.getStateChange() == ItemEvent.SELECTED)
-      RomSetManager.loadSet(cbRomSets.getItemAt(cbRomSets.getSelectedIndex()));
+      Main.loadRomSet(cbRomSets.getItemAt(cbRomSets.getSelectedIndex()));
 	};
 		
 	public MainFrame()
@@ -147,7 +149,11 @@ public class MainFrame extends JFrame implements WindowListener
     toolsMenu.removeAll();
     
     toolsMenu.add(MenuElement.TOOLS_DOWNLOAD_ART.item);
+    
+    MenuElement.TOOLS_OPTIONS.item.addActionListener( e -> optionsFrame.showMe() );
     toolsMenu.add(MenuElement.TOOLS_OPTIONS.item);
+    
+    MenuElement.TOOLS_SHOW_CONSOLE.item.addActionListener( e -> toggleConsole(((JMenuItem)e.getSource()).isSelected()));
     toolsMenu.add(MenuElement.TOOLS_SHOW_CONSOLE.item);
     
     JMenu pluginsMenu = new JMenu("Plugins"); // TODO: localize
@@ -195,7 +201,7 @@ public class MainFrame extends JFrame implements WindowListener
     }
   }
 
-	void toggleConsole(boolean flag)
+	private void toggleConsole(boolean flag)
 	{
 		if (flag)
 		{
@@ -208,6 +214,8 @@ public class MainFrame extends JFrame implements WindowListener
 	
 	public void romSetLoaded(RomSet<?> set)
 	{
+	  this.set = set;
+	  
 	  buildMenu(set);
 	  
 	  searchPanel.activate(false);
@@ -218,7 +226,8 @@ public class MainFrame extends JFrame implements WindowListener
     cbRomSets.setSelectedItem(set);
     cbRomSets.addItemListener(romSetListener);
     
-    infoPanel.setScreenSizes(set.screenTitle,set.screenGame);
+    infoPanel.romSetLoaded(set);
+    optionsFrame.romSetLoaded(set);
   
 	  updateTable();
 	}
@@ -245,7 +254,7 @@ public class MainFrame extends JFrame implements WindowListener
 	    r.status == RomStatus.INCORRECT_NAME && MenuElement.VIEW_SHOW_UNORGANIZED.item.isSelected()
 	  );
 	  
-		RomSet.current.list.stream().filter(predicate).forEach(romListModel.collector());
+		set.list.stream().filter(predicate).forEach(romListModel.collector());
 
     if (current != null)     
     {      
@@ -282,6 +291,6 @@ public class MainFrame extends JFrame implements WindowListener
 	@Override
   public void windowClosing(WindowEvent e)
 	{
-    RomSet.current.saveStatus();
+    set.saveStatus();
 	}
 }

@@ -2,8 +2,6 @@ package jack.rm.data.set;
 
 import jack.rm.data.NumberedRom;
 import jack.rm.data.Rom;
-import jack.rm.data.RomSave;
-import jack.rm.data.RomSize;
 import jack.rm.data.console.System;
 
 import java.awt.Dimension;

@@ -1,7 +1,6 @@
 package jack.rm.data;
 
 import jack.rm.Main;
-import jack.rm.Settings;
 import jack.rm.data.set.RomSet;
 import jack.rm.files.*;
 import jack.rm.gui.Dialogs;
@@ -122,12 +121,12 @@ public class Scanner
 		
 		if (total)
 		{
-			Log.log(LogType.MESSAGE, LogSource.SCANNER, LogTarget.romset(RomSet.current), "Scanning for roms");
+			Log.log(LogType.MESSAGE, LogSource.SCANNER, LogTarget.romset(set), "Scanning for roms");
 			set.list.resetStatus();
 		}
 		else
 		{
-	    Log.log(LogType.MESSAGE, LogSource.SCANNER, LogTarget.romset(RomSet.current), "Scanning for new roms");
+	    Log.log(LogType.MESSAGE, LogSource.SCANNER, LogTarget.romset(set), "Scanning for new roms");
 
 	    set.list.stream()
 	    .filter(r -> r.status != RomStatus.NOT_FOUND)
@@ -135,18 +134,18 @@ public class Scanner
 	    .forEach(existing::add);
 		}
 
-		Path folder = RomSet.current.romPath();
+		Path folder = set.romPath();
 			
 		if (folder == null || !Files.exists(folder) || !Files.isDirectory(folder))
 		{
-		  Log.log(LogType.ERROR, LogSource.SCANNER, LogTarget.romset(RomSet.current), "Roms path doesn't exist! Scanning interrupted");
+		  Log.log(LogType.ERROR, LogSource.SCANNER, LogTarget.romset(set), "Roms path doesn't exist! Scanning interrupted");
 		  Dialogs.showError("Romset Path", "Romset path is not set, or it doesn't exists as a folder.\nPlease set one in Options.", Main.mainFrame);
 		  set.list.resetStatus();
 		  Main.mainFrame.updateTable();
 		  return;
 		}
 			
-		foundFiles = new FolderScanner(RomSet.current.getFileMatcher(), set.getSettings().getIgnoredPaths()).scan(folder);
+		foundFiles = new FolderScanner(set.getFileMatcher(), set.getSettings().getIgnoredPaths()).scan(folder);
 		ScannerWorker worker = new ScannerWorker(foundFiles);
 		worker.execute();
 	}
@@ -206,7 +205,7 @@ public class Scanner
 	    ProgressDialog.finished();
 	    
 	    if (!clones.isEmpty())
-	      Main.clonesDialog.activate(set.list, clones);
+	      Main.clonesDialog.activate(set, clones);
 	    else
 	      set.saveStatus();
 	  }

@@ -1,12 +1,9 @@
 package jack.rm.data.set;
 
-import jack.rm.Settings;
 import jack.rm.data.*;
 import jack.rm.data.console.System;
 import jack.rm.data.parser.*;
 import jack.rm.files.Organizer;
-import jack.rm.net.AssetDownloader;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;

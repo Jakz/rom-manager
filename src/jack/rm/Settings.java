@@ -1,21 +1,12 @@
 package jack.rm;
 
-import java.io.*;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 import com.pixbits.plugin.PluginManager;
 import com.pixbits.plugin.PluginSet;
 
-import jack.rm.data.Asset;
-import jack.rm.data.Rom;
-import jack.rm.data.set.*;
 import jack.rm.files.OrganizerDetails;
-import jack.rm.json.Json;
-import jack.rm.log.Log;
-import jack.rm.log.LogSource;
-import jack.rm.log.LogType;
 import jack.rm.plugins.*;
 import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.RenamerPlugin;
