@@ -31,13 +31,13 @@ public class InfoPanel extends JPanel implements ActionListener
     GENRE        (6, Text.ROM_INFO_GENRE),
     CLONES       (7, Text.ROM_INFO_CLONES),
     CRC          (8, Text.ROM_INFO_CRC),
-    INTERNAL_NAME(9, Text.ROM_INFO_INTERNAL_NAME),
-    SERIAL       (10, Text.ROM_INFO_SERIAL),
-    GROUP        (11, Text.ROM_INFO_GROUP),
-    DUMP_DATE    (12, Text.ROM_INFO_DUMP_DATE),
-    COMMENT      (13, Text.ROM_INFO_COMMENT),
-    FILENAME     (14, Text.ROM_INFO_PATH),
-    PATH         (15, Text.ROM_INFO_PATH)
+    /*INTERNAL_NAME(9, Text.ROM_INFO_INTERNAL_NAME),*/
+    SERIAL       (9, Text.ROM_INFO_SERIAL),
+    GROUP        (10, Text.ROM_INFO_GROUP),
+    DUMP_DATE    (11, Text.ROM_INFO_DUMP_DATE),
+    COMMENT      (12, Text.ROM_INFO_COMMENT),
+    FILENAME     (13, Text.ROM_INFO_PATH),
+    PATH         (14, Text.ROM_INFO_PATH)
     ;
      
     public final int index;
@@ -83,10 +83,12 @@ public class InfoPanel extends JPanel implements ActionListener
 	  downloadButton.setEnabled(false);
 		
 		imgTitle = new JLabel();
-		imgTitle.setHorizontalAlignment(SwingConstants.CENTER);
-		
+		imgTitle.setHorizontalAlignment(SwingConstants.LEFT);
+    imgTitle.setBorder(BorderFactory.createLineBorder(Color.black));
+
 		imgScreen = new JLabel();
-		imgScreen.setHorizontalAlignment(SwingConstants.CENTER);
+		imgScreen.setHorizontalAlignment(SwingConstants.RIGHT);
+		imgScreen.setBorder(BorderFactory.createLineBorder(Color.black));
 		
 		JPanel subField1 = new JPanel();
 		GroupLayout gl1 = new GroupLayout(subField1);
@@ -181,8 +183,8 @@ public class InfoPanel extends JPanel implements ActionListener
       public void run() {
 				imgTitle.setPreferredSize(new Dimension(set.screenTitle.width+30,set.screenTitle.height));
 				imgScreen.setPreferredSize(new Dimension(set.screenGame.width,set.screenGame.height));
-				revalidate();
-				repaint();
+				imgTitle.revalidate();
+				imgScreen.revalidate();
 			}
 		});
 		
@@ -264,9 +266,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		fields[Field.GROUP.index].setText(rom.group);
 		fields[Field.DUMP_DATE.index].setText(rom.date);
 		fields[Field.SIZE.index].setText(rom.size.toString(RomSize.PrintStyle.LONG, RomSize.PrintUnit.BITS)+" ("+rom.size.toString(RomSize.PrintStyle.LONG, RomSize.PrintUnit.BYTES)+")");
-		//fields[5].setText(StringManager.getGenre(rom.genre));
 		fields[Field.LOCATION.index].setText(rom.location.fullName);
-		fields[Field.INTERNAL_NAME.index].setText(rom.internalName);
 		fields[Field.SERIAL.index].setText(rom.serial);
 		fields[Field.CRC.index].setText(Long.toHexString(rom.crc).toUpperCase());
 		fields[Field.LANGUAGES.index].setText(rom.languagesAsString());
@@ -282,7 +282,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		imgTitle.setIcon(loadImage(rom,"title"));
 		imgScreen.setIcon(loadImage(rom,"game"));
 		
-		if (rom.status == RomStatus.NOT_FOUND)
+		if (rom.status == RomStatus.MISSING)
 		{
 		  openFolderButton.setEnabled(false);
 		  openArchiveButton.setEnabled(false);

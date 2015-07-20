@@ -47,30 +47,30 @@ public class PluginSet<P extends Plugin>
   }
   
   @SuppressWarnings("unchecked")
-  public <T extends Plugin> Set<T> getPlugins(PluginType type)
+  public <T extends Plugin> Set<T> getPlugins(PluginType<?> type)
   {
     return (Set<T>)(Set<?>)stream().filter( p -> p.getPluginType() == type).collect(Collectors.toSet()); 
   }
   
   @SuppressWarnings("unchecked")
-  public <T extends Plugin> Set<T> getEnabledPlugins(PluginType type)
+  public <T extends Plugin> Set<T> getEnabledPlugins(PluginType<?> type)
   {
     return (Set<T>)(Set<?>)getPlugins(type).stream().filter(p -> p.isEnabled()).collect(Collectors.toSet());
   }
   
   @SuppressWarnings("unchecked")
-  public <T extends Plugin> T getPlugin(PluginType type)
+  public <T extends Plugin> T getPlugin(PluginType<?> type)
   {
     return (T)stream().filter( p -> p.getPluginType() == type).findFirst().orElse(null);
   }
   
   @SuppressWarnings("unchecked")
-  public <T extends Plugin> T getEnabledPlugin(PluginType type)
+  public <T extends Plugin> T getEnabledPlugin(PluginType<?> type)
   {
     return (T)stream().filter( p -> p.getPluginType() == type && p.isEnabled()).findFirst().orElse(null);
   }
   
-  public boolean hasPlugin(PluginType type)
+  public boolean hasPlugin(PluginType<?> type)
   {
     return stream().anyMatch( p -> p.getPluginType() == type );
   }

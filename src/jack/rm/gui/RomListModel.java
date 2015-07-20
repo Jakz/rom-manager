@@ -26,9 +26,9 @@ public class RomListModel extends AbstractListModel<Rom>
 		Rom rom = (Rom)o;
 		if (isCorrect && rom.status == RomStatus.FOUND)
 			list.add(rom);
-		else if (isMissing && rom.status == RomStatus.NOT_FOUND)
+		else if (isMissing && rom.status == RomStatus.MISSING)
 			list.add(rom);
-		else if (isBadlyNamed && rom.status == RomStatus.INCORRECT_NAME)
+		else if (isBadlyNamed && rom.status == RomStatus.UNORGANIZED)
 			list.add(rom);
 
 		return;

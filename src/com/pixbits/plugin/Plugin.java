@@ -88,5 +88,5 @@ public abstract class Plugin implements JsonnableContext
     return new PluginInfo(getClass().getSimpleName(), new PluginVersion(1,0), "", "None");
   }
  
-  public abstract PluginType getPluginType();
+  public abstract PluginType<?> getPluginType();
 }

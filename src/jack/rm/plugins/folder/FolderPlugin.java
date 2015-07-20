@@ -17,5 +17,5 @@ public abstract class FolderPlugin extends OrganizerPlugin implements Function<R
   @Override public String getTitle() { return "Organizing by folder"; }
   @Override public String getProgressText() { return "Moving"; }
     
-  @Override public PluginType getPluginType() { return PluginRealType.FOLDER_ORGANIZER; }
+  @Override public PluginType<?> getPluginType() { return PluginRealType.FOLDER_ORGANIZER; }
 }

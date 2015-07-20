@@ -6,7 +6,6 @@ import java.util.*;
 import com.pixbits.plugin.PluginManager;
 import com.pixbits.plugin.PluginSet;
 
-import jack.rm.files.OrganizerDetails;
 import jack.rm.plugins.*;
 import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.RenamerPlugin;
@@ -18,16 +17,13 @@ public class Settings
 	public boolean checkImageCRC;
 	
 	public PluginSet<ActualPlugin> plugins;
-		
-	public OrganizerDetails organizer;
-	
+			
 	
 	public Settings(PluginManager<ActualPlugin, ActualPluginBuilder> manager)
 	{
 	  plugins = new PluginSet<ActualPlugin>();
 	  manager.setup(plugins);
 	  checkImageCRC = true;   
-	  organizer = new OrganizerDetails();
 	  renamingPattern = "%n - %t [%S]";
 	  romsPath = null;
 	}

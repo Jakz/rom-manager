@@ -79,7 +79,7 @@ public class RomList
 	public void resetStatus()
 	{
 		for (Rom r : list)
-			r.status = RomStatus.NOT_FOUND;
+			r.status = RomStatus.MISSING;
 		
 		updateStatus();
 	}
@@ -99,8 +99,8 @@ public class RomList
 	  {
 	    switch (r.status)
 	    {
-	      case NOT_FOUND: ++countNotFound; break;
-	      case INCORRECT_NAME: ++countBadlyNamed; break;
+	      case MISSING: ++countNotFound; break;
+	      case UNORGANIZED: ++countBadlyNamed; break;
 	      case FOUND: ++countCorrect; break;
 	    }
 	  }
@@ -110,15 +110,15 @@ public class RomList
 	{
     for (Rom rom : list)
     {
-      if (rom.status != RomStatus.NOT_FOUND)
+      if (rom.status != RomStatus.MISSING)
       {  
         if (rom.status == RomStatus.FOUND)
         {
-          if (!rom.hasCorrectName())
-            rom.status = RomStatus.INCORRECT_NAME;
+          if (!rom.isOrganized())
+            rom.status = RomStatus.UNORGANIZED;
         }
-        else if (rom.status == RomStatus.INCORRECT_NAME)
-          if (rom.hasCorrectName())
+        else if (rom.status == RomStatus.UNORGANIZED)
+          if (rom.isOrganized())
             rom.status = RomStatus.FOUND;
       }
     }
@@ -139,6 +139,5 @@ public class RomList
     Consumer<Boolean> renamerPhase = renamer == null ? moverPhase : b -> new RenamerWorker(set, renamer, moverPhase).execute();
 
     renamerPhase.accept(true);
-  }
-  
+  }  
 }

@@ -30,7 +30,7 @@ public class MoveUnknownFilesPlugin extends CleanupPlugin implements PluginWithI
         Files.createDirectory(path);
   
       Set<Path> existing = list.stream()
-        .filter( r -> r.status != RomStatus.NOT_FOUND )
+        .filter( r -> r.status != RomStatus.MISSING )
         .map( r -> r.getPath().file())
         .collect(Collectors.toSet());
   

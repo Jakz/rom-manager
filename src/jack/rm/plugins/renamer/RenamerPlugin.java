@@ -10,7 +10,7 @@ import jack.rm.plugins.PluginRealType;
 
 public abstract class RenamerPlugin extends OrganizerPlugin implements Function<Rom,String>
 {
-  @Override public PluginType getPluginType() { return PluginRealType.RENAMER; }
+  @Override public PluginType<?> getPluginType() { return PluginRealType.RENAMER; }
   
   @Override public String getTitle() { return "Renaming ROMs"; }
   @Override public String getProgressText() { return "Renaming"; }

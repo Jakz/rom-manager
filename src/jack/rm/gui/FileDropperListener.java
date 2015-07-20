@@ -38,7 +38,7 @@ public class FileDropperListener implements FileTransferHandler.Listener
             {
             
             // a missing rom has been dropped on list
-            if (result.rom.status == RomStatus.NOT_FOUND)
+            if (result.rom.status == RomStatus.MISSING)
             {
               result.assign();
               Rom rom = result.rom;
@@ -53,7 +53,7 @@ public class FileDropperListener implements FileTransferHandler.Listener
               
               rom.status = RomStatus.FOUND;
               
-              Organizer.organizeRomIfNeeded(rom, true, true);
+              Organizer.organizeRomIfNeeded(rom);
               
               RomSet.current.list.updateStatus();
               Main.mainFrame.updateTable();

@@ -4,7 +4,7 @@ public class PluginBuilder<T extends Plugin>
 {  
   private final PluginID id;
   
-  public final PluginType type;
+  public final PluginType<? extends PluginType<?>> type;
   public final PluginInfo info;
   public final boolean isNative;
   

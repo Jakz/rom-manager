@@ -38,8 +38,8 @@ public class CountPanel extends JPanel
 	  Map<RomStatus, Long> status = model.stream().collect(Collectors.groupingBy( r -> r.status, HashMap::new, Collectors.counting()));
 	    
     counters[0].setText(""+status.getOrDefault(RomStatus.FOUND, 0L));
-    counters[1].setText(""+status.getOrDefault(RomStatus.INCORRECT_NAME, 0L));
-    counters[2].setText(""+status.getOrDefault(RomStatus.NOT_FOUND, 0L));
+    counters[1].setText(""+status.getOrDefault(RomStatus.UNORGANIZED, 0L));
+    counters[2].setText(""+status.getOrDefault(RomStatus.MISSING, 0L));
     counters[3].setText(""+model.getSize());
 	}
 }

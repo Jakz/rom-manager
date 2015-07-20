@@ -4,6 +4,8 @@ import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.RomWithSaveMixin;
 import jack.rm.data.set.RomSet;
 import jack.rm.files.Organizer;
+import jack.rm.plugins.folder.FolderPlugin;
+import jack.rm.plugins.renamer.RenamerPlugin;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -22,6 +24,8 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 	public void setAttribute(RomAttribute key, Object value) { attributes.put(key, value); }
 	@SuppressWarnings("unchecked") public <T> T getAttribute(RomAttribute key) { return (T)attributes.get(key); }
 	
+  private boolean favourite;
+
 	public int imageNumber;
 	
 	public String title;
@@ -34,7 +38,6 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 	public Set<Language> languages;
 	public Genre genre;
 	
-	public String internalName;
 	public String serial;
 	public long crc;
 		
@@ -47,7 +50,7 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 	
 	public Rom()
 	{
-		status = RomStatus.NOT_FOUND;
+		status = RomStatus.MISSING;
 		languages = new TreeSet<>();
     imgCRC1 = -1L;
     imgCRC2 = -1L;
@@ -61,7 +64,7 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 	@Override
   public String toString()
 	{
-		return Organizer.getCorrectName(this);
+		return getCorrectName();
 	}
 	
 	public String languagesAsString()
@@ -108,20 +111,32 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 
 	public boolean isOrganized()
 	{
-	  boolean nameIsOrganized = !RomSet.current.getSettings().organizer.hasRenamePolicy() || hasCorrectName();
-	  boolean positionIsOrganized = RomSet.current.getSettings().getFolderOrganizer() == null || hasCorrectFolder();
-	  return nameIsOrganized && positionIsOrganized;
+	  boolean name = hasCorrectName(), folder = hasCorrectFolder();
+	  return name && folder;
 	}
-	
-	public boolean hasCorrectFolder()
-	{
-	  return Organizer.getCorrectFolder(this).equals(path.file().getParent());
-	}
-	
-	public boolean hasCorrectName()
-	{
-	  return Organizer.getCorrectName(this).equals(path.plainName());
-	}
+  
+  public String getCorrectName()
+  {
+    RenamerPlugin renamer = RomSet.current.getSettings().getRenamer();
+    return renamer.getCorrectName(this);
+  }
+  
+  public Path getCorrectFolder()
+  {
+    FolderPlugin mover = RomSet.current.getSettings().getFolderOrganizer();
+    return mover.getFolderForRom(this);
+  }
+  
+  public boolean hasCorrectName()
+  {
+    return getCorrectName().equals(path.plainName());
+  }
+  
+  public boolean hasCorrectFolder()
+  {
+    return RomSet.current.getSettings().getFolderOrganizer() == null || 
+        path.file().getParent().equals(RomSet.current.getSettings().romsPath.resolve(getCorrectFolder()));
+  }
 
 	@Override
 	public boolean equals(Object other)
@@ -134,4 +149,7 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 	{
 		return title.compareTo(rom.title);
 	}
+		
+	public boolean isFavourite() { return favourite; }
+	public void setFavourite(boolean value) { favourite = value; }
 }

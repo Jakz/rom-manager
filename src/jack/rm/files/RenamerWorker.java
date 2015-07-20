@@ -23,7 +23,7 @@ public class RenamerWorker extends OrganizerWorker<RenamerPlugin>
   @Override
   public void execute(Rom rom)
   {
-    if (rom.status == RomStatus.INCORRECT_NAME)
+    if (rom.status == RomStatus.UNORGANIZED)
     {        
       Organizer.renameRom(rom);  
       romSet.list.updateStatus();

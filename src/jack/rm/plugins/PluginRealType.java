@@ -2,7 +2,7 @@ package jack.rm.plugins;
 
 import com.pixbits.plugin.PluginType;
 
-public enum PluginRealType implements PluginType
+public enum PluginRealType implements PluginType<PluginRealType>
 {
   FOLDER_ORGANIZER("Folder Organizer", true, false),
   ROMSET_CLEANUP("Romset Cleanup", false, false),

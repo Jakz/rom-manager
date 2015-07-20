@@ -29,7 +29,7 @@ public class PluginManager<T extends Plugin, B extends PluginBuilder<T>>
   @SuppressWarnings("unchecked")
   public void setup(PluginSet<T> set)
   {
-    Map<PluginType, Set<B>> map = plugins.stream().collect(Collectors.groupingBy(b -> b.type, HashMap::new, Collectors.toSet()));
+    Map<PluginType<?>, Set<B>> map = plugins.stream().collect(Collectors.groupingBy(b -> b.type, HashMap::new, Collectors.toSet()));
     
     map.forEach( (k, v) -> {
       if (k.isRequired())

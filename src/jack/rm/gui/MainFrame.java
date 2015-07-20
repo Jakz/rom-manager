@@ -250,8 +250,8 @@ public class MainFrame extends JFrame implements WindowListener
 	  
 	  Predicate<Rom> predicate = searchPanel.buildSearchPredicate().and( r ->
 	    r.status == RomStatus.FOUND && MenuElement.VIEW_SHOW_CORRECT.item.isSelected() ||
-	    r.status == RomStatus.NOT_FOUND && MenuElement.VIEW_SHOW_NOT_FOUND.item.isSelected() ||
-	    r.status == RomStatus.INCORRECT_NAME && MenuElement.VIEW_SHOW_UNORGANIZED.item.isSelected()
+	    r.status == RomStatus.MISSING && MenuElement.VIEW_SHOW_NOT_FOUND.item.isSelected() ||
+	    r.status == RomStatus.UNORGANIZED && MenuElement.VIEW_SHOW_UNORGANIZED.item.isSelected()
 	  );
 	  
 		set.list.stream().filter(predicate).forEach(romListModel.collector());

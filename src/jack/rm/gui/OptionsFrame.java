@@ -92,7 +92,7 @@ public class OptionsFrame extends JFrame implements ActionListener, ComponentLis
 	@Override
   public void componentHidden(ComponentEvent e)
 	{
-	  RomSet.current.list.checkNames();
-	  RomSet.current.saveStatus();
+	  set.list.checkNames();
+	  set.saveStatus();
 	}
 }

@@ -117,6 +117,6 @@ public class PatternRenamerPanel extends JPanel implements CaretListener
   public void caretUpdate(CaretEvent e)
 	{
 	  RomSet.current.getSettings().renamingPattern = patternField.getText();
-		exampleField.setText(Organizer.getCorrectName(RomSet.current.list.get(0)));
+		exampleField.setText(RomSet.current.list.get(0).getCorrectName());
 	}
 }

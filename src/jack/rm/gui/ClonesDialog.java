@@ -303,8 +303,8 @@ public class ClonesDialog extends JDialog
     }
     
     Predicate<ScanResult> predicateAny = e -> true;
-    Predicate<ScanResult> predicateCorrectFolder = e -> Organizer.getCorrectFolder(e.rom).equals(e.path.file().getParent());
-    Predicate<ScanResult> predicateCorrectName = e -> Organizer.getCorrectName(e.rom).equals(e.path.file().getFileName());
+    Predicate<ScanResult> predicateCorrectFolder = e -> e.rom.getCorrectFolder().equals(e.path.file().getParent());
+    Predicate<ScanResult> predicateCorrectName = e -> e.rom.getCorrectName().equals(e.path.file().getFileName());
     Predicate<ScanResult> predicateCorrectNameAndFolder = predicateCorrectName.and(predicateCorrectFolder);
     
     List<Predicate<ScanResult>> predicates = Arrays.asList(

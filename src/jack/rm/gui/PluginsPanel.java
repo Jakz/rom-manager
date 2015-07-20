@@ -11,13 +11,13 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import com.pixbits.plugin.PluginBuilder;
 import com.pixbits.plugin.PluginManager;
+import com.pixbits.plugin.PluginType;
 import com.pixbits.plugin.gui.PluginConfigTable;
 
 import net.miginfocom.swing.MigLayout;
 
 import jack.rm.data.set.RomSet;
-import jack.rm.plugins.ActualPlugin;
-import jack.rm.plugins.ActualPluginBuilder;
+import jack.rm.plugins.*;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -30,7 +30,7 @@ public class PluginsPanel extends JPanel
   private final PluginManager<ActualPlugin, ActualPluginBuilder> manager;
   private RomSet<?> romset;
   
-  class PluginCellRenderer implements TableCellRenderer
+  private class PluginCellRenderer implements TableCellRenderer
   {
     private final TableCellRenderer inner;
     
@@ -54,7 +54,7 @@ public class PluginsPanel extends JPanel
     }
   }
   
-  class PluginTableModel extends AbstractTableModel
+  private class PluginTableModel extends AbstractTableModel
   {
     final List<ActualPluginBuilder> plugins = new ArrayList<>();
     
@@ -108,6 +108,7 @@ public class PluginsPanel extends JPanel
             
       manager.stream()
         .filter(b -> filter.getItemAt(filter.getSelectedIndex()).test(b, romset))
+        .sorted( (p1, p2) -> ((PluginRealType)p1.type).compareTo((PluginRealType)p2.type))
         .forEach(plugins::add);
       
       fireChanges();

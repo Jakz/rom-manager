@@ -22,7 +22,7 @@ public class MoverWorker extends OrganizerWorker<FolderPlugin>
   @Override
   public void execute(Rom rom)
   {
-    if (rom.status != RomStatus.NOT_FOUND)
+    if (rom.status != RomStatus.MISSING)
     {     
       try
       {      

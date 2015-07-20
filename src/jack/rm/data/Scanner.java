@@ -55,7 +55,7 @@ public class Scanner
 	  	  
 	  Rom rom = result.rom;
 	  
-	  if (rom.status != RomStatus.NOT_FOUND)
+	  if (rom.status != RomStatus.MISSING)
 	  {	    
 	    clones.add(result);
 	    Log.warning(LogSource.SCANNER, LogTarget.file(set.getSettings().romsPath.relativize(result.path.file())), "File contains a rom already present in romset: "+rom.getPath());
@@ -67,7 +67,7 @@ public class Scanner
 	  if (rom.isOrganized())
 	    rom.status = RomStatus.FOUND;
 	  else
-	    rom.status = RomStatus.INCORRECT_NAME;
+	    rom.status = RomStatus.UNORGANIZED;
 	}
 	
 	public ScanResult scanFile(Path file)
@@ -129,7 +129,7 @@ public class Scanner
 	    Log.log(LogType.MESSAGE, LogSource.SCANNER, LogTarget.romset(set), "Scanning for new roms");
 
 	    set.list.stream()
-	    .filter(r -> r.status != RomStatus.NOT_FOUND)
+	    .filter(r -> r.status != RomStatus.MISSING)
 	    .map(r -> r.getPath().file())
 	    .forEach(existing::add);
 		}

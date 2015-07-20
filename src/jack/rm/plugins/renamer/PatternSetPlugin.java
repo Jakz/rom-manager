@@ -10,7 +10,7 @@ import jack.rm.plugins.PluginRealType;
 
 public abstract class PatternSetPlugin extends ActualPlugin
 {
-  public PluginType getPluginType() { return PluginRealType.PATTERN_SET; }
+  public PluginType<?> getPluginType() { return PluginRealType.PATTERN_SET; }
   
   public abstract List<Pattern> getPatterns();
 }

@@ -40,37 +40,15 @@ public class Organizer
 	  
 	  return patterns;
 	}
-		
-	public static String getCorrectName(Rom rom)
-	{
-	  RenamerPlugin plugin = RomSet.current.getSettings().getRenamer();
-	  
-	  return plugin.getCorrectName(rom);
-	}
-	
-	public static Path getCorrectFolder(Rom rom)
-	{
-	  Settings settings = RomSet.current.getSettings();
-	  Path base = settings.romsPath;
-	  
-	  FolderPlugin organizer = settings.getFolderOrganizer();
-	  
-	  if (organizer != null)
-	    return base.resolve(organizer.getFolderForRom(rom));
-	  else if (rom.getPath() != null)
-	    return rom.getPath().file().getParent();
-	  else return base;
-	}
 
-	public static void organizeRomIfNeeded(Rom rom, boolean renamePhase, boolean movePhase)
+	public static void organizeRomIfNeeded(Rom rom)
 	{
 	  Settings settings = RomSet.current.getSettings();
-	  OrganizerDetails details = settings.organizer;
 	  
-	  if (renamePhase && details.hasRenamePolicy() && !rom.hasCorrectName())
+	  if (!rom.hasCorrectName())
 	    renameRom(rom);
 	  
-	  if (movePhase && settings.getFolderOrganizer() != null && !rom.hasCorrectFolder())
+	  if (!rom.hasCorrectFolder())
 	    moveRom(rom);
 	}
 	
@@ -80,7 +58,7 @@ public class Organizer
 	  Path renameTo = romPath.file().getParent();
 	  
 	  //TODO: should fix extensions if wrong and crc is verified but now just keeps them
-    renameTo = renameTo.resolve(Organizer.getCorrectName(rom).toString()+"."+romPath.getExtension());
+    renameTo = renameTo.resolve(rom.getCorrectName()+"."+romPath.getExtension());
 
     try
     {
@@ -95,11 +73,11 @@ public class Organizer
 	
 	public static void moveRom(Rom rom)
 	{
-	  if (rom.status != RomStatus.NOT_FOUND)
+	  if (rom.status != RomStatus.MISSING)
     {     
       try
       {      
-        Path finalPath = getCorrectFolder(rom);
+        Path finalPath = rom.getCorrectFolder();
   
         if (!Files.exists(finalPath) || !Files.isDirectory(finalPath))
         {
