@@ -7,7 +7,8 @@ public enum PluginRealType implements PluginType<PluginRealType>
   FOLDER_ORGANIZER("Folder Organizer", true, false),
   ROMSET_CLEANUP("Romset Cleanup", false, false),
   PATTERN_SET("Renamer Pattern Set", false, false),
-  RENAMER("Renamer", true, true)
+  RENAMER("Renamer", true, true),
+  ROM_DOWNLOADER("ROM Downloader", false, false)
   ;
   
   public final String caption;

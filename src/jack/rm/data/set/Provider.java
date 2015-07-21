@@ -2,14 +2,14 @@ package jack.rm.data.set;
 
 import jack.rm.data.Asset;
 import jack.rm.data.console.System;
-import jack.rm.data.set.RomSetOfflineList.AssetDownloader;
+import jack.rm.net.AssetManager;
 
 public interface Provider
 {
   public String getTag();
   public String getName();
   
-  public AssetDownloader getAssetDownloader();
+  public AssetManager getAssetManager();
   public Asset[] getSupportedAssets();
   
   public RomSet<?> buildRomSet(System system);

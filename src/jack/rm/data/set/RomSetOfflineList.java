@@ -17,7 +17,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 public abstract class RomSetOfflineList extends RomSet<NumberedRom>
 {
-	class AssetDownloader implements jack.rm.net.AssetManager
+	private static class AssetDownloader implements jack.rm.net.AssetManager
 	{
 	  final URL url;
 	  private final DecimalFormat format;
@@ -54,9 +54,7 @@ public abstract class RomSetOfflineList extends RomSet<NumberedRom>
 	  @Override public Asset[] getSupportedAssets() { return assets; }
 
 	}
-	
-	private final AssetDownloader assetDownloader;
-	
+		
 	public RomSetOfflineList(System type, ProviderID provider, Dimension screenTitle, Dimension screenGame)
 	{
 		this(type,provider,screenTitle,screenGame,null);
@@ -64,16 +62,9 @@ public abstract class RomSetOfflineList extends RomSet<NumberedRom>
 	
 	public RomSetOfflineList(System type, ProviderID provider, Dimension screenTitle, Dimension screenGame, URL artDownloadURL)
 	{
-		super(type,provider,screenTitle,screenGame);
-		
-    if (artDownloadURL != null)
-      assetDownloader = new AssetDownloader(artDownloadURL);
-    else
-      assetDownloader = null;
+		super(type,provider,screenTitle,screenGame,artDownloadURL != null ? new AssetDownloader(artDownloadURL) : null);
 	}
 	
-	@Override public AssetDownloader getAssetManager() { return assetDownloader; }
-
 	@Override
   public String ident()
 	{

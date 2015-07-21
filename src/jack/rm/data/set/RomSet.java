@@ -43,19 +43,21 @@ public abstract class RomSet<R extends Rom>
 	public final Dimension screenGame;
 	
 	private Settings settings;
+	private final AssetManager assetManager;
 
-	RomSet(System type, ProviderID provider, Dimension screenTitle, Dimension screenGame)
+	RomSet(System type, ProviderID provider, Dimension screenTitle, Dimension screenGame, AssetManager assetManager)
 	{
 		this.list = new RomList(this);
 	  this.type = type;
 		this.provider = provider;
 		this.screenTitle = screenTitle;
 		this.screenGame = screenGame;
+		this.assetManager = assetManager;
 	}
 	
 	public Settings getSettings() { return settings; }
 	
-	public abstract AssetManager getAssetManager();
+	public final AssetManager getAssetManager() { return assetManager; }
 		
 	public abstract String downloadURL(Rom rom);
 	
