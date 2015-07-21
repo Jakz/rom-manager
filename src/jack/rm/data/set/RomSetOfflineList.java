@@ -7,6 +7,8 @@ import jack.rm.files.Organizer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.awt.Dimension;
 
 import org.xml.sax.XMLReader;
@@ -15,10 +17,16 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 public abstract class RomSetOfflineList extends RomSet<NumberedRom>
 {
-	class AssetDownloader implements jack.rm.net.AssetDownloader
+	class AssetDownloader implements jack.rm.net.AssetManager
 	{
 	  final URL url;
-	  AssetDownloader(URL url) { this.url = url; }
+	  private final DecimalFormat format;
+	  AssetDownloader(URL url)
+	  {
+	    this.url = url;
+	    format = new DecimalFormat();
+	    format.applyPattern("0000");
+	  }
 	  
 	  @Override public URL assetURL(Asset asset, Rom rom)
 	  {
@@ -36,6 +44,15 @@ public abstract class RomSetOfflineList extends RomSet<NumberedRom>
 	      return null;
 	    }
 	  }
+	  
+	  @Override public Path assetPath(Asset asset, Rom rom)
+	  {
+	    return Paths.get(format.format(rom.imageNumber)+".png");
+	  }
+	  
+	  private final Asset[] assets = new Asset[] { Asset.SCREEN_TITLE, Asset.SCREEN_GAMEPLAY };
+	  @Override public Asset[] getSupportedAssets() { return assets; }
+
 	}
 	
 	private final AssetDownloader assetDownloader;
@@ -55,15 +72,7 @@ public abstract class RomSetOfflineList extends RomSet<NumberedRom>
       assetDownloader = null;
 	}
 	
-	private final Asset[] assets = new Asset[] { Asset.SCREEN_TITLE, Asset.SCREEN_GAMEPLAY };
-	@Override public Asset[] getSupportedAssets() { return assets; }
-	@Override public AssetDownloader getAssetDownloader() { return assetDownloader; }
-
-	@Override
-  public Path assetPath(Asset asset, Rom rom)
-	{
-		return getAssetPath(asset).resolve(Organizer.formatNumber(rom.imageNumber)+".png");
-	}
+	@Override public AssetDownloader getAssetManager() { return assetDownloader; }
 
 	@Override
   public String ident()

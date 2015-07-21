@@ -10,7 +10,7 @@ import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.log.LogType;
-import jack.rm.net.AssetDownloader;
+import jack.rm.net.AssetManager;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.cleanup.CleanupPlugin;
 
@@ -55,11 +55,8 @@ public abstract class RomSet<R extends Rom>
 	
 	public Settings getSettings() { return settings; }
 	
-	public abstract AssetDownloader getAssetDownloader();
-  public abstract Asset[] getSupportedAssets();
-	
-	public abstract Path assetPath(Asset asset, Rom rom);
-	
+	public abstract AssetManager getAssetManager();
+		
 	public abstract String downloadURL(Rom rom);
 	
 	public abstract void load();
@@ -145,10 +142,10 @@ public abstract class RomSet<R extends Rom>
 	  }
 	}
 	
-  public Path getAssetPath(Asset asset)
+  public final Path getAssetPath(Asset asset, Rom rom)
   {
-    Path path = Paths.get("screens",ident());  
-    return path.resolve(asset == Asset.SCREEN_GAMEPLAY ? "game/" : "title/");
+    Path path = Paths.get("assets",ident()).resolve(asset == Asset.SCREEN_GAMEPLAY ? "game/" : "title/");  
+    return rom == null ? path : path.resolve(getAssetManager().assetPath(asset, rom));
   }
 	
 	public boolean loadStatus()
@@ -161,8 +158,9 @@ public abstract class RomSet<R extends Rom>
   	  
   	  try
   	  {
-  	    for (Asset asset : getSupportedAssets())
-  	      Files.createDirectories(getAssetPath(asset));
+  	    AssetManager assetManager = getAssetManager();
+  	    for (Asset asset : assetManager.getSupportedAssets())
+  	      Files.createDirectories(getAssetPath(asset, null));
   	  }
   	  catch (IOException e)
   	  {

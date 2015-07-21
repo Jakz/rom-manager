@@ -8,6 +8,8 @@ import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.renamer.PatternSetPlugin;
+
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
@@ -60,6 +62,10 @@ public class Organizer
     try
     {
       rom.move(renameTo);
+    }
+    catch (FileAlreadyExistsException e)
+    {
+      Log.error(LogSource.ORGANIZER, LogTarget.rom(rom), "Can't rename file, already exists: "+e.getFile());
     }
     catch (Exception e)
     {

@@ -127,6 +127,7 @@ public class MainFrame extends JFrame implements WindowListener
 	{	
 		toolsMenu.removeAll();
 	  
+		romsMenu.removeAll();
 	  romsMenu.add(MenuElement.ROMS_SCAN_FOR_ROMS.item);
     romsMenu.add(MenuElement.ROMS_SCAN_FOR_NEW_ROMS.item);
     romsMenu.addSeparator();

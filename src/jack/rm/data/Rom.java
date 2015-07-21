@@ -81,7 +81,7 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 	
 	public boolean hasAsset(Asset asset)
 	{
-	  Path f = RomSet.current.getAssetPath(asset).resolve(Organizer.formatNumber(imageNumber)+".png");
+	  Path f = RomSet.current.getAssetPath(asset, this);
 	   
     if (!Files.exists(f)) return false;
     else
@@ -98,7 +98,7 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 	
 	public boolean hasAllAssets()
 	{
-	  for (Asset asset : RomSet.current.getSupportedAssets())
+	  for (Asset asset : RomSet.current.getAssetManager().getSupportedAssets())
 	    if (!hasAsset(asset))
 	      return false;
 	  

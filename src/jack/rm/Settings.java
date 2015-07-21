@@ -1,6 +1,7 @@
 package jack.rm;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 import com.pixbits.plugin.PluginManager;
@@ -12,7 +13,7 @@ import jack.rm.plugins.renamer.RenamerPlugin;
 
 public class Settings
 {	
-	public String renamingPattern;
+  public String renamingPattern;
 	public Path romsPath;	
 	public boolean checkImageCRC;
 	
@@ -56,7 +57,7 @@ public class Settings
 
 	  return paths;
 	}
-	
+
 	Settings()
 	{
     plugins = new PluginSet<ActualPlugin>();

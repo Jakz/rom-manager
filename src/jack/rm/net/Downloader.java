@@ -39,7 +39,7 @@ public class Downloader
     pool = (ThreadPoolExecutor)Executors.newFixedThreadPool(10);
     started = true;
     
-    Asset[] assets = set.getSupportedAssets();
+    Asset[] assets = set.getAssetManager().getSupportedAssets();
     
     for (int i = 0; i < set.list.count(); ++i)
     {
@@ -54,17 +54,13 @@ public class Downloader
   }
   
   public void downloadArt(final Rom r)
-  {
-    System.out.println(Thread.currentThread().getName());
-    
+  {    
     new Thread()
     {
       @Override
       public void run()
-      {
-        System.out.println(Thread.currentThread().getName());
-        
-        Asset[] assets = set.getSupportedAssets();
+      {        
+        Asset[] assets = set.getAssetManager().getSupportedAssets();
 
         for (Asset asset : assets)
           if (!r.hasAsset(asset))
@@ -85,8 +81,8 @@ public class Downloader
     
     public ArtDownloaderTask(Rom rom, Asset asset)
     {  
-      path = set.assetPath(asset, rom);
-      url = set.getAssetDownloader().assetURL(asset, rom);
+      path = set.getAssetPath(asset, rom);
+      url = set.getAssetManager().assetURL(asset, rom);
       
       //System.out.println(url+" -> "+path.toAbsolutePath());
           

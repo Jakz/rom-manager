@@ -215,13 +215,13 @@ public class InfoPanel extends JPanel implements ActionListener
 	
 	void setImage(Rom rom, Asset asset, JLabel dest)
 	{
-		Path path = set.assetPath(asset, rom);
+		Path path = set.getAssetPath(asset, rom);
 		int w,h;
 		long crc = -1L;
-		
+				
 		if (asset == Asset.SCREEN_TITLE)
 		{
-			path = set.assetPath(asset, rom);
+			path = set.getAssetPath(asset, rom);
 			w = set.screenTitle.width;
 			h = set.screenTitle.height;
 			
@@ -292,7 +292,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		fields[Field.CRC.index].setText(Long.toHexString(rom.crc).toUpperCase());
 		fields[Field.LANGUAGES.index].setText(rom.languagesAsString());
 		//fields[11].setText(rom.getClonesString());
-		fields[Field.SAVE_TYPE.index].setText(rom.getSave().toString());
+		//fields[Field.SAVE_TYPE.index].setText(rom.getSave().toString());
 		fields[Field.COMMENT.index].setText(rom.getAttribute(RomAttribute.COMMENT));
 		
 		RomPath romPath = rom.getPath();
