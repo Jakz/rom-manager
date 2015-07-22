@@ -46,6 +46,11 @@ public class PluginManager<T extends Plugin, B extends PluginBuilder<T>>
     });
   }
   
+  public Set<B> getBuildersByType(PluginType<?> type)
+  {
+    return plugins.stream().filter( b -> b.type == type).collect(Collectors.toSet());
+  }
+  
   public boolean register(Class<? extends T> clazz)
   { 
     boolean alreadyRegistered = stream().anyMatch( p -> p.getID().getType().equals(clazz));

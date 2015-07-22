@@ -10,8 +10,8 @@ import com.pixbits.plugin.PluginVersion;
 import java.nio.file.Path;
 
 import jack.rm.data.Rom;
+import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.set.*;
-import jack.rm.data.NumberedRom;
 import jack.rm.files.Organizer;
 
 public class NumericalOrganizer extends FolderPlugin
@@ -27,7 +27,8 @@ public class NumericalOrganizer extends FolderPlugin
   @Override 
   public Path getFolderForRom(Rom rom)
   {
-    int which = (((NumberedRom)rom).number - 1) / folderSize;
+    int number = rom.getAttribute(RomAttribute.NUMBER);
+    int which = (number - 1) / folderSize;
     String first = Organizer.formatNumber(folderSize*which+1);
     String last = Organizer.formatNumber(folderSize*(which+1));
     return Paths.get(first+"-"+last+java.io.File.separator);
@@ -41,6 +42,6 @@ public class NumericalOrganizer extends FolderPlugin
   }
   
   @Override
-  public Predicate<RomSet<?>> compatibility() { return rs -> rs instanceof NumberedSet<?>; }
+  public Predicate<RomSet<?>> compatibility() { return rs -> rs.doesSupportAttribute(RomAttribute.NUMBER); }
 
 }

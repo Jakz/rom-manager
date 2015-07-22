@@ -24,7 +24,7 @@ public class PluginID
     return clazz.hashCode();
   }
     
-  Class<? extends Plugin> getType()
+  public Class<? extends Plugin> getType()
   {
     return clazz;
   }

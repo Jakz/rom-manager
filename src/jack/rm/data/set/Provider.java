@@ -1,7 +1,12 @@
 package jack.rm.data.set;
 
-public interface Provider
+public abstract class Provider
 {
-  public String getTag();
-  public String getName();
+  public abstract String getTag();
+  public abstract String getName();
+  
+  public boolean equals(Object o)
+  {
+    return o instanceof Provider && ((Provider)o).getTag().equals(getTag());
+  }
 }

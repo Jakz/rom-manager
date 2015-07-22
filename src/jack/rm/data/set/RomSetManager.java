@@ -2,32 +2,39 @@ package jack.rm.data.set;
 
 import java.util.*;
 
+import com.pixbits.plugin.PluginManager;
+
+import jack.rm.Main;
 import jack.rm.data.*;
 import jack.rm.data.console.System;
 import jack.rm.log.*;
+import jack.rm.plugins.ActualPlugin;
+import jack.rm.plugins.ActualPluginBuilder;
+import jack.rm.plugins.PluginRealType;
+import jack.rm.plugins.providers.ProviderPlugin;;
+
 
 public class RomSetManager
 {
-	private static Map<System, RomSet<? extends Rom>> sets = new HashMap<>();
-	
-	static
+	public static void buildRomsetList()
 	{
-		try
-		{
-		  sets.put(System.GBA, new GBA());
-		  sets.put(System.NDS, new NDS());
-		  sets.put(System.GBC, new GBC());
-		  sets.put(System.NES, new NES());
-		  sets.put(System.GB, new GB());
-		  sets.put(System.WS, new WS());
-		  sets.put(System._3DS, new _3DS());
-		}
-		catch (Exception e)
-		{
-		  e.printStackTrace();
-		}
+	  PluginManager<ActualPlugin, ActualPluginBuilder> manager = Main.manager; 
+	  Set<ActualPluginBuilder> builders = manager.getBuildersByType(PluginRealType.PROVIDER);
+	  
+	  for (ActualPluginBuilder builder : builders)
+	  {
+	    ProviderPlugin plugin = (ProviderPlugin)manager.build((Class<ProviderPlugin>)builder.getID().getType());
+	    
+	    for (System system : System.values())
+	    {
+	      if (plugin.isSystemSupported(system))
+	        sets.put(system, plugin.buildRomSet(system));
+	    }
+	  }
 	}
-	
+  
+  private static Map<System, RomSet<? extends Rom>> sets = new HashMap<>();
+
 	public static RomSet<?> bySystem(System system)
 	{
 	   return sets.values().stream().filter( rs -> rs.system == system).findFirst().orElse(null);

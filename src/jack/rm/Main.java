@@ -99,6 +99,7 @@ public class Main
     manager.register(jack.rm.plugins.renamer.BasicRenamerPlugin.class);
     manager.register(jack.rm.plugins.renamer.PatternRenamerPlugin.class);
     manager.register(jack.rm.plugins.downloader.EmuParadiseDownloader.class);
+    manager.register(jack.rm.plugins.providers.offlinelist.OfflineListProviderPlugin.class);
 
 	}
 	
@@ -133,6 +134,8 @@ public class Main
 	  setLNF();
 	  
 	  loadPlugins();
+	  
+	  RomSetManager.buildRomsetList();
 	  
 	  romsetPanel = new ManagerPanel();
 	  renamerPanel = new PatternRenamerPanel();

@@ -3,7 +3,6 @@ package jack.rm.data;
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
 import jack.rm.data.rom.RomAttribute;
-import jack.rm.data.rom.RomWithSaveMixin;
 import jack.rm.data.set.RomSet;
 import jack.rm.files.Organizer;
 import jack.rm.plugins.folder.FolderPlugin;
@@ -17,9 +16,11 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
+public class Rom implements Comparable<Rom>
 {
-	public RomStatus status;
+	private final RomSet<?> set;
+  
+  public RomStatus status;
 	
 	private Map<RomAttribute, Object> attributes = new HashMap<>();
 	private Map<Asset, AssetData> assetData = new HashMap<>();
@@ -40,9 +41,10 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 	private RomPath path;
 
 	
-	public Rom()
+	public Rom(RomSet<?> set)
 	{
-		status = RomStatus.MISSING;
+    this.set = set;
+	  status = RomStatus.MISSING;
 		languages = new TreeSet<>();
 	}
 	
@@ -138,14 +140,29 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 
 	@Override
 	public boolean equals(Object other)
-	{
-	  return other instanceof Rom && ((Rom)other).getTitle().equals(getTitle());
+	{ 
+	  if (set.doesSupportAttribute(RomAttribute.NUMBER) && other instanceof Rom)
+	  {
+	    int n1 = getAttribute(RomAttribute.NUMBER);
+	    int n2 = ((Rom)other).getAttribute(RomAttribute.NUMBER);
+	    return n1 == n2;
+	  }
+	  
+	  return false;
 	}
 	
 	@Override
   public int compareTo(Rom rom)
 	{
-		return getTitle().compareTo(rom.getTitle());
+		if (set.doesSupportAttribute(RomAttribute.NUMBER))
+		{
+      int n1 = getAttribute(RomAttribute.NUMBER);
+      int n2 = rom.getAttribute(RomAttribute.NUMBER);
+      
+      return n1 - n2;
+		}
+	  
+	  return getTitle().compareTo(rom.getTitle());
 	}
 		
 	public boolean isFavourite() { return favourite; }

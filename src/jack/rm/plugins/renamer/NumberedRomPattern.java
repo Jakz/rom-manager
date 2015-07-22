@@ -5,9 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
-import jack.rm.data.NumberedRom;
 import jack.rm.data.Rom;
-import jack.rm.data.set.NumberedSet;
+import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.set.RomSet;
 import jack.rm.files.Pattern;
 
@@ -41,7 +40,7 @@ public class NumberedRomPattern extends PatternSetPlugin
     @Override
     public String apply(String name, Rom rom)
     { 
-      return name.replace(code,format.format(((NumberedRom)rom).number));
+      return name.replace(code,format.format((int)rom.getAttribute(RomAttribute.NUMBER)));
     }
   }
   
@@ -54,5 +53,5 @@ public class NumberedRomPattern extends PatternSetPlugin
   }
   
   @Override
-  public Predicate<RomSet<?>> compatibility() { return rs -> rs instanceof NumberedSet<?>; }
+  public Predicate<RomSet<?>> compatibility() { return rs -> rs.doesSupportAttribute(RomAttribute.NUMBER); }
 }

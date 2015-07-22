@@ -1,6 +1,7 @@
 package jack.rm.data;
 
 import jack.rm.*;
+import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.set.RomSet;
 import jack.rm.files.MoverWorker;
 import jack.rm.files.*;
@@ -40,9 +41,12 @@ public class RomList
 	public Rom getByNumber(int number)
 	{
 	  for (Rom r : list)
-	    if (((NumberedRom)r).number == number)
+	  {
+	    int rnumber = r.getAttribute(RomAttribute.NUMBER);
+	    if (rnumber == number)
 	      return r;
-	  
+	  }
+
 	  return null;
 	}
 	

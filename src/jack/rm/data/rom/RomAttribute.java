@@ -9,7 +9,10 @@ public enum RomAttribute
   DATE,
   COMMENT,
   LOCATION,
-  
+  LANGUAGE,
+  SIZE,
+  SERIAL,
+  CRC,
   SAVE_TYPE,
   
   ;

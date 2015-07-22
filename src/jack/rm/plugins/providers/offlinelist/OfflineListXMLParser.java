@@ -1,4 +1,4 @@
-package jack.rm.data.parser;
+package jack.rm.plugins.providers.offlinelist;
 
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
@@ -14,15 +14,17 @@ import java.util.Map;
 import java.util.Set;
 
 import jack.rm.data.console.GBA;
+import jack.rm.data.parser.XMLHandler;
 import jack.rm.data.rom.RomAttribute;
+import jack.rm.data.set.RomSet;
 
-public class OfflineListXMLParser extends DefaultHandler
+public class OfflineListXMLParser extends XMLHandler
 {
 	CharArrayWriter buffer = new CharArrayWriter();
 	
 	private final DecimalFormat format;
 	
-	private final Asset[] assets;
+	private Asset[] assets;
 	
 	static final private Map<Integer, Language> languageMap = new HashMap<>();
 	
@@ -47,22 +49,21 @@ public class OfflineListXMLParser extends DefaultHandler
 	  languageMap.put(65536, Language.KOREAN);
 	}
 	
-	NumberedRom rom;
+	Rom rom;
 	int curString;
 	
 	boolean started = false;
 	
-	RomList romList;
-	
-	
-	public OfflineListXMLParser(RomList romList, Asset[] assets)
+	public void setRomSet(RomSet<?> set)
 	{
-		this.romList = romList;
-		
+	  super.setRomSet(set);
+	  this.assets = set.getAssetManager().getSupportedAssets();
+	}
+	
+	public OfflineListXMLParser()
+	{
     format = new DecimalFormat();
     format.applyPattern("0000");
-    
-    this.assets = assets;
 	}
 
 	@Override
@@ -70,7 +71,7 @@ public class OfflineListXMLParser extends DefaultHandler
 	{			
 		if (localName.equals("game"))
 		{
-			rom = new NumberedRom();
+			rom = new Rom(set);
 		}
 		else if (localName.equals("games"))
 		{
@@ -115,7 +116,7 @@ public class OfflineListXMLParser extends DefaultHandler
 	  
 	  return null;
 	}
-	
+
   Set<String> saves = new HashSet<>();
 	
 	@Override
@@ -136,12 +137,12 @@ public class OfflineListXMLParser extends DefaultHandler
 		    }
 		    break;
 		  }
-		  case "releaseNumber": rom.number = asInt(); break;
+		  case "releaseNumber": rom.setAttribute(RomAttribute.NUMBER, asInt()); break;
 		  case "title": rom.setTitle(asString()); break;
 		  case "saveType":
 		  {
 		    RomSave<?> save = parseSave(asString());
-		    rom.setSave(save);
+		    rom.setAttribute(RomAttribute.SAVE_TYPE, save);
 		    break;
 		  }
 		  case "romSize": rom.size = RomSize.forBytes(asLong()); break;
@@ -166,10 +167,10 @@ public class OfflineListXMLParser extends DefaultHandler
         break;
       }
       case "comment": rom.setAttribute(RomAttribute.COMMENT, asString()); break;
-      case "game": romList.add(rom); break;
+      case "game": set.list.add(rom); break;
       case "games":
       {
-        romList.sort(); 
+        set.list.sort(); 
         saves.forEach(s -> System.out.println(s));
         break;
       }

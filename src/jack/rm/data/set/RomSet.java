@@ -6,6 +6,8 @@ import jack.rm.assets.Asset;
 import jack.rm.assets.AssetManager;
 import jack.rm.data.*;
 import jack.rm.data.console.System;
+import jack.rm.data.parser.DatLoader;
+import jack.rm.data.rom.RomAttribute;
 import jack.rm.json.Json;
 import jack.rm.json.RomListAdapter;
 import jack.rm.log.Log;
@@ -26,67 +28,69 @@ import java.util.stream.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 
-import java.awt.Dimension;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public abstract class RomSet<R extends Rom>
+public class RomSet<R extends Rom>
 {
   public static RomSet<? extends Rom> current = null;
 	
+  private boolean loaded;
+
 	public final RomList list;
 	public final System system;
-	public final ProviderID provider;
-	
-	public final Dimension screenTitle;
-	public final Dimension screenGame;
+	public final Provider provider;
+	public final ProviderType providerType;
 	
 	private Settings settings;
 	private final AssetManager assetManager;
+	private final DatLoader loader;
+	
+	
+	private final RomAttribute[] attributes;
 
-	RomSet(System type, ProviderID provider, Dimension screenTitle, Dimension screenGame, AssetManager assetManager)
+	public RomSet(System type, Provider provider, ProviderType providerType, RomAttribute[] attributes, AssetManager assetManager, DatLoader loader)
 	{
 		this.list = new RomList(this);
 	  this.system = type;
 		this.provider = provider;
-		this.screenTitle = screenTitle;
-		this.screenGame = screenGame;
+		this.providerType = providerType;
+		this.attributes = attributes;
 		this.assetManager = assetManager;
+		this.loader = loader;
+		this.loaded = false;
 	}
 	
 	public Settings getSettings() { return settings; }
 	
 	public final AssetManager getAssetManager() { return assetManager; }
-			
-	public abstract void load();
 	
-
+	public boolean doesSupportAttribute(RomAttribute attribute) { return Arrays.stream(attributes).anyMatch( a -> a == RomAttribute.NUMBER); }
+	public final RomAttribute[] getSupportedAttributes() { return attributes; }
+			
+	public final void load()
+	{ 
+	  if (!loaded)
+	    loader.load(this); 
+	  loaded = true;
+	}
+	
 	@Override
   public String toString()
 	{
-		return system.name+" ("+provider.name+")";
+		return system.name+" ("+provider.getName()+")";
 	}
 	
 	public String ident()
 	{
-		return provider.tag+"-"+system.tag;
+		return provider.getTag()+"-"+system.tag+"-"+providerType.getIdent();
 	}
 	
 	public String datPath()
 	{
 		return "dat/"+ident()+".xml";
-	}
-
-	public boolean hasGameArt()
-	{
-		return screenGame != null;
-	}
-	
-	public boolean hasTitleArt()
-	{
-		return screenTitle != null;
 	}
 
 	public PathMatcher getFileMatcher()
