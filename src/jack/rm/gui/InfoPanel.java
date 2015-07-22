@@ -1,6 +1,8 @@
 package jack.rm.gui;
 
 import jack.rm.*;
+import jack.rm.assets.Asset;
+import jack.rm.assets.AssetManager;
 import jack.rm.data.*;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.set.RomSet;
@@ -25,6 +27,8 @@ public class InfoPanel extends JPanel implements ActionListener
 	private static final long serialVersionUID = 1L;
 	
 	private RomSet<?> set = null;
+	
+	private final JPanel imagesPanel;
 	
 	private static class AttributeField
 	{
@@ -88,7 +92,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	final private JPanel pFields = new JPanel();
 	final private JPanel pTotal = new JPanel();
 	
-	final private JLabel imgTitle, imgScreen;
+	private AssetImage[] images;
 	
 	final private JButton downloadButton = new JButton("Download ROM");
 	final private JButton assetsButton = new JButton("Download Assets");
@@ -97,6 +101,23 @@ public class InfoPanel extends JPanel implements ActionListener
 	final private JPanel buttons = new JPanel();
 	
 	private Rom rom;
+	
+	private class AssetImage
+	{
+	  final Asset asset;
+	  final JLabel image;
+	  
+	  AssetImage(Asset asset)
+	  {
+	    this.asset = asset;
+	    
+	    image = new JLabel();
+	    image.setHorizontalAlignment(SwingConstants.CENTER);
+	    image.setBorder(BorderFactory.createLineBorder(Color.black));
+	    image.setForeground(Color.RED);
+	    image.setFont(image.getFont().deriveFont(30.0f));
+	  }
+	}
 		
 	public InfoPanel()
 	{
@@ -104,19 +125,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		openArchiveButton.setEnabled(false);
 	  
 	  downloadButton.setEnabled(false);
-		
-		imgTitle = new JLabel();
-		imgTitle.setHorizontalAlignment(SwingConstants.CENTER);
-    imgTitle.setBorder(BorderFactory.createLineBorder(Color.black));
-    imgTitle.setForeground(Color.RED);
-    imgTitle.setFont(imgTitle.getFont().deriveFont(30.0f));
-
-		imgScreen = new JLabel();
-		imgScreen.setHorizontalAlignment(SwingConstants.CENTER);
-		imgScreen.setBorder(BorderFactory.createLineBorder(Color.black));
-		imgScreen.setForeground(Color.RED);
-		imgScreen.setFont(imgScreen.getFont().deriveFont(30.0f));
-		
+	  		
 		JPanel subField1 = new JPanel();
 		GroupLayout gl1 = new GroupLayout(subField1);
 		subField1.setLayout(gl1);
@@ -174,14 +183,12 @@ public class InfoPanel extends JPanel implements ActionListener
 		}
 		
 		gl1.setVerticalGroup(vGroup1);
-			
-		JPanel imgs = new JPanel();
-		imgs.add(imgTitle);
-		imgs.add(Box.createRigidArea(new Dimension(30,0)));
-		imgs.add(imgScreen);
+			    
+		imagesPanel = new JPanel();
+    pTotal.add(imagesPanel);
+
 		
 		pTotal.setLayout(new BoxLayout(pTotal, BoxLayout.PAGE_AXIS));
-		pTotal.add(imgs);
 		JPanel pFields2 = new JPanel(new BorderLayout());
 		pFields2.add(pFields, BorderLayout.NORTH);
 		pTotal.add(pFields2);
@@ -204,14 +211,27 @@ public class InfoPanel extends JPanel implements ActionListener
 	public void romSetLoaded(final RomSet<?> set)
 	{
 		this.set = set;
-	  
+		
+		AssetManager manager = set.getAssetManager();
+		Asset[] assets = manager.getSupportedAssets();
+    images = new AssetImage[] { new AssetImage(assets[0]), new AssetImage(assets[1]) };
+    
 	  SwingUtilities.invokeLater(new Runnable() {
 			@Override
       public void run() {
-				imgTitle.setPreferredSize(new Dimension(set.screenTitle.width+30,set.screenTitle.height));
-				imgScreen.setPreferredSize(new Dimension(set.screenGame.width,set.screenGame.height));
-				imgTitle.revalidate();
-				imgScreen.revalidate();
+				imagesPanel.removeAll();
+				
+		    imagesPanel.add(images[0].image);
+		    imagesPanel.add(Box.createRigidArea(new Dimension(30,0)));
+		    imagesPanel.add(images[1].image);
+		    
+		    for (AssetImage image : images)
+		    {
+		      image.image.setPreferredSize(((Asset.Image)image.asset).getSize());
+		      image.image.revalidate();
+		    }
+		    
+		    imagesPanel.revalidate();
 			}
 		});
 		
@@ -221,49 +241,26 @@ public class InfoPanel extends JPanel implements ActionListener
 	void setImage(Rom rom, Asset asset, JLabel dest)
 	{
 		Path path = set.getAssetPath(asset, rom);
-		int w,h;
-		long crc = -1L;
-				
-		if (asset == Asset.SCREEN_TITLE)
-		{
-			path = set.getAssetPath(asset, rom);
-			w = set.screenTitle.width;
-			h = set.screenTitle.height;
-			
-			if (rom != null)
-				crc = rom.imgCRC1;
-		}
-		else
-		{
-			w = set.screenGame.width;
-			h = set.screenGame.height;
-			
-			if (rom != null)
-				crc = rom.imgCRC2;
-		}
-		
+		Asset.Image imageAsset = (Asset.Image)asset;
 
-		if (Files.exists(path) && (!set.getSettings().checkImageCRC || crc == Scanner.computeCRC(path)))
+		long crc = rom.getAssetData(asset).getCRC();
+		boolean shouldCheckCRC = asset.hasCRC();
+		Dimension size = imageAsset.getSize();
+
+		if (Files.exists(path) && (!shouldCheckCRC || crc == Scanner.computeCRC(path)))
 		{
 			ImageIcon i = new ImageIcon(path.toString());
 			
 			Image img = i.getImage();
-			BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+			BufferedImage bi = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 			Graphics g = bi.createGraphics();
-			g.drawImage(img, 0, 0, w, h, null);
+			g.drawImage(img, 0, 0, size.width, size.height, null);
 			
 			dest.setText("");
 			dest.setIcon(new ImageIcon(bi));
 		}
 		else
 		{
-			ImageIcon i = new ImageIcon("data/images/missing.png");
-			
-			Image img = i.getImage();
-			BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-			Graphics g = bi.createGraphics();
-			g.drawImage(img, 0, 0, w, h, null);
-			
 			dest.setText("Asset Missing");
 			dest.setIcon(null);
 		}
@@ -276,10 +273,11 @@ public class InfoPanel extends JPanel implements ActionListener
 			fields[t].setText("");
 		}
 		
-		imgTitle.setIcon(null);
-		imgScreen.setIcon(null);
-		imgTitle.setText("");
-		imgTitle.setText("");
+		for (AssetImage image : images)
+		{
+		  image.image.setIcon(null);
+		  image.image.setText("");
+		}
 	}
 	
 	public void updateFields(Rom rom)
@@ -305,15 +303,15 @@ public class InfoPanel extends JPanel implements ActionListener
     fields[Field.FILENAME.index].setText(romPath != null ? romPath.file().getFileName().toString() : "");
 		fields[Field.PATH.index].setText(romPath != null ? romPath.file().getParent().toString() : "");
 		
-    setImage(rom, Asset.SCREEN_TITLE, imgTitle);
-    setImage(rom, Asset.SCREEN_GAMEPLAY, imgScreen);
+		for (AssetImage image : images)
+		  setImage(rom, image.asset, image.image);
 		
 		if (rom.status == RomStatus.MISSING)
 		{
 		  openFolderButton.setEnabled(false);
 		  openArchiveButton.setEnabled(false);
 			
-		  downloadButton.setEnabled(RomSet.current.getSettings().hasDownloader(RomSet.current.type));
+		  downloadButton.setEnabled(RomSet.current.getSettings().hasDownloader(RomSet.current.system));
 		}
 		else
 		{
@@ -339,7 +337,7 @@ public class InfoPanel extends JPanel implements ActionListener
 			{
 				Set<RomDownloaderPlugin> downloaders = RomSet.current.getSettings().plugins.getEnabledPlugins(PluginRealType.ROM_DOWNLOADER);
 				
-				URL url = downloaders.stream().filter( p -> p.isSystemSupported(RomSet.current.type)).findFirst().get().getDownloadURL(RomSet.current.type, rom);
+				URL url = downloaders.stream().filter( p -> p.isSystemSupported(RomSet.current.system)).findFirst().get().getDownloadURL(RomSet.current.system, rom);
 			  
 			  Desktop.getDesktop().browse(url.toURI());
 			}

@@ -2,6 +2,8 @@ package jack.rm.data.set;
 
 import jack.rm.Main;
 import jack.rm.Settings;
+import jack.rm.assets.Asset;
+import jack.rm.assets.AssetManager;
 import jack.rm.data.*;
 import jack.rm.data.console.System;
 import jack.rm.json.Json;
@@ -10,7 +12,6 @@ import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.log.LogType;
-import jack.rm.net.AssetManager;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.cleanup.CleanupPlugin;
 
@@ -36,7 +37,7 @@ public abstract class RomSet<R extends Rom>
   public static RomSet<? extends Rom> current = null;
 	
 	public final RomList list;
-	public final System type;
+	public final System system;
 	public final ProviderID provider;
 	
 	public final Dimension screenTitle;
@@ -48,7 +49,7 @@ public abstract class RomSet<R extends Rom>
 	RomSet(System type, ProviderID provider, Dimension screenTitle, Dimension screenGame, AssetManager assetManager)
 	{
 		this.list = new RomList(this);
-	  this.type = type;
+	  this.system = type;
 		this.provider = provider;
 		this.screenTitle = screenTitle;
 		this.screenGame = screenGame;
@@ -65,12 +66,12 @@ public abstract class RomSet<R extends Rom>
 	@Override
   public String toString()
 	{
-		return type.name+" ("+provider.name+")";
+		return system.name+" ("+provider.name+")";
 	}
 	
 	public String ident()
 	{
-		return provider.tag+"-"+type.tag;
+		return provider.tag+"-"+system.tag;
 	}
 	
 	public String datPath()
@@ -87,23 +88,24 @@ public abstract class RomSet<R extends Rom>
 	{
 		return screenTitle != null;
 	}
-	
-	public Path romPath()
-	{
-		return settings.romsPath;
-	}
-	
+
 	public PathMatcher getFileMatcher()
 	{
-	  Stream<String> stream = Arrays.stream(type.exts);
+	  Stream<String> stream = Arrays.stream(system.exts);
 	  
-	  if (type.acceptsArchives)
+	  if (system.acceptsArchives)
 	    stream = Stream.concat(stream, Arrays.stream(new String[]{"zip"}));
 	  
 	  String pattern = stream.collect(Collectors.joining(",", "glob:*.{", "}"));
 	  	  
 	  return FileSystems.getDefault().getPathMatcher(pattern);
 	}
+	
+  public final Path getAssetPath(Asset asset, Rom rom)
+  {
+    Path path = Paths.get("assets",ident()).resolve(asset.getPath());  
+    return rom == null ? path : path.resolve(rom.getAssetData(asset).getPath());
+  }
 	
 	public final void cleanup()
 	{
@@ -141,13 +143,7 @@ public abstract class RomSet<R extends Rom>
 	    e.printStackTrace();
 	  }
 	}
-	
-  public final Path getAssetPath(Asset asset, Rom rom)
-  {
-    Path path = Paths.get("assets",ident()).resolve(asset == Asset.SCREEN_GAMEPLAY ? "game/" : "title/");  
-    return rom == null ? path : path.resolve(getAssetManager().assetPath(asset, rom));
-  }
-	
+		
 	public boolean loadStatus()
 	{
 	  try

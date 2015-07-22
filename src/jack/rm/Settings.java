@@ -17,7 +17,6 @@ public class Settings
 {	
   public String renamingPattern;
 	public Path romsPath;	
-	public boolean checkImageCRC;
 	
 	public PluginSet<ActualPlugin> plugins;
 			
@@ -25,8 +24,7 @@ public class Settings
 	public Settings(PluginManager<ActualPlugin, ActualPluginBuilder> manager)
 	{
 	  plugins = new PluginSet<ActualPlugin>();
-	  manager.setup(plugins);
-	  checkImageCRC = true;   
+	  manager.setup(plugins); 
 	  renamingPattern = "%n - %t [%S]";
 	  romsPath = null;
 	}

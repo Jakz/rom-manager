@@ -11,7 +11,7 @@ public class DeleteEmptyFoldersPlugin extends CleanupPlugin
   @Override public void execute(RomList list)
   {
     Queue<File> files = new LinkedList<File>();
-    files.add(list.set.romPath().toFile());
+    files.add(list.set.getSettings().romsPath.toFile());
     
     int counter = 0;
     

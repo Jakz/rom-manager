@@ -5,11 +5,12 @@ import javax.swing.UIManager.LookAndFeelInfo;
 
 import java.awt.Desktop;
 import java.util.function.Consumer;
+
+import jack.rm.assets.Downloader;
 import jack.rm.data.*;
 import jack.rm.data.console.System;
 import jack.rm.data.set.*;
 import jack.rm.gui.*;
-import jack.rm.net.Downloader;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
 

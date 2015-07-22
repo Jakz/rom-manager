@@ -1,5 +1,7 @@
 package jack.rm.data;
 
+import jack.rm.assets.Asset;
+import jack.rm.assets.AssetData;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.RomWithSaveMixin;
 import jack.rm.data.set.RomSet;
@@ -20,13 +22,12 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 	public RomStatus status;
 	
 	private Map<RomAttribute, Object> attributes = new HashMap<>();
+	private Map<Asset, AssetData> assetData = new HashMap<>();
 	
 	public void setAttribute(RomAttribute key, Object value) { attributes.put(key, value); }
 	@SuppressWarnings("unchecked") public <T> T getAttribute(RomAttribute key) { return (T)attributes.get(key); }
 	
   private boolean favourite;
-
-	public int imageNumber;
 	
 	public RomSize size;
 	
@@ -37,16 +38,12 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 	public long crc;
 			
 	private RomPath path;
-	
-	public long imgCRC1;
-	public long imgCRC2;
+
 	
 	public Rom()
 	{
 		status = RomStatus.MISSING;
 		languages = new TreeSet<>();
-    imgCRC1 = -1L;
-    imgCRC2 = -1L;
 	}
 	
 	public RomID<?> getID() { return new RomID.CRC(crc); }
@@ -56,6 +53,11 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 	
 	public void setTitle(String title) { setAttribute(RomAttribute.TITLE, title); }
 	public String getTitle() { return getAttribute(RomAttribute.TITLE); }
+	
+	public AssetData getAssetData(Asset asset)
+	{
+	  return assetData.computeIfAbsent(asset, k -> new AssetData());
+	}
 	
 	@Override
   public String toString()
@@ -76,7 +78,7 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
 	
 	public long getCRCforAsset(Asset asset)
 	{
-	  return asset == Asset.SCREEN_GAMEPLAY ? imgCRC2 : imgCRC1;
+	  return assetData.get(asset).getCRC();
 	}
 	
 	public boolean hasAsset(Asset asset)
@@ -86,7 +88,7 @@ public class Rom implements Comparable<Rom>, RomWithSaveMixin<RomSave<?>>
     if (!Files.exists(f)) return false;
     else
     {
-      if (RomSet.current.getSettings().checkImageCRC)
+      if (asset.hasCRC())
       {
         long icrc = Scanner.computeCRC(f);
         return icrc == getCRCforAsset(asset);

@@ -1,9 +1,13 @@
 package jack.rm.data.parser;
 
+import jack.rm.assets.Asset;
+import jack.rm.assets.AssetData;
 import jack.rm.data.*;
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
 import java.io.CharArrayWriter;
+import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -15,6 +19,10 @@ import jack.rm.data.rom.RomAttribute;
 public class OfflineListXMLParser extends DefaultHandler
 {
 	CharArrayWriter buffer = new CharArrayWriter();
+	
+	private final DecimalFormat format;
+	
+	private final Asset[] assets;
 	
 	static final private Map<Integer, Language> languageMap = new HashMap<>();
 	
@@ -47,9 +55,14 @@ public class OfflineListXMLParser extends DefaultHandler
 	RomList romList;
 	
 	
-	public OfflineListXMLParser(RomList romList)
+	public OfflineListXMLParser(RomList romList, Asset[] assets)
 	{
 		this.romList = romList;
+		
+    format = new DecimalFormat();
+    format.applyPattern("0000");
+    
+    this.assets = assets;
 	}
 
 	@Override
@@ -113,7 +126,16 @@ public class OfflineListXMLParser extends DefaultHandler
 		
 		switch(localName)
 		{
-		  case "imageNumber": rom.imageNumber = asInt(); break;
+		  case "imageNumber":
+		  {
+		    for (Asset asset : assets)
+		    {
+		      AssetData data = rom.getAssetData(asset);
+		      data.setPath(Paths.get(format.format(asInt())+".png"));
+		      data.setURLData(format.format(asInt())+(asset==assets[0]?"a":"b")+".png");
+		    }
+		    break;
+		  }
 		  case "releaseNumber": rom.number = asInt(); break;
 		  case "title": rom.setTitle(asString()); break;
 		  case "saveType":
@@ -133,8 +155,16 @@ public class OfflineListXMLParser extends DefaultHandler
 		  }
 		  case "sourceRom": rom.setAttribute(RomAttribute.GROUP, asString()); break;
 		  case "romCRC": rom.crc = Long.parseLong(asString(), 16); break;
-      case "im1CRC": rom.imgCRC1 = Long.parseLong(asString(), 16); break;
-      case "im2CRC": rom.imgCRC2 = Long.parseLong(asString(), 16); break;
+      case "im1CRC": 
+      {
+        rom.getAssetData(assets[0]).setCRC(Long.parseLong(asString(), 16));
+        break;
+      }
+      case "im2CRC": 
+      {
+        rom.getAssetData(assets[1]).setCRC(Long.parseLong(asString(), 16));
+        break;
+      }
       case "comment": rom.setAttribute(RomAttribute.COMMENT, asString()); break;
       case "game": romList.add(rom); break;
       case "games":

@@ -1,4 +1,4 @@
-package jack.rm.net;
+package jack.rm.assets;
 
 import jack.rm.Main;
 import jack.rm.data.*;
@@ -83,9 +83,7 @@ public class Downloader
     {  
       path = set.getAssetPath(asset, rom);
       url = set.getAssetManager().assetURL(asset, rom);
-      
-      //System.out.println(url+" -> "+path.toAbsolutePath());
-          
+                
       this.rom = rom;
       this.asset = asset;
     }

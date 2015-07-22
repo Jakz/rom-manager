@@ -8,7 +8,8 @@ public enum PluginRealType implements PluginType<PluginRealType>
   ROMSET_CLEANUP("Romset Cleanup", false, false),
   PATTERN_SET("Renamer Pattern Set", false, false),
   RENAMER("Renamer", true, true),
-  ROM_DOWNLOADER("ROM Downloader", false, false)
+  ROM_DOWNLOADER("ROM Downloader", false, false),
+  PROVIDER("DAT Provider", false, false)
   ;
   
   public final String caption;

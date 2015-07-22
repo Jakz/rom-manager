@@ -30,7 +30,7 @@ public class RomSetManager
 	
 	public static RomSet<?> bySystem(System system)
 	{
-	   return sets.values().stream().filter( rs -> rs.type == system).findFirst().orElse(null);
+	   return sets.values().stream().filter( rs -> rs.system == system).findFirst().orElse(null);
 	}
 	
 	public static RomSet<?> byIdent(String ident)

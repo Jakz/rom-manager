@@ -134,7 +134,7 @@ public class Scanner
 	    .forEach(existing::add);
 		}
 
-		Path folder = set.romPath();
+		Path folder = set.getSettings().romsPath;
 			
 		if (folder == null || !Files.exists(folder) || !Files.isDirectory(folder))
 		{
