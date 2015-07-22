@@ -58,9 +58,7 @@ public abstract class RomSet<R extends Rom>
 	public Settings getSettings() { return settings; }
 	
 	public final AssetManager getAssetManager() { return assetManager; }
-		
-	public abstract String downloadURL(Rom rom);
-	
+			
 	public abstract void load();
 	
 

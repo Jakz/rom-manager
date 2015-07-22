@@ -14,7 +14,7 @@ public class EmuParadiseDownloader extends RomDownloaderPlugin
   private final String query1 = "http://www.emuparadise.me/roms/search.php?query=";
   private final String query2 = "&section=roms&sysid=";
   
-  EmuParadiseDownloader()
+  public EmuParadiseDownloader()
   {
     idents.put(System.GBA, 31);
     idents.put(System.GBC, 11);

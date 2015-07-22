@@ -91,7 +91,4 @@ public abstract class RomSetOfflineList extends RomSet<NumberedRom>
 	{
 		loadDat(new OfflineListXMLParser(list), datPath());
 	}
-	
-	@Override
-  public abstract String downloadURL(Rom rom);
 }

@@ -5,6 +5,9 @@ import jack.rm.data.*;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.set.RomSet;
 import jack.rm.i18n.Text;
+import jack.rm.plugins.PluginRealType;
+import jack.rm.plugins.downloader.RomDownloaderPlugin;
+
 
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
@@ -13,7 +16,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.nio.file.*;
+import java.util.Set;
 import java.net.URI;
+import java.net.URL;
 
 public class InfoPanel extends JPanel implements ActionListener
 {
@@ -308,7 +313,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		  openFolderButton.setEnabled(false);
 		  openArchiveButton.setEnabled(false);
 			
-		  downloadButton.setEnabled(true);
+		  downloadButton.setEnabled(RomSet.current.getSettings().hasDownloader(RomSet.current.type));
 		}
 		else
 		{
@@ -332,7 +337,11 @@ public class InfoPanel extends JPanel implements ActionListener
 		{
 			try
 			{
-				Desktop.getDesktop().browse(new URI(set.downloadURL(rom)));
+				Set<RomDownloaderPlugin> downloaders = RomSet.current.getSettings().plugins.getEnabledPlugins(PluginRealType.ROM_DOWNLOADER);
+				
+				URL url = downloaders.stream().filter( p -> p.isSystemSupported(RomSet.current.type)).findFirst().get().getDownloadURL(RomSet.current.type, rom);
+			  
+			  Desktop.getDesktop().browse(url.toURI());
 			}
 			catch (Exception ee)
 			{

@@ -97,6 +97,7 @@ public class Main
     manager.register(jack.rm.plugins.renamer.NumberedRomPattern.class);
     manager.register(jack.rm.plugins.renamer.BasicRenamerPlugin.class);
     manager.register(jack.rm.plugins.renamer.PatternRenamerPlugin.class);
+    manager.register(jack.rm.plugins.downloader.EmuParadiseDownloader.class);
 
 	}
 	

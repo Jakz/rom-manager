@@ -7,7 +7,9 @@ import java.util.*;
 import com.pixbits.plugin.PluginManager;
 import com.pixbits.plugin.PluginSet;
 
+import jack.rm.data.console.System;
 import jack.rm.plugins.*;
+import jack.rm.plugins.downloader.RomDownloaderPlugin;
 import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.RenamerPlugin;
 
@@ -44,6 +46,13 @@ public class Settings
 	public boolean hasCleanupPlugins()
 	{
 	  return !plugins.getEnabledPlugins(PluginRealType.ROMSET_CLEANUP).isEmpty();
+	}
+	
+	public boolean hasDownloader(System system)
+	{
+	  Set<RomDownloaderPlugin> downloaders = plugins.getEnabledPlugins(PluginRealType.ROM_DOWNLOADER);
+	  
+	  return downloaders.stream().filter( p -> p.isSystemSupported(system)).findFirst().isPresent();
 	}
 	
 	public Set<Path> getIgnoredPaths()
