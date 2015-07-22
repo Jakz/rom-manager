@@ -4,7 +4,6 @@ import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.set.RomSet;
-import jack.rm.files.Organizer;
 import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.RenamerPlugin;
 
@@ -18,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class Rom implements Comparable<Rom>
 {
-	private final RomSet<?> set;
+	private final RomSet set;
   
   public RomStatus status;
 	
@@ -41,7 +40,7 @@ public class Rom implements Comparable<Rom>
 	private RomPath path;
 
 	
-	public Rom(RomSet<?> set)
+	public Rom(RomSet set)
 	{
     this.set = set;
 	  status = RomStatus.MISSING;

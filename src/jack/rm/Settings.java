@@ -1,7 +1,6 @@
 package jack.rm;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 import com.pixbits.plugin.PluginManager;

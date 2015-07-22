@@ -13,7 +13,7 @@ import jack.rm.plugins.folder.FolderPlugin;
 
 public class MoverWorker extends OrganizerWorker<FolderPlugin>
 {
-  public MoverWorker(RomSet<?> romSet, FolderPlugin plugin, Consumer<Boolean> callback)
+  public MoverWorker(RomSet romSet, FolderPlugin plugin, Consumer<Boolean> callback)
   {
     super(romSet, plugin, callback);
   }

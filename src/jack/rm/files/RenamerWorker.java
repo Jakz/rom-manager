@@ -8,7 +8,7 @@ import jack.rm.plugins.renamer.RenamerPlugin;
 
 public class RenamerWorker extends OrganizerWorker<RenamerPlugin>
 {
-  public RenamerWorker(RomSet<?> romSet, RenamerPlugin plugin, Consumer<Boolean> callback)
+  public RenamerWorker(RomSet romSet, RenamerPlugin plugin, Consumer<Boolean> callback)
   {
     super(romSet, plugin, callback);
   }

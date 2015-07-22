@@ -15,7 +15,7 @@ import com.pixbits.gui.ProgressDialog;
 
 public class Scanner
 {
-	RomSet<?> set;
+	RomSet set;
 	
 	private Set<Path> existing = new HashSet<>();
 	private Set<Path> foundFiles = new HashSet<>();
@@ -23,7 +23,7 @@ public class Scanner
 	
 	private PathMatcher archiveMatcher = FileSystems.getDefault().getPathMatcher("glob:*.{zip}");
 	
-	public Scanner(RomSet<?> set)
+	public Scanner(RomSet set)
 	{
 		this.set = set;
 	}

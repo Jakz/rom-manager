@@ -5,5 +5,5 @@ import jack.rm.data.set.RomSet;
 @FunctionalInterface
 public interface DatLoader
 {
-  public void load(RomSet<?> set);
+  public void load(RomSet set);
 }

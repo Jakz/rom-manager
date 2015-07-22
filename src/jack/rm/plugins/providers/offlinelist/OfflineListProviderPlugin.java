@@ -7,10 +7,8 @@ import java.nio.file.Paths;
 import java.text.DecimalFormat;
 
 import jack.rm.assets.Asset;
-import jack.rm.assets.AssetManager;
 import jack.rm.data.Rom;
 import jack.rm.data.console.System;
-import jack.rm.data.parser.DatLoader;
 import jack.rm.data.parser.XMLDatLoader;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.set.Provider;
@@ -78,7 +76,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
   }
   
   @Override
-  public RomSet<?> buildRomSet(System system)
+  public RomSet buildRomSet(System system)
   {
     try
     {

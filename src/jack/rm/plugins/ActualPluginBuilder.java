@@ -8,7 +8,7 @@ import jack.rm.data.set.RomSet;
 
 public class ActualPluginBuilder extends PluginBuilder<ActualPlugin>
 {
-  Predicate<RomSet<?>> compatibility;
+  Predicate<RomSet> compatibility;
   
   public ActualPluginBuilder(ActualPlugin plugin)
   {
@@ -16,5 +16,5 @@ public class ActualPluginBuilder extends PluginBuilder<ActualPlugin>
     this.compatibility = plugin.compatibility();
   }
   
-  public boolean isCompatible(RomSet<?> romset) { return compatibility.test(romset); }
+  public boolean isCompatible(RomSet romset) { return compatibility.test(romset); }
 }

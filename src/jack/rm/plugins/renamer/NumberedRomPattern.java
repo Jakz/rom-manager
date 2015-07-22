@@ -53,5 +53,5 @@ public class NumberedRomPattern extends PatternSetPlugin
   }
   
   @Override
-  public Predicate<RomSet<?>> compatibility() { return rs -> rs.doesSupportAttribute(RomAttribute.NUMBER); }
+  public Predicate<RomSet> compatibility() { return rs -> rs.doesSupportAttribute(RomAttribute.NUMBER); }
 }

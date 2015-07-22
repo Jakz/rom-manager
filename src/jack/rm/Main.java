@@ -103,9 +103,9 @@ public class Main
 
 	}
 	
-	public static void loadRomSet(RomSet<?> romSet)
+	public static void loadRomSet(RomSet romSet)
 	{
-	  RomSet<?> set = RomSetManager.loadSet(romSet);
+	  RomSet set = RomSetManager.loadSet(romSet);
     RomSet.current = set;
     boolean wasInit = set.loadStatus();
 

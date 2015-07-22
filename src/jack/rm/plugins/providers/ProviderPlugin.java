@@ -11,11 +11,11 @@ import jack.rm.plugins.PluginRealType;
 
 public abstract class ProviderPlugin extends ActualPlugin
 {
-  public abstract RomSet<?> buildRomSet(System system);
+  public abstract RomSet buildRomSet(System system);
   public abstract boolean isSystemSupported(System system);
   
   public PluginType<?> getPluginType() { return PluginRealType.PROVIDER; }
   
-  protected Predicate<RomSet<?>> compatibility() { return rs -> false; }
+  protected Predicate<RomSet> compatibility() { return rs -> false; }
 
 }

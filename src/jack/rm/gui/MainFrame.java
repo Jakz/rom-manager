@@ -19,7 +19,7 @@ public class MainFrame extends JFrame implements WindowListener
 {	
 	private static final long serialVersionUID = 1L;
 	
-	private RomSet<?> set = null;
+	private RomSet set = null;
 	
 	 //menu
   final private JMenuBar menu = new JMenuBar();
@@ -47,7 +47,7 @@ public class MainFrame extends JFrame implements WindowListener
 	final private ListListener listListener = new ListListener();
 	final private JScrollPane listPane = new JScrollPane(list);
 	
-	private final JComboBox<RomSet<? extends Rom>> cbRomSets = new JComboBox<>();
+	private final JComboBox<RomSet> cbRomSets = new JComboBox<>();
 	
 	final MenuListener menuListener = new MenuListener();
 		
@@ -90,7 +90,7 @@ public class MainFrame extends JFrame implements WindowListener
 		
 		setJMenuBar(menu);
 		
-		for (RomSet<? extends Rom> rs : RomSetManager.sets())
+		for (RomSet rs : RomSetManager.sets())
 			cbRomSets.addItem(rs);
 		
 		cbRomSets.addItemListener(romSetListener);
@@ -123,7 +123,7 @@ public class MainFrame extends JFrame implements WindowListener
 		setTitle("Rom Manager v0.6 - build 51");
 	}
 
-	private void buildMenu(RomSet<?> set)
+	private void buildMenu(RomSet set)
 	{	
 		toolsMenu.removeAll();
 	  
@@ -213,7 +213,7 @@ public class MainFrame extends JFrame implements WindowListener
 			layout.first(this.getContentPane());
 	}
 	
-	public void romSetLoaded(RomSet<?> set)
+	public void romSetLoaded(RomSet set)
 	{
 	  this.set = set;
 	  

@@ -6,7 +6,7 @@ import jack.rm.data.set.RomSet;
 
 public class XMLHandler extends DefaultHandler
 {
-  protected RomSet<?> set;
+  protected RomSet set;
   
-  public void setRomSet(RomSet<?> set) { this.set = set; }
+  public void setRomSet(RomSet set) { this.set = set; }
 }

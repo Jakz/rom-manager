@@ -14,13 +14,13 @@ import java.util.stream.Stream;
 
 public class RomList
 {
-	public final RomSet<? extends Rom> set;
+	public final RomSet set;
   List<Rom> list;
 	Map<Long, Rom> crcs;
 	
 	private int countCorrect, countBadlyNamed, countNotFound, countTotal;
 	
-	public RomList(RomSet<? extends Rom> set)
+	public RomList(RomSet set)
 	{
 		this.set = set;
 	  list = new ArrayList<>();

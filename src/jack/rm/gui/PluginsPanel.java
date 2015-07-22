@@ -27,7 +27,7 @@ public class PluginsPanel extends JPanel
   private final JTable table;
   private final PluginTableModel model;
   private final PluginManager<ActualPlugin, ActualPluginBuilder> manager;
-  private RomSet<?> romset;
+  private RomSet romset;
   
   private class PluginCellRenderer implements TableCellRenderer
   {
@@ -128,12 +128,12 @@ public class PluginsPanel extends JPanel
     COMPATIBLE
     {
       public String toString() { return "Show Compatible"; }
-      public boolean test(ActualPluginBuilder builder, RomSet<?> romset) { return builder.isCompatible(romset); }
+      public boolean test(ActualPluginBuilder builder, RomSet romset) { return builder.isCompatible(romset); }
     },
     ENABLED
     {
       public String toString() { return "Show Enabled"; }
-      public boolean test(ActualPluginBuilder builder, RomSet<?> romset) { 
+      public boolean test(ActualPluginBuilder builder, RomSet romset) { 
         Optional<ActualPlugin> plugin = romset.getSettings().plugins.getPlugin(builder.getID());
         return plugin.isPresent() && plugin.get().isEnabled();
       }
@@ -141,11 +141,11 @@ public class PluginsPanel extends JPanel
     ALL
     { 
       public String toString() { return "Show All"; } 
-      public boolean test(ActualPluginBuilder builder, RomSet<?> romset) { return true; }
+      public boolean test(ActualPluginBuilder builder, RomSet romset) { return true; }
     }
     ;
     
-    public abstract boolean test(ActualPluginBuilder builder, RomSet<?> romset);
+    public abstract boolean test(ActualPluginBuilder builder, RomSet romset);
     
   }
   
@@ -237,7 +237,7 @@ public class PluginsPanel extends JPanel
 
   }
   
-  public void populate(RomSet<?> romset)
+  public void populate(RomSet romset)
   {
     this.romset = romset;
     model.populate();

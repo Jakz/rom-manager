@@ -19,14 +19,13 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.nio.file.*;
 import java.util.Set;
-import java.net.URI;
 import java.net.URL;
 
 public class InfoPanel extends JPanel implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
 	
-	private RomSet<?> set = null;
+	private RomSet set = null;
 	
 	private final JPanel imagesPanel;
 	
@@ -208,7 +207,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		this.add(pTotal);
 	}
 	
-	public void romSetLoaded(final RomSet<?> set)
+	public void romSetLoaded(final RomSet set)
 	{
 		this.set = set;
 		

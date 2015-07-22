@@ -15,13 +15,13 @@ import jack.rm.plugins.OrganizerPlugin;
 public abstract class OrganizerWorker<T extends OrganizerPlugin> extends SwingWorker<Void, Integer>
 {
   protected int total = 0;
-  protected final RomSet<?> romSet;
+  protected final RomSet romSet;
   protected final T plugin;
   protected final Consumer<Boolean> callback;
   protected final String title;
   protected final String progressText;
   
-  public OrganizerWorker(RomSet<?> romSet, T plugin, Consumer<Boolean> callback)
+  public OrganizerWorker(RomSet romSet, T plugin, Consumer<Boolean> callback)
   {
     this.romSet = romSet;
     this.plugin = plugin;

@@ -19,7 +19,7 @@ import jack.rm.data.set.RomSet;
 
 public class ClonesDialog extends JDialog
 {
-  private RomSet<?> set;
+  private RomSet set;
   final JTable table;
   final CloneTableModel model;
   
@@ -228,7 +228,7 @@ public class ClonesDialog extends JDialog
     Main.mainFrame.updateTable();
   }
   
-  public void activate(RomSet<?> set, Set<ScanResult> clones)
+  public void activate(RomSet set, Set<ScanResult> clones)
   {
     this.set = set;
     this.keep.clear();

@@ -1,7 +1,6 @@
 package jack.rm.data.parser;
 
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import jack.rm.data.set.RomSet;
@@ -17,7 +16,7 @@ public class XMLDatLoader implements DatLoader
     //this.path = path;
   }
   
-  public void load(RomSet<?> set)
+  public void load(RomSet set)
   {
     try
     {

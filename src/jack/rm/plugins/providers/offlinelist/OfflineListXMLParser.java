@@ -4,7 +4,6 @@ import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
 import jack.rm.data.*;
 import org.xml.sax.*;
-import org.xml.sax.helpers.*;
 import java.io.CharArrayWriter;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
@@ -54,7 +53,7 @@ public class OfflineListXMLParser extends XMLHandler
 	
 	boolean started = false;
 	
-	public void setRomSet(RomSet<?> set)
+	public void setRomSet(RomSet set)
 	{
 	  super.setRomSet(set);
 	  this.assets = set.getAssetManager().getSupportedAssets();

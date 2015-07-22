@@ -33,9 +33,9 @@ import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class RomSet<R extends Rom>
+public class RomSet
 {
-  public static RomSet<? extends Rom> current = null;
+  public static RomSet current = null;
 	
   private boolean loaded;
 

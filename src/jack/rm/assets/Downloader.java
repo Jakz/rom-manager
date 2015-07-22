@@ -24,9 +24,9 @@ public class Downloader
   int missingTasks;
   boolean started;
   
-  private final RomSet<? extends Rom> set;
+  private final RomSet set;
 
-  public Downloader(RomSet<? extends Rom> set)
+  public Downloader(RomSet set)
   {
     this.set = set;
   }

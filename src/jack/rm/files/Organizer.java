@@ -30,7 +30,7 @@ public class Organizer
 		return format.format(index);
 	}
 	
-	public static Set<Pattern> getPatterns(RomSet<?> set)
+	public static Set<Pattern> getPatterns(RomSet set)
 	{
 	  Set<Pattern> patterns = new TreeSet<Pattern>();
 	  

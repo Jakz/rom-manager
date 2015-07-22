@@ -11,7 +11,7 @@ import jack.rm.log.LogTarget;
 
 public abstract class ActualPlugin extends Plugin
 {
-  protected Predicate<RomSet<?>> compatibility() { return rs -> true; }
+  protected Predicate<RomSet> compatibility() { return rs -> true; }
     
   protected void message(String message) { Log.message(LogSource.PLUGINS, LogTarget.plugin(this), message); }
   protected void warning(String message) { Log.warning(LogSource.PLUGINS, LogTarget.plugin(this), message); }

@@ -12,7 +12,7 @@ public class OptionsFrame extends JFrame implements ActionListener, ComponentLis
 {
 	private static final long serialVersionUID = 1L;
 	
-	private RomSet<?> set;
+	private RomSet set;
 
 	JTabbedPane tabs = new JTabbedPane();
 	
@@ -58,7 +58,7 @@ public class OptionsFrame extends JFrame implements ActionListener, ComponentLis
 		pack();
 	}
 	
-	public void romSetLoaded(RomSet<?> set)
+	public void romSetLoaded(RomSet set)
 	{
 	  this.set = set;
 	}

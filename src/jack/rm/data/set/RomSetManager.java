@@ -16,7 +16,8 @@ import jack.rm.plugins.providers.ProviderPlugin;;
 
 public class RomSetManager
 {
-	public static void buildRomsetList()
+	@SuppressWarnings("unchecked")
+  public static void buildRomsetList()
 	{
 	  PluginManager<ActualPlugin, ActualPluginBuilder> manager = Main.manager; 
 	  Set<ActualPluginBuilder> builders = manager.getBuildersByType(PluginRealType.PROVIDER);
@@ -33,29 +34,29 @@ public class RomSetManager
 	  }
 	}
   
-  private static Map<System, RomSet<? extends Rom>> sets = new HashMap<>();
+  private static Map<System, RomSet> sets = new HashMap<>();
 
-	public static RomSet<?> bySystem(System system)
+	public static RomSet bySystem(System system)
 	{
 	   return sets.values().stream().filter( rs -> rs.system == system).findFirst().orElse(null);
 	}
 	
-	public static RomSet<?> byIdent(String ident)
+	public static RomSet byIdent(String ident)
 	{
 		return sets.values().stream().filter( rs -> rs.ident().equals(ident)).findFirst().orElse(null);
 	}
 	
-	public static Collection<RomSet<? extends Rom>> sets()
+	public static Collection<RomSet> sets()
 	{
 		return sets.values();
 	}
 	
-	public static RomSet<? extends Rom> loadSet(System console)
+	public static RomSet loadSet(System console)
 	{
 		return loadSet(sets.get(console));
 	}
 	
-	public static RomSet<? extends Rom> loadSet(RomSet<? extends Rom> set)
+	public static RomSet loadSet(RomSet set)
 	{
 		Log.log(LogType.MESSAGE, LogSource.STATUS, LogTarget.romset(set), "Loading romset");
 	  			
