@@ -127,17 +127,17 @@ public class OfflineListXMLParser extends XMLHandler
 		    rom.setAttribute(RomAttribute.SAVE_TYPE, save);
 		    break;
 		  }
-		  case "romSize": rom.size = RomSize.forBytes(asLong()); break;
+		  case "romSize": rom.setSize(RomSize.forBytes(asLong())); break;
 		  case "publisher": rom.setAttribute(RomAttribute.PUBLISHER, asString()); break;
 		  case "location": rom.setAttribute(RomAttribute.LOCATION, Location.get(asInt())); break;
 		  case "language":
 		  {
 		    int values = asInt();
-		    languageMap.forEach( (k, v) -> { if ((values & k) != 0) rom.languages.add(v); });
+		    languageMap.forEach( (k, v) -> { if ((values & k) != 0) rom.getLanguages().add(v); });
 		    break;
 		  }
 		  case "sourceRom": rom.setAttribute(RomAttribute.GROUP, asString()); break;
-		  case "romCRC": rom.crc = Long.parseLong(asString(), 16); break;
+		  case "romCRC": rom.setCRC(Long.parseLong(asString(), 16)); break;
       case "im1CRC": 
       {
         rom.getAssetData(assets[0]).setCRC(Long.parseLong(asString(), 16));

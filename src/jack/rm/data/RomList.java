@@ -30,7 +30,7 @@ public class RomList
 	public void add(Rom rom)
 	{
 		list.add(rom);
-		crcs.put(rom.crc,rom);
+		crcs.put(rom.getCRC(),rom);
 	}
 	
 	public Rom get(int i)

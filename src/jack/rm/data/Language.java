@@ -1,6 +1,8 @@
 package jack.rm.data;
 
 import java.util.*;
+import java.util.stream.Collectors;
+
 import jack.rm.gui.Icon;
 
 public enum Language
@@ -61,5 +63,11 @@ public enum Language
 	static Language forName(String language)
 	{
 		return mapping.get(language);
+	}
+	
+	public static String asString(Set<Language> languages)
+	{
+	   return languages.stream().map( l -> l.fullName).collect(Collectors.joining(", "));
+
 	}
 }

@@ -184,7 +184,7 @@ public class SearchPanel extends JPanel
       predicate = predicate.and(r -> r.getAttribute(RomAttribute.LOCATION).equals(location));
     
     if (language != null)
-      predicate = predicate.and(r -> r.languages.contains(language));
+      predicate = predicate.and(r -> r.getLanguages().contains(language));
 	  
 	  return predicate;
 	}

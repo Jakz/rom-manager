@@ -28,32 +28,36 @@ public class Rom implements Comparable<Rom>
 	@SuppressWarnings("unchecked") public <T> T getAttribute(RomAttribute key) { return (T)attributes.get(key); }
 	
   private boolean favourite;
-	
-	public RomSize size;
-	
-	public Set<Language> languages;
+		
 	public Genre genre;
-	
-	public String serial;
-	public long crc;
-			
-	private RomPath path;
 
+	private RomPath path;
 	
 	public Rom(RomSet set)
 	{
     this.set = set;
 	  status = RomStatus.MISSING;
-		languages = new TreeSet<>();
 	}
 	
-	public RomID<?> getID() { return new RomID.CRC(crc); }
+	public RomID<?> getID() { return new RomID.CRC(getCRC()); }
 	
 	public RomPath getPath() { return path; }
 	public void setPath(RomPath path) { this.path = path; }
 	
 	public void setTitle(String title) { setAttribute(RomAttribute.TITLE, title); }
 	public String getTitle() { return getAttribute(RomAttribute.TITLE); }
+	
+	public void setSize(RomSize size) { setAttribute(RomAttribute.SIZE, size); }
+	public RomSize getSize() { return getAttribute(RomAttribute.SIZE); }
+	
+	public void setCRC(long crc) { setAttribute(RomAttribute.CRC, crc); }
+	public long getCRC() { return getAttribute(RomAttribute.CRC); }
+	
+	@SuppressWarnings("unchecked")
+	public Set<Language> getLanguages()
+	{
+	  return (Set<Language>)attributes.computeIfAbsent(RomAttribute.LANGUAGE, k -> new TreeSet<Language>());
+	}
 	
 	public AssetData getAssetData(Asset asset)
 	{
@@ -64,11 +68,6 @@ public class Rom implements Comparable<Rom>
   public String toString()
 	{
 		return getCorrectName();
-	}
-	
-	public String languagesAsString()
-	{
-		return languages.stream().map( l -> l.fullName).collect(Collectors.joining(", "));
 	}
 	
 	public void move(Path dest) throws IOException

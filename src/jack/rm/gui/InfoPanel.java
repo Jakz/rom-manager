@@ -9,7 +9,7 @@ import jack.rm.data.set.RomSet;
 import jack.rm.i18n.Text;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.downloader.RomDownloaderPlugin;
-
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
@@ -18,7 +18,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.nio.file.*;
+import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.net.URL;
 
 public class InfoPanel extends JPanel implements ActionListener
@@ -43,51 +45,26 @@ public class InfoPanel extends JPanel implements ActionListener
 	    
 	    if (isReal)
 	      value.setFont(value.getFont().deriveFont(Font.BOLD, 14.0f));
+	    
+	    value.setBackground(new Color(220,220,220));
+	    
+	    title.setHorizontalAlignment(SwingConstants.RIGHT);
+	    title.setText(attrib.caption.text());
+	  }
+	  
+	  void setValue(Rom rom)
+	  {
+	    if (attrib == RomAttribute.PATH)
+	      value.setText(rom.getPath() != null ? rom.getPath().file().getParent().toString() : "");
+	    else if (attrib == RomAttribute.FILENAME)
+	      value.setText(rom.getPath() != null ? rom.getPath().file().getFileName().toString() : "");
+	    else
+	      value.setText(attrib.prettyValue(rom.getAttribute(attrib)));
 	  }
 	}
-	
-  private static enum Field
-  {
-    TITLE        (0, Text.ROM_INFO_TITLE),
-    PUBLISHER    (1, Text.ROM_INFO_PUBLISHER),
-    LOCATION     (2, Text.ROM_INFO_LOCATION),
-    LANGUAGES    (3, Text.ROM_INFO_LANGUAGES),
-    SIZE         (4, Text.ROM_INFO_SIZE),
-    SAVE_TYPE    (5, Text.ROM_INFO_SAVE_TYPE),
-    GENRE        (6, Text.ROM_INFO_GENRE),
-    CLONES       (7, Text.ROM_INFO_CLONES),
-    CRC          (8, Text.ROM_INFO_CRC),
-    /*INTERNAL_NAME(9, Text.ROM_INFO_INTERNAL_NAME),*/
-    SERIAL       (9, Text.ROM_INFO_SERIAL),
-    GROUP        (10, Text.ROM_INFO_GROUP),
-    DUMP_DATE    (11, Text.ROM_INFO_DUMP_DATE),
-    COMMENT      (12, Text.ROM_INFO_COMMENT),
-    FILENAME     (13, Text.ROM_INFO_PATH),
-    PATH         (14, Text.ROM_INFO_PATH)
-    ;
-     
-    public final int index;
-    public final String title;
-     
-    Field(int index, Text text)
-    {
-      this.index = index;
-      this.title = text.text();
-    }
-     
-    static Field forIndex(int index)
-    {
-      for (Field f : values())
-        if (f.index == index)
-          return f;
-      
-      return null;
-    }
-   }
-	
-	final JLabel[] labels = new JLabel[Field.values().length];
-	final private JLabel[] fields = new JLabel[Field.values().length];
-	
+
+  private java.util.List<AttributeField> fields;
+
 	final private JPanel pFields = new JPanel();
 	final private JPanel pTotal = new JPanel();
 	
@@ -124,70 +101,14 @@ public class InfoPanel extends JPanel implements ActionListener
 		openArchiveButton.setEnabled(false);
 	  
 	  downloadButton.setEnabled(false);
-	  		
-		JPanel subField1 = new JPanel();
-		GroupLayout gl1 = new GroupLayout(subField1);
-		subField1.setLayout(gl1);
-		
-		pFields.setLayout(new BorderLayout());
-		pFields.add(subField1, BorderLayout.CENTER);
 
-		gl1.setAutoCreateGaps(true);
-		gl1.setAutoCreateContainerGaps(true);
-				
-		Font f = new Font("null", Font.BOLD, 14);
-		
-		for (int t = 0; t < labels.length; ++t)
-		{
-			labels[t] = new JLabel(Field.forIndex(t).title+":");
-			fields[t] = new JLabel();
-			
-			if (t < labels.length-2)
-				fields[t].setFont(f);
-			//fields[t].setEditable(false);
-			fields[t].setBackground(new Color(220,220,220));
-			labels[t].setHorizontalAlignment(SwingConstants.RIGHT);
-		}
-		
-		GroupLayout.SequentialGroup hGroup1 = gl1.createSequentialGroup();
-		
-		GroupLayout.ParallelGroup pg1 = gl1.createParallelGroup();
-		
-		for (int i = 0; i < labels.length; ++i)
-		{
-			pg1.addComponent(labels[i]);
-		}
-		
-		hGroup1.addGroup(pg1);
-		
-		pg1 = gl1.createParallelGroup();
+    pFields.setLayout(new BorderLayout());
 
-		for (int i = 0; i < labels.length; ++i)
-		{
-			pg1.addComponent(fields[i]);
-		}
-		
-		hGroup1.addGroup(pg1);
-		
-		gl1.setHorizontalGroup(hGroup1);
-		
-		GroupLayout.SequentialGroup vGroup1 = gl1.createSequentialGroup();
-		
-		for (int i = 0; i < labels.length; ++i)
-		{
-			pg1 = gl1.createParallelGroup(Alignment.BASELINE);
-			pg1.addComponent(labels[i]);
-			pg1.addComponent(fields[i]);
-			vGroup1.addGroup(pg1);
-		}
-		
-		gl1.setVerticalGroup(vGroup1);
-			    
-		imagesPanel = new JPanel();
-    pTotal.add(imagesPanel);
-
-		
 		pTotal.setLayout(new BoxLayout(pTotal, BoxLayout.PAGE_AXIS));
+		
+    imagesPanel = new JPanel();
+    pTotal.add(imagesPanel);
+		
 		JPanel pFields2 = new JPanel(new BorderLayout());
 		pFields2.add(pFields, BorderLayout.NORTH);
 		pTotal.add(pFields2);
@@ -234,7 +155,21 @@ public class InfoPanel extends JPanel implements ActionListener
 			}
 		});
 		
-
+	  RomAttribute[] attributes = set.getSupportedAttributes();
+	  
+	  fields = Arrays.stream(attributes).map( a -> new AttributeField(a, true) ).collect(Collectors.toList());
+	  fields.add(new AttributeField(RomAttribute.FILENAME, false));
+	  fields.add(new AttributeField(RomAttribute.PATH, false));
+	  
+	  pFields.removeAll();
+	  
+	  pFields.setLayout(new MigLayout());
+	  
+	  for (AttributeField field : fields)
+	  {
+	    pFields.add(field.title);
+	    pFields.add(field.value, "wrap");
+	  }
 	}
 	
 	void setImage(Rom rom, Asset asset, JLabel dest)
@@ -267,11 +202,9 @@ public class InfoPanel extends JPanel implements ActionListener
 	
 	public void resetFields()
 	{
-		for (int t = 0; t < fields.length; ++t)
-		{
-			fields[t].setText("");
-		}
-		
+		for (AttributeField field : fields)
+		  field.value.setText("");
+
 		for (AssetImage image : images)
 		{
 		  image.image.setIcon(null);
@@ -284,24 +217,16 @@ public class InfoPanel extends JPanel implements ActionListener
 		this.rom = rom;
 		
 		this.setVisible(true);
-		fields[Field.TITLE.index].setText(rom.getAttribute(RomAttribute.TITLE));
-		fields[Field.PUBLISHER.index].setText(rom.getAttribute(RomAttribute.PUBLISHER));
-		fields[Field.GROUP.index].setText(rom.getAttribute(RomAttribute.GROUP));
-		fields[Field.DUMP_DATE.index].setText(rom.getAttribute(RomAttribute.DATE));
-		fields[Field.SIZE.index].setText(rom.size.toString(RomSize.PrintStyle.LONG, RomSize.PrintUnit.BITS)+" ("+rom.size.toString(RomSize.PrintStyle.LONG, RomSize.PrintUnit.BYTES)+")");
-		fields[Field.LOCATION.index].setText(rom.getAttribute(RomAttribute.LOCATION).toString());
-		fields[Field.SERIAL.index].setText(rom.serial);
-		fields[Field.CRC.index].setText(Long.toHexString(rom.crc).toUpperCase());
-		fields[Field.LANGUAGES.index].setText(rom.languagesAsString());
-		//fields[11].setText(rom.getClonesString());
-		//fields[Field.SAVE_TYPE.index].setText(rom.getSave().toString());
-		fields[Field.COMMENT.index].setText(rom.getAttribute(RomAttribute.COMMENT));
 		
-		RomPath romPath = rom.getPath();
-		
-    fields[Field.FILENAME.index].setText(romPath != null ? romPath.file().getFileName().toString() : "");
-		fields[Field.PATH.index].setText(romPath != null ? romPath.file().getParent().toString() : "");
-		
+    for (AttributeField field : fields)
+    {
+      try { field.setValue(rom); }
+      catch (NullPointerException e)
+      {
+        throw new RuntimeException(String.format("Attribute %s of %s is null", field.attrib.name(), rom.getTitle()));
+      }
+    }
+
 		for (AssetImage image : images)
 		  setImage(rom, image.asset, image.image);
 		

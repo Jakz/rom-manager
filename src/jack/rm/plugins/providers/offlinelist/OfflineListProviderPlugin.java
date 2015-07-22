@@ -49,8 +49,8 @@ public class OfflineListProviderPlugin extends ProviderPlugin
     RomAttribute.PUBLISHER,
     RomAttribute.GROUP,
     RomAttribute.SIZE,
+    RomAttribute.SAVE_TYPE,
     RomAttribute.LOCATION,
-    RomAttribute.SERIAL,
     RomAttribute.LANGUAGE,
     RomAttribute.CRC,
     RomAttribute.COMMENT

@@ -46,13 +46,13 @@ public class BasicPatternSet extends PatternSetPlugin
   private static class MegabyteSizePattern extends Pattern {
     MegabyteSizePattern() { super("%s", "Size of the game dump in bytes (long)"); }
     @Override
-    public String apply(String name, Rom rom) { return name.replace(code,rom.size.toString(RomSize.PrintStyle.LONG, RomSize.PrintUnit.BYTES)); }
+    public String apply(String name, Rom rom) { return name.replace(code,rom.getSize().toString(RomSize.PrintStyle.LONG, RomSize.PrintUnit.BYTES)); }
   }
   
   private static class MegabitSizePattern extends Pattern {
     MegabitSizePattern() { super("%S", "Size of the game dump in bits (short)"); }
     @Override
-    public String apply(String name, Rom rom) { return name.replace(code,rom.size.toString(RomSize.PrintStyle.SHORT, RomSize.PrintUnit.BITS)); }
+    public String apply(String name, Rom rom) { return name.replace(code,rom.getSize().toString(RomSize.PrintStyle.SHORT, RomSize.PrintUnit.BITS)); }
   }
   
   private static class FullLocationPattern extends Pattern {
@@ -77,8 +77,8 @@ public class BasicPatternSet extends PatternSetPlugin
     ShortLanguagePattern() { super("%i", "Short language"); }
     @Override
     public String apply(String name, Rom rom) {
-      Stream<Language> stream = rom.languages.stream();
-      long langCount = rom.languages.size();
+      Stream<Language> stream = rom.getLanguages().stream();
+      long langCount = rom.getLanguages().size();
 
       if (langCount == 1)
         return name.replace(code,stream.findFirst().get().iso639_1);
