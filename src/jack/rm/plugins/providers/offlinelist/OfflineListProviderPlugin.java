@@ -5,10 +5,21 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.IllegalFormatException;
+import java.util.List;
+import java.util.UnknownFormatConversionException;
+import java.util.stream.Collectors;
 
 import jack.rm.assets.Asset;
 import jack.rm.data.Rom;
+import jack.rm.data.RomSave;
+import jack.rm.data.RomSize;
+import jack.rm.data.console.GBA;
+import jack.rm.data.console.NDS;
 import jack.rm.data.console.System;
+import jack.rm.data.console.GBA.Save;
+import jack.rm.data.parser.SaveParser;
 import jack.rm.data.parser.XMLDatLoader;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.set.Provider;
@@ -23,6 +34,12 @@ public class OfflineListProviderPlugin extends ProviderPlugin
   {
     new Asset.Image(Paths.get("title"), new Dimension(480,320)),
     new Asset.Image(Paths.get("gameplay"), new Dimension(480,320))
+  };
+  
+  private final static Asset[] NDS_ASSETS = 
+  {
+    new Asset.Image(Paths.get("title"), new Dimension(214,384)),
+    new Asset.Image(Paths.get("gameplay"), new Dimension(256,384))
   };
   
   private final static RomAttribute[] GBA_ATTRIBUTES = 
@@ -62,7 +79,6 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         int first = (((number-1)/500)*500) + 1;
         int last = (((number-1)/500+1)*500);
         String partial = first+"-"+last+"/";
-        String suffix = asset == assets[0] ? "a.png" : "b.png";
         return new URL(url, partial+rom.getAssetData(asset).getURLData());
       }
       catch (MalformedURLException e)
@@ -73,6 +89,67 @@ public class OfflineListProviderPlugin extends ProviderPlugin
     }
 
     @Override public Asset[] getSupportedAssets() { return assets; }
+  }
+  
+  private static class GBASaveParser implements SaveParser
+  {
+    public RomSave<?> parse(String string)
+    {
+      String[] tokens = string.split("_");
+      
+      if (tokens.length == 1 && tokens[0].compareToIgnoreCase(GBA.Save.Type.NONE.toString()) == 0)
+        return new GBA.Save(GBA.Save.Type.NONE);
+      else if (tokens.length >= 2)
+      {
+        if (tokens.length > 2)
+          tokens[1] = tokens[2];
+        
+        for (GBA.Save.Type type : GBA.Save.Type.values())
+        {
+          if (tokens[0].toLowerCase().contains(type.toString().toLowerCase()))
+            return new GBA.Save(type, Integer.valueOf(tokens[1].substring(1)));
+        }
+      }
+      
+      return new GBA.Save(GBA.Save.Type.NONE);
+    }
+  }
+  
+  private static class NDSSaveParser implements SaveParser
+  {
+    public RomSave<?> parse(String string)
+    {
+      if (string.equals("TBC"))
+        return new NDS.Save(NDS.Save.Type.TBC);
+      else if (string.equals("None"))
+        return new NDS.Save(NDS.Save.Type.NONE);
+      
+      String[] tokens = string.split(" - ");
+      tokens = Arrays.stream(tokens).map(String::trim).map(String::toLowerCase).toArray(String[]::new);
+      
+      NDS.Save.Type type = null;
+      long multiplier = 0;
+      
+      if (tokens[0].equals("flash"))
+        type = NDS.Save.Type.FLASH;
+      else if (tokens[0].equals("eeprom"))
+        type = NDS.Save.Type.EEPROM;
+      else
+        throw new UnknownFormatConversionException("Unable to parse NDS save: "+string);
+      
+      if (tokens[1].endsWith("kbit"))
+        multiplier = RomSize.KBIT;
+      else if (tokens[1].endsWith("mbit"))
+        multiplier = RomSize.MEGABIT;
+      else
+        throw new UnknownFormatConversionException("Unable to parse NDS save: "+string);
+
+      String ntoken = tokens[1].substring(0, tokens[1].length() - 4).trim();
+      
+      multiplier *= Integer.valueOf(ntoken);
+      
+      return new NDS.Save(type, multiplier);
+    }
   }
   
   @Override
@@ -89,9 +166,20 @@ public class OfflineListProviderPlugin extends ProviderPlugin
           () -> "ol",
           GBA_ATTRIBUTES, 
           new OfflineListProviderPlugin.AssetManager(GBA_ASSETS, new URL("http://offlinelistgba.free.fr/imgs/")), 
-          new XMLDatLoader(new OfflineListXMLParser())
+          new XMLDatLoader(new OfflineListXMLParser(new GBASaveParser()))
       );
-      
+      return romSet;
+    }
+    else if (system == System.NDS)
+    {
+      RomSet romSet = new RomSet(
+          system, 
+          new AdvanSceneProvider(), 
+          () -> "ol",
+          GBA_ATTRIBUTES, 
+          new OfflineListProviderPlugin.AssetManager(NDS_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_NDS/")), 
+          new XMLDatLoader(new OfflineListXMLParser(new NDSSaveParser()))
+      );
       return romSet;
     }
     
@@ -113,7 +201,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
 
   @Override public boolean isSystemSupported(System system)
   {
-    return system == System.GBA;
+    return system == System.GBA || system == System.NDS;
   }
 
 }

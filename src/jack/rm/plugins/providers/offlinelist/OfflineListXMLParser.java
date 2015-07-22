@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import jack.rm.data.console.GBA;
+import jack.rm.data.parser.SaveParser;
 import jack.rm.data.parser.XMLHandler;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.set.RomSet;
@@ -51,6 +52,8 @@ public class OfflineListXMLParser extends XMLHandler
 	Rom rom;
 	int curString;
 	
+	private SaveParser saveParser;
+	
 	boolean started = false;
 	
 	public void setRomSet(RomSet set)
@@ -59,10 +62,11 @@ public class OfflineListXMLParser extends XMLHandler
 	  this.assets = set.getAssetManager().getSupportedAssets();
 	}
 	
-	public OfflineListXMLParser()
+	public OfflineListXMLParser(SaveParser saveParser)
 	{
     format = new DecimalFormat();
     format.applyPattern("0000");
+    this.saveParser = saveParser;
 	}
 
 	@Override
@@ -94,27 +98,6 @@ public class OfflineListXMLParser extends XMLHandler
 	{
 	  return Long.parseLong(asString());
 	}
-	
-	public GBA.Save parseSave(String string)
-	{
-	  String[] tokens = string.split("_");
-	  
-	  if (tokens.length == 1 && tokens[0].compareToIgnoreCase(GBA.Save.Type.NONE.toString()) == 0)
-	    return new GBA.Save(GBA.Save.Type.NONE);
-	  else if (tokens.length >= 2)
-	  {
-	    if (tokens.length > 2)
-	      tokens[1] = tokens[2];
-	    
-	    for (GBA.Save.Type type : GBA.Save.Type.values())
-	    {
-	      if (tokens[0].toLowerCase().contains(type.toString().toLowerCase()))
-	        return new GBA.Save(type, Integer.valueOf(tokens[1].substring(1)));
-	    }
-	  }
-	  
-	  return null;
-	}
 
   Set<String> saves = new HashSet<>();
 	
@@ -132,7 +115,7 @@ public class OfflineListXMLParser extends XMLHandler
 		    {
 		      AssetData data = rom.getAssetData(asset);
 		      data.setPath(Paths.get(format.format(asInt())+".png"));
-		      data.setURLData(format.format(asInt())+(asset==assets[0]?"a":"b")+".png");
+		      data.setURLData(asInt()+(asset==assets[0]?"a":"b")+".png");
 		    }
 		    break;
 		  }
@@ -140,7 +123,7 @@ public class OfflineListXMLParser extends XMLHandler
 		  case "title": rom.setTitle(asString()); break;
 		  case "saveType":
 		  {
-		    RomSave<?> save = parseSave(asString());
+		    RomSave<?> save = saveParser.parse(asString());
 		    rom.setAttribute(RomAttribute.SAVE_TYPE, save);
 		    break;
 		  }
