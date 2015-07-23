@@ -13,7 +13,6 @@ import jack.rm.data.set.*;
 import jack.rm.gui.*;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
-
 import com.pixbits.plugin.PluginManager;
 import com.pixbits.workflow.*;
 
@@ -92,6 +91,7 @@ public class Main
     
     manager.register(jack.rm.plugins.folder.NumericalOrganizer.class);
     manager.register(jack.rm.plugins.folder.AlphabeticalOrganizer.class);
+    manager.register(jack.rm.plugins.folder.RootOrganizer.class);
     manager.register(jack.rm.plugins.cleanup.DeleteEmptyFoldersPlugin.class);
     manager.register(jack.rm.plugins.cleanup.MoveUnknownFilesPlugin.class);
     manager.register(jack.rm.plugins.renamer.BasicPatternSet.class);
@@ -100,6 +100,8 @@ public class Main
     manager.register(jack.rm.plugins.renamer.PatternRenamerPlugin.class);
     manager.register(jack.rm.plugins.downloader.EmuParadiseDownloader.class);
     manager.register(jack.rm.plugins.providers.offlinelist.OfflineListProviderPlugin.class);
+    manager.register(jack.rm.plugins.providers.clrmame.ClrMamePlugin.class);
+
 
 	}
 	

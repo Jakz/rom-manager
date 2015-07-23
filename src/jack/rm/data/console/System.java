@@ -9,6 +9,7 @@ public enum System
 	NDS("nds", "Nintendo DS", new String[] {"nds", "dsi"}, true),
 	_3DS("3ds", "Nintendo 3DS", new String[] {"3ds"}, true),
 	WS("ws", "WonderSwan", new String[] {"ws"}, true),
+	GG("gg", "Game Gear", new String[] {"gg"}, true),
 	C64("c64", "Commodore 64", null, false)
 	;
 	

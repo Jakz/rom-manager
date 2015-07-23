@@ -90,7 +90,7 @@ public class RomSet
 	
 	public String datPath()
 	{
-		return "dat/"+ident()+".xml";
+		return "dat/"+ident()+"."+providerType.getExtension();
 	}
 
 	public PathMatcher getFileMatcher()

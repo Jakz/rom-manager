@@ -27,13 +27,30 @@ public enum RomAttribute
     }
   },
   SERIAL(Text.ROM_INFO_SERIAL),
+  SAVE_TYPE(Text.ROM_INFO_SAVE_TYPE),
+  
   CRC(Text.ROM_INFO_CRC)
   {
     public String prettyValue(Object value) {
       return Long.toHexString((Long)value).toUpperCase();
     }
   },
-  SAVE_TYPE(Text.ROM_INFO_SAVE_TYPE),
+  SHA1(Text.ROM_INFO_SHA1)
+  {
+    public String prettyValue(Object value) {
+      byte[] digest = (byte[])value;
+      return javax.xml.bind.DatatypeConverter.printHexBinary(digest);
+    }
+  },
+  MD5(Text.ROM_INFO_MD5)
+  {
+    public String prettyValue(Object value) {
+      byte[] digest = (byte[])value;
+      return javax.xml.bind.DatatypeConverter.printHexBinary(digest);
+    }
+  },
+  
+  
   FILENAME(Text.ROM_INFO_FILENAME),
   PATH(Text.ROM_INFO_PATH)
   ;

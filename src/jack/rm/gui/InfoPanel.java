@@ -6,14 +6,11 @@ import jack.rm.assets.AssetManager;
 import jack.rm.data.*;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.set.RomSet;
-import jack.rm.i18n.Text;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.downloader.RomDownloaderPlugin;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import javax.swing.GroupLayout.Alignment;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -134,26 +131,36 @@ public class InfoPanel extends JPanel implements ActionListener
 		
 		AssetManager manager = set.getAssetManager();
 		Asset[] assets = manager.getSupportedAssets();
-    images = new AssetImage[] { new AssetImage(assets[0]), new AssetImage(assets[1]) };
-    
-	  SwingUtilities.invokeLater(new Runnable() {
-			@Override
-      public void run() {
-				imagesPanel.removeAll();
-				
-		    imagesPanel.add(images[0].image);
-		    imagesPanel.add(Box.createRigidArea(new Dimension(30,0)));
-		    imagesPanel.add(images[1].image);
-		    
-		    for (AssetImage image : images)
-		    {
-		      image.image.setPreferredSize(((Asset.Image)image.asset).getSize());
-		      image.image.revalidate();
-		    }
-		    
-		    imagesPanel.revalidate();
-			}
-		});
+		
+		if (assets.length == 0)
+		{
+		  images = new AssetImage[0];
+		  imagesPanel.removeAll();
+		  imagesPanel.revalidate();
+		}
+		else
+		{
+      images = new AssetImage[] { new AssetImage(assets[0]), new AssetImage(assets[1]) };
+      
+  	  SwingUtilities.invokeLater(new Runnable() {
+  			@Override
+        public void run() {
+  				imagesPanel.removeAll();
+  				
+  		    imagesPanel.add(images[0].image);
+  		    imagesPanel.add(Box.createRigidArea(new Dimension(30,0)));
+  		    imagesPanel.add(images[1].image);
+  		    
+  		    for (AssetImage image : images)
+  		    {
+  		      image.image.setPreferredSize(((Asset.Image)image.asset).getSize());
+  		      image.image.revalidate();
+  		    }
+  		    
+  		    imagesPanel.revalidate();
+  			}
+  		});
+		}
 		
 	  RomAttribute[] attributes = set.getSupportedAttributes();
 	  

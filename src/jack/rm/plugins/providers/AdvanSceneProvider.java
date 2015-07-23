@@ -1,4 +1,4 @@
-package jack.rm.plugins.providers.offlinelist;
+package jack.rm.plugins.providers;
 
 import jack.rm.data.set.Provider;
 

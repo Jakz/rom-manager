@@ -12,7 +12,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import jack.rm.data.console.GBA;
 import jack.rm.data.parser.SaveParser;
 import jack.rm.data.parser.XMLHandler;
 import jack.rm.data.rom.RomAttribute;

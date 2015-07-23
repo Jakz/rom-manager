@@ -31,7 +31,11 @@ class RomCellRenderer extends JPanel implements ListCellRenderer<Rom>
 	{
 	  mainLabel.setText(rom.toString());
 	  Location location = rom.getAttribute(RomAttribute.LOCATION);
-	  mainLabel.setIcon(location.icon.getIcon());
+	  
+	  if (location != null)
+	    mainLabel.setIcon(location.icon.getIcon());
+	  else
+	    mainLabel.setIcon(null);
 		
 	  if (rom.isFavourite())
 	    rightIcon.setIcon(Icon.FAVORITE.getIcon());

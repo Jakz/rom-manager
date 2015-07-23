@@ -6,11 +6,7 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.Arrays;
-import java.util.IllegalFormatException;
-import java.util.List;
 import java.util.UnknownFormatConversionException;
-import java.util.stream.Collectors;
-
 import jack.rm.assets.Asset;
 import jack.rm.data.Rom;
 import jack.rm.data.RomSave;
@@ -18,13 +14,12 @@ import jack.rm.data.RomSize;
 import jack.rm.data.console.GBA;
 import jack.rm.data.console.NDS;
 import jack.rm.data.console.System;
-import jack.rm.data.console.GBA.Save;
 import jack.rm.data.parser.SaveParser;
 import jack.rm.data.parser.XMLDatLoader;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.set.Provider;
 import jack.rm.data.set.RomSet;
-import jack.rm.plugins.providers.ProviderPlugin;
+import jack.rm.plugins.providers.*;
 
 public class OfflineListProviderPlugin extends ProviderPlugin
 {
@@ -163,7 +158,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
       RomSet romSet = new RomSet(
           system, 
           PROVIDER, 
-          () -> "ol",
+          new OfflineListProviderType(),
           GBA_ATTRIBUTES, 
           new OfflineListProviderPlugin.AssetManager(GBA_ASSETS, new URL("http://offlinelistgba.free.fr/imgs/")), 
           new XMLDatLoader(new OfflineListXMLParser(new GBASaveParser()))
@@ -175,7 +170,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
       RomSet romSet = new RomSet(
           system, 
           new AdvanSceneProvider(), 
-          () -> "ol",
+          new OfflineListProviderType(),
           GBA_ATTRIBUTES, 
           new OfflineListProviderPlugin.AssetManager(NDS_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_NDS/")), 
           new XMLDatLoader(new OfflineListXMLParser(new NDSSaveParser()))
