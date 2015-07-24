@@ -37,6 +37,12 @@ public class OfflineListProviderPlugin extends ProviderPlugin
     new Asset.Image(Paths.get("gameplay"), new Dimension(256,384))
   };
   
+  private final static Asset[] GB_ASSETS = 
+  {
+    new Asset.Image(Paths.get("title"), new Dimension(320,288)),
+    new Asset.Image(Paths.get("gameplay"), new Dimension(320,288))
+  };
+  
   private final static RomAttribute[] GBA_ATTRIBUTES = 
   {
     RomAttribute.TITLE,
@@ -50,6 +56,20 @@ public class OfflineListProviderPlugin extends ProviderPlugin
     RomAttribute.CRC,
     RomAttribute.COMMENT
   };
+  
+  private final static RomAttribute[] GB_ATTRIBUTES = 
+  {
+    RomAttribute.TITLE,
+    RomAttribute.NUMBER,
+    RomAttribute.PUBLISHER,
+    RomAttribute.GROUP,
+    RomAttribute.SIZE,
+    RomAttribute.LOCATION,
+    RomAttribute.LANGUAGE,
+    RomAttribute.CRC,
+    RomAttribute.COMMENT
+  };
+  
   
   private static class AssetManager implements jack.rm.assets.AssetManager
   {
@@ -160,7 +180,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
           PROVIDER, 
           new OfflineListProviderType(),
           GBA_ATTRIBUTES, 
-          new OfflineListProviderPlugin.AssetManager(GBA_ASSETS, new URL("http://offlinelistgba.free.fr/imgs/")), 
+          new AssetManager(GBA_ASSETS, new URL("http://offlinelistgba.free.fr/imgs/")), 
           new XMLDatLoader(new OfflineListXMLParser(new GBASaveParser()))
       );
       return romSet;
@@ -172,10 +192,34 @@ public class OfflineListProviderPlugin extends ProviderPlugin
           new AdvanSceneProvider(), 
           new OfflineListProviderType(),
           GBA_ATTRIBUTES, 
-          new OfflineListProviderPlugin.AssetManager(NDS_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_NDS/")), 
+          new AssetManager(NDS_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_NDS/")), 
           new XMLDatLoader(new OfflineListXMLParser(new NDSSaveParser()))
       );
       return romSet;
+    }
+    else if (system == System.GBC)
+    {
+      RomSet romSet = new RomSet(
+        system,
+        new NoIntroProvider(),
+        new OfflineListProviderType(),
+        GB_ATTRIBUTES,
+        new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20Gameboy%20Color/")),
+        new XMLDatLoader(new OfflineListXMLParser(r -> null))
+      );
+      return romSet;
+    }
+    else if (system == System.GB)
+    {
+      RomSet romSet = new RomSet(
+          system,
+          new NoIntroProvider(),
+          new OfflineListProviderType(),
+          GB_ATTRIBUTES,
+          new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20Gameboy/")),
+          new XMLDatLoader(new OfflineListXMLParser(r -> null))
+        );
+        return romSet;
     }
     
     }
@@ -196,7 +240,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
 
   @Override public boolean isSystemSupported(System system)
   {
-    return system == System.GBA || system == System.NDS;
+    return system == System.GBA || system == System.NDS || system == System.GB || system == System.GBC;
   }
 
 }

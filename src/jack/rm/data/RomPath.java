@@ -39,7 +39,7 @@ public abstract class RomPath
     @Override public String getExtension() {
       String filename = file.getFileName().toString();
       int lastdot = filename.lastIndexOf('.');
-      return lastdot != -1 ? filename.substring(lastdot) : "";
+      return lastdot != -1 ? filename.substring(lastdot+1) : "";
     }
     
     @Override
