@@ -79,7 +79,8 @@ public abstract class Plugin implements JsonnableContext
       ExposedParameter annotation = f.getAnnotation(ExposedParameter.class);
       String name = !annotation.name().isEmpty() ? annotation.name() : f.getName();  
       String description = !annotation.description().isEmpty() ? annotation.description() : null;  
-      return new PluginArgument(this, f, name, f.getType(), description);
+      String params = !annotation.params().isEmpty() ? annotation.params() : null;  
+      return new PluginArgument(this, f, name, f.getType(), description, params);
     }).collect(Collectors.toList());
   }
 

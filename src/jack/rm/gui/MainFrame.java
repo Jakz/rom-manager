@@ -11,6 +11,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.event.*;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.awt.*;
@@ -64,7 +65,7 @@ public class MainFrame extends JFrame implements WindowListener
     if (e.getStateChange() == ItemEvent.SELECTED)
       Main.loadRomSet(cbRomSets.getItemAt(cbRomSets.getSelectedIndex()));
 	};
-		
+
 	public MainFrame()
 	{
 		list.setModel(romListModel);
@@ -75,6 +76,24 @@ public class MainFrame extends JFrame implements WindowListener
 		list.setBackground(Color.WHITE);
 		list.getSelectionModel().addListSelectionListener(listListener);
     list.setSelectedIndex(0);
+        
+    list.addMouseListener(
+        new MouseAdapter(){
+          @Override
+          public void mouseClicked(MouseEvent e){
+            if (e.getClickCount() == 2){
+              int r = list.getSelectedIndex();
+              
+              if (r != -1)
+              {
+                Rom rom = list.getModel().getElementAt(r);
+                
+                rom.setFavourite(!rom.isFavourite());
+                romListModel.fireChanges(r);   
+              }
+            }
+          }
+        });
 
 		listPane.setPreferredSize(new Dimension(230,500));		
 		
@@ -230,6 +249,7 @@ public class MainFrame extends JFrame implements WindowListener
     infoPanel.romSetLoaded(set);
     optionsFrame.romSetLoaded(set);
   
+    list.clearSelection();
 	  updateTable();
 	}
 	

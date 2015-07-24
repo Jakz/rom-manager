@@ -25,7 +25,7 @@ public abstract class RomPath
     public Bin(Path file)
     {
       super(RomType.BIN);
-      this.file = file;
+      this.file = file.normalize();
     }
     
     @Override
@@ -57,7 +57,7 @@ public abstract class RomPath
     public Archive(Path file, String internalName)
     {
       super(RomType.ZIP);
-      this.file = file;
+      this.file = file.normalize();
       this.internalName = internalName;
     }
     

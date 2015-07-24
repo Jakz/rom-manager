@@ -8,6 +8,7 @@ import jack.rm.log.*;
 
 import java.nio.file.*;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.zip.*;
 import javax.swing.SwingWorker;
 
@@ -146,6 +147,7 @@ public class Scanner
 		}
 			
 		foundFiles = new FolderScanner(set.getFileMatcher(), set.getSettings().getIgnoredPaths()).scan(folder);
+
 		ScannerWorker worker = new ScannerWorker(foundFiles);
 		worker.execute();
 	}

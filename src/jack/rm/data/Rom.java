@@ -131,8 +131,15 @@ public class Rom implements Comparable<Rom>
   
   public boolean hasCorrectFolder()
   {
-    return RomSet.current.getSettings().getFolderOrganizer() == null || 
-        path.file().getParent().equals(RomSet.current.getSettings().romsPath.resolve(getCorrectFolder()));
+    try {
+      return RomSet.current.getSettings().getFolderOrganizer() == null || 
+        Files.isSameFile(path.file().getParent(), RomSet.current.getSettings().romsPath.resolve(getCorrectFolder()));
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+      return false;
+    }
   }
 
 	@Override
@@ -143,6 +150,10 @@ public class Rom implements Comparable<Rom>
 	    int n1 = getAttribute(RomAttribute.NUMBER);
 	    int n2 = ((Rom)other).getAttribute(RomAttribute.NUMBER);
 	    return n1 == n2;
+	  }
+	  else if (other instanceof Rom)
+	  {
+	    return getTitle().equals(((Rom)other).getAttribute(RomAttribute.TITLE));
 	  }
 	  
 	  return false;

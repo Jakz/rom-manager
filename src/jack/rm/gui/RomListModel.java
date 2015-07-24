@@ -59,6 +59,11 @@ public class RomListModel extends AbstractListModel<Rom>
 	public Consumer<Rom> collector() { return list::add; }
 	public Stream<Rom> stream() { return list.stream(); }
 	
+	public void fireChanges(int row)
+	{
+	  this.fireContentsChanged(RomListModel.this, row, row);
+	}
+	
 	public void fireChanges()
 	{
 		RomListModel.this.fireContentsChanged(RomListModel.this, 0, list.size());

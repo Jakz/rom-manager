@@ -9,9 +9,12 @@ public class JPlaceHolderTextField extends JTextField
 {
 	private static final long serialVersionUID = 1L;
 	
-	public JPlaceHolderTextField(int s)
+	private final String placeholder;
+	
+	public JPlaceHolderTextField(int s, String placeholder)
 	{
 		super(s);
+		this.placeholder = placeholder;
 	}
 	
   @Override
@@ -25,7 +28,7 @@ public class JPlaceHolderTextField extends JTextField
           
           FontMetrics fm = g2.getFontMetrics();
           
-          g2.drawString(Text.TEXT_SEARCH_IN_TITLE.text(), 10, this.getSize().height/2+fm.getAscent()/2); //figure out x, y from font's FontMetrics and size of component.
+          g2.drawString(placeholder, 10, this.getSize().height/2+fm.getAscent()/2); //figure out x, y from font's FontMetrics and size of component.
           g2.dispose();
       }
     }

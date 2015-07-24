@@ -17,7 +17,7 @@ import jack.rm.plugins.PluginWithIgnorePaths;
 
 public class MoveUnknownFilesPlugin extends CleanupPlugin implements PluginWithIgnorePaths
 {
-  @ExposedParameter(name="Unknown Path", description="The folder to move unknown file into, can be inside the romset path") Path path;
+  @ExposedParameter(name="Unknown Path", description="The folder to move unknown file into, can be inside the romset path", params="directories") Path path;
   
   int counter;
  

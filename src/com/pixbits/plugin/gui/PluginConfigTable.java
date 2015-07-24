@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.swing.JFileChooser;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
@@ -102,11 +103,23 @@ public class PluginConfigTable extends JTable
       
       types = model.arguments.stream().map( a -> a.getType() ).collect(Collectors.toList());
  
-      types.stream().map( t -> {
+      model.arguments.stream().map( a -> {
+        Class<?> t = a.getType();
         if (t.equals(Integer.class) || t.equals(Integer.TYPE))
           return new PluginArgumentEditor(t, this.getDefaultEditor(Integer.class));
         else if (t.equals(java.nio.file.Path.class))
-          return new PathArgumentEditor();
+        {
+          int type = JFileChooser.FILES_AND_DIRECTORIES;
+          
+          String params = a.getParams();
+          
+          if (params.equals("directories"))
+            type = JFileChooser.DIRECTORIES_ONLY;
+          else if (params.equals("files"))
+            type = JFileChooser.FILES_ONLY;
+          
+          return new PathArgumentEditor(type);
+        }
         else
           return this.getDefaultEditor(Object.class);
       }).forEach(editors::add);

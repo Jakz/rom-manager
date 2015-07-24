@@ -21,7 +21,7 @@ public class SearchPanel extends JPanel
 	private static final long serialVersionUID = 1L;
 	
 	final JLabel[] labels = new JLabel[4];
-	final JPlaceHolderTextField romName = new JPlaceHolderTextField(10);
+	final JPlaceHolderTextField freeSearchField = new JPlaceHolderTextField(10, Text.TEXT_SEARCH_IN_TITLE.text());
 	final MainFrame mainFrame;
 	
 	final JComboBox<RomSize> sizes = new JComboBox<>();
@@ -141,7 +141,7 @@ public class SearchPanel extends JPanel
 		
 		sizes.setRenderer(new RomSizeCellRenderer());
 
-		romName.addCaretListener(new FieldListener());
+		freeSearchField.addCaretListener(new FieldListener());
 		sizes.addActionListener(listener);
 		//genres.addActionListener(listener);
 		locations.addActionListener(listener);
@@ -150,7 +150,7 @@ public class SearchPanel extends JPanel
 		this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		
 		this.add(labels[0]);
-		this.add(romName);
+		this.add(freeSearchField);
 		this.add(labels[1]);
 		this.add(sizes);
 		this.add(labels[2]);
@@ -161,20 +161,42 @@ public class SearchPanel extends JPanel
 		active = true;
 	}
 	
+	private boolean isSearchArg(String[] tokens, String... vals)
+	{
+	  boolean firstMatch = tokens[0].equals(vals[0]);  
+	  return firstMatch && Arrays.stream(vals, 1, vals.length).anyMatch( v -> v.equals(tokens[1]));
+	}
+	
 	public Predicate<Rom> buildSearchPredicate()
 	{
 	  Predicate<Rom> predicate = r -> true;
 	  
-	  if (!romName.getText().isEmpty())
+	  if (!freeSearchField.getText().isEmpty())
 	  {
-      String[] tokens = romName.getText().split(" ");
-	    Map<Boolean, List<String>> ptokens = Arrays.stream(tokens).collect(Collectors.partitioningBy( t -> !t.startsWith("-")));
+      String[] tokens = freeSearchField.getText().split(" ");
+	    Map<Boolean, List<String>> ptokens = Arrays.stream(tokens).filter(t -> !t.contains(":")).collect(Collectors.partitioningBy( t -> !t.startsWith("!")));
 	    
 	    for (String token : ptokens.get(true))
 	      predicate = predicate.and(r -> r.getTitle().toLowerCase().contains(token));
 	    
 	    for (String token : ptokens.get(false))
         predicate = predicate.and(r -> !r.getTitle().toLowerCase().contains(token));
+	    
+	    List<String> specialTokens = Arrays.stream(tokens).filter(t -> t.contains(":")).collect(Collectors.toList());
+	    
+	    for (String special : specialTokens)
+	    {
+	      String[] stokens = special.split(":");
+
+	      if (stokens.length == 2)
+	      {
+	        final boolean negated = stokens[0].startsWith("!");
+	        if (negated) stokens[0] = stokens[0].substring(1);
+	        
+	        if (isSearchArg(stokens, "is", "favorite", "favourite", "fav"))
+	          predicate = predicate.and(r -> negated ^ (r.isFavourite()));
+	      }
+	    }
 	  }
 	  
 	  Location location = locations.getItemAt(locations.getSelectedIndex());
@@ -201,7 +223,7 @@ public class SearchPanel extends JPanel
 			}
 		});
 		
-		romName.setText("");
+		freeSearchField.setText("");
 		sizes.setSelectedIndex(-1);
 		locations.setSelectedIndex(-1);
 		languages.setSelectedIndex(-1);

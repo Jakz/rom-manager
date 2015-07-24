@@ -11,4 +11,5 @@ public @interface ExposedParameter
 {
   String name() default "";
   String description() default "";
+  String params() default "";
 }

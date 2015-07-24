@@ -19,7 +19,7 @@ import jack.rm.plugins.BackgroundPlugin;
 
 public class ArchiveMergerPlugin extends CleanupPlugin implements BackgroundPlugin
 {
-  @ExposedParameter(name="Archive Path", description="This is the archive that will contain the whole romset")
+  @ExposedParameter(name="Archive Path", description="This is the archive that will contain the whole romset", params="files")
   Path path; 
   
   @Override public void execute(RomList list)
