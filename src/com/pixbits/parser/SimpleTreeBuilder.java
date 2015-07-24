@@ -35,10 +35,6 @@ public class SimpleTreeBuilder
   
   private void token(String token)
   {
-    //System.out.println(token);
-    
-    //if (true) return;
-    
     boolean wasPartial = partial;
     
     if (!partial)

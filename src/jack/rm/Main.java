@@ -94,6 +94,7 @@ public class Main
     manager.register(jack.rm.plugins.folder.RootOrganizer.class);
     manager.register(jack.rm.plugins.cleanup.DeleteEmptyFoldersPlugin.class);
     manager.register(jack.rm.plugins.cleanup.MoveUnknownFilesPlugin.class);
+    manager.register(jack.rm.plugins.cleanup.ArchiveMergerPlugin.class);
     manager.register(jack.rm.plugins.renamer.BasicPatternSet.class);
     manager.register(jack.rm.plugins.renamer.NumberedRomPattern.class);
     manager.register(jack.rm.plugins.renamer.BasicRenamerPlugin.class);
