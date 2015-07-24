@@ -105,7 +105,7 @@ public class OfflineListXMLParser extends XMLHandler
 	{
 		if (!started)
 			return;
-		
+				
 		switch(localName)
 		{
 		  case "imageNumber":
@@ -128,7 +128,10 @@ public class OfflineListXMLParser extends XMLHandler
 		  }
 		  case "romSize": rom.setSize(RomSize.forBytes(asLong())); break;
 		  case "publisher": rom.setAttribute(RomAttribute.PUBLISHER, asString()); break;
-		  case "location": rom.setAttribute(RomAttribute.LOCATION, Location.get(asInt())); break;
+		  case "location":
+		  {
+		    rom.setAttribute(RomAttribute.LOCATION, Location.get(asInt())); break;
+		  }
 		  case "language":
 		  {
 		    int values = asInt();

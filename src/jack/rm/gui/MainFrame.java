@@ -61,6 +61,8 @@ public class MainFrame extends JFrame implements WindowListener
 	final private InfoPanel infoPanel = new InfoPanel();
 	final private OptionsFrame optionsFrame = new OptionsFrame();
 	
+	final private TextOutputFrame textFrame = new TextOutputFrame();
+	
 	final private ItemListener romSetListener = e -> {
     if (e.getStateChange() == ItemEvent.SELECTED)
       Main.loadRomSet(cbRomSets.getItemAt(cbRomSets.getSelectedIndex()));
@@ -141,6 +143,13 @@ public class MainFrame extends JFrame implements WindowListener
 		pack();
 		setTitle("Rom Manager v0.6 - build 51");
 	}
+	
+	private void exportList(Predicate<Rom> predicate)
+	{
+    StringBuilder builder = new StringBuilder();
+    set.list.stream().filter(predicate).map(r -> r.getTitle()).sorted().forEach(r -> builder.append(r).append('\n'));
+    textFrame.showWithText(this, builder.toString());
+	}
 
 	private void buildMenu(RomSet set)
 	{	
@@ -153,10 +162,23 @@ public class MainFrame extends JFrame implements WindowListener
     romsMenu.add(MenuElement.ROMS_RENAME.item);
     romsMenu.add(MenuElement.ROMS_CLEANUP.item);
     romsMenu.addSeparator();
+    
     romsMenu.add(romsExportSubmenu);
-    romsExportSubmenu.add(MenuElement.ROMS_EXPORT_FOUND.item);
-    romsExportSubmenu.add(MenuElement.ROMS_EXPORT_MISSING.item);
+    
+    JMenuItem exportFavorites = new JMenuItem("Export Favourites");
+    exportFavorites.addActionListener( e -> { exportList(r -> r.isFavourite()); });
+    romsExportSubmenu.add(exportFavorites);
+    
+    JMenuItem exportFound = new JMenuItem(Text.MENU_ROMS_EXPORT_FOUND.text());
+    exportFound.addActionListener( e -> { exportList(r -> r.status != RomStatus.MISSING); });
+    romsExportSubmenu.add(exportFound);
+    
+    JMenuItem exportMissing = new JMenuItem(Text.MENU_ROMS_EXPORT_MISSING.text());
+    exportMissing.addActionListener( e -> { exportList(r -> r.status == RomStatus.MISSING); });
+    romsExportSubmenu.add(exportMissing);
+
     romsMenu.addSeparator();
+    
     romsMenu.add(MenuElement.ROMS_EXIT.item);
     
     JMenuItem[] filters = { MenuElement.VIEW_SHOW_CORRECT.item, MenuElement.VIEW_SHOW_UNORGANIZED.item, MenuElement.VIEW_SHOW_NOT_FOUND.item };

@@ -29,14 +29,6 @@ class MenuListener implements ActionListener
 			Main.scanner.scanForRoms(false);
 			Main.mainFrame.updateTable();
 		}
-		else if (tag == MenuElement.ROMS_EXPORT_MISSING)
-		{
-			//export missing				
-		}
-		else if (tag == MenuElement.ROMS_EXPORT_FOUND)
-		{
-			//export correct
-		}
 		else if (tag == MenuElement.ROMS_CLEANUP)
 		{
 		  RomSet.current.cleanup();

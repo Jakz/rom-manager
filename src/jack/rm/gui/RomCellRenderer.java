@@ -22,6 +22,8 @@ class RomCellRenderer extends JPanel implements ListCellRenderer<Rom>
 	  setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));
 	  setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 	  
+	  rightIcon.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+	  
 	  add(mainLabel);
 	  add(rightIcon);
 	}
