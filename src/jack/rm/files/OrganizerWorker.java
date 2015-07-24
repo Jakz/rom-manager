@@ -10,9 +10,9 @@ import com.pixbits.gui.ProgressDialog;
 import jack.rm.Main;
 import jack.rm.data.Rom;
 import jack.rm.data.set.RomSet;
-import jack.rm.plugins.OrganizerPlugin;
+import jack.rm.plugins.BackgroundPlugin;
 
-public abstract class OrganizerWorker<T extends OrganizerPlugin> extends SwingWorker<Void, Integer>
+public abstract class OrganizerWorker<T extends BackgroundPlugin> extends SwingWorker<Void, Integer>
 {
   protected int total = 0;
   protected final RomSet romSet;
