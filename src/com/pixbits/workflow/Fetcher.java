@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public abstract class Fetcher<T extends Data> extends AbstractSpliterator<T> implements Supplier<Stream<T>>
+public abstract class Fetcher<T extends WorkflowData> extends AbstractSpliterator<T> implements Supplier<Stream<T>>
 {
   public Fetcher(int size)
   {

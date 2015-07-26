@@ -1,6 +1,6 @@
 package com.pixbits.workflow;
 
-public interface Data
+public interface WorkflowData
 {
 
 }

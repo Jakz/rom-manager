@@ -49,7 +49,7 @@ public class Main
 		}
 	}
 	
-	static class IntHolder implements Data
+	static class IntHolder implements WorkflowData
 	{
 	  public int value;
 	  

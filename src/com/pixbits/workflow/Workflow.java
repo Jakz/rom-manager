@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public class Workflow<T extends Data>
+public class Workflow<T extends WorkflowData>
 {
   private Fetcher<T> fetcher;
   private Dumper<T> dumper;
