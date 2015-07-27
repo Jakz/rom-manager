@@ -126,7 +126,7 @@ public class OfflineListXMLParser extends XMLHandler
 		  {		    
 		    try
 		    {
-		      saves.add(asString());
+		      //saves.add(asString());
 		      RomSave<?> save = saveParser.parse(asString());
 		      rom.setAttribute(RomAttribute.SAVE_TYPE, save);
 		    }

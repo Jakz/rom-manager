@@ -6,6 +6,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import java.awt.Desktop;
 import java.util.function.Consumer;
 
+import jack.rm.assets.AssetPacker;
 import jack.rm.assets.Downloader;
 import jack.rm.data.*;
 import jack.rm.data.console.System;
@@ -170,6 +171,8 @@ public class Main
 		mainFrame = new MainFrame();
 	
     loadRomSet(RomSetManager.bySystem(System.GBA));
+    
+    AssetPacker.packAssets(RomSet.current);
 
 		
 		mainFrame.setLocationRelativeTo(null);

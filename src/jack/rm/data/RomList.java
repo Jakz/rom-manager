@@ -12,7 +12,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-public class RomList
+public class RomList implements Iterable<Rom>
 {
 	public final RomSet set;
   List<Rom> list;
@@ -126,6 +126,7 @@ public class RomList
 	}
   
   public Stream<Rom> stream() { return list.stream(); }
+  public Iterator<Rom> iterator() { return list.iterator(); }
   
   public void organize()
   {
