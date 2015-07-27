@@ -14,6 +14,7 @@ import jack.rm.data.RomSize;
 import jack.rm.data.console.GBA;
 import jack.rm.data.console.NDS;
 import jack.rm.data.console.System;
+import jack.rm.data.console.NDS.Save;
 import jack.rm.data.parser.SaveParser;
 import jack.rm.data.parser.XMLDatLoader;
 import jack.rm.data.rom.RomAttribute;
@@ -122,7 +123,18 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         for (GBA.Save.Type type : GBA.Save.Type.values())
         {
           if (tokens[0].toLowerCase().contains(type.toString().toLowerCase()))
-            return new GBA.Save(type, Integer.valueOf(tokens[1].substring(1)));
+          {
+            GBA.Save.Version[] versions = GBA.Save.valuesForType(type);
+            
+            for (GBA.Save.Version version : versions)
+            {
+              if (tokens[1].contains(version.toString()))
+                return new GBA.Save(type, version);
+            }
+            
+            throw new RuntimeException("GBA Save format not recognized for: "+string);
+            
+          }
         }
       }
       

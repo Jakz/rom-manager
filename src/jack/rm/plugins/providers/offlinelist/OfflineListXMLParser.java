@@ -123,6 +123,7 @@ public class OfflineListXMLParser extends XMLHandler
 		  case "title": rom.setTitle(asString()); break;
 		  case "saveType":
 		  {		    
+		    //saves.add(asString());
 		    RomSave<?> save = saveParser.parse(asString());
 		    rom.setAttribute(RomAttribute.SAVE_TYPE, save);
 		    break;
