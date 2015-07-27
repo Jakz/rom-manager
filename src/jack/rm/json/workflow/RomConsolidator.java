@@ -1,0 +1,31 @@
+package jack.rm.json.workflow;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
+
+import com.pixbits.workflow.*;
+
+import jack.rm.data.Rom;
+
+public class RomConsolidator extends Dumper<RomHandle>
+{
+  Path destination = Paths.get("/Users/jack/Desktop/drivers");
+  
+  public void accept(RomHandle handle)
+  {
+    try
+    {
+      Rom rom = handle.getRom();
+      Path finalPath = destination.resolve(rom.getTitle()+"."+rom.getSystem().exts[0]);
+      Files.copy(handle.getPath(), finalPath, StandardCopyOption.REPLACE_EXISTING);
+      Files.deleteIfExists(handle.getPath());
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
+  }
+}

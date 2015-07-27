@@ -6,6 +6,7 @@ import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.set.RomSet;
 import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.RenamerPlugin;
+import jack.rm.data.console.System;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -53,6 +54,8 @@ public class Rom implements Comparable<Rom>
 	
 	public void setCRC(long crc) { setAttribute(RomAttribute.CRC, crc); }
 	public long getCRC() { return getAttribute(RomAttribute.CRC); }
+	
+	public System getSystem() { return set.system; }
 	
 	@SuppressWarnings("unchecked")
 	public Set<Language> getLanguages()

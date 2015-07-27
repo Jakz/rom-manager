@@ -10,6 +10,8 @@ import jack.rm.data.rom.RomAttribute;
 
 public class GBASavePatcherPlugin
 {
+  static private byte[] toBytes(String string) { return javax.xml.bind.DatatypeConverter.parseHexBinary(string); }
+  
   private static class PatchEntry
   {
     byte[] fromBlock;
@@ -28,6 +30,25 @@ public class GBASavePatcherPlugin
   }
   
   // FLASH1M_V102
+  private static final PatchEntry[] Flash_v102 = {
+    new PatchEntry(
+      toBytes("aa211970054a55211170b0211970e0210905087070475555000eaa2a000e30b591b0684600f0f3f86d460135064aaa20"),
+      toBytes("80210902092212069f4411800349c302c91811807047feffff010000000030b591b0684600f0f3f86d460135064aaa2000000549552000009020000010a9034a101c08e000005555000eaa2a000e204e000008880138088008880028f9d10c48132013200006040ce0200005622062200006000e04430749aa200000074a55200000f02000000000")
+    ),
+    new PatchEntry(
+      toBytes("1449aa240c70134b55221a70802008700c701a7010200870"),
+      toBytes("0e210906ff248022134b5202013a8c54fcd1000000000000")
+    ),
+    new PatchEntry(
+      toBytes("aa250d70134b55221a70802008700d701a7030202070"),
+      toBytes("ff25082200005202013aa554fcd10000000000000000")
+    ),
+    new PatchEntry(
+      toBytes("2270094b55221a70a0222270"),
+      toBytes("0000094b55220000a0220000")
+    ) 
+  };
+
   
   // FLASH1M_V103
   
@@ -71,6 +92,8 @@ public class GBASavePatcherPlugin
     
     if (type == GBA.Save.Type.FLASH)
     {
+      if (version == 102)
+        patch = Flash_v102;      
       if (version == 121 || version == 122)
         patch = Flash_v120_v121;
     }

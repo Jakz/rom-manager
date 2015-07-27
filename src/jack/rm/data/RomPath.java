@@ -1,6 +1,9 @@
 package jack.rm.data;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.*;
+import java.util.zip.*;
 
 public abstract class RomPath
 {
@@ -12,6 +15,7 @@ public abstract class RomPath
   public abstract RomPath build(Path file);
   public abstract boolean isArchive();
   public abstract String getExtension();
+  public abstract InputStream getInputStream() throws IOException;
   
   RomPath(RomType type)
   {
@@ -47,6 +51,12 @@ public abstract class RomPath
     {
       return new Bin(file);
     }
+    
+    @Override
+    public InputStream getInputStream() throws IOException
+    {
+      return Files.newInputStream(file);
+    }
   }
   
   public static class Archive extends RomPath
@@ -76,6 +86,37 @@ public abstract class RomPath
     public RomPath build(Path file)
     {
       return new Archive(file, this.internalName);
+    }
+    
+    @Override
+    public InputStream getInputStream() throws IOException
+    {
+      return new RomZipInputStream(this);
+    }
+    
+    private class RomZipInputStream extends InputStream
+    {
+      private final ZipFile file;
+      private final ZipEntry entry;
+      private final InputStream is;
+      
+      RomZipInputStream(Archive archive) throws IOException
+      {
+        this.file = new ZipFile(archive.file.toFile());
+        this.entry = file.getEntry(archive.internalName);
+        this.is = file.getInputStream(entry);
+      }
+      
+      @Override public int read() throws IOException
+      {
+        return is.read();
+      }
+      
+      @Override public void close() throws IOException
+      {
+        is.close();
+        file.close();
+      }
     }
   }
 }

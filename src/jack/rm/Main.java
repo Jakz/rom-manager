@@ -11,6 +11,10 @@ import jack.rm.data.*;
 import jack.rm.data.console.System;
 import jack.rm.data.set.*;
 import jack.rm.gui.*;
+import jack.rm.json.workflow.RomConsolidator;
+import jack.rm.json.workflow.RomHandle;
+import jack.rm.json.workflow.SingleRomSource;
+import jack.rm.json.workflow.TrimOperation;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
 import com.pixbits.plugin.PluginManager;
@@ -122,6 +126,22 @@ public class Main
 
 
     downloader = new Downloader(set);
+    
+    /*for (int i = 0; i < romSet.list.count(); ++i)
+      if (romSet.list.get(i).status == RomStatus.FOUND)
+      {
+        Rom rom = romSet.list.get(i);
+        
+        Fetcher<RomHandle> source = new SingleRomSource(rom);
+        Dumper<RomHandle> dumper = new RomConsolidator();
+        Workflow<RomHandle> workflow = new Workflow<>(source, dumper);
+        workflow.addStep(new TrimOperation(new byte[]{0x00, (byte)0xff}));
+        workflow.execute();
+
+        java.lang.System.exit(0);
+      }*/
+    
+    
 
 	}
 	
@@ -149,7 +169,7 @@ public class Main
 		
 		mainFrame = new MainFrame();
 	
-    loadRomSet(RomSetManager.bySystem(System.GB));
+    loadRomSet(RomSetManager.bySystem(System.GBA));
 
 		
 		mainFrame.setLocationRelativeTo(null);

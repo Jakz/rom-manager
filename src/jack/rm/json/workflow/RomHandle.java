@@ -3,7 +3,10 @@ package jack.rm.json.workflow;
 import jack.rm.data.Rom;
 import jack.rm.data.RomPath;
 
+import java.io.IOException;
 import java.nio.ByteOrder;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import com.pixbits.io.BinaryBuffer;
 import com.pixbits.workflow.WorkflowData;
@@ -12,29 +15,31 @@ public class RomHandle implements WorkflowData
 {
   private final Rom rom;
   private BinaryBuffer buffer;
-  private RomPath path;
+  private Path path;
 
 
   public RomHandle(Rom rom)
   {
-    this(rom, rom.getPath());
-  }
-  
-  public RomHandle(Rom rom, RomPath path)
-  {
     this.rom = rom;
-    this.path = path;
-    this.buffer = null;
+  }
+
+  public Rom getRom() { return rom; }
+  
+  private void prepareBuffer() throws IOException
+  {
+    RomPath source = rom.getPath();
+    this.path = Files.createTempFile(null, null);
+    Files.copy(source.getInputStream(), path, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
   }
   
-  public Rom getRom() { return rom; }
   public BinaryBuffer getBuffer()
   {
     if (buffer == null)
     {
       try
       {
-        buffer = new BinaryBuffer(rom.getPath().file(), BinaryBuffer.Mode.WRITE, ByteOrder.BIG_ENDIAN);
+        prepareBuffer();
+        buffer = new BinaryBuffer(path, BinaryBuffer.Mode.WRITE, ByteOrder.BIG_ENDIAN);
       }
       catch (Exception e)
       {
@@ -45,5 +50,5 @@ public class RomHandle implements WorkflowData
     return buffer;
   }
   
-  public RomPath getPath() { return path; }
+  public Path getPath() { return path; }
 }
