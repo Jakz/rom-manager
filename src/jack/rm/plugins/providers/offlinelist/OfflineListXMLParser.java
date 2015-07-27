@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import jack.rm.data.parser.SaveParser;
 import jack.rm.data.parser.XMLHandler;
@@ -98,7 +99,7 @@ public class OfflineListXMLParser extends XMLHandler
 	  return Long.parseLong(asString());
 	}
 
-  Set<String> saves = new HashSet<>();
+  Set<String> saves = new TreeSet<>();
 	
 	@Override
   public void endElement(String namespaceURI, String localName, String qName) throws SAXException
@@ -121,7 +122,7 @@ public class OfflineListXMLParser extends XMLHandler
 		  case "releaseNumber": rom.setAttribute(RomAttribute.NUMBER, asInt()); break;
 		  case "title": rom.setTitle(asString()); break;
 		  case "saveType":
-		  {
+		  {		    
 		    RomSave<?> save = saveParser.parse(asString());
 		    rom.setAttribute(RomAttribute.SAVE_TYPE, save);
 		    break;

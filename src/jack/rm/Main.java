@@ -149,7 +149,7 @@ public class Main
 		
 		mainFrame = new MainFrame();
 	
-    loadRomSet(RomSetManager.bySystem(System.GBA));
+    loadRomSet(RomSetManager.bySystem(System.GB));
 
 		
 		mainFrame.setLocationRelativeTo(null);

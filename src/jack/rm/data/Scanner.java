@@ -99,19 +99,22 @@ public class Scanner
           Log.log(LogType.ERROR, LogSource.SCANNER, LogTarget.file(file), "Zipped file is corrupt, skipping");
         }
       }
-      
-      return result;
     }
     else
     {
-      long crc = computeCRC(file);
-      
-      Rom rom = set.list.getByCRC(crc);
-      
-      if (rom != null)
-        return new ScanResult(rom, new RomPath.Bin(file));
-      else return null;
+      if (!existing.contains(file))
+      {    
+        long crc = computeCRC(file);
+        
+        Rom rom = set.list.getByCRC(crc);
+        
+        if (rom != null)
+          return new ScanResult(rom, new RomPath.Bin(file));
+        else return null;
+      }
     }
+	  
+	  return result;
 	}
 	
 	public void scanForRoms(boolean total)

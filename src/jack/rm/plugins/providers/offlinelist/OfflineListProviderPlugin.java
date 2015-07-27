@@ -183,6 +183,14 @@ public class OfflineListProviderPlugin extends ProviderPlugin
           new AssetManager(GBA_ASSETS, new URL("http://offlinelistgba.free.fr/imgs/")), 
           new XMLDatLoader(new OfflineListXMLParser(new GBASaveParser()))
       );
+      /*RomSet romSet = new RomSet(
+          system, 
+          new AdvanSceneProvider(), 
+          new OfflineListProviderType(),
+          GBA_ATTRIBUTES, 
+          new AssetManager(GBA_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_GBA/")), 
+          new XMLDatLoader(new OfflineListXMLParser(new GBASaveParser()))
+      );*/
       return romSet;
     }
     else if (system == System.NDS)

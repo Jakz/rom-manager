@@ -165,7 +165,7 @@ public class MainFrame extends JFrame implements WindowListener
     
     romsMenu.add(romsExportSubmenu);
     
-    JMenuItem exportFavorites = new JMenuItem("Export Favourites");
+    JMenuItem exportFavorites = new JMenuItem("Export favourites");
     exportFavorites.addActionListener( e -> { exportList(r -> r.isFavourite()); });
     romsExportSubmenu.add(exportFavorites);
     
@@ -288,7 +288,7 @@ public class MainFrame extends JFrame implements WindowListener
 	  /*StackTraceElement[] stack = Thread.currentThread().getStackTrace();
 		Arrays.stream(stack).forEach(s -> System.out.println(s));*/
 	  
-	  System.out.println("updated table");
+	  //System.out.println("updated table");
 	  romListModel.clear();
 	  
 	  Predicate<Rom> predicate = searchPanel.buildSearchPredicate().and( r ->

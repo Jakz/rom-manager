@@ -49,6 +49,7 @@ public class GBA
       return value;
     }
     
+    public int getVersion() { return version; }
     public Type getType() { return type; }
   }
 }

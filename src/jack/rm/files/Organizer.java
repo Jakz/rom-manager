@@ -41,9 +41,7 @@ public class Organizer
 	}
 
 	public static void organizeRomIfNeeded(Rom rom)
-	{
-	  Settings settings = RomSet.current.getSettings();
-	  
+	{	  
 	  if (!rom.hasCorrectName())
 	    renameRom(rom);
 	  

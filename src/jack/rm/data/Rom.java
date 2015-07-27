@@ -10,6 +10,7 @@ import jack.rm.plugins.renamer.RenamerPlugin;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -22,6 +23,7 @@ public class Rom implements Comparable<Rom>
 	
 	private Map<RomAttribute, Object> attributes = new HashMap<>();
 	private Map<Asset, AssetData> assetData = new HashMap<>();
+	private Set<RomAttribute> customAttributes = new HashSet<>();
 	
 	public void setAttribute(RomAttribute key, Object value) { attributes.put(key, value); }
 	@SuppressWarnings("unchecked") public <T> T getAttribute(RomAttribute key) { return (T)attributes.get(key); }

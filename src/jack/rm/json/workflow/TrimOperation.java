@@ -2,9 +2,7 @@ package jack.rm.json.workflow;
 
 import jack.rm.files.Trimmer;
 
-import com.pixbits.workflow.Mutuator;
-
-public class TrimOperation implements RomBinaryOperation
+public class TrimOperation implements RomOperation
 {
   byte[] filler;
   
@@ -16,7 +14,7 @@ public class TrimOperation implements RomBinaryOperation
     this.filler = filler;
   }
   
-  public WorkflowBinaryRom apply(WorkflowBinaryRom rom)
+  public RomHandle apply(RomHandle rom)
   {
     try {
       Trimmer.trim(rom.getBuffer(), filler);

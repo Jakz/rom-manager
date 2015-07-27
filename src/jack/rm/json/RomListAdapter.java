@@ -26,7 +26,7 @@ public class RomListAdapter implements JsonSerializer<RomList>, JsonDeserializer
   public JsonElement serialize(RomList src, Type type, JsonSerializationContext context)
   {
     RomSavedState[] roms = list.stream()
-      .filter( r -> r.status != RomStatus.MISSING)
+      .filter( r -> r.status != RomStatus.MISSING || r.isFavourite())
       .map( r -> new RomSavedState(r.getID(), r.status, r.getPath(), r.isFavourite()) )
       .toArray( size -> new RomSavedState[size]);
     

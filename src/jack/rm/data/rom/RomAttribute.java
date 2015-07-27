@@ -7,7 +7,7 @@ import jack.rm.i18n.Text;
 
 public enum RomAttribute
 {
-  NUMBER(Text.ROM_INFO_TITLE),
+  NUMBER(Text.ROM_INFO_NUMBER),
   TITLE(Text.ROM_INFO_TITLE),
   PUBLISHER(Text.ROM_INFO_PUBLISHER),
   GROUP(Text.ROM_INFO_GROUP),
@@ -50,6 +50,7 @@ public enum RomAttribute
     }
   },
   
+  GENRE(Text.ROM_INFO_GENRE),
   
   FILENAME(Text.ROM_INFO_FILENAME),
   PATH(Text.ROM_INFO_PATH)

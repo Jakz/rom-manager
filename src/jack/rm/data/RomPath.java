@@ -33,7 +33,7 @@ public abstract class RomPath
     @Override
     public String toString() { return file.getFileName().toString(); }
     @Override
-    public String plainName() { return file.getFileName().toString().substring(0, file.getFileName().toString().length()-4); }
+    public String plainName() { return file.getFileName().toString().substring(0, file.getFileName().toString().lastIndexOf('.')); }
     
     @Override public boolean isArchive() { return false; }
     @Override public String getExtension() {
@@ -66,7 +66,7 @@ public abstract class RomPath
     @Override
     public String toString() { return file.getFileName().toString() + " ("+internalName+")"; }
     @Override
-    public String plainName() { return file.getFileName().toString().substring(0, file.getFileName().toString().length()-4); }
+    public String plainName() { return file.getFileName().toString().substring(0, file.getFileName().toString().lastIndexOf('.')); }
     
     @Override public boolean isArchive() { return true; }
     
