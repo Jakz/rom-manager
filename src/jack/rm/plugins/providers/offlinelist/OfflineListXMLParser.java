@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.UnknownFormatConversionException;
 
 import jack.rm.data.parser.SaveParser;
 import jack.rm.data.parser.XMLHandler;
@@ -123,9 +124,17 @@ public class OfflineListXMLParser extends XMLHandler
 		  case "title": rom.setTitle(asString()); break;
 		  case "saveType":
 		  {		    
-		    //saves.add(asString());
-		    RomSave<?> save = saveParser.parse(asString());
-		    rom.setAttribute(RomAttribute.SAVE_TYPE, save);
+		    try
+		    {
+		      saves.add(asString());
+		      RomSave<?> save = saveParser.parse(asString());
+		      rom.setAttribute(RomAttribute.SAVE_TYPE, save);
+		    }
+		    catch (UnknownFormatConversionException e)
+		    {
+		      System.out.println("Rom: "+rom.getTitle());
+		      e.printStackTrace();
+		    }
 		    break;
 		  }
 		  case "romSize": rom.setSize(RomSize.forBytes(asLong())); break;

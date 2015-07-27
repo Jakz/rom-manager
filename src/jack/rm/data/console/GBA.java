@@ -14,6 +14,7 @@ public class GBA
       EEPROM,
       FLASH,
       SRAM,
+      TBC,
       NONE;
     };
     

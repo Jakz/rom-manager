@@ -107,7 +107,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
     @Override public Asset[] getSupportedAssets() { return assets; }
   }
   
-  private static class GBASaveParser implements SaveParser
+  private static class GBASaveParserOL implements SaveParser
   {
     public RomSave<?> parse(String string)
     {
@@ -132,13 +132,34 @@ public class OfflineListProviderPlugin extends ProviderPlugin
                 return new GBA.Save(type, version);
             }
             
-            throw new RuntimeException("GBA Save format not recognized for: "+string);
+            throw new UnknownFormatConversionException("Unable to parse GBA save: "+string);
             
           }
         }
       }
       
       return new GBA.Save(GBA.Save.Type.NONE);
+    }
+  }
+  
+  private static class GBASaveParserAS implements SaveParser
+  {
+    public RomSave<?> parse(String string)
+    {
+      if (string.toLowerCase().equals("none"))
+        return new GBA.Save(GBA.Save.Type.NONE);
+      else if (string.toLowerCase().equals("tbc"))
+        return new GBA.Save(GBA.Save.Type.TBC);
+      else if (string.equals("Eeprom - 4 kbit"))
+        return new GBA.Save(GBA.Save.Type.EEPROM, GBA.Save.EEPROM.v122);
+        
+      for (GBA.Save.Type type : GBA.Save.Type.values())
+        if (string.toLowerCase().contains(type.toString().toLowerCase()))
+          for (GBA.Save.Version version :  GBA.Save.valuesForType(type))
+            if (string.contains(version.toString()))
+              return new GBA.Save(type, version);
+      
+      throw new UnknownFormatConversionException("Unable to parse GBA save: "+string);
     }
   }
   
@@ -187,22 +208,22 @@ public class OfflineListProviderPlugin extends ProviderPlugin
     
     if (system == System.GBA)
     {
-      RomSet romSet = new RomSet(
+      /*RomSet romSet = new RomSet(
           system, 
           PROVIDER, 
           new OfflineListProviderType(),
           GBA_ATTRIBUTES, 
           new AssetManager(GBA_ASSETS, new URL("http://offlinelistgba.free.fr/imgs/")), 
-          new XMLDatLoader(new OfflineListXMLParser(new GBASaveParser()))
-      );
-      /*RomSet romSet = new RomSet(
+          new XMLDatLoader(new OfflineListXMLParser(new GBASaveParserOL()))
+      );*/
+      RomSet romSet = new RomSet(
           system, 
           new AdvanSceneProvider(), 
           new OfflineListProviderType(),
           GBA_ATTRIBUTES, 
           new AssetManager(GBA_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_GBA/")), 
-          new XMLDatLoader(new OfflineListXMLParser(new GBASaveParser()))
-      );*/
+          new XMLDatLoader(new OfflineListXMLParser(new GBASaveParserAS()))
+      );
       return romSet;
     }
     else if (system == System.NDS)

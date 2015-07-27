@@ -305,7 +305,7 @@ public class ClonesDialog extends JDialog
     boolean hasMover = set.getSettings().getFolderOrganizer() != null;
     
     Predicate<ScanResult> predicateAny = e -> true;
-    Predicate<ScanResult> predicateCorrectFolder = e -> !hasMover || e.rom.getCorrectFolder().equals(e.path.file().getParent());
+    Predicate<ScanResult> predicateCorrectFolder = e -> !hasMover || set.getSettings().romsPath.resolve(e.rom.getCorrectFolder()).equals(e.path.file().getParent());
     Predicate<ScanResult> predicateCorrectName = e -> !hasRenamer || e.rom.getCorrectName().equals(e.path.file().getFileName());
     Predicate<ScanResult> predicateCorrectNameAndFolder = predicateCorrectName.and(predicateCorrectFolder);
     

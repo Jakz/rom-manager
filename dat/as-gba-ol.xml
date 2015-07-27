@@ -2,7 +2,7 @@
 <dat xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="datas.xsd">
 	<configuration>
 		<datName>ADVANsCEne Pure GBA Entertainment Collection</datName>
-		<datVersion>0436</datVersion>
+		<datVersion>0444</datVersion>
 		<system>Nintendo GameBoy Advance</system>
 		<screenshotsWidth>240</screenshotsWidth>
 		<screenshotsHeight>160</screenshotsHeight>
@@ -60,7 +60,7 @@
 			<romSize>4194304</romSize>
 			<publisher>Nintendo</publisher>
 			<location>7</location>
-			<sourceRom>Mr. Lee</sourceRom>
+			<sourceRom>Independent</sourceRom>
 			<language>256</language>
 			<files>
 				<romCRC extension=".gba">25E3FC9A</romCRC>
@@ -77,7 +77,7 @@
 			<romSize>4194304</romSize>
 			<publisher>Nintendo</publisher>
 			<location>7</location>
-			<sourceRom>Mr. Lee</sourceRom>
+			<sourceRom>Independent</sourceRom>
 			<language>256</language>
 			<files>
 				<romCRC extension=".gba">B993B92F</romCRC>
@@ -601,10 +601,10 @@
 			<releaseNumber>33</releaseNumber>
 			<title>Tony Hawk's Pro Skater 2</title>
 			<saveType>Eeprom v111 - 4 kbit</saveType>
-			<romSize>8388608</romSize>
+			<romSize>16777216</romSize>
 			<publisher>Activision</publisher>
 			<location>1</location>
-			<sourceRom>The Corporation</sourceRom>
+			<sourceRom>Total Crap</sourceRom>
 			<language>2</language>
 			<files>
 				<romCRC extension=".gba">812DC57A</romCRC>
@@ -16868,7 +16868,7 @@
 		<game>
 			<imageNumber>990</imageNumber>
 			<releaseNumber>990</releaseNumber>
-			<title>WarioWare, Inc. - Mega Microgame$!</title>
+			<title>WarioWare, Inc. - Mega Microgames!</title>
 			<saveType>Sram v112 - 256 kbit</saveType>
 			<romSize>8388608</romSize>
 			<publisher>Nintendo</publisher>
@@ -24739,7 +24739,7 @@
 		<game>
 			<imageNumber>1453</imageNumber>
 			<releaseNumber>1453</releaseNumber>
-			<title>The Lord of The Rings - Ou no Kikan</title>
+			<title>The Lord of the Rings - Ou no Kikan</title>
 			<saveType>Eeprom v122 - 4 kbit</saveType>
 			<romSize>16777216</romSize>
 			<publisher>Electronic Arts</publisher>
@@ -38084,7 +38084,7 @@
 		<game>
 			<imageNumber>2238</imageNumber>
 			<releaseNumber>2238</releaseNumber>
-			<title>Franklin's Great Adventure</title>
+			<title>Franklin's Great Adventures</title>
 			<saveType>Eeprom v124 - 4 kbit</saveType>
 			<romSize>4194304</romSize>
 			<publisher>Neko Entertainment</publisher>

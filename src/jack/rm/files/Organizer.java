@@ -78,7 +78,7 @@ public class Organizer
     {     
       try
       {      
-        Path finalPath = rom.getCorrectFolder();
+        Path finalPath = RomSet.current.getSettings().romsPath.resolve(rom.getCorrectFolder());
   
         if (!Files.exists(finalPath) || !Files.isDirectory(finalPath))
         {
