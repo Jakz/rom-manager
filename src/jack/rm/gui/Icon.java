@@ -28,8 +28,9 @@ public enum Icon
   STATUS_CORRECT("status_correct"),
   STATUS_NOT_FOUND("status_not_found"),
   FAVORITE("favorite"),
-  EDIT("edit")
-  
+  EDIT("edit"),
+  DELETE("delete")
+
   ;
   
   private final String name;

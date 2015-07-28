@@ -136,7 +136,7 @@ public class MainFrame extends JFrame implements WindowListener
 		this.add(cardConsole,"Console");
 		
 
-		this.setPreferredSize(new Dimension(1280,700));
+		this.setPreferredSize(new Dimension(1440,900));
 		this.addWindowListener(this);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			

@@ -12,12 +12,17 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.nio.file.*;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.net.URL;
@@ -38,24 +43,39 @@ public class InfoPanel extends JPanel implements ActionListener
 	
 	private Mode mode;
 	
-	private class AttributeField
+	private class AttributeField implements CaretListener, ActionListener
 	{
 	  private JLabel title;
 	  private JTextField value;
-	  private JButton editButton;
+	  
+	  private JButton deleteButton;
+	  
 	  private RomAttribute attrib;
 	  private Border defaultBorder;
 	  private Color defaultColor;
 	  
+	  Object parseValue()
+	  {
+	    if (attrib.clazz == String.class)
+	      return value.getText();
+	    else if (attrib.clazz == Integer.class)
+	    {
+	      try {
+	        return Integer.parseInt(value.getText());
+	      } catch (Exception e) { return null; }
+	    }
+	    
+	    return null;
+	  }
+	  
 	  AttributeField(RomAttribute attrib, boolean isReal)
 	  {
 	    title = new JLabel();
-	    value = new JTextField();
+	    value = new JTextField(40);
 	    this.attrib = attrib;
 	    
 	    if (isReal)
-	      value.setFont(value.getFont().deriveFont(Font.BOLD, 14.0f));
-	    
+	      value.setFont(value.getFont().deriveFont(Font.BOLD, 14.0f)); 
 	    
 	    title.setHorizontalAlignment(SwingConstants.RIGHT);
 	    title.setText(attrib.caption.text());
@@ -68,28 +88,81 @@ public class InfoPanel extends JPanel implements ActionListener
 	    defaultColor = new Color(color.getRed(), color.getGreen(), color.getBlue());
 	    value.setBackground(defaultColor);
 
+	    deleteButton = new JButton();
+	    deleteButton.setIcon(Icon.DELETE.getIcon());
+	    deleteButton.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
+	    deleteButton.setVisible(false);
+	    deleteButton.addActionListener( e -> {
+	      rom.clearCustomAttribute(attrib);
+	      setValue(rom);
+	      value.setBackground(Color.WHITE);
+	    });
 	    
-	    if (mode == Mode.EDIT && attrib.clazz != null)
-	    {
-	      editButton = new JButton();
-	      editButton.setIcon(Icon.EDIT.getIcon());
-	      editButton.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
-	      
-	      editButton.addActionListener( e -> { 
-	        value.setEditable(true);
-	        value.requestFocus();    
-	        value.setBorder(defaultBorder);
-	        value.setBackground(Color.WHITE);
-	      });
-	    }
+	  }
+	  
+	  void enableEdit()
+	  {
+      if (attrib.clazz != null)
+      {
+        value.setEditable(true);
+        value.setBorder(defaultBorder);
+        value.setBackground(Color.WHITE);     
+        value.addCaretListener(this);
+        value.addActionListener(this);
+        
+        deleteButton.setVisible(rom.hasCustomAttribute(attrib));
+      }
 	  }
 	  
 	  void finishEdit()
 	  {
-	    Insets insets = defaultBorder.getBorderInsets(value);
-	    value.setBorder(BorderFactory.createEmptyBorder(insets.top, insets.left, insets.bottom, insets.right));
-	    value.setEditable(false);
-      value.setBackground(defaultColor);
+	    if (attrib.clazz != null)
+	    {
+	      Insets insets = defaultBorder.getBorderInsets(value);
+	      value.setBorder(BorderFactory.createEmptyBorder(insets.top, insets.left, insets.bottom, insets.right));
+	      value.setEditable(false);
+	      value.setBackground(defaultColor);
+        value.removeCaretListener(this);
+        value.removeActionListener(this);
+      
+	      deleteButton.setVisible(false);
+	    }
+	  }
+	  
+	  void clearCustomAttribute()
+	  {
+	    if (rom.hasCustomAttribute(attrib))
+	    {
+	      rom.clearCustomAttribute(attrib);
+	      setValue(rom);
+	      Main.mainFrame.romListModel.fireChanges(Main.mainFrame.list.getSelectedIndex());
+	    }
+	    deleteButton.setVisible(false);
+	  }
+	  
+	  public void caretUpdate(CaretEvent e)
+	  {
+      Object pv = parseValue();
+      
+      if (pv != null && !pv.equals(rom.getAttribute(attrib)))
+        value.setBackground(new Color(255,175,0));
+      else
+        value.setBackground(Color.WHITE);
+	  }
+	  
+	  public void actionPerformed(ActionEvent e)
+	  {
+	    Object pv = parseValue();
+	    
+	    if (pv != null && !pv.equals(rom.getAttribute(attrib)))
+	    {
+	      rom.setCustomAttribute(attrib, pv);
+	      value.setBackground(Color.WHITE);
+	      deleteButton.setVisible(true);
+	      Main.mainFrame.romListModel.fireChanges(Main.mainFrame.list.getSelectedIndex());
+	    }
+	    else
+	      setValue(rom);
 	  }
 	  
 	  void setValue(Rom rom)
@@ -100,6 +173,8 @@ public class InfoPanel extends JPanel implements ActionListener
 	      value.setText(rom.getPath() != null ? rom.getPath().file().getFileName().toString() : "");
 	    else
 	      value.setText(attrib.prettyValue(rom.getAttribute(attrib)));
+
+	    deleteButton.setVisible(mode == Mode.EDIT && rom.hasCustomAttribute(attrib));
 	  }
 	}
 
@@ -114,6 +189,10 @@ public class InfoPanel extends JPanel implements ActionListener
 	final private JButton assetsButton = new JButton("Download Assets");
 	final private JButton openFolderButton = new JButton("Open Folder");
 	final private JButton openArchiveButton = new JButton("Open Archive");
+	
+	final private JToggleButton editButton;
+	final private JButton resetCustomFieldsButton;
+	
 	final private JPanel buttons = new JPanel();
 	
 	private Rom rom;
@@ -137,7 +216,29 @@ public class InfoPanel extends JPanel implements ActionListener
 		
 	public InfoPanel()
 	{
-		openFolderButton.setEnabled(false);
+		editButton = new JToggleButton(Icon.EDIT.getIcon());
+    editButton.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
+    editButton.setToolTipText("Switch between edit and normal mode");
+    
+    resetCustomFieldsButton = new JButton(Icon.DELETE.getIcon());
+    resetCustomFieldsButton.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
+    resetCustomFieldsButton.setToolTipText("Reset all custom attributes to default");
+    resetCustomFieldsButton.addActionListener( e -> fields.stream().forEach(AttributeField::clearCustomAttribute) );
+    
+    editButton.addActionListener(e -> {
+      mode = editButton.isSelected() ? Mode.EDIT : Mode.VIEW;
+      
+      for (AttributeField field : fields)
+      {
+        if (mode == Mode.EDIT)
+          field.enableEdit();
+        else
+          field.finishEdit();
+      }
+    });
+    
+	  
+	  openFolderButton.setEnabled(false);
 		openArchiveButton.setEnabled(false);
 	  
 	  downloadButton.setEnabled(false);
@@ -170,7 +271,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	
 	public void romSetLoaded(final RomSet set)
 	{
-		mode = Mode.EDIT;
+		mode = Mode.VIEW;
 	  
 	  this.set = set;
 		
@@ -212,23 +313,26 @@ public class InfoPanel extends JPanel implements ActionListener
 	  fields = Arrays.stream(attributes).map( a -> new AttributeField(a, true) ).collect(Collectors.toList());
 	  fields.add(new AttributeField(RomAttribute.FILENAME, false));
 	  fields.add(new AttributeField(RomAttribute.PATH, false));
-	  
+	  	  
 	  pFields.removeAll();
 	  
 	  pFields.setLayout(new MigLayout());
 	  
 	  for (AttributeField field : fields)
-	  {
-	    pFields.add(field.title);
-	    
-	    if (mode == Mode.VIEW || field.editButton == null)
-	      pFields.add(field.value, "wrap");
-	    else
+	  {	    
+	    pFields.add(field.title, "span 4");
+
+	    if (field.deleteButton != null)
 	    {
-	      pFields.add(field.value);
-	      pFields.add(field.editButton, "wrap");
+	      pFields.add(field.value, "span 8, growx");
+	      pFields.add(field.deleteButton, "wrap");
 	    }
+	    else
+	      pFields.add(field.value, "span 9, growx, wrap");
 	  }
+	  
+	  pFields.add(editButton);
+	  pFields.add(resetCustomFieldsButton);
 	}
 	
 	void setImage(Rom rom, Asset asset, JLabel dest)

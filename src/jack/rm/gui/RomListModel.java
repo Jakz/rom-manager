@@ -63,7 +63,7 @@ public class RomListModel extends AbstractListModel<Rom>
 	{
 	  this.fireContentsChanged(RomListModel.this, row, row);
 	}
-	
+
 	public void fireChanges()
 	{
 		RomListModel.this.fireContentsChanged(RomListModel.this, 0, list.size());
