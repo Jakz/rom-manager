@@ -11,6 +11,8 @@ import jack.rm.plugins.downloader.RomDownloaderPlugin;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -28,25 +30,66 @@ public class InfoPanel extends JPanel implements ActionListener
 	
 	private final JPanel imagesPanel;
 	
-	private static class AttributeField
+	private enum Mode
+	{
+	  VIEW,
+	  EDIT
+	};
+	
+	private Mode mode;
+	
+	private class AttributeField
 	{
 	  private JLabel title;
-	  private JLabel value;
+	  private JTextField value;
+	  private JButton editButton;
 	  private RomAttribute attrib;
+	  private Border defaultBorder;
+	  private Color defaultColor;
 	  
 	  AttributeField(RomAttribute attrib, boolean isReal)
 	  {
 	    title = new JLabel();
-	    value = new JLabel();
+	    value = new JTextField();
 	    this.attrib = attrib;
 	    
 	    if (isReal)
 	      value.setFont(value.getFont().deriveFont(Font.BOLD, 14.0f));
 	    
-	    value.setBackground(new Color(220,220,220));
 	    
 	    title.setHorizontalAlignment(SwingConstants.RIGHT);
 	    title.setText(attrib.caption.text());
+	    
+	    defaultBorder = value.getBorder();
+	    Insets insets = defaultBorder.getBorderInsets(value);
+	    value.setBorder(BorderFactory.createEmptyBorder(insets.top, insets.left, insets.bottom, insets.right));
+	    value.setEditable(false);
+	    Color color = UIManager.getColor("Panel.background");
+	    defaultColor = new Color(color.getRed(), color.getGreen(), color.getBlue());
+	    value.setBackground(defaultColor);
+
+	    
+	    if (mode == Mode.EDIT && attrib.clazz != null)
+	    {
+	      editButton = new JButton();
+	      editButton.setIcon(Icon.EDIT.getIcon());
+	      editButton.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
+	      
+	      editButton.addActionListener( e -> { 
+	        value.setEditable(true);
+	        value.requestFocus();    
+	        value.setBorder(defaultBorder);
+	        value.setBackground(Color.WHITE);
+	      });
+	    }
+	  }
+	  
+	  void finishEdit()
+	  {
+	    Insets insets = defaultBorder.getBorderInsets(value);
+	    value.setBorder(BorderFactory.createEmptyBorder(insets.top, insets.left, insets.bottom, insets.right));
+	    value.setEditable(false);
+      value.setBackground(defaultColor);
 	  }
 	  
 	  void setValue(Rom rom)
@@ -127,7 +170,9 @@ public class InfoPanel extends JPanel implements ActionListener
 	
 	public void romSetLoaded(final RomSet set)
 	{
-		this.set = set;
+		mode = Mode.EDIT;
+	  
+	  this.set = set;
 		
 		AssetManager manager = set.getAssetManager();
 		Asset[] assets = manager.getSupportedAssets();
@@ -175,7 +220,14 @@ public class InfoPanel extends JPanel implements ActionListener
 	  for (AttributeField field : fields)
 	  {
 	    pFields.add(field.title);
-	    pFields.add(field.value, "wrap");
+	    
+	    if (mode == Mode.VIEW || field.editButton == null)
+	      pFields.add(field.value, "wrap");
+	    else
+	    {
+	      pFields.add(field.value);
+	      pFields.add(field.editButton, "wrap");
+	    }
 	  }
 	}
 	

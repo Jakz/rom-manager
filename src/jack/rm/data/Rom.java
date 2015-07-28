@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Stream;
 
 public class Rom implements Comparable<Rom>
 {
@@ -24,21 +25,31 @@ public class Rom implements Comparable<Rom>
 	
 	private Map<RomAttribute, Object> attributes = new HashMap<>();
 	private Map<Asset, AssetData> assetData = new HashMap<>();
-	private Set<RomAttribute> customAttributes = new HashSet<>();
+	private Map<RomAttribute, Object> customAttributes = new HashMap<>();
 	
 	public void setAttribute(RomAttribute key, Object value) { attributes.put(key, value); }
-	@SuppressWarnings("unchecked") public <T> T getAttribute(RomAttribute key) { return (T)attributes.get(key); }
+	public void setCustomAttribute(RomAttribute key, Object value) { customAttributes.put(key, value); }
+	
+	@SuppressWarnings("unchecked") public <T> T getAttribute(RomAttribute key) { 
+	  return (T)customAttributes.getOrDefault(key, attributes.get(key));
+	}
+	
+ public Stream<Map.Entry<RomAttribute, Object>> getCustomAttributes() { return customAttributes.entrySet().stream(); }
+
 	
   private boolean favourite;
 		
-	public Genre genre;
-
 	private RomPath path;
 	
 	public Rom(RomSet set)
 	{
     this.set = set;
 	  status = RomStatus.MISSING;
+	}
+	
+	public boolean shouldSerializeState()
+	{
+	  return isFavourite() || status != RomStatus.MISSING || !customAttributes.isEmpty();
 	}
 	
 	public RomID<?> getID() { return new RomID.CRC(getCRC()); }

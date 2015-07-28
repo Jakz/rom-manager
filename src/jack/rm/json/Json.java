@@ -28,6 +28,7 @@ public class Json
     registerTypeAdapter(RomSet.class, new RomSetAdapter());
     registerTypeAdapter(RomID.class, new RomIdAdapter());
     registerTypeAdapter(RomPath.class, new RomPathAdapter());
+    registerTypeAdapter(RomSavedAttribute.class, new RomSavedAttributeAdapter());
     registerTypeAdapter(Path.class, new PathAdapter());
     registerTypeAdapter(Plugin.class, new JsonPluginAdapter<Plugin>());
     registerTypeAdapter(PluginSet.class, new JsonPluginSetAdapter<ActualPlugin>());

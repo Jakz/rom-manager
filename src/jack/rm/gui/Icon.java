@@ -27,7 +27,8 @@ public enum Icon
   STATUS_BADLY_NAMED("status_badly_named"),
   STATUS_CORRECT("status_correct"),
   STATUS_NOT_FOUND("status_not_found"),
-  FAVORITE("favorite")
+  FAVORITE("favorite"),
+  EDIT("edit")
   
   ;
   

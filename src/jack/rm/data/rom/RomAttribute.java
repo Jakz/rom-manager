@@ -1,18 +1,20 @@
 package jack.rm.data.rom;
 
 import java.util.Set;
+
+import jack.rm.data.Genre;
 import jack.rm.data.Language;
 import jack.rm.data.RomSize;
 import jack.rm.i18n.Text;
 
 public enum RomAttribute
 {
-  NUMBER(Text.ROM_INFO_NUMBER),
-  TITLE(Text.ROM_INFO_TITLE),
+  NUMBER(Integer.class, Text.ROM_INFO_NUMBER),
+  TITLE(String.class, Text.ROM_INFO_TITLE),
   PUBLISHER(Text.ROM_INFO_PUBLISHER),
   GROUP(Text.ROM_INFO_GROUP),
   DATE(Text.ROM_INFO_DUMP_DATE),
-  COMMENT(Text.ROM_INFO_COMMENT),
+  COMMENT(String.class, Text.ROM_INFO_COMMENT),
   LOCATION(Text.ROM_INFO_LOCATION),
   LANGUAGE(Text.ROM_INFO_LANGUAGES) { 
     @SuppressWarnings("unchecked") public String prettyValue(Object value) { 
@@ -50,17 +52,24 @@ public enum RomAttribute
     }
   },
   
-  GENRE(Text.ROM_INFO_GENRE),
+  GENRE(Genre.class, Text.ROM_INFO_GENRE),
   
   FILENAME(Text.ROM_INFO_FILENAME),
   PATH(Text.ROM_INFO_PATH)
   ;
   
-  RomAttribute(Text caption)
+  RomAttribute(Class<?> clazz, Text caption)
   {
+    this.clazz = clazz;
     this.caption = caption;
   }
   
+  RomAttribute(Text caption)
+  {
+    this(null, caption);
+  }
+  
+  public final Class<?> clazz; 
   public final Text caption;
   public String prettyValue(Object value) { return value.toString(); } 
 }

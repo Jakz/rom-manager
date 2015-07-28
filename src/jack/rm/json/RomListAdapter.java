@@ -1,6 +1,7 @@
 package jack.rm.json;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import java.lang.reflect.Type;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -25,12 +26,12 @@ public class RomListAdapter implements JsonSerializer<RomList>, JsonDeserializer
   @Override
   public JsonElement serialize(RomList src, Type type, JsonSerializationContext context)
   {
-    RomSavedState[] roms = list.stream()
-      .filter( r -> r.status != RomStatus.MISSING || r.isFavourite())
-      .map( r -> new RomSavedState(r.getID(), r.status, r.getPath(), r.isFavourite()) )
-      .toArray( size -> new RomSavedState[size]);
+    List<RomSavedState> roms = list.stream()
+      .filter(Rom::shouldSerializeState)
+      .map(r -> new RomSavedState(r))
+      .collect(Collectors.toList());
     
-    return context.serialize(roms);
+    return context.serialize(roms, new TypeToken<List<RomSavedState>>(){}.getType());
   }
   
   @Override
@@ -47,6 +48,11 @@ public class RomListAdapter implements JsonSerializer<RomList>, JsonDeserializer
         rom.setPath(prom.file);
         rom.status = prom.status;
         rom.setFavourite(prom.favourite);
+        
+        if (prom.attributes != null)
+          for (RomSavedAttribute attrib : prom.attributes)
+            rom.setCustomAttribute(attrib.key, attrib.value);
+        
       }
     }
     

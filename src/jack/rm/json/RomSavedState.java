@@ -1,5 +1,8 @@
 package jack.rm.json;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import jack.rm.data.*;
 
 public class RomSavedState
@@ -8,14 +11,19 @@ public class RomSavedState
 	RomPath file;
 	RomStatus status;
 	boolean favourite;
+	List<RomSavedAttribute> attributes;
 	
 	public RomSavedState() { }
 	
-	public RomSavedState(RomID<?> id, RomStatus status, RomPath file, boolean favourite)
+	public RomSavedState(Rom rom)
 	{
-	  this.id = id;
-	  this.status = status;
-	  this.file = file;
-	  this.favourite = favourite;
+	  this.id = rom.getID();
+	  this.status = rom.status;
+	  this.file = rom.getPath();
+	  this.favourite = rom.isFavourite();
+	  
+	  this.attributes = rom.getCustomAttributes()
+	      .map( e -> new RomSavedAttribute(e.getKey(), e.getValue()))
+	      .collect(Collectors.toList());
 	}
 }
