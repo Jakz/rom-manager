@@ -45,7 +45,9 @@ public class MoverWorker extends OrganizerWorker<FolderPlugin>
         {  
           rom.move(newFile);
           Log.message(LogSource.ORGANIZER, LogTarget.rom(rom), "Moved rom to "+finalPath);
-        }    
+        }
+        
+        rom.updateStatus();
       }
       catch (Exception e)
       {

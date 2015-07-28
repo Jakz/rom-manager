@@ -123,6 +123,14 @@ public class Rom implements Comparable<Rom>
 	  
 	  return true;
 	}
+	
+	public void updateStatus()
+	{
+	  if (status != RomStatus.MISSING)
+	  {
+	    status = isOrganized() ? RomStatus.FOUND : RomStatus.UNORGANIZED;
+	  }
+	}
 
 	public boolean isOrganized()
 	{

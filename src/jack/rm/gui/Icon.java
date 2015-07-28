@@ -29,7 +29,8 @@ public enum Icon
   STATUS_NOT_FOUND("status_not_found"),
   FAVORITE("favorite"),
   EDIT("edit"),
-  DELETE("delete")
+  DELETE("delete"),
+  ADD("add")
 
   ;
   

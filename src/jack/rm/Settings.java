@@ -7,6 +7,7 @@ import com.pixbits.plugin.PluginManager;
 import com.pixbits.plugin.PluginSet;
 
 import jack.rm.data.console.System;
+import jack.rm.data.rom.RomAttribute;
 import jack.rm.plugins.*;
 import jack.rm.plugins.downloader.RomDownloaderPlugin;
 import jack.rm.plugins.folder.FolderPlugin;
@@ -18,10 +19,19 @@ public class Settings
 	public Path romsPath;	
 	
 	public PluginSet<ActualPlugin> plugins;
-			
 	
+	public List<RomAttribute> attributes;
+
+  Settings()
+  {
+    plugins = new PluginSet<ActualPlugin>();
+    attributes = new ArrayList<>();
+  }
+  
 	public Settings(PluginManager<ActualPlugin, ActualPluginBuilder> manager)
 	{
+	  attributes = new ArrayList<>();
+	  
 	  plugins = new PluginSet<ActualPlugin>();
 	  manager.setup(plugins); 
 	  renamingPattern = "%n - %t [%S]";
@@ -63,9 +73,7 @@ public class Settings
 
 	  return paths;
 	}
+	
+	public List<RomAttribute> getRomAttributes() { return attributes; }
 
-	Settings()
-	{
-    plugins = new PluginSet<ActualPlugin>();
-	}
 }
