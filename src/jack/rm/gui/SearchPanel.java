@@ -184,6 +184,8 @@ public class SearchPanel extends JPanel
 	    
 	    List<String> specialTokens = Arrays.stream(tokens).filter(t -> t.contains(":")).collect(Collectors.toList());
 	    
+	    // TODO: manage quotes
+	    
 	    for (String special : specialTokens)
 	    {
 	      String[] stokens = special.split(":");
@@ -195,6 +197,13 @@ public class SearchPanel extends JPanel
 	        
 	        if (isSearchArg(stokens, "is", "favorite", "favourite", "fav"))
 	          predicate = predicate.and(r -> negated ^ (r.isFavourite()));
+	        else if (stokens[0].equals("genre"))
+	          predicate = predicate.and(r -> {
+	            Genre genre = r.getAttribute(RomAttribute.GENRE);
+	            Genre sgenre = Genre.forName(stokens[1]);
+	            
+	            return negated ^ (genre != null && sgenre != null && genre == sgenre);
+	          });
 	      }
 	    }
 	  }

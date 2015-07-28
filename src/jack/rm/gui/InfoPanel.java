@@ -175,12 +175,43 @@ public class InfoPanel extends JPanel implements ActionListener
 	private class EnumAttributeField extends AttributeField
 	{
 	  private JComboBox<Enum<?>> value;
+	  private JTextField readValue;
+	  private JPanel panel;
 	  
 	  //@SuppressWarnings("unchecked")
 	  EnumAttributeField(RomAttribute attrib, boolean isReal)
 	  {
 	    super(attrib, isReal);
 	    value = new JComboBox<Enum<?>>();
+	    readValue = new JTextField(40);
+	    
+      Color color = UIManager.getColor("Panel.background");
+      Color tmpColor = new Color(color.getRed(), color.getGreen(), color.getBlue());
+      readValue.setBackground(tmpColor);
+      readValue.setEditable(false);
+      Insets insets = readValue.getBorder().getBorderInsets(readValue);
+      readValue.setBorder(BorderFactory.createEmptyBorder(insets.top, insets.left, insets.bottom, insets.right));
+      
+      value.addItemListener(e -> {
+	      if (e.getStateChange() == ItemEvent.SELECTED)
+	      {
+	        rom.setCustomAttribute(attrib, value.getSelectedItem());
+	        deleteButton.setVisible(true);
+	        rom.updateStatus();
+	        readValue.setText(value.getSelectedItem().toString());
+	        Main.mainFrame.romListModel.fireChanges(Main.mainFrame.list.getSelectedIndex());
+	      }
+	    });
+	    
+	    panel = new JPanel();
+	    panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
+	    panel.add(readValue);
+	    
+      if (isReal)
+      {
+        value.setFont(value.getFont().deriveFont(Font.BOLD, 14.0f));
+        readValue.setFont(value.getFont().deriveFont(Font.BOLD, 14.0f)); 
+      }
 	    
 	    try
 	    {
@@ -197,7 +228,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	    
 	  }
 	  
-	  public JComponent getComponent() { return value; }
+	  public JComponent getComponent() { return panel; }
 	  
 	  public void clear() { value.setSelectedIndex(-1); }
 	  
@@ -208,17 +239,36 @@ public class InfoPanel extends JPanel implements ActionListener
 	  
 	  public void enableEdit()
 	  {
-	    
+	    panel.remove(readValue);
+	    panel.add(value);
+      panel.revalidate();
+      deleteButton.setVisible(rom.hasCustomAttribute(attrib));
+
 	  }
 	  
 	  public void finishEdit()
 	  {
-	    
+	    panel.remove(value);
+	    panel.add(readValue);
+	    panel.revalidate();
+	    deleteButton.setVisible(false);
 	  }
 	  
 	  public void setValue(Rom rom)
 	  {
-	    value.setSelectedItem(rom.getAttribute(attrib));
+	    
+	    Object ovalue = rom.getAttribute(attrib);
+	    value.setSelectedItem(ovalue);
+	    if (ovalue != null)
+	    {
+	      deleteButton.setVisible(mode == Mode.EDIT && rom.hasCustomAttribute(attrib));
+	      readValue.setText(ovalue.toString());
+	    }	    
+	    else
+	    {
+	      deleteButton.setVisible(false);
+	      readValue.setText("");
+	    }
 	  }
 	  
 	  public Object parseValue()
@@ -326,14 +376,17 @@ public class InfoPanel extends JPanel implements ActionListener
     editButton.setToolTipText("Switch between edit and normal mode");
     
     editButton.addActionListener(e -> {
-      mode = editButton.isSelected() ? Mode.EDIT : Mode.VIEW;
-      
-      for (AttributeField field : fields)
-      {
-        if (mode == Mode.EDIT)
-          field.enableEdit();
-        else
-          field.finishEdit();
+      if (rom != null)
+      {    
+        mode = editButton.isSelected() ? Mode.EDIT : Mode.VIEW;
+        
+        for (AttributeField field : fields)
+        {
+          if (mode == Mode.EDIT)
+            field.enableEdit();
+          else
+            field.finishEdit();
+        }
       }
     });
     

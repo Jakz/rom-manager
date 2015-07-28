@@ -24,7 +24,10 @@ public enum Genre
 	RTS("RTS"),
 	TURN_RPG("Turn RPG"),
 	TURN_STRATEGY("Turn Strategy"),
-	SPORTS("Sports")
+	SPORTS("Sports"),
+	MUSIC("Music"),
+	BOARD_GAME("Board Game"),
+	CARDS("Cards")
 	;
 
   Genre(String name) { this.name = name; }
@@ -32,4 +35,15 @@ public enum Genre
   public final String name;
   
   public String toString() { return name; }
+  
+  public static Genre forName(String string)
+  {
+    for (Genre g : values())
+    {
+      if (g.name.toLowerCase().equals(string.toLowerCase()))
+        return g;
+    }
+    
+    return null;
+  }
 }
