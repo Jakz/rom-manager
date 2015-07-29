@@ -1,14 +1,16 @@
-package jack.rm.plugins.rom;
+package jack.rm.files;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import com.pixbits.io.BinaryBuffer;
+import com.pixbits.io.BufferPosition;
 
 import jack.rm.data.Rom;
 import jack.rm.data.console.GBA;
 import jack.rm.data.rom.RomAttribute;
 
-public class GBASavePatcherPlugin
+public class GBASavePatcher
 {
   static private byte[] toBytes(String string) { return javax.xml.bind.DatatypeConverter.parseHexBinary(string); }
   
@@ -131,10 +133,47 @@ public class GBASavePatcherPlugin
   );
       
 
-  
-  public void path(Rom rom, BinaryBuffer buffer)
+  private static void patchEeprom111(BinaryBuffer buffer) throws IOException
   {
-    GBA.Save save = rom.getAttribute(RomAttribute.SAVE_TYPE);
+    byte[] firstBlock = toBytes("27e0d02000050188");
+    byte[] firstBlockReplacement = toBytes("27e0e02000050188");
+    
+    buffer.replace(firstBlock, firstBlockReplacement);
+    
+    byte[] payload1from = toBytes("0e48396801600e48");
+    byte[] payload1to = toBytes("0048004700000008");
+    int payload1addressOffset = 4;
+    
+    byte[] payload2 = toBytes("39682748814223d0891c0888012802d12448786033e000230022891c10b40124086820405b000343891c521c062af7d110bc3960db01022000021b180e2000061b187b60391c083108880938088016e015490023002210b40124086820405b000343891c521c062af7d110bcdb01022000021b180e2000061b18083b3b600b48396801600a48796801600a48391c08310a88802109060a4302600748004700000000000d0000000e0400000ed4000004d8000004dc00000400000008");
+    int payload2addressOffset = 184; 
+    
+    long payload2Position = buffer.length() - 1;
+    byte value = buffer.read(payload2Position);
+    
+    // find first unused byte starting from end
+    while (value == 0x00 || value == (byte)0xff)
+      value = buffer.read(--payload2Position);
+    
+    ++payload2Position;
+    
+    // adjust position to be aligned to 16 bytes
+    payload2Position += 16 - (payload2Position % 16);
+    
+    // add 256 bytes if there is not enough room available
+    if (buffer.length() - payload2Position < payload2.length)
+    {
+      buffer.resize(buffer.length() + 256);
+    }
+    
+    buffer.replace(payload2, (int)payload2Position);
+    Optional<BufferPosition> payload1Position = buffer.replace(payload1from, payload1to);
+    
+    buffer.writeU24((int)payload2Position + 1, payload1Position.get().get() + payload1addressOffset);
+    buffer.writeU24(payload1Position.get().get() + 1 + 32, (int)payload2Position + payload2addressOffset);
+  }
+  
+  public static void patch(GBA.Save save, BinaryBuffer buffer)
+  {
     GBA.Save.Type type = save.getType();
     GBA.Save.Version version = save.getVersion();
     PatchEntry[] patch = null;
@@ -174,12 +213,16 @@ public class GBASavePatcherPlugin
           patch = Eeprom_v124; break;
         case v126:
           patch = Eeprom_v126; break;
+          
+        case v111: break; // handled after
       }
     }
     
     try
     {
-      if (patch != null)
+      if (type == GBA.Save.Type.EEPROM && version == GBA.Save.EEPROM.v111)
+        patchEeprom111(buffer);
+      else if (patch != null)
       {
         for (PatchEntry entry : patch)
           entry.patch(buffer);

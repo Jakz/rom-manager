@@ -8,13 +8,23 @@ import java.util.function.Consumer;
 
 public class SimpleParser
 {
-  private final InputStream is;
+  private InputStream is;
   private final StringBuilder sb;
   private Consumer<String> callback;
   private boolean quote;
   
   private final Map<Character, TokenSpec> map;
   private final TokenSpec defaultToken;
+  
+  public SimpleParser()
+  {
+    this(null, null);
+  }
+  
+  public SimpleParser(Consumer<String> callback)
+  {
+    this(null, callback);
+  }
   
   public SimpleParser(InputStream is)
   {
@@ -29,6 +39,13 @@ public class SimpleParser
     this.callback = callback;
     this.map = new HashMap<>();
     this.defaultToken = new TokenSpec(TokenSpec.Type.NORMAL, ' ');
+  }
+  
+  public void reset(InputStream is)
+  {
+    this.is = is;
+    quote = false;
+    sb.setLength(0);
   }
   
   public void setCallback(Consumer<String> callback)
@@ -92,7 +109,8 @@ public class SimpleParser
       {
         if (quote)
         {
-          callback.accept(pop());
+          if (sb.length() > 0)
+            callback.accept(pop());
           quote = false;
         }
         else
@@ -108,5 +126,8 @@ public class SimpleParser
       else
         sb.append((char)c);
     }
+    
+    if (sb.length() > 0)
+      callback.accept(pop());
   }
 }

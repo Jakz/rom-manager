@@ -12,7 +12,7 @@ import jack.rm.data.Rom;
 
 public class RomConsolidator extends Dumper<RomHandle>
 {
-  Path destination = Paths.get("/Users/jack/Desktop/drivers");
+  Path destination = Paths.get("/Users/jack/Documents/dev");
   
   public void accept(RomHandle handle)
   {

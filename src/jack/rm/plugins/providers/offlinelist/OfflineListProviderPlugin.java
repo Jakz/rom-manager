@@ -151,14 +151,33 @@ public class OfflineListProviderPlugin extends ProviderPlugin
       else if (string.toLowerCase().equals("tbc"))
         return new GBA.Save(GBA.Save.Type.TBC);
       else if (string.equals("Eeprom - 4 kbit"))
-        return new GBA.Save(GBA.Save.Type.EEPROM, GBA.Save.EEPROM.v122);
+        return new GBA.Save(GBA.Save.Type.EEPROM, GBA.Save.EEPROM.v122, 8192);
         
-      for (GBA.Save.Type type : GBA.Save.Type.values())
-        if (string.toLowerCase().contains(type.toString().toLowerCase()))
-          for (GBA.Save.Version version :  GBA.Save.valuesForType(type))
-            if (string.contains(version.toString()))
-              return new GBA.Save(type, version);
-      
+      if (string.toLowerCase().contains("sram"))
+      {
+        for (GBA.Save.Version version :  GBA.Save.valuesForType(GBA.Save.Type.SRAM))
+          if (string.contains(version.toString()))
+            return new GBA.Save(GBA.Save.Type.SRAM, version, 32768);
+      }
+      else if (string.toLowerCase().contains("flash"))
+      {
+
+        for (GBA.Save.Version version :  GBA.Save.valuesForType(GBA.Save.Type.FLASH))
+          if (string.contains(version.toString()))
+          {
+            int size = (string.contains("512") ? 512 : 1024 ) * (int)RomSize.KBYTE / 8;
+            return new GBA.Save(GBA.Save.Type.FLASH, version, size);
+          }
+      }
+      else if (string.toLowerCase().contains("eeprom"))
+      {
+        for (GBA.Save.Version version :  GBA.Save.valuesForType(GBA.Save.Type.EEPROM))
+          if (string.contains(version.toString()))
+          {
+            return new GBA.Save(GBA.Save.Type.EEPROM, version, string.contains("64") ? 8192 : (8192/16));
+          }
+      }
+
       throw new UnknownFormatConversionException("Unable to parse GBA save: "+string);
     }
   }

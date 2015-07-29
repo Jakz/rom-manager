@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.lang.reflect.Method;
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel.MapMode;
@@ -78,6 +79,14 @@ public class BinaryBuffer implements AutoCloseable
       reverse(data);
   }
   
+  public void writeOrdered(byte[] data, int position)
+  {
+    if (order == ByteOrder.BIG_ENDIAN)
+      reverse(data);
+    for (byte b : data)
+      buffer.put(position++, b);
+  }
+  
   public boolean didReachEnd()
   {
     return buffer.remaining() == 0;
@@ -105,17 +114,16 @@ public class BinaryBuffer implements AutoCloseable
     buffer.put(bytes, 0, bytes.length);
   }
   
-  public boolean replace(byte[] from, byte[] to) throws IOException
+  public Optional<BufferPosition> replace(byte[] from, byte[] to) throws IOException
   {
     Optional<BufferPosition> position = this.scanForData(from);
     
     if (position.isPresent())
     {
       this.insert(to, position.get().get(), from.length);
-      return true;
     }
     
-    return false;
+    return position;
   }
   
   public void insert(byte[] bytes, int position, int length) throws IOException
@@ -188,6 +196,11 @@ public class BinaryBuffer implements AutoCloseable
     byte[] data = new byte[2];
     readOrdered(data);
     return (data[0] & 0xFF) | ((data[1] & 0xFF) << 8);
+  }
+  
+  public void writeU24(int value, int position)
+  {
+    writeOrdered(BigInteger.valueOf(value).toByteArray(), position);
   }
     
   public String readString(int length)

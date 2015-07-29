@@ -3,6 +3,8 @@ package jack.rm.plugins.providers.offlinelist;
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
 import jack.rm.data.*;
+import jack.rm.data.console.GBA;
+
 import org.xml.sax.*;
 import java.io.CharArrayWriter;
 import java.nio.file.Paths;
@@ -11,6 +13,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.UnknownFormatConversionException;
 
@@ -100,7 +103,7 @@ public class OfflineListXMLParser extends XMLHandler
 	  return Long.parseLong(asString());
 	}
 
-  Set<String> saves = new TreeSet<>();
+  Map<String, RomSave> saves = new TreeMap<>();
 	
 	@Override
   public void endElement(String namespaceURI, String localName, String qName) throws SAXException
@@ -126,8 +129,8 @@ public class OfflineListXMLParser extends XMLHandler
 		  {		    
 		    try
 		    {
-		      //saves.add(asString());
 		      RomSave<?> save = saveParser.parse(asString());
+		      saves.put(asString(), save);
 		      rom.setAttribute(RomAttribute.SAVE_TYPE, save);
 		    }
 		    catch (UnknownFormatConversionException e)
@@ -166,7 +169,7 @@ public class OfflineListXMLParser extends XMLHandler
       case "games":
       {
         set.list.sort(); 
-        saves.forEach(s -> System.out.println(s));
+        saves.forEach((k,v) -> System.out.println(k+" -> "+v));
         break;
       }
 

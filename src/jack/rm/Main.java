@@ -12,10 +12,7 @@ import jack.rm.data.*;
 import jack.rm.data.console.System;
 import jack.rm.data.set.*;
 import jack.rm.gui.*;
-import jack.rm.json.workflow.RomConsolidator;
-import jack.rm.json.workflow.RomHandle;
-import jack.rm.json.workflow.SingleRomSource;
-import jack.rm.json.workflow.TrimOperation;
+import jack.rm.json.workflow.*;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
 import com.pixbits.plugin.PluginManager;
@@ -127,6 +124,14 @@ public class Main
 
 
     downloader = new Downloader(set);
+    
+    Rom rom = romSet.list.getByNumber(33);
+    Fetcher<RomHandle> source = new SingleRomSource(rom);
+    Dumper<RomHandle> dumper = new RomConsolidator();
+    Workflow<RomHandle> workflow = new Workflow<>(source, dumper);
+    workflow.addStep(new GBASavePatchOperation());
+    workflow.execute();
+    java.lang.System.exit(0);
     
     /*for (int i = 0; i < romSet.list.count(); ++i)
       if (romSet.list.get(i).status == RomStatus.FOUND)
