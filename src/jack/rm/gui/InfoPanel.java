@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.net.URL;
 
 public class InfoPanel extends JPanel implements ActionListener
@@ -400,12 +401,6 @@ public class InfoPanel extends JPanel implements ActionListener
     addCustomFieldButton.setToolTipText("Add a custom attribute to the romset");    
     
     customPopup = new JPopupMenu();
-    JMenuItem popupItem = new JMenuItem("Genre");
-    popupItem.addActionListener(e -> set.getSettings().getRomAttributes().add(RomAttribute.GENRE));
-    customPopup.add(popupItem);
-    
-    customPopup.add(new JMenuItem("Custom Comment 1"));
-    customPopup.add(new JMenuItem("Custom Comment 2"));
     
     addCustomFieldButton.addMouseListener(new MouseAdapter(){
       public void mousePressed(MouseEvent e) {
@@ -444,6 +439,114 @@ public class InfoPanel extends JPanel implements ActionListener
 		
 		this.add(pTotal);
 	}
+	
+	public void buildPopupMenu()
+	{
+	  customPopup.removeAll();
+	  
+	  JMenu embedded = new JMenu("Embedded");
+	  customPopup.add(embedded);
+	  JMenu custom = new JMenu("Custom");
+	  customPopup.add(custom);
+	  
+	  RomAttribute[] cattributes = new RomAttribute[] {
+	    RomAttribute.GENRE,
+	    RomAttribute.TAG
+	  };
+	  
+	  List<RomAttribute> enabledAttribs = set.getSettings().getRomAttributes();
+	  
+	  Stream<RomAttribute> eattributes = Arrays.stream(set.getSupportedAttributes());
+	  
+	  Runnable menuItemPostAction = () -> {
+	    buildFields();
+	    pFields.revalidate();
+	    updateFields(rom);
+	    buildPopupMenu();
+	  };
+	  
+	  for (RomAttribute cattrib : cattributes)
+	  {
+	    JMenuItem item = null;
+	    if (enabledAttribs.contains(cattrib))
+	    {
+	      item = new JMenuItem("Remove \'"+cattrib.caption.text()+"\'");
+	      item.addActionListener(e -> {
+	        set.getSettings().getRomAttributes().remove(cattrib);
+	        set.list.stream().forEach(r -> r.clearCustomAttribute(cattrib));
+	        menuItemPostAction.run();
+	      });
+	    }
+	    else
+	    {
+	      item = new JMenuItem("Add \'"+cattrib.caption.text()+"\'");
+	      item.addActionListener(e -> {
+	        set.getSettings().getRomAttributes().add(cattrib);
+          menuItemPostAction.run();
+	      });
+	    }
+	    
+	    custom.add(item);
+	  }
+	  
+	  eattributes.forEach(eattrib -> {
+      JMenuItem item = null;
+      if (enabledAttribs.contains(eattrib))
+      {
+        item = new JMenuItem("Hide \'"+eattrib.caption.text()+"\'");
+        item.addActionListener(e -> {
+          set.getSettings().getRomAttributes().remove(eattrib);
+          menuItemPostAction.run();
+        });
+      }
+      else
+      {
+        item = new JMenuItem("Show \'"+eattrib.caption.text()+"\'");
+        item.addActionListener(e -> {
+          List<RomAttribute> newAttributes = Arrays.stream(set.getSupportedAttributes())
+          .filter(ee -> enabledAttribs.contains(ee) || ee == eattrib).collect(Collectors.toList());
+
+          enabledAttribs.stream().filter(ee -> !Arrays.asList(set.getSupportedAttributes()).contains(ee)).forEach(newAttributes::add);       
+          enabledAttribs.clear();
+          enabledAttribs.addAll(newAttributes);
+          
+          menuItemPostAction.run();
+        });
+      }
+      
+      embedded.add(item);
+	  });
+	}
+	
+	void buildFields()
+	{
+    List<RomAttribute> attributes = set.getSettings().getRomAttributes();
+    
+    fields = attributes.stream().map( a -> buildField(a, true) ).collect(Collectors.toList());
+    fields.add(buildField(RomAttribute.FILENAME, false));
+    fields.add(buildField(RomAttribute.PATH, false));
+        
+    pFields.removeAll();
+    
+    pFields.setLayout(new MigLayout());
+    
+    for (AttributeField field : fields)
+    {     
+      pFields.add(field.title, "span 4");
+
+      if (field.deleteButton != null)
+      {
+        pFields.add(field.getComponent(), "span 8, growx");
+        pFields.add(field.deleteButton, "wrap");
+      }
+      else
+        pFields.add(field.getComponent(), "span 9, growx, wrap");
+    }
+    
+    pFields.add(addCustomFieldButton);
+    pFields.add(editButton);
+    pFields.add(resetCustomFieldsButton);
+	}
 		
 	public void romSetLoaded(final RomSet set)
 	{
@@ -453,6 +556,8 @@ public class InfoPanel extends JPanel implements ActionListener
 		
 		AssetManager manager = set.getAssetManager();
 		Asset[] assets = manager.getSupportedAssets();
+		
+		buildPopupMenu();
 		
 		if (assets.length == 0)
 		{
@@ -484,33 +589,7 @@ public class InfoPanel extends JPanel implements ActionListener
   		});
 		}
 		
-	  RomAttribute[] attributes = set.getSupportedAttributes();
-	  
-	  fields = Arrays.stream(attributes).map( a -> buildField(a, true) ).collect(Collectors.toList());
-	  set.getSettings().getRomAttributes().stream().map(a -> buildField(a, true)).forEach(fields::add);
-	  fields.add(buildField(RomAttribute.FILENAME, false));
-	  fields.add(buildField(RomAttribute.PATH, false));
-	  	  
-	  pFields.removeAll();
-	  
-	  pFields.setLayout(new MigLayout());
-	  
-	  for (AttributeField field : fields)
-	  {	    
-	    pFields.add(field.title, "span 4");
-
-	    if (field.deleteButton != null)
-	    {
-	      pFields.add(field.getComponent(), "span 8, growx");
-	      pFields.add(field.deleteButton, "wrap");
-	    }
-	    else
-	      pFields.add(field.getComponent(), "span 9, growx, wrap");
-	  }
-	  
-    pFields.add(addCustomFieldButton);
-	  pFields.add(editButton);
-	  pFields.add(resetCustomFieldsButton);
+		buildFields();
 	}
 	
 	void setImage(Rom rom, Asset asset, JLabel dest)

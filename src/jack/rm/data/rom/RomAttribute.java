@@ -54,6 +54,8 @@ public enum RomAttribute
   
   GENRE(Genre.class, Text.ROM_INFO_GENRE),
   
+  TAG(String.class, Text.ROM_INFO_TAG),
+  
   FILENAME(Text.ROM_INFO_FILENAME),
   PATH(Text.ROM_INFO_PATH)
   ;

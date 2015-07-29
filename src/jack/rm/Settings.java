@@ -30,9 +30,7 @@ public class Settings
   
 	public Settings(PluginManager<ActualPlugin, ActualPluginBuilder> manager)
 	{
-	  attributes = new ArrayList<>();
-	  
-	  plugins = new PluginSet<ActualPlugin>();
+	  this();
 	  manager.setup(plugins); 
 	  renamingPattern = "%n - %t [%S]";
 	  romsPath = null;
@@ -75,5 +73,4 @@ public class Settings
 	}
 	
 	public List<RomAttribute> getRomAttributes() { return attributes; }
-
 }
