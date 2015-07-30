@@ -1,4 +1,4 @@
-package jack.rm.json.workflow;
+package jack.rm.workflow;
 
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -32,7 +32,7 @@ public class IPSPatchOperation extends RomOperation
   public String getName() { return "IPS Patcher"; }
   public String getDescription() { return "This operation applies an IPS patch to a ROM"; }
   
-  public RomHandle apply(RomHandle handle)
+  protected RomHandle doApply(RomHandle handle)
   {
     IPSPatch patch = patches.get(handle.getRom());
     

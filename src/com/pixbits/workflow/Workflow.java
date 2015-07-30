@@ -27,6 +27,11 @@ public class Workflow<T extends WorkflowData>
       dumper.accept(stream.map(mutuator.get()));
   }
   
+  public void addBenchmarkedStep(Mutuator<T> mutuator)
+  {
+    mutuators.add(new BenchmarkMutuator<T>(mutuator));
+  }
+  
   public void addStep(Mutuator<T> mutuator)
   {
     mutuators.add(mutuator);

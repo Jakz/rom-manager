@@ -1,4 +1,4 @@
-package jack.rm.json.workflow;
+package jack.rm.workflow;
 
 import jack.rm.data.console.System;
 import jack.rm.data.rom.RomAttribute;
@@ -14,7 +14,7 @@ public class GBASavePatchOperationGBATA extends RomOperation
 
   }
   
-  public RomHandle apply(RomHandle handle)
+  protected RomHandle doApply(RomHandle handle)
   {
     GBASavePatcherGBATA.patch(handle.getRom().getAttribute(RomAttribute.SAVE_TYPE), handle.getBuffer());
     return handle;

@@ -102,6 +102,16 @@ public class BinaryBuffer implements AutoCloseable
     return file.length();
   }
   
+  public int position()
+  {
+    return buffer.position();
+  }
+  
+  public void position(int position)
+  {
+    buffer.position(position);
+  }
+  
   public void resize(long size) throws IOException
   {
     file.setLength(size);
@@ -191,6 +201,22 @@ public class BinaryBuffer implements AutoCloseable
     return (data[0] & 0xFF) | ((data[1] & 0xFF) << 8) | ((data[2] & 0xFF) << 16);
   }
   
+  public int readU32()
+  {
+    byte[] data = new byte[4];
+    readOrdered(data);
+    return (data[0] & 0xFF) | ((data[1] & 0xFF) << 8) | ((data[2] & 0xFF) << 16) | ((data[3] & 0xFF) << 24);
+  }
+  
+  public int readU32(int position)
+  {
+    int backup = position();
+    position(position);
+    int value = readU32();
+    position(backup);
+    return value;
+  }
+  
   public int readU16()
   {
     byte[] data = new byte[2];
@@ -229,7 +255,7 @@ public class BinaryBuffer implements AutoCloseable
   
 
   
-  private Optional<BufferPosition> scanForDataWithCRC(byte[] data)
+  private Optional<BufferPosition> scanForDataWithCRC(byte[] data, int start)
   {
     Checksum crc = new Adler32();
     crc.update(data, 0, data.length);
@@ -237,7 +263,7 @@ public class BinaryBuffer implements AutoCloseable
     final long destCRC = crc.getValue();
     final byte[] tempBuffer = new byte[data.length];
     
-    for (int i = 0; i < buffer.limit() - data.length; ++i)
+    for (int i = start; i < buffer.limit() - data.length; ++i)
     {
       if (buffer.get(i) == data[0])
       {

@@ -1,4 +1,4 @@
-package jack.rm.json.workflow;
+package jack.rm.workflow;
 
 import java.io.IOException;
 import java.nio.ByteOrder;
@@ -28,7 +28,7 @@ public class RomHandle implements WorkflowData
 
   public Rom getRom() { return rom; }
   
-  private void prepareBuffer() throws IOException
+  public void prepareBuffer() throws IOException
   {
     RomPath source = rom.getPath();
     this.path = Files.createTempFile(null, null);

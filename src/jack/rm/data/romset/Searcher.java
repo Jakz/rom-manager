@@ -3,6 +3,7 @@ package jack.rm.data.romset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -60,7 +61,7 @@ public class Searcher
           String[] itokens = tokens[1].split(" ");
           
           return r -> {
-            RomSave<? >save = r.getAttribute(RomAttribute.SAVE_TYPE);            
+            RomSave<?> save = r.getAttribute(RomAttribute.SAVE_TYPE);            
             return save != null && Arrays.stream(itokens).allMatch(s -> save.toString().toLowerCase().contains(s.toLowerCase()));   
           };
         }
@@ -70,6 +71,17 @@ public class Searcher
             Location location = r.getAttribute(RomAttribute.LOCATION);
             return location.fullName.toLowerCase().equals(tokens[1]);
           };
+        }
+        else if (tokens[0].equals("has"))
+        {
+          Optional<RomAttribute> attrib = Arrays.stream(RomAttribute.values()).filter(a -> a.caption.text().toLowerCase().equals(tokens[1])).findFirst();
+
+          System.out.println(RomAttribute.TAG.caption.toString().toLowerCase()+" == "+tokens[1]);
+          
+          if (attrib.isPresent())
+            return r -> r.getAttribute(attrib.get()) != null;
+          else
+            return r -> true;
         }
       }    
     }

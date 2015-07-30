@@ -117,6 +117,9 @@ public class RomSet
 	  plugins.stream().forEach( p -> p.execute(this.list) );
 	}
 	
+	public Rom find(String query) { return list.find(query); }
+	public List<Rom> filter(String query) { return list.stream().filter(Searcher.buildSeachPredicate(query)).collect(Collectors.toList()); }
+	
 	public void saveStatus()
 	{
 	  try

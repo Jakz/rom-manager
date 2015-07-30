@@ -1,4 +1,4 @@
-package jack.rm.json.workflow;
+package jack.rm.workflow;
 
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -22,9 +22,11 @@ public class EZFlashIVRomConsolidator extends Dumper<RomHandle>
     try
     {
       Rom rom = handle.getRom();
-      Path finalPath = destination.resolve(rom.getTitle()+"."+rom.getSystem().exts[0]);
-      Files.copy(handle.getPath(), finalPath, StandardCopyOption.REPLACE_EXISTING);
-      Files.deleteIfExists(handle.getPath());
+      Path finalBasePath = destination.resolve(handle.getDestPath());
+      Path finalPath = finalBasePath.resolve(rom.getTitle()+"."+rom.getSystem().exts[0]);
+      Files.createDirectories(finalBasePath);
+      Files.move(handle.getPath(), finalPath, StandardCopyOption.REPLACE_EXISTING);
+      //Files.deleteIfExists(handle.getPath());
       
       Path saverPath = destination.resolve(Paths.get("SAVER")).resolve(rom.getTitle()+".sav");
       

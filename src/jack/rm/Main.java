@@ -4,15 +4,27 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import java.awt.Desktop;
+import java.nio.ByteOrder;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+
 import jack.rm.assets.AssetPacker;
 import jack.rm.assets.Downloader;
 import jack.rm.data.console.System;
+import jack.rm.data.rom.Rom;
+import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.romset.*;
+import jack.rm.files.GBASleepHack;
 import jack.rm.files.Scanner;
 import jack.rm.gui.*;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
+import jack.rm.workflow.*;
+
+import com.pixbits.io.BinaryBuffer;
+import com.pixbits.io.BinaryBuffer.Mode;
 import com.pixbits.plugin.PluginManager;
 import com.pixbits.workflow.*;
 
@@ -122,22 +134,45 @@ public class Main
 
 
     downloader = new Downloader(set);
+    
+    /*List<Rom> favourites = set.filter("is:fav");
+    Fetcher<RomHandle> source = new MultipleRomSource(favourites);
+    Dumper<RomHandle> dumper = new RomConsolidator(Paths.get("/Users/jack/Documents/Dev/gba/ez/gb"));
+    Workflow<RomHandle> workflow = new Workflow<>(source,dumper);
+    workflow.addStep(new LogOperation());
+    workflow.execute();
+    java.lang.System.exit(0);*/
 
-    /*List<Rom> favourites = set.list.stream().filter(Searcher.buildSeachPredicate("is:fav")).collect(Collectors.toList());
+    /*List<Rom> favourites = set.filter("is:fav");
     
     Fetcher<RomHandle> source = new MultipleRomSource(favourites);
     Dumper<RomHandle> dumper = new EZFlashIVRomConsolidator();
     Workflow<RomHandle> workflow = new Workflow<>(source, dumper);
     
     IPSPatchOperation ipsOperation = new IPSPatchOperation();
-    ipsOperation.addPatch(romSet.list.find("yoshi universal loc:europe"), Paths.get("/Volumes/WinSSD/gba-ips/yoshi-universal-gravitation-tilt-fix.ips"));
-    ipsOperation.addPatch(romSet.list.find("wario twisted"), Paths.get("/Volumes/WinSSD/gba-ips/wario-ware-tilt-fix.ips"));
-    ipsOperation.addPatch(romSet.list.find("kuru paradise"), Paths.get("/Volumes/WinSSD/gba-ips/kururin-paradise-translation.ips"));
+    ipsOperation.addPatch(set.find("yoshi universal loc:europe"), Paths.get("/Volumes/WinSSD/gba-ips/yoshi-universal-gravitation-tilt-fix.ips"));
+    ipsOperation.addPatch(set.find("wario twisted"), Paths.get("/Volumes/WinSSD/gba-ips/wario-ware-tilt-fix.ips"));
+    ipsOperation.addPatch(set.find("kuru paradise"), Paths.get("/Volumes/WinSSD/gba-ips/kururin-paradise-translation.ips"));
     
-    workflow.addStep(new LogOperation());
-    workflow.addStep(ipsOperation);
-    workflow.addStep(new GBASavePatchOperationGBATA());
+    workflow.addBenchmarkedStep(new LogOperation());
+    workflow.addBenchmarkedStep(ipsOperation);
+    workflow.addBenchmarkedStep(new GBASavePatchOperationGBATA());
+    workflow.addBenchmarkedStep(new TrimOperation(new byte[] {0x00, (byte)0xff}));
+    workflow.addStep(new SortByAttributeOperation(RomAttribute.TAG, false));
     workflow.execute();
+    java.lang.System.exit(0);*/
+    
+    /*try
+    {
+      BinaryBuffer buffer = new BinaryBuffer("/Users/jack/Documents/Dev/gba/aw.gba", BinaryBuffer.Mode.WRITE, ByteOrder.LITTLE_ENDIAN);
+      GBASleepHack.patch(buffer);
+      buffer.close();
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
+    
     java.lang.System.exit(0);*/
 	}
 	

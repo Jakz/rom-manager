@@ -1,4 +1,4 @@
-package jack.rm.json.workflow;
+package jack.rm.workflow;
 
 import jack.rm.files.Trimmer;
 
@@ -14,7 +14,7 @@ public class TrimOperation extends RomOperation
     this.filler = filler;
   }
   
-  public RomHandle apply(RomHandle rom)
+  protected RomHandle doApply(RomHandle rom)
   {
     try {
       Trimmer.trim(rom.getBuffer(), filler);

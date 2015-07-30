@@ -1,4 +1,4 @@
-package jack.rm.json.workflow;
+package jack.rm.workflow;
 
 import java.util.ArrayList;
 import java.util.Arrays;
