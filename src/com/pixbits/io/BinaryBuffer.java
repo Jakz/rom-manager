@@ -211,6 +211,11 @@ public class BinaryBuffer implements AutoCloseable
     return new String(bbuffer);
   }
   
+  public void write(byte value, int position)
+  {
+    buffer.put(position, value);
+  }
+  
   public void write(byte[] bytes)
   {
     buffer.put(bytes);

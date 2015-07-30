@@ -6,11 +6,9 @@ import java.util.Optional;
 import com.pixbits.io.BinaryBuffer;
 import com.pixbits.io.BufferPosition;
 
-import jack.rm.data.Rom;
 import jack.rm.data.console.GBA;
-import jack.rm.data.rom.RomAttribute;
 
-public class GBASavePatcher
+public class GBASavePatcherGBATA
 {
   static private byte[] toBytes(String string) { return javax.xml.bind.DatatypeConverter.parseHexBinary(string); }
   
@@ -87,12 +85,19 @@ public class GBASavePatcher
     "70b500040a1c400be021090541180731002310780870013301320139072bf8d9002070bc02bc0847"
   );
   
-  private static final PatchEntry[] Eeprom_v124 = buildPatch(
+  /*private static final PatchEntry[] Eeprom_v124 = buildPatch(
     "a2b00d1c0004030c034800688088834205d3014848e0",
     "00040a1c400be021090541180731002308781070013301320139072bf8d9002070bc02bc0847",
     "f0b5acb00d1c0004010c1206170e034800688088814205d3",
     "70b500040a1c400be021090541180731002310780870013301320139072bf8d9002070bc02bc0847"
-  );
+  );*/
+  
+  private static final PatchEntry[] Eeprom_v124 = buildPatch(
+      "A2B00D1C0004030C034800688088834205D3014844E0D0580003FF8000002248061C0068017A",
+      "00040a1c400be021090541180731002308781070013301320139072bf8d9002070bc02bc0847",
+      "F0B5ACB00D1C0004010C1206170E034800688088814205D301489DE0D0580003FF8000000F480068",
+      "70b500040a1c400be021090541180731002310780870013301320139072bf8d9002070bc02bc0847"
+    );
   
   private static final PatchEntry[] Eeprom_v126 = buildPatch(
     "a2b00d1c0004030c034800688088834205d3014848e0",

@@ -3,18 +3,13 @@ package jack.rm.plugins.providers.offlinelist;
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
 import jack.rm.data.*;
-import jack.rm.data.console.GBA;
-
 import org.xml.sax.*;
 import java.io.CharArrayWriter;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.UnknownFormatConversionException;
 
 import jack.rm.data.parser.SaveParser;

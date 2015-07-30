@@ -1,7 +1,5 @@
 package com.pixbits.gui;
 
-import jack.rm.i18n.Text;
-
 import javax.swing.*;
 import java.awt.*;
 

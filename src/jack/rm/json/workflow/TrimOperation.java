@@ -2,7 +2,7 @@ package jack.rm.json.workflow;
 
 import jack.rm.files.Trimmer;
 
-public class TrimOperation implements RomOperation
+public class TrimOperation extends RomOperation
 {
   byte[] filler;
   

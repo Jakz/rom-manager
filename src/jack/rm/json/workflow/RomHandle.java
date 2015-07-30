@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.ByteOrder;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import com.pixbits.io.BinaryBuffer;
 import com.pixbits.workflow.WorkflowData;
@@ -16,11 +17,13 @@ public class RomHandle implements WorkflowData
   private final Rom rom;
   private BinaryBuffer buffer;
   private Path path;
+  private Path destPath;
 
 
   public RomHandle(Rom rom)
   {
     this.rom = rom;
+    destPath = Paths.get(".");
   }
 
   public Rom getRom() { return rom; }
@@ -49,6 +52,9 @@ public class RomHandle implements WorkflowData
     
     return buffer;
   }
+  
+  public Path getDestPath() { return destPath; }
+  public void setDestPath(Path path) { this.destPath = path; }
   
   public Path getPath() { return path; }
 }

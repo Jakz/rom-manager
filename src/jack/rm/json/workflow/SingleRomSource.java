@@ -1,6 +1,5 @@
 package jack.rm.json.workflow;
 
-import java.util.Spliterator;
 import java.util.function.Consumer;
 
 import com.pixbits.workflow.*;

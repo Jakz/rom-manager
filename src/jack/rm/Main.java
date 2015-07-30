@@ -4,7 +4,10 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import java.awt.Desktop;
+import java.nio.file.Paths;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.List;
 
 import jack.rm.assets.AssetPacker;
 import jack.rm.assets.Downloader;
@@ -124,42 +127,27 @@ public class Main
 
 
     downloader = new Downloader(set);
+
+    /*List<Rom> favourites = set.list.stream().filter(Searcher.buildSeachPredicate("is:fav")).collect(Collectors.toList());
     
-    Rom rom = romSet.list.getByNumber(33);
-    Fetcher<RomHandle> source = new SingleRomSource(rom);
-    Dumper<RomHandle> dumper = new RomConsolidator();
+    Fetcher<RomHandle> source = new MultipleRomSource(favourites);
+    Dumper<RomHandle> dumper = new EZFlashIVRomConsolidator();
     Workflow<RomHandle> workflow = new Workflow<>(source, dumper);
-    workflow.addStep(new GBASavePatchOperation());
+    
+    IPSPatchOperation ipsOperation = new IPSPatchOperation();
+    ipsOperation.addPatch(romSet.list.find("yoshi universal loc:europe"), Paths.get("/Volumes/WinSSD/gba-ips/yoshi-universal-gravitation-tilt-fix.ips"));
+    ipsOperation.addPatch(romSet.list.find("wario twisted"), Paths.get("/Volumes/WinSSD/gba-ips/wario-ware-tilt-fix.ips"));
+    ipsOperation.addPatch(romSet.list.find("kuru paradise"), Paths.get("/Volumes/WinSSD/gba-ips/kururin-paradise-translation.ips"));
+    
+    workflow.addStep(new LogOperation());
+    workflow.addStep(ipsOperation);
+    workflow.addStep(new GBASavePatchOperationGBATA());
     workflow.execute();
-    java.lang.System.exit(0);
-    
-    /*for (int i = 0; i < romSet.list.count(); ++i)
-      if (romSet.list.get(i).status == RomStatus.FOUND)
-      {
-        Rom rom = romSet.list.get(i);
-        
-        Fetcher<RomHandle> source = new SingleRomSource(rom);
-        Dumper<RomHandle> dumper = new RomConsolidator();
-        Workflow<RomHandle> workflow = new Workflow<>(source, dumper);
-        workflow.addStep(new TrimOperation(new byte[]{0x00, (byte)0xff}));
-        workflow.execute();
-
-        java.lang.System.exit(0);
-      }*/
-    
-    
-
+    java.lang.System.exit(0);*/
 	}
 	
 	public static void main(String[] args)
 	{
-	  /*IntFetcher fetcher = new IntFetcher();
-	  IntDumper dumper = new IntDumper();
-	  Workflow<IntHolder> workflow = new Workflow<>(fetcher, dumper);
-	  workflow.addStep( i -> {i.value *= 2; return i; } );
-	  workflow.addStep( i -> {i.value += 17; return i; } );
-	  workflow.execute();*/
-	  
 	  if (true)
 	  {
 	  setOS();
@@ -174,7 +162,9 @@ public class Main
 	  pluginsPanel = new PluginsPanel(manager);
 		
 		mainFrame = new MainFrame();
-	
+    clonesDialog = new ClonesDialog(mainFrame, "Rom Clones");
+
+		
     loadRomSet(RomSetManager.bySystem(System.GBA));
     
     AssetPacker.packAssets(RomSet.current);
@@ -183,7 +173,6 @@ public class Main
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setVisible(true);
 		
-    clonesDialog = new ClonesDialog(mainFrame, "Rom Clones");
 	  }
 	}
 

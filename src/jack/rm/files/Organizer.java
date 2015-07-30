@@ -1,6 +1,5 @@
 package jack.rm.files;
 
-import jack.rm.Settings;
 import jack.rm.data.*;
 import jack.rm.data.set.*;
 import jack.rm.log.Log;

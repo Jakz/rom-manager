@@ -8,7 +8,6 @@ import jack.rm.log.*;
 
 import java.nio.file.*;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.zip.*;
 import javax.swing.SwingWorker;
 

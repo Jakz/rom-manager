@@ -52,6 +52,7 @@ public class GBA
       return value;
     }
     
+    public long getSize() { return size; }
     public Version getVersion() { return version; }
     public Type getType() { return type; }
     

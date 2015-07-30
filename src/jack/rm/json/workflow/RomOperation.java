@@ -1,10 +1,11 @@
 package jack.rm.json.workflow;
 
 import com.pixbits.workflow.Mutuator;
+import jack.rm.data.console.System;
 
-public interface RomOperation extends Mutuator<RomHandle>
-{
-  String getName();
-  String getDescription();
-  default boolean isSystemSupported() { return true; }
+public abstract class RomOperation implements Mutuator<RomHandle>
+{  
+  abstract String getName();
+  abstract String getDescription();
+  boolean isSystemSupported(System system) { return true; }
 }

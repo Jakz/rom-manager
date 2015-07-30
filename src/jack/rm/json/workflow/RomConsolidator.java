@@ -4,15 +4,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
-
 import com.pixbits.workflow.*;
 
 import jack.rm.data.Rom;
 
 public class RomConsolidator extends Dumper<RomHandle>
 {
-  Path destination = Paths.get("/Users/jack/Documents/dev");
+  Path destination = Paths.get("/Users/jack/Documents/dev/ez");
   
   public void accept(RomHandle handle)
   {

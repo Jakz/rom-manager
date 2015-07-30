@@ -3,6 +3,7 @@ package jack.rm.data;
 import jack.rm.*;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.set.RomSet;
+import jack.rm.data.set.Searcher;
 import jack.rm.files.MoverWorker;
 import jack.rm.files.*;
 import jack.rm.plugins.folder.FolderPlugin;
@@ -127,6 +128,11 @@ public class RomList implements Iterable<Rom>
   
   public Stream<Rom> stream() { return list.stream(); }
   public Iterator<Rom> iterator() { return list.iterator(); }
+  public Rom find(String search) { 
+    Optional<Rom> rom = list.stream().filter(Searcher.buildSeachPredicate(search)).findFirst();
+    if (!rom.isPresent()) throw new RuntimeException("RomList::find failed to find any rom");
+    return rom.orElse(null);
+  }
   
   public void organize()
   {

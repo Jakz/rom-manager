@@ -14,7 +14,6 @@ import jack.rm.data.RomSize;
 import jack.rm.data.console.GBA;
 import jack.rm.data.console.NDS;
 import jack.rm.data.console.System;
-import jack.rm.data.console.NDS.Save;
 import jack.rm.data.parser.SaveParser;
 import jack.rm.data.parser.XMLDatLoader;
 import jack.rm.data.rom.RomAttribute;
