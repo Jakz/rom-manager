@@ -1,4 +1,4 @@
-package jack.rm.data.set;
+package jack.rm.data.romset;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,11 +8,11 @@ import java.util.function.Predicate;
 
 import com.pixbits.parser.SimpleParser;
 
-import jack.rm.data.Genre;
-import jack.rm.data.Rom;
-import jack.rm.data.RomSave;
-import jack.rm.data.Location;
+import jack.rm.data.rom.Genre;
+import jack.rm.data.rom.Location;
+import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
+import jack.rm.data.rom.RomSave;
 
 public class Searcher
 {

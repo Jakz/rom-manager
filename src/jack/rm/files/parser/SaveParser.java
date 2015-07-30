@@ -1,6 +1,6 @@
-package jack.rm.data.parser;
+package jack.rm.files.parser;
 
-import jack.rm.data.RomSave;
+import jack.rm.data.rom.RomSave;
 
 @FunctionalInterface
 public interface SaveParser

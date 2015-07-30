@@ -10,10 +10,9 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import jack.rm.data.RomPath;
-import jack.rm.data.RomType;
-import jack.rm.data.RomPath.Archive;
-import jack.rm.data.RomPath.Bin;
+import jack.rm.data.rom.RomPath;
+import jack.rm.data.rom.RomPath.Archive;
+import jack.rm.data.rom.RomPath.Bin;
 
 public class RomPathAdapter implements JsonDeserializer<RomPath>, JsonSerializer<RomPath>
 {
@@ -22,13 +21,13 @@ public class RomPathAdapter implements JsonDeserializer<RomPath>, JsonSerializer
   {
     JsonObject obj = json.getAsJsonObject();
     
-    RomType type = (RomType)context.deserialize(obj.get("type"), RomType.class);
+    RomPath.Type type = (RomPath.Type)context.deserialize(obj.get("type"), RomPath.Type.class);
     
     if (type != null)
     {
-      if (type == RomType.BIN)
+      if (type == RomPath.Type.BIN)
         return new Bin(java.nio.file.Paths.get((String)context.deserialize(obj.get("file"), String.class)));
-      else if (type == RomType.ZIP)
+      else if (type == RomPath.Type.ZIP)
         return new Archive(java.nio.file.Paths.get((String)context.deserialize(obj.get("file"), String.class)), obj.get("internalName").getAsString());
     }      
     return null;
@@ -38,8 +37,8 @@ public class RomPathAdapter implements JsonDeserializer<RomPath>, JsonSerializer
   public JsonElement serialize(RomPath entry, Type typeOfT, JsonSerializationContext context)
   {
     JsonObject json = new JsonObject();
-    RomType entryType = entry.type;
-    json.add("type", context.serialize(entryType, RomType.class));
+    RomPath.Type entryType = entry.type;
+    json.add("type", context.serialize(entryType, RomPath.Type.class));
     
     switch (entryType)
     {

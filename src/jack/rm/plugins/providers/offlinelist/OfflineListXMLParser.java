@@ -2,7 +2,6 @@ package jack.rm.plugins.providers.offlinelist;
 
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
-import jack.rm.data.*;
 import org.xml.sax.*;
 import java.io.CharArrayWriter;
 import java.nio.file.Paths;
@@ -12,10 +11,15 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.UnknownFormatConversionException;
 
-import jack.rm.data.parser.SaveParser;
-import jack.rm.data.parser.XMLHandler;
+import jack.rm.data.rom.Language;
+import jack.rm.data.rom.Location;
+import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
-import jack.rm.data.set.RomSet;
+import jack.rm.data.rom.RomSave;
+import jack.rm.data.rom.RomSize;
+import jack.rm.data.romset.RomSet;
+import jack.rm.files.parser.SaveParser;
+import jack.rm.files.parser.XMLHandler;
 
 public class OfflineListXMLParser extends XMLHandler
 {

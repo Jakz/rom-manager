@@ -1,6 +1,6 @@
-package jack.rm.data.parser;
+package jack.rm.files.parser;
 
-import jack.rm.data.set.RomSet;
+import jack.rm.data.romset.RomSet;
 
 @FunctionalInterface
 public interface DatLoader

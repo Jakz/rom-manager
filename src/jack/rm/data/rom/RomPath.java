@@ -1,4 +1,4 @@
-package jack.rm.data;
+package jack.rm.data.rom;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,7 +7,23 @@ import java.util.zip.*;
 
 public abstract class RomPath
 {
-  public final RomType type;
+  public static enum Type
+  {
+    BIN(""),
+    ZIP("zip")
+    
+    ;
+    
+    public final String ext;
+    
+    Type(String ext)
+    {
+      this.ext = ext;
+    }
+  }
+  
+  
+  public final Type type;
   @Override
   public abstract String toString();
   public abstract Path file();
@@ -17,7 +33,7 @@ public abstract class RomPath
   public abstract String getExtension();
   public abstract InputStream getInputStream() throws IOException;
   
-  RomPath(RomType type)
+  RomPath(Type type)
   {
     this.type = type;
   }
@@ -28,7 +44,7 @@ public abstract class RomPath
 
     public Bin(Path file)
     {
-      super(RomType.BIN);
+      super(Type.BIN);
       this.file = file.normalize();
     }
     
@@ -66,7 +82,7 @@ public abstract class RomPath
     
     public Archive(Path file, String internalName)
     {
-      super(RomType.ZIP);
+      super(Type.ZIP);
       this.file = file.normalize();
       this.internalName = internalName;
     }

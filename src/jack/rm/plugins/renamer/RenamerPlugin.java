@@ -4,7 +4,7 @@ import java.util.function.Function;
 
 import com.pixbits.plugin.PluginType;
 
-import jack.rm.data.Rom;
+import jack.rm.data.rom.Rom;
 import jack.rm.plugins.OrganizerPlugin;
 import jack.rm.plugins.PluginRealType;
 

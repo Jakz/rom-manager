@@ -7,7 +7,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import jack.rm.data.RomID;;
+import jack.rm.data.rom.RomID;;
 
 class RomIdAdapter implements JsonSerializer<RomID<?>>, JsonDeserializer<RomID<?>> {
   @Override

@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jack.rm.data.console.System;
-import jack.rm.data.Rom;
+import jack.rm.data.rom.Rom;
 
 public class EmuParadiseDownloader extends RomDownloaderPlugin
 {

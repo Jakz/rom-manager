@@ -9,9 +9,9 @@ import com.pixbits.plugin.PluginVersion;
 
 import java.nio.file.Path;
 
-import jack.rm.data.Rom;
+import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
-import jack.rm.data.set.*;
+import jack.rm.data.romset.*;
 import jack.rm.files.Organizer;
 
 public class NumericalOrganizer extends FolderPlugin

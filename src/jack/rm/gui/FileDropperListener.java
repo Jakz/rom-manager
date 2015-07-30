@@ -1,9 +1,11 @@
 package jack.rm.gui;
 
 import jack.rm.Main;
-import jack.rm.data.*;
-import jack.rm.data.set.RomSet;
+import jack.rm.data.rom.Rom;
+import jack.rm.data.rom.RomStatus;
+import jack.rm.data.romset.RomSet;
 import jack.rm.files.Organizer;
+import jack.rm.files.ScanResult;
 import jack.rm.log.*;
 
 import java.nio.file.Files;

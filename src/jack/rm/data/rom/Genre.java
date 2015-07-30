@@ -1,4 +1,4 @@
-package jack.rm.data;
+package jack.rm.data.rom;
 
 public enum Genre
 {

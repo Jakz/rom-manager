@@ -10,8 +10,8 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
 
-import jack.rm.data.Rom;
-import jack.rm.data.RomList;;
+import jack.rm.data.rom.Rom;
+import jack.rm.data.romset.RomList;;
 
 public class RomListAdapter implements JsonSerializer<RomList>, JsonDeserializer<RomList>
 {

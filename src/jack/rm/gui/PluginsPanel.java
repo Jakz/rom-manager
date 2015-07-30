@@ -14,8 +14,7 @@ import com.pixbits.plugin.PluginManager;
 import com.pixbits.plugin.gui.PluginConfigTable;
 
 import net.miginfocom.swing.MigLayout;
-
-import jack.rm.data.set.RomSet;
+import jack.rm.data.romset.RomSet;
 import jack.rm.plugins.*;
 
 import java.awt.Color;

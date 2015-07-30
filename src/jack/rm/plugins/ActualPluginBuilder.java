@@ -4,7 +4,7 @@ import java.util.function.Predicate;
 
 import com.pixbits.plugin.PluginBuilder;
 
-import jack.rm.data.set.RomSet;
+import jack.rm.data.romset.RomSet;
 
 public class ActualPluginBuilder extends PluginBuilder<ActualPlugin>
 {

@@ -1,7 +1,8 @@
 package jack.rm.assets;
 
 import java.net.URL;
-import jack.rm.data.Rom;
+
+import jack.rm.data.rom.Rom;
 
 public class EmptyAssetManager implements AssetManager
 {

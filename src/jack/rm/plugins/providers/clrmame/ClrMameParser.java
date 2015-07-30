@@ -4,10 +4,11 @@ import java.io.FileInputStream;
 import com.pixbits.parser.SimpleParser;
 import com.pixbits.parser.SimpleTreeBuilder;
 
-import jack.rm.data.*;
-import jack.rm.data.parser.DatLoader;
+import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
-import jack.rm.data.set.RomSet;
+import jack.rm.data.rom.RomSize;
+import jack.rm.data.romset.RomSet;
+import jack.rm.files.parser.DatLoader;
 
 public class ClrMameParser implements DatLoader
 {

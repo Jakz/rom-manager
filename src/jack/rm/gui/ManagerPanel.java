@@ -1,7 +1,7 @@
 package jack.rm.gui;
 
 import jack.rm.Settings;
-import jack.rm.data.set.RomSet;
+import jack.rm.data.romset.RomSet;
 import jack.rm.i18n.Text;
 
 import java.awt.*;

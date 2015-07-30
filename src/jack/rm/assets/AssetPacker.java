@@ -4,10 +4,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import jack.rm.data.Rom;
-import jack.rm.data.RomList;
-import jack.rm.data.set.RomSet;
-
+import jack.rm.data.rom.Rom;
+import jack.rm.data.romset.RomList;
+import jack.rm.data.romset.RomSet;
 import net.lingala.zip4j.core.*;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;

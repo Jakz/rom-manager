@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import jack.rm.data.RomList;
+import jack.rm.data.romset.RomList;
 
 public class DeleteEmptyFoldersPlugin extends CleanupPlugin
 {

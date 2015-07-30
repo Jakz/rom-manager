@@ -1,6 +1,6 @@
 package jack.rm.files;
 
-import jack.rm.data.Rom;
+import jack.rm.data.rom.Rom;
 
 public abstract class Pattern implements Comparable<Pattern>
 {

@@ -2,9 +2,6 @@ package jack.rm.data.rom;
 
 import java.util.Set;
 
-import jack.rm.data.Genre;
-import jack.rm.data.Language;
-import jack.rm.data.RomSize;
 import jack.rm.i18n.Text;
 
 public enum RomAttribute

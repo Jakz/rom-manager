@@ -4,7 +4,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-import jack.rm.data.Rom;
+import jack.rm.data.rom.Rom;
 import jack.rm.files.IPSPatch;
 
 public class IPSPatchOperation extends RomOperation

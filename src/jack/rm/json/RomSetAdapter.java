@@ -10,8 +10,8 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import jack.rm.data.set.RomSet;
-import jack.rm.data.set.RomSetManager;
+import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.RomSetManager;
 
 class RomSetAdapter implements JsonSerializer<RomSet>, JsonDeserializer<RomSet> {
   @Override

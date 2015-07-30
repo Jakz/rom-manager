@@ -4,18 +4,13 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import java.awt.Desktop;
-import java.nio.file.Paths;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.List;
-
 import jack.rm.assets.AssetPacker;
 import jack.rm.assets.Downloader;
-import jack.rm.data.*;
 import jack.rm.data.console.System;
-import jack.rm.data.set.*;
+import jack.rm.data.romset.*;
+import jack.rm.files.Scanner;
 import jack.rm.gui.*;
-import jack.rm.json.workflow.*;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
 import com.pixbits.plugin.PluginManager;

@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 import com.pixbits.workflow.*;
 
-import jack.rm.data.Rom;
+import jack.rm.data.rom.Rom;
 
 public class SingleRomSource extends Fetcher<RomHandle>
 {

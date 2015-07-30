@@ -4,11 +4,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-import jack.rm.data.Location;
-import jack.rm.data.Language;
-import jack.rm.data.Rom;
-import jack.rm.data.RomSize;
+import jack.rm.data.rom.Language;
+import jack.rm.data.rom.Location;
+import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
+import jack.rm.data.rom.RomSize;
 import jack.rm.files.Pattern;
 
 import com.pixbits.plugin.PluginInfo;

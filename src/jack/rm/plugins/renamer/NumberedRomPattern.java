@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
-import jack.rm.data.Rom;
+import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
-import jack.rm.data.set.RomSet;
+import jack.rm.data.romset.RomSet;
 import jack.rm.files.Pattern;
 
 import com.pixbits.plugin.PluginInfo;

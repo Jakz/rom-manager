@@ -9,8 +9,8 @@ import java.nio.file.StandardOpenOption;
 
 import com.pixbits.workflow.*;
 
-import jack.rm.data.Rom;
 import jack.rm.data.console.GBA;
+import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
 
 public class EZFlashIVRomConsolidator extends Dumper<RomHandle>

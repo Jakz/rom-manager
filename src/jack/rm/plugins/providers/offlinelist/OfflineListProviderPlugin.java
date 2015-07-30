@@ -8,17 +8,17 @@ import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.UnknownFormatConversionException;
 import jack.rm.assets.Asset;
-import jack.rm.data.Rom;
-import jack.rm.data.RomSave;
-import jack.rm.data.RomSize;
 import jack.rm.data.console.GBA;
 import jack.rm.data.console.NDS;
 import jack.rm.data.console.System;
-import jack.rm.data.parser.SaveParser;
-import jack.rm.data.parser.XMLDatLoader;
+import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
-import jack.rm.data.set.Provider;
-import jack.rm.data.set.RomSet;
+import jack.rm.data.rom.RomSave;
+import jack.rm.data.rom.RomSize;
+import jack.rm.data.romset.Provider;
+import jack.rm.data.romset.RomSet;
+import jack.rm.files.parser.SaveParser;
+import jack.rm.files.parser.XMLDatLoader;
 import jack.rm.plugins.providers.*;
 
 public class OfflineListProviderPlugin extends ProviderPlugin

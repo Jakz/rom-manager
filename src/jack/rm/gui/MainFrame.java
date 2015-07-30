@@ -1,8 +1,10 @@
 package jack.rm.gui;
 
 import jack.rm.*;
-import jack.rm.data.*;
-import jack.rm.data.set.*;
+import jack.rm.data.rom.Rom;
+import jack.rm.data.rom.RomSize;
+import jack.rm.data.rom.RomStatus;
+import jack.rm.data.romset.*;
 import jack.rm.i18n.*;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.cleanup.*;

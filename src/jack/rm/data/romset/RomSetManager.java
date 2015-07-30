@@ -1,12 +1,12 @@
-package jack.rm.data.set;
+package jack.rm.data.romset;
 
 import java.util.*;
 
 import com.pixbits.plugin.PluginManager;
 
 import jack.rm.Main;
-import jack.rm.data.*;
 import jack.rm.data.console.System;
+import jack.rm.data.rom.RomSize;
 import jack.rm.log.*;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;

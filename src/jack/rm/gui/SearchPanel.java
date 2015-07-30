@@ -1,8 +1,11 @@
 package jack.rm.gui;
 
-import jack.rm.data.*;
+import jack.rm.data.rom.Language;
+import jack.rm.data.rom.Location;
+import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
-import jack.rm.data.set.Searcher;
+import jack.rm.data.rom.RomSize;
+import jack.rm.data.romset.Searcher;
 import jack.rm.i18n.Text;
 import javax.swing.*;
 import javax.swing.event.*;

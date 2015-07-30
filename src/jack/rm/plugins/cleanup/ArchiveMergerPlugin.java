@@ -9,11 +9,12 @@ import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
 
 import com.pixbits.plugin.ExposedParameter;
-import jack.rm.data.Rom;
-import jack.rm.data.RomList;
-import jack.rm.data.RomPath;
-import jack.rm.data.RomStatus;
-import jack.rm.data.set.RomSet;
+
+import jack.rm.data.rom.Rom;
+import jack.rm.data.rom.RomPath;
+import jack.rm.data.rom.RomStatus;
+import jack.rm.data.romset.RomList;
+import jack.rm.data.romset.RomSet;
 import jack.rm.files.OrganizerWorker;
 import jack.rm.plugins.BackgroundPlugin;
 

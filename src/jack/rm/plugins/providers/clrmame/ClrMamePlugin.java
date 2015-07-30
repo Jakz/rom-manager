@@ -3,7 +3,7 @@ package jack.rm.plugins.providers.clrmame;
 import jack.rm.assets.EmptyAssetManager;
 import jack.rm.data.console.System;
 import jack.rm.data.rom.RomAttribute;
-import jack.rm.data.set.RomSet;
+import jack.rm.data.romset.RomSet;
 import jack.rm.plugins.providers.*;
 
 

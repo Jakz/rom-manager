@@ -26,15 +26,12 @@ public class PathArgumentEditor implements TableCellEditor
   
   private JTable table;
   private int row;
-  
-  private final int type;
-  
+    
   PathArgumentEditor(int type)
   {
     inner = new DefaultCellEditor(new JTextField());
     field = (JTextField)inner.getComponent();
     field.setBorder(null);
-    this.type = type;
     browse = new JButton("...");
     
     cb = new ComponentBorder(browse);

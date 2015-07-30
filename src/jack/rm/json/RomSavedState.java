@@ -3,7 +3,10 @@ package jack.rm.json;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import jack.rm.data.*;
+import jack.rm.data.rom.Rom;
+import jack.rm.data.rom.RomID;
+import jack.rm.data.rom.RomPath;
+import jack.rm.data.rom.RomStatus;
 
 public class RomSavedState
 {

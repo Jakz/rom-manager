@@ -1,6 +1,6 @@
 package jack.rm.plugins.renamer;
 
-import jack.rm.data.Rom;
+import jack.rm.data.rom.Rom;
 
 public class BasicRenamerPlugin extends RenamerPlugin
 {

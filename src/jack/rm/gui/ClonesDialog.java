@@ -1,7 +1,8 @@
 package jack.rm.gui;
 
 import jack.rm.Main;
-import jack.rm.data.*;
+import jack.rm.data.rom.Rom;
+import jack.rm.data.rom.RomPath;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -14,8 +15,8 @@ import java.util.*;
 import java.util.function.*;
 import java.util.stream.Collectors;
 
-import jack.rm.data.ScanResult;
-import jack.rm.data.set.RomSet;
+import jack.rm.data.romset.RomSet;
+import jack.rm.files.ScanResult;
 
 public class ClonesDialog extends JDialog
 {
@@ -129,15 +130,15 @@ public class ClonesDialog extends JDialog
   private enum ClonePriority
   {
     ANY("Any", null),
-    ARCHIVE("Archive", RomType.ZIP),
-    BINARY("Binary", RomType.BIN)
+    ARCHIVE("Archive", RomPath.Type.ZIP),
+    BINARY("Binary", RomPath.Type.BIN)
     ;
     
-    ClonePriority(String caption, RomType type) { this.caption = caption; this.type = type; }
+    ClonePriority(String caption, RomPath.Type type) { this.caption = caption; this.type = type; }
     public String toString() { return caption; }
     
     public final String caption;
-    public final RomType type;
+    public final RomPath.Type type;
   }
   
   private final JComboBox<ClonePolicy> clonePolicy = new JComboBox<>(ClonePolicy.values());

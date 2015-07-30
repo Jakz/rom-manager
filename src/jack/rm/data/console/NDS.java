@@ -1,7 +1,7 @@
 package jack.rm.data.console;
 
-import jack.rm.data.RomSave;
-import jack.rm.data.RomSize;
+import jack.rm.data.rom.RomSave;
+import jack.rm.data.rom.RomSize;
 
 public class NDS
 {

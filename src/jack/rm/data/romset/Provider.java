@@ -1,4 +1,4 @@
-package jack.rm.data.set;
+package jack.rm.data.romset;
 
 public abstract class Provider
 {

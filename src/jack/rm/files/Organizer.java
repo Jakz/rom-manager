@@ -1,7 +1,9 @@
 package jack.rm.files;
 
-import jack.rm.data.*;
-import jack.rm.data.set.*;
+import jack.rm.data.rom.Rom;
+import jack.rm.data.rom.RomPath;
+import jack.rm.data.rom.RomStatus;
+import jack.rm.data.romset.*;
 import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;

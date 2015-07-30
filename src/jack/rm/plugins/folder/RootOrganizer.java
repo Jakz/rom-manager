@@ -5,7 +5,7 @@ import java.nio.file.Path;
 import com.pixbits.plugin.PluginInfo;
 import com.pixbits.plugin.PluginVersion;
 
-import jack.rm.data.Rom;
+import jack.rm.data.rom.Rom;
 
 public class RootOrganizer extends FolderPlugin
 {

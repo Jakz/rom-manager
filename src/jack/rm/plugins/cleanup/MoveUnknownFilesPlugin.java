@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 import com.pixbits.plugin.ExposedParameter;
 
 import jack.rm.Settings;
-import jack.rm.data.RomList;
-import jack.rm.data.RomStatus;
+import jack.rm.data.rom.RomStatus;
+import jack.rm.data.romset.RomList;
 import jack.rm.files.FolderScanner;
 import jack.rm.plugins.PluginWithIgnorePaths;
 

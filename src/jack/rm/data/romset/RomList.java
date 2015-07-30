@@ -1,9 +1,10 @@
-package jack.rm.data;
+package jack.rm.data.romset;
 
 import jack.rm.*;
+import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
-import jack.rm.data.set.RomSet;
-import jack.rm.data.set.Searcher;
+import jack.rm.data.rom.RomID;
+import jack.rm.data.rom.RomStatus;
 import jack.rm.files.MoverWorker;
 import jack.rm.files.*;
 import jack.rm.plugins.folder.FolderPlugin;
@@ -19,7 +20,7 @@ public class RomList implements Iterable<Rom>
   List<Rom> list;
 	Map<Long, Rom> crcs;
 	
-	private int countCorrect, countBadlyNamed, countNotFound, countTotal;
+	private int countCorrect, countBadlyNamed, countNotFound;
 	
 	public RomList(RomSet set)
 	{
@@ -90,7 +91,6 @@ public class RomList implements Iterable<Rom>
 	
 	public void updateStatus()
 	{
-	  countTotal = list.size();
 	  countNotFound = 0;
 	  countBadlyNamed = 0;
 	  countCorrect = 0;

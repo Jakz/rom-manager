@@ -1,13 +1,13 @@
-package jack.rm.data.set;
+package jack.rm.data.romset;
 
 import jack.rm.Main;
 import jack.rm.Settings;
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetManager;
-import jack.rm.data.*;
 import jack.rm.data.console.System;
-import jack.rm.data.parser.DatLoader;
+import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
+import jack.rm.files.parser.DatLoader;
 import jack.rm.json.Json;
 import jack.rm.json.RomListAdapter;
 import jack.rm.log.Log;

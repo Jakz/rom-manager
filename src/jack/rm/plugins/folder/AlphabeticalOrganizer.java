@@ -7,7 +7,7 @@ import java.text.Normalizer.Form;
 import com.pixbits.plugin.PluginInfo;
 import com.pixbits.plugin.PluginVersion;
 
-import jack.rm.data.Rom;
+import jack.rm.data.rom.Rom;
 
 public class AlphabeticalOrganizer extends FolderPlugin
 {

@@ -1,6 +1,7 @@
 package jack.rm.gui;
 
-import jack.rm.data.*;
+import jack.rm.data.rom.Location;
+import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
 
 import javax.swing.*;

@@ -1,9 +1,9 @@
-package jack.rm.data.parser;
+package jack.rm.files.parser;
 
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import jack.rm.data.set.RomSet;
+import jack.rm.data.romset.RomSet;
 
 public class XMLDatLoader implements DatLoader
 {

@@ -1,6 +1,6 @@
 package jack.rm.plugins.providers;
 
-import jack.rm.data.set.ProviderType;
+import jack.rm.data.romset.ProviderType;
 
 public class ClrMameProviderType implements ProviderType
 {

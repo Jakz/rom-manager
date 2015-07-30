@@ -9,9 +9,9 @@ import com.pixbits.plugin.JsonPluginSetAdapter;
 import com.pixbits.plugin.Plugin;
 import com.pixbits.plugin.PluginSet;
 
-import jack.rm.data.RomPath;
-import jack.rm.data.RomID;
-import jack.rm.data.set.RomSet;
+import jack.rm.data.rom.RomID;
+import jack.rm.data.rom.RomPath;
+import jack.rm.data.romset.RomSet;
 import jack.rm.plugins.ActualPlugin;
 
 public class Json

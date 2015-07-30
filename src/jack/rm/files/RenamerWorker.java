@@ -1,9 +1,10 @@
 package jack.rm.files;
 
 import java.util.function.Consumer;
-import jack.rm.data.Rom;
-import jack.rm.data.RomStatus;
-import jack.rm.data.set.RomSet;
+
+import jack.rm.data.rom.Rom;
+import jack.rm.data.rom.RomStatus;
+import jack.rm.data.romset.RomSet;
 import jack.rm.plugins.renamer.RenamerPlugin;
 
 public class RenamerWorker extends OrganizerWorker<RenamerPlugin>

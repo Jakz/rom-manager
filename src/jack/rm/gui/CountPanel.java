@@ -1,12 +1,13 @@
 package jack.rm.gui;
 
-import jack.rm.data.RomStatus;
 import java.awt.*;
 import java.util.stream.Collectors;
 import java.util.Map;
 import java.util.HashMap;
 
 import javax.swing.*;
+
+import jack.rm.data.rom.RomStatus;
 
 public class CountPanel extends JPanel
 {

@@ -2,8 +2,8 @@ package jack.rm.plugins.renamer;
 
 import java.util.Set;
 
-import jack.rm.data.Rom;
-import jack.rm.data.set.RomSet;
+import jack.rm.data.rom.Rom;
+import jack.rm.data.romset.RomSet;
 import jack.rm.files.Organizer;
 import jack.rm.files.Pattern;
 

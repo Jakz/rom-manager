@@ -6,7 +6,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import com.pixbits.workflow.*;
 
-import jack.rm.data.Rom;
+import jack.rm.data.rom.Rom;
 
 public class RomConsolidator extends Dumper<RomHandle>
 {

@@ -1,4 +1,4 @@
-package jack.rm.data;
+package jack.rm.data.rom;
 
 import jack.rm.i18n.*;
 import jack.rm.gui.Icon;

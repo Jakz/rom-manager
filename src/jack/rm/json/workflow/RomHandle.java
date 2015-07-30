@@ -1,8 +1,5 @@
 package jack.rm.json.workflow;
 
-import jack.rm.data.Rom;
-import jack.rm.data.RomPath;
-
 import java.io.IOException;
 import java.nio.ByteOrder;
 import java.nio.file.Files;
@@ -11,6 +8,9 @@ import java.nio.file.Paths;
 
 import com.pixbits.io.BinaryBuffer;
 import com.pixbits.workflow.WorkflowData;
+
+import jack.rm.data.rom.Rom;
+import jack.rm.data.rom.RomPath;
 
 public class RomHandle implements WorkflowData
 {
