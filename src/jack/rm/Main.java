@@ -4,15 +4,20 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import java.awt.Desktop;
+import java.io.IOException;
 import java.nio.ByteOrder;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import jack.rm.assets.AssetPacker;
 import jack.rm.assets.Downloader;
 import jack.rm.data.console.System;
+import jack.rm.data.rom.Language;
+import jack.rm.data.rom.Location;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.romset.*;
@@ -143,9 +148,10 @@ public class Main
     workflow.execute();
     java.lang.System.exit(0);*/
 
-    /*List<Rom> favourites = set.filter("is:fav");
+    /*List<Rom> favourites = set.filter("is:fav");*/
     
-    Fetcher<RomHandle> source = new MultipleRomSource(favourites);
+    //Fetcher<RomHandle> source = new MultipleRomSource(favourites);
+    /*Fetcher<RomHandle> source = new SingleRomSource(set.list.getByNumber(256));
     Dumper<RomHandle> dumper = new EZFlashIVRomConsolidator();
     Workflow<RomHandle> workflow = new Workflow<>(source, dumper);
     
@@ -157,15 +163,17 @@ public class Main
     workflow.addBenchmarkedStep(new LogOperation());
     workflow.addBenchmarkedStep(ipsOperation);
     workflow.addBenchmarkedStep(new GBASavePatchOperationGBATA());
-    workflow.addBenchmarkedStep(new TrimOperation(new byte[] {0x00, (byte)0xff}));
+    workflow.addBenchmarkedStep(new GBASleepHackOperation());
+    //workflow.addBenchmarkedStep(new TrimOperation(new byte[] {0x00, (byte)0xff}));
     workflow.addStep(new SortByAttributeOperation(RomAttribute.TAG, false));
     workflow.execute();
     java.lang.System.exit(0);*/
     
     /*try
     {
-      BinaryBuffer buffer = new BinaryBuffer("/Users/jack/Documents/Dev/gba/aw.gba", BinaryBuffer.Mode.WRITE, ByteOrder.LITTLE_ENDIAN);
-      GBASleepHack.patch(buffer);
+      BinaryBuffer buffer = new BinaryBuffer("/Users/jack/Documents/Dev/gba/aw-copy.gba", BinaryBuffer.Mode.WRITE, ByteOrder.LITTLE_ENDIAN);
+      java.lang.System.out.println(buffer.length());
+      new GBASleepHack().patch(buffer);
       buffer.close();
     }
     catch (Exception e)
@@ -196,7 +204,7 @@ public class Main
 
 		
     loadRomSet(RomSetManager.bySystem(System.GBA));
-    
+
     AssetPacker.packAssets(RomSet.current);
 
 		

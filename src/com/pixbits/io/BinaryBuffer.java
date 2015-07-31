@@ -79,6 +79,13 @@ public class BinaryBuffer implements AutoCloseable
       reverse(data);
   }
   
+  public void writeOrdered(byte[] data)
+  {
+    if (order == ByteOrder.BIG_ENDIAN)
+      reverse(data);
+    buffer.put(data);
+  }
+  
   public void writeOrdered(byte[] data, int position)
   {
     if (order == ByteOrder.BIG_ENDIAN)
@@ -213,7 +220,7 @@ public class BinaryBuffer implements AutoCloseable
     int backup = position();
     position(position);
     int value = readU32();
-    position(backup);
+    buffer.position(backup);
     return value;
   }
   
@@ -223,10 +230,25 @@ public class BinaryBuffer implements AutoCloseable
     readOrdered(data);
     return (data[0] & 0xFF) | ((data[1] & 0xFF) << 8);
   }
-  
+
   public void writeU24(int value, int position)
   {
-    writeOrdered(BigInteger.valueOf(value).toByteArray(), position);
+    writeOrdered(new byte[] {(byte)(value & 0xFF), (byte)((value >> 8) & 0xFF), (byte)((value >> 16) & 0xFF)}, position);
+  }
+  
+  public void writeU32(int value)
+  {
+    writeOrdered(new byte[] {(byte)(value & 0xFF), (byte)((value >> 8) & 0xFF), (byte)((value >> 16) & 0xFF), (byte)((value >> 24) & 0xFF)});
+  }
+  
+  public void writeU32(int value, int position)
+  {
+    writeOrdered(new byte[] {(byte)(value & 0xFF), (byte)((value >> 8) & 0xFF), (byte)((value >> 16) & 0xFF), (byte)((value >> 24) & 0xFF)}, position);
+  }
+  
+  public void writeU16(int value, int position)
+  {
+    writeOrdered(new byte[] {(byte)(value & 0xFF), (byte)((value >> 8) & 0xFF)}, position);
   }
     
   public String readString(int length)

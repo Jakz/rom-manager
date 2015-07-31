@@ -129,7 +129,7 @@ public class OfflineListXMLParser extends XMLHandler
 		    try
 		    {
 		      RomSave<?> save = saveParser.parse(asString());
-		      saves.put(asString(), save);
+		      //saves.put(asString(), save);
 		      rom.setAttribute(RomAttribute.SAVE_TYPE, save);
 		    }
 		    catch (UnknownFormatConversionException e)
