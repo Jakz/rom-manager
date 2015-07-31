@@ -107,7 +107,7 @@ public class RomSet
 	
   public final Path getAssetPath(Asset asset, Rom rom)
   {
-    Path path = Paths.get("assets",ident()).resolve(asset.getPath());  
+    Path path = Paths.get("data/", ident(), "assets").resolve(asset.getPath());
     return rom == null ? path : path.resolve(rom.getAssetData(asset).getPath());
   }
 	
