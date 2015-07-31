@@ -21,13 +21,15 @@ consolidate in "path" with ez4
 
  */
 
-import org.junit.*;
 
 import jack.rm.data.romset.Searcher;
 
+/*
+import org.junit.*;
 import static org.junit.Assert.*;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
+*/
 
 //@RunWith(Enclosed.class)
 public class ScriptParser
@@ -69,7 +71,7 @@ public class ScriptParser
       Scanners.SINGLE_QUOTE_STRING
     ); }
   
-  
+  /*
   @Test
   public void testPredicate()
   {
@@ -90,5 +92,5 @@ public class ScriptParser
     assertThat(script().parse("find 'is:fav'; select 'is:fav'").length(), is((Object)2));
     assertThat(script().parse("find 'is:fav';").length(), is((Object)1));
     assertThat(script().parse("find 'is:fav'\n select 'is:fav'").length(), is((Object)2));
-  }
+  }*/
 }

@@ -102,7 +102,7 @@ public class OfflineListXMLParser extends XMLHandler
 	  return Long.parseLong(asString());
 	}
 
-  Map<String, RomSave> saves = new TreeMap<>();
+  Map<String, RomSave<?>> saves = new TreeMap<>();
 	
 	@Override
   public void endElement(String namespaceURI, String localName, String qName) throws SAXException
