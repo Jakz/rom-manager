@@ -23,7 +23,8 @@ public enum MenuElement {
   
   TOOLS_DOWNLOAD_ART(Text.MENU_TOOLS_DOWNLOAD_ART, false),
   TOOLS_OPTIONS(Text.MENU_TOOLS_OPTIONS, false),
-  TOOLS_SHOW_CONSOLE(Text.MENU_TOOLS_SHOW_CONSOLE, true)
+  TOOLS_SHOW_MESSAGES(Text.MENU_TOOLS_SHOW_MESSAGES, true),
+  TOOLS_CONSOLE(Text.MENU_TOOLS_CONSOLE, true)
   ;
   
   MenuElement(Text title, boolean checkbox)

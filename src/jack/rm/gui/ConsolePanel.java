@@ -1,119 +1,104 @@
 package jack.rm.gui;
 
-import javax.swing.table.*;
-
-import jack.rm.log.*;
-
-import java.util.*;
-import java.util.List;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.*;
-import java.awt.*;
 
-public class ConsolePanel extends JPanel
+import org.codehaus.jparsec.Parser;
+import org.codehaus.jparsec.error.ParseErrorDetails;
+import org.codehaus.jparsec.error.ParserException;
+
+import jack.rm.data.romset.RomSet;
+import jack.rm.script.*;
+
+public class ConsolePanel extends JPanel implements KeyListener, ScriptStdout
 {
-	private static final long serialVersionUID = 1L;
-	
-	class LogTableModel extends AbstractTableModel
-	{
-	  final List<LogMessage> messages = new ArrayList<>();
-	  final String[] columnNames = {"Source", "Target", "Message"};
-	  final Class<?>[] columnClasses = {LogSource.class, LogTarget.class, String.class};
-	  
-	  
-	  @Override public String getColumnName(int i) { return columnNames[i]; }
-	  @Override public Class<?> getColumnClass(int i) { return columnClasses[i]; }
-	  @Override public int getColumnCount() { return columnNames.length; }
-	  @Override public boolean isCellEditable(int r, int c) { return false; }
-	  
-	  @Override public int getRowCount() { return messages.size(); }
-	  
-	  @Override public Object getValueAt(int r, int c)
-	  {
-	    LogMessage m = messages.get(r);
-	    
-	    switch (c)
-	    {
-	      case 0: return m.source;
-	      case 1: return m.target;
-	      case 2: return m.message;
-	      default: return null;
-	    }
-	  }
-	  
-	  void populate()
-	  {
-	    messages.clear();
-	    
-	    List<LogMessage> tmessages = Log.get();
-	    
-	    for (LogMessage msg : tmessages)
-	      messages.add(msg);
-	  }
-	  
-	  void fireChanges()
-	  {
-	    fireTableDataChanged();
-	  }
-	  
-	  class Renderer extends DefaultTableCellRenderer
-	  {
-	    @Override
-      public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int r, int c)
-	    {
-	      JLabel label = (JLabel)super.getTableCellRendererComponent(table, value, isSelected, hasFocus, r, c);
+  private final JTextArea console;
+  private int startCommandPosition;
+  
+  private Parser<Script> parser;
+  
+  ConsolePanel()
+  {
+    console = new JTextArea();
+    JScrollPane pane = new JScrollPane(console);
+    pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+    
+    console.setFont(new Font("Monaco", Font.BOLD, 12));
+    console.setBackground(Color.BLACK);
+    console.setForeground(new Color(177,242,27));
+    
+    this.setLayout(new BorderLayout());
+    this.add(pane, BorderLayout.CENTER);
+    
+    parser = new ScriptParser().script();
+    
+    console.addKeyListener(this);
+    
+    appendPrompt();
+  }
+  
+  public void appendPrompt()
+  {
+    /*if (console.getText().length() != 0 && console.getText().charAt(console.getText().length()-1) != '\n');
+      console.append("\n");*/
+    
+    console.append("> ");
+    console.setCaretPosition(console.getText().length());
+    startCommandPosition = console.getText().length();
+  }
+  
+  public void syntaxError(String message)
+  {
+    console.append("\nSyntax error: "+message.replaceAll("\n", " ")+"\n");
+  }
+  
+  public void keyPressed(KeyEvent k)
+  {
 
-	      LogMessage msg = messages.get(r);
-	      
-	      if (msg.type == LogType.WARNING)
-	        label.setForeground(new Color(255,153,0));
-	      else if (msg.type == LogType.ERROR)
-	        label.setForeground(new Color(180,0,0));
-	      else
-	        label.setForeground(table.getForeground());
-	      
-	      return label;
-	    }
-	  } 
-	}
-	
-	private final JTable table;
-	private final LogTableModel model;
-	private final JButton clearButton = new JButton("Clear");
-	
-	ConsolePanel()
-	{
-		model = new LogTableModel();
-				
-		table = new JTable(model);
-		
-		LogTableModel.Renderer tableRenderer = model.new Renderer();
-		
-		for (int i = 0; i < table.getColumnCount(); ++i)
-		  table.getColumnModel().getColumn(i).setCellRenderer(tableRenderer);
+  }
+  
+  public void keyReleased(KeyEvent k)
+  {
+    if (k.getKeyChar() == KeyEvent.VK_ENTER)
+    {
+      try
+      {
+        String command = console.getText(startCommandPosition, console.getText().length() - startCommandPosition);
+        System.out.println("Executing \'"+command+"\'");
+        
+        Script script = parser.parse(command);
+        script.execute(new ScriptEnvironment(RomSet.current, this));
+      }
+      catch (ParserException e)
+      {
+        //ParseErrorDetails details = e.getErrorDetails();
+        syntaxError(e.getMessage());
 
-		JScrollPane scroll = new JScrollPane(table);
-		this.setLayout(new BorderLayout());
-		this.add(scroll,BorderLayout.CENTER);
-		
-		clearButton.addActionListener(e -> {
-		  Log.wipe(); 
-		  populate();
-		});
-		
-		JPanel lower = new JPanel(new GridLayout(1,5));
-		lower.add(new JLabel());
-		lower.add(new JLabel());
-		lower.add(clearButton);
-		lower.add(new JLabel());
-		lower.add(new JLabel());
-		
-		this.add(lower, BorderLayout.SOUTH);
-	}
-	
-	public void populate()
-	{
-	  model.populate();
-	  model.fireChanges();
-	}
+      }
+      catch (Exception e)
+      {
+        e.printStackTrace();
+      }
+      finally
+      {
+        appendPrompt();
+      }
+    }
+  }
+  
+  public void keyTyped(KeyEvent k)
+  {
+    
+  }
+  
+  public void append(String text)
+  {
+    console.append(text+"\n");
+  }
 }

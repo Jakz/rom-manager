@@ -101,6 +101,7 @@ public class Main
 	{
 	  @Override public void accept(IntHolder holder) { /*System.out.println(holder.get());*/ }
 	}
+
 	
 	public static void loadPlugins()
 	{
@@ -169,6 +170,8 @@ public class Main
     workflow.execute();
     java.lang.System.exit(0);*/
     
+    
+    /*
     try
     {
       BinaryBuffer buffer = new BinaryBuffer("/Users/jack/Documents/Dev/gba/sma-m.gba", BinaryBuffer.Mode.WRITE, ByteOrder.LITTLE_ENDIAN);
@@ -181,7 +184,7 @@ public class Main
       e.printStackTrace();
     }
     
-    java.lang.System.exit(0);
+    java.lang.System.exit(0);*/
 	}
 	
 	public static void main(String[] args)

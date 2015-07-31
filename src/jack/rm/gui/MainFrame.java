@@ -55,7 +55,8 @@ public class MainFrame extends JFrame implements WindowListener
 		
 	final private CardLayout layout = new CardLayout();
 	final private JPanel cardMain = new JPanel(new BorderLayout());
-	final public ConsolePanel cardConsole = new ConsolePanel();
+	final public LogPanel logPanel = new LogPanel();
+	final private ConsolePanel consolePanel = new ConsolePanel();
 	
 	final private CountPanel countPanel = new CountPanel(romListModel);
 	final private SearchPanel searchPanel = new SearchPanel(this);
@@ -133,9 +134,10 @@ public class MainFrame extends JFrame implements WindowListener
 		cardMain.add(south, BorderLayout.SOUTH);
 		
 		setLayout(layout);
-		this.add(cardMain,"Main");
-		this.add(cardConsole,"Console");
-		
+		getContentPane().add(cardMain, "main");
+		getContentPane().add(logPanel, "log");
+		getContentPane().add(consolePanel, "console");
+		layout.show(getContentPane(), "console");
 
 		this.setPreferredSize(new Dimension(1440,900));
 		this.addWindowListener(this);
@@ -196,9 +198,12 @@ public class MainFrame extends JFrame implements WindowListener
     MenuElement.TOOLS_OPTIONS.item.addActionListener( e -> optionsFrame.showMe() );
     toolsMenu.add(MenuElement.TOOLS_OPTIONS.item);
     
-    MenuElement.TOOLS_SHOW_CONSOLE.item.addActionListener( e -> toggleConsole(((JMenuItem)e.getSource()).isSelected()));
-    toolsMenu.add(MenuElement.TOOLS_SHOW_CONSOLE.item);
+    MenuElement.TOOLS_SHOW_MESSAGES.item.addActionListener( e -> toggleLogPanel(((JMenuItem)e.getSource()).isSelected()));
+    toolsMenu.add(MenuElement.TOOLS_SHOW_MESSAGES.item);
     
+    MenuElement.TOOLS_CONSOLE.item.addActionListener( e -> toggleConsole(((JMenuItem)e.getSource()).isSelected()));
+    toolsMenu.add(MenuElement.TOOLS_CONSOLE.item);
+
     JMenu pluginsMenu = new JMenu("Plugins"); // TODO: localize
     
     Set<CleanupPlugin> plugins = set.getSettings().plugins.getEnabledPlugins(PluginRealType.ROMSET_CLEANUP);
@@ -244,15 +249,26 @@ public class MainFrame extends JFrame implements WindowListener
     }
   }
 
-	private void toggleConsole(boolean flag)
+	private void toggleLogPanel(boolean flag)
 	{
 		if (flag)
 		{
-			cardConsole.populate();
-		  layout.last(this.getContentPane());
+			logPanel.populate();
+			layout.show(getContentPane(), "log");
 		}
 		else
-			layout.first(this.getContentPane());
+      layout.show(getContentPane(), "main");
+	}
+	
+	private void toggleConsole(boolean flag)
+	{
+	   if (flag)
+	    {
+	      logPanel.populate();
+	      layout.show(getContentPane(), "console");
+	    }
+	    else
+	      layout.show(getContentPane(), "main");
 	}
 	
 	public void romSetLoaded(RomSet set)

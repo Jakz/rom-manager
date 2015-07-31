@@ -95,6 +95,8 @@ public class Searcher
   
   public static Predicate<Rom> buildSeachPredicate(String text)
   {
+    System.out.println("text: "+text);
+    
     Predicate<Rom> predicate = r -> true;
     
     List<String> tokens = new ArrayList<>();
