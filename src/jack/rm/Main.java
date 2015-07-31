@@ -169,9 +169,9 @@ public class Main
     workflow.execute();
     java.lang.System.exit(0);*/
     
-    /*try
+    try
     {
-      BinaryBuffer buffer = new BinaryBuffer("/Users/jack/Documents/Dev/gba/aw-copy.gba", BinaryBuffer.Mode.WRITE, ByteOrder.LITTLE_ENDIAN);
+      BinaryBuffer buffer = new BinaryBuffer("/Users/jack/Documents/Dev/gba/sma-m.gba", BinaryBuffer.Mode.WRITE, ByteOrder.LITTLE_ENDIAN);
       java.lang.System.out.println(buffer.length());
       new GBASleepHack().patch(buffer);
       buffer.close();
@@ -181,7 +181,7 @@ public class Main
       e.printStackTrace();
     }
     
-    java.lang.System.exit(0);*/
+    java.lang.System.exit(0);
 	}
 	
 	public static void main(String[] args)

@@ -121,7 +121,7 @@ public class GBASleepHack
       buffer.writeU32(0xE8BD5003);
       buffer.writeU32(0xE59F0000 + (rn << REG_DEST_SHIFT));
       buffer.writeU32(0xE12FFF10 + rn);
-      buffer.writeU32(0x08000000 + strAddress+1+2);
+      buffer.writeU32(0x08000000 + strAddress + (thumb ? (1+2) : 4));
     }
   }
   
