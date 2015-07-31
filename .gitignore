@@ -1,5 +1,6 @@
 .classpath
 .project
-.setting/*
-/bin
-/target
+.fatjar
+.settings/*
+bin/
+target/
