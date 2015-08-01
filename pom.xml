@@ -52,6 +52,9 @@
 							<mainClass>jack.rm.Main</mainClass>
 						</manifest>
 					</archive>
+					<excludes>
+						<exclude>jack/rm/pluging/providers/intrinsic/ASParserMain.java</exclude>
+					</excludes>
 				</configuration>
 				<executions>
 					<execution>
@@ -107,6 +110,12 @@
 			<groupId>net.lingala.zip4j</groupId>
 			<artifactId>zip4j</artifactId>
 			<version>${zip4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.8.2</version>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 </project>
