@@ -33,6 +33,7 @@ import com.google.gson.reflect.TypeToken;
 import jack.rm.data.rom.Location;
 import jack.rm.data.rom.Version;
 import jack.rm.data.console.GB;
+import jack.rm.data.console.GBC;
 import jack.rm.data.rom.Language;
 
 
@@ -240,6 +241,8 @@ public class ASParserMain
     locationMap.put("Australia", Location.AUSTRALIA);
     locationMap.put("Germany", Location.GERMANY);
     locationMap.put("Spain", Location.SPAIN);
+    locationMap.put("China", Location.CHINA);
+
     
     languageMap.put("English", Language.ENGLISH);
     languageMap.put("French", Language.FRENCH);
@@ -250,10 +253,20 @@ public class ASParserMain
     languageMap.put("Dutch", Language.DUTCH);
     languageMap.put("Japanese", Language.JAPANESE);
     languageMap.put("Swedish", Language.SWEDISH);
+    languageMap.put("Portuguese (", Language.PORTUGUESE);
+    languageMap.put("Portuguese", Language.PORTUGUESE);
+    languageMap.put("Polish", Language.POLISH);
+    languageMap.put("English (UK)", Language.ENGLISH_UK);
+    languageMap.put("English (US)", Language.ENGLISH);
+    languageMap.put("Chinese", Language.CHINESE);
+    languageMap.put("Norwegian", Language.NORWEGIAN);
+    languageMap.put("Finnish", Language.FINNISH);
+    languageMap.put("UK English", Language.ENGLISH_UK);
     
     saveMap.put("256KBit", new SaveFactory(GB.Save.Type.SRAM, 32678));
     saveMap.put("64KBit", new SaveFactory(GB.Save.Type.SRAM, 8192));
     saveMap.put("No SRAM", new SaveFactory(GB.Save.Type.NONE, 0));
+    //saveMap.put("n/a", new SaveFactory(GBC.Save.Type.NONE, 0));
     
     final int kbit256 = 32768;
     final int mbit1 = 65536*2;
@@ -265,10 +278,16 @@ public class ASParserMain
     sizeMap.put("2 Mbit", mbit1*2);
     sizeMap.put("4 Mbit", mbit1*4);
     sizeMap.put("8 Mbit", mbit1*8);
+    sizeMap.put("8,12 Mbit", mbit1*8);
+    sizeMap.put("16 Mbit", mbit1*16);
+    sizeMap.put("32 Mbit", mbit1*32);
+    sizeMap.put("64 Mbit", mbit1*64);
+
     
     versionMap.put("1.0", new VersionFactory(1,0));
     versionMap.put("1.1)", new VersionFactory(1,1));
     versionMap.put("1.1", new VersionFactory(1,1));
+    versionMap.put("1.16", new VersionFactory(1,16));
     versionMap.put("1.2", new VersionFactory(1,2));
     versionMap.put("n/a", new VersionFactory(0,0));
 
@@ -278,7 +297,7 @@ public class ASParserMain
   {
     try
     {  
-      BufferedReader rdr = Files.newBufferedReader(Paths.get("dat/im-gb-as.json"));
+      BufferedReader rdr = Files.newBufferedReader(Paths.get("dat/im-gbc-as.json"));
       GsonBuilder builder = new GsonBuilder().setPrettyPrinting();
       Gson gson = builder.create();
       entries = gson.fromJson(rdr, new TypeToken<List<RomEntry>>(){}.getType());
@@ -345,10 +364,10 @@ public class ASParserMain
         }
       }
       
-      
+      /*
       BufferedWriter wrt = Files.newBufferedWriter(Paths.get("gb.json"), StandardOpenOption.CREATE);
       wrt.write(gson.toJson(jentries));
-      wrt.close();
+      wrt.close();*/
     }
     catch (Exception e)
     {
@@ -414,9 +433,9 @@ public class ASParserMain
     if (!locationMap.containsKey(e.region))
       throw new RuntimeException("Location Missing: "+e.region);
     if (!sizeMap.containsKey(e.size))
-      throw new RuntimeException("Size Missing: "+e.size);
-    if (!saveMap.containsKey(e.saveType))
-      throw new RuntimeException("Save Missing: "+e.saveType);
+      throw new RuntimeException("Size Missing: "+e.size+" ("+e.title+")");
+    /*if (!saveMap.containsKey(e.saveType))
+      throw new RuntimeException("Save Missing: "+e.saveType);*/
     if (!versionMap.containsKey(e.version))
       throw new RuntimeException("Version Missing: "+e.version);
 
@@ -441,7 +460,7 @@ public class ASParserMain
     j.version = versionMap.get(e.version).build();
     j.crc = Long.parseLong(e.crc.toLowerCase(), 16);
     j.size = sizeMap.get(e.size);
-    j.saveType = saveMap.get(e.saveType).build();
+    //j.saveType = saveMap.get(e.saveType).build();
     j.comment = e.releaseNotes;
     j.pocketHeavenRef = Integer.valueOf(e.pocketHeavenRelease);
     
