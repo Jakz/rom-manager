@@ -18,6 +18,9 @@ public enum Location
 	AUSTRALIA(19, Text.LOCATION_AUSTRALIA, "AU", "A", Icon.FLAG_AUSTRALIA),
 	KOREA(22, Text.LOCATION_KOREA, "KR", "K", Icon.FLAG_KOREA),
 	
+	SWEDEN(24, Text.LOCATION_SWEDEN, "KR", "K", Icon.FLAG_SWEDEN),
+
+	
 	NONE(-1, Text.NONE, "NA", "N", Icon.FLAG_USA)
 	
 	;

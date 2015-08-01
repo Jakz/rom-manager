@@ -86,7 +86,7 @@ public class RomSet
 	
 	public String ident()
 	{
-		return provider.getTag()+"-"+system.tag+"-"+providerType.getIdent();
+		return providerType.getIdent()+"-"+system.tag+"-"+provider.getTag();
 	}
 	
 	public String datPath()

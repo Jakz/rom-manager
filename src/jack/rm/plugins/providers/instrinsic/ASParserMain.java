@@ -1,4 +1,5 @@
 package jack.rm.plugins.providers.instrinsic;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
@@ -7,8 +8,10 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
@@ -26,6 +29,11 @@ import org.jsoup.select.Elements;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+
+import jack.rm.data.rom.Location;
+import jack.rm.data.rom.Version;
+import jack.rm.data.console.GB;
+import jack.rm.data.rom.Language;
 
 
 public class ASParserMain
@@ -197,12 +205,81 @@ public class ASParserMain
     checkDat();
   }
   
+  private static Map<String, Location> locationMap = new HashMap<>();
+  private static Map<String, Language> languageMap = new HashMap<>();
+  private static Map<String, SaveFactory> saveMap = new HashMap<>();
+  private static Map<String, Integer> sizeMap = new HashMap<>();
+  private static Map<String, VersionFactory> versionMap = new HashMap<>();
+
+
+  private static class SaveFactory
+  {
+    final private GB.Save.Type type;
+    final private long size;
+    
+    SaveFactory(GB.Save.Type type, long size) { this.type = type; this.size = size; }
+    GB.Save build() { return new GB.Save(type, size); }
+  }
+  
+  private static class VersionFactory
+  {
+    final private int major, minor;
+
+    VersionFactory(int major, int minor) { this.major = major; this.minor = minor; }
+    Version build() { return major != 0 || minor != 0 ? new Version.Standard(major, minor) : new Version.Unspecified(); }
+  }
+  
+  static
+  {
+    locationMap.put("USA", Location.USA);
+    locationMap.put("Sweden", Location.SWEDEN);
+    locationMap.put("Japan", Location.JAPAN);
+    locationMap.put("Europe", Location.EUROPE);
+    locationMap.put("Italy", Location.ITALY);
+    locationMap.put("France", Location.FRANCE);
+    locationMap.put("Australia", Location.AUSTRALIA);
+    locationMap.put("Germany", Location.GERMANY);
+    locationMap.put("Spain", Location.SPAIN);
+    
+    languageMap.put("English", Language.ENGLISH);
+    languageMap.put("French", Language.FRENCH);
+    languageMap.put("German", Language.GERMAN);
+    languageMap.put("Italian", Language.ITALIAN);
+    languageMap.put("Spanish", Language.SPANISH);
+    languageMap.put("Danish", Language.DANISH);
+    languageMap.put("Dutch", Language.DUTCH);
+    languageMap.put("Japanese", Language.JAPANESE);
+    languageMap.put("Swedish", Language.SWEDISH);
+    
+    saveMap.put("256KBit", new SaveFactory(GB.Save.Type.SRAM, 32678));
+    saveMap.put("64KBit", new SaveFactory(GB.Save.Type.SRAM, 8192));
+    saveMap.put("No SRAM", new SaveFactory(GB.Save.Type.NONE, 0));
+    
+    final int kbit256 = 32768;
+    final int mbit1 = 65536*2;
+    
+    sizeMap.put("256 Kbit", kbit256);
+    sizeMap.put("0,25 Mbit", kbit256);
+    sizeMap.put("0,5 Mbit", kbit256*2);
+    sizeMap.put("1 Mbit", mbit1);
+    sizeMap.put("2 Mbit", mbit1*2);
+    sizeMap.put("4 Mbit", mbit1*4);
+    sizeMap.put("8 Mbit", mbit1*8);
+    
+    versionMap.put("1.0", new VersionFactory(1,0));
+    versionMap.put("1.1)", new VersionFactory(1,1));
+    versionMap.put("1.1", new VersionFactory(1,1));
+    versionMap.put("1.2", new VersionFactory(1,2));
+    versionMap.put("n/a", new VersionFactory(0,0));
+
+  }
+  
   public static void checkDat()
   {
     try
     {  
-      BufferedReader rdr = Files.newBufferedReader(Paths.get("dat/gb.json"));
-      GsonBuilder builder = new GsonBuilder();
+      BufferedReader rdr = Files.newBufferedReader(Paths.get("dat/im-gb-as.json"));
+      GsonBuilder builder = new GsonBuilder().setPrettyPrinting();
       Gson gson = builder.create();
       entries = gson.fromJson(rdr, new TypeToken<List<RomEntry>>(){}.getType());
       checkFields();
@@ -222,6 +299,7 @@ public class ASParserMain
       Set<String> versions = new HashSet<>();
       Set<String> regions = new HashSet<>();
       Set<String> languages = new HashSet<>();
+      Set<String> sizes = new HashSet<>();
       for (RomEntry entry : entries)
       {
         if (!emptyEntries.contains(entry))
@@ -229,7 +307,17 @@ public class ASParserMain
           saves.add(entry.saveType);
           versions.add(entry.version);
           regions.add(entry.region);
-          languages.add(entry.languages);
+          sizes.add(entry.size);
+          Arrays.stream(entry.languages.split(" -")).map(String::trim).forEach(languages::add);
+          
+          String[] assets = { entry.assetGame, entry.assetTitle };
+          
+          for (String asset : assets)
+          {
+            int assetNumber = Integer.valueOf(asset.substring(asset.lastIndexOf("/")+1, asset.lastIndexOf(".")-1));
+            if (assetNumber != entry.number)
+              throw new RuntimeException("Asset and number doesn't match: "+entry.number+" != "+assetNumber);
+          }
         }
       }
       
@@ -244,6 +332,23 @@ public class ASParserMain
       
       for (String language : languages)
         System.out.println("Language: "+language);
+      
+      for (String size : sizes)
+        System.out.println("Size: "+size);
+      
+      List<JsonRomField> jentries = new ArrayList<>();
+      for (RomEntry entry : entries)
+      {
+        if (!emptyEntries.contains(entry))
+        {
+          jentries.add(buildJsonEntry(entry));
+        }
+      }
+      
+      
+      BufferedWriter wrt = Files.newBufferedWriter(Paths.get("gb.json"), StandardOpenOption.CREATE);
+      wrt.write(gson.toJson(jentries));
+      wrt.close();
     }
     catch (Exception e)
     {
@@ -302,20 +407,61 @@ public class ASParserMain
     }
   }
   
-  public static enum Language
+  static JsonRomField buildJsonEntry(RomEntry e)
   {
+    JsonRomField j = new JsonRomField();
     
-  }
-  
-  public static enum Location
-  {
+    if (!locationMap.containsKey(e.region))
+      throw new RuntimeException("Location Missing: "+e.region);
+    if (!sizeMap.containsKey(e.size))
+      throw new RuntimeException("Size Missing: "+e.size);
+    if (!saveMap.containsKey(e.saveType))
+      throw new RuntimeException("Save Missing: "+e.saveType);
+    if (!versionMap.containsKey(e.version))
+      throw new RuntimeException("Version Missing: "+e.version);
+
+    j.number = e.number;
+    j.title = e.title;
+    j.location = locationMap.get(e.region);
+    j.languages = new ArrayList<>();
     
+    StringBuilder missingLanguage = new StringBuilder();
+    Arrays.stream(e.languages.split(" -")).map(String::trim).forEach(l -> {
+      if (!languageMap.containsKey(l))
+        missingLanguage.append(l+" ");
+      else
+        j.languages.add(languageMap.get(l));
+    });
+    
+    if (missingLanguage.length() > 0)
+      System.out.println("Language Missing: "+missingLanguage+" for \'"+e.languages+" ("+e.title+")");
+    
+    j.publisher = e.publisher;
+    j.group = e.group;
+    j.version = versionMap.get(e.version).build();
+    j.crc = Long.parseLong(e.crc.toLowerCase(), 16);
+    j.size = sizeMap.get(e.size);
+    j.saveType = saveMap.get(e.saveType).build();
+    j.comment = e.releaseNotes;
+    j.pocketHeavenRef = Integer.valueOf(e.pocketHeavenRelease);
+    
+    return j;
   }
-  
-  class JsonRomField
+
+  static class JsonRomField
   {
+    int number;
+    String title;
     Location location;
-    Set<Language> languages;
+    List<Language> languages;
+    String publisher;
+    String group;
+    Version version;
+    long crc;
+    int size;
+    GB.Save saveType;
+    String comment;
+    int pocketHeavenRef;
   }
   
   /*
@@ -335,6 +481,21 @@ public class ASParserMain
     Field 'pocketHeavenRelease', used: true
     Field 'assetTitle', used: true
     Field 'assetGame', used: true
+    
+    Field 'number', emptySomewhere: false
+    Field 'title', emptySomewhere: false **
+    Field 'region', emptySomewhere: false **
+    Field 'languages', emptySomewhere: false **
+    Field 'publisher', emptySomewhere: false **
+    Field 'group', emptySomewhere: false **
+    Field 'version', emptySomewhere: true
+    Field 'crc', emptySomewhere: false
+    Field 'size', emptySomewhere: false **
+    Field 'saveType', emptySomewhere: false **
+    Field 'releaseNotes', emptySomewhere: false
+    Field 'pocketHeavenRelease', emptySomewhere: false
+    Field 'assetTitle', emptySomewhere: false **
+    Field 'assetGame', emptySomewhere: false **
    
    
    */
