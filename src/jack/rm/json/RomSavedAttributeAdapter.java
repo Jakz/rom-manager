@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
+import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.RomAttribute;
 
 class RomSavedAttributeAdapter implements JsonSerializer<RomSavedAttribute>, JsonDeserializer<RomSavedAttribute> {
@@ -23,11 +24,11 @@ class RomSavedAttributeAdapter implements JsonSerializer<RomSavedAttribute>, Jso
   @Override
   public RomSavedAttribute deserialize(JsonElement json, Type type, JsonDeserializationContext context)
   {
-    RomAttribute attribute = context.deserialize(json.getAsJsonObject().get("key"), RomAttribute.class);
+    Attribute attribute = context.deserialize(json.getAsJsonObject().get("key"), RomAttribute.class);
     
-    if (attribute.clazz != null)
+    if (attribute.getClazz() != null)
     {
-      Object value = context.deserialize(json.getAsJsonObject().get("value"), attribute.clazz);
+      Object value = context.deserialize(json.getAsJsonObject().get("value"), attribute.getClazz());
       return new RomSavedAttribute(attribute, value);
     }
     

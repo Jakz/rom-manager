@@ -5,6 +5,7 @@ import jack.rm.Settings;
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetManager;
 import jack.rm.data.console.System;
+import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.files.parser.DatLoader;
@@ -49,9 +50,9 @@ public class RomSet
 	private final DatLoader loader;
 	
 	
-	private final RomAttribute[] attributes;
+	private final Attribute[] attributes;
 
-	public RomSet(System type, Provider provider, ProviderType providerType, RomAttribute[] attributes, AssetManager assetManager, DatLoader loader)
+	public RomSet(System type, Provider provider, ProviderType providerType, Attribute[] attributes, AssetManager assetManager, DatLoader loader)
 	{
 		this.list = new RomList(this);
 	  this.system = type;
@@ -67,8 +68,8 @@ public class RomSet
 	
 	public final AssetManager getAssetManager() { return assetManager; }
 	
-	public boolean doesSupportAttribute(RomAttribute attribute) { return Arrays.stream(attributes).anyMatch( a -> a == RomAttribute.NUMBER); }
-	public final RomAttribute[] getSupportedAttributes() { return attributes; }
+	public boolean doesSupportAttribute(Attribute attribute) { return Arrays.stream(attributes).anyMatch( a -> a == RomAttribute.NUMBER); }
+	public final Attribute[] getSupportedAttributes() { return attributes; }
 			
 	public final void load()
 	{ 

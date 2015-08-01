@@ -1,13 +1,13 @@
 package jack.rm.workflow;
 
-import jack.rm.data.rom.RomAttribute;
+import jack.rm.data.rom.Attribute;
 
 public class SortByAttributeOperation extends RomOperation
 {
   private boolean isLowercase;
-  private RomAttribute attribute;
+  private Attribute attribute;
   
-  public SortByAttributeOperation(RomAttribute attrib, boolean isLowercase)
+  public SortByAttributeOperation(Attribute attrib, boolean isLowercase)
   {
     this.attribute = attrib;
     this.isLowercase = isLowercase;

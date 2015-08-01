@@ -22,20 +22,20 @@ public class Rom implements Comparable<Rom>
   
   public RomStatus status;
 	
-	private Map<RomAttribute, Object> attributes = new HashMap<>();
+	private Map<Attribute, Object> attributes = new HashMap<>();
 	private Map<Asset, AssetData> assetData = new HashMap<>();
-	private Map<RomAttribute, Object> customAttributes = new HashMap<>();
+	private Map<Attribute, Object> customAttributes = new HashMap<>();
 	
-	public void setAttribute(RomAttribute key, Object value) { attributes.put(key, value); }
-	public void setCustomAttribute(RomAttribute key, Object value) { customAttributes.put(key, value); }
+	public void setAttribute(Attribute key, Object value) { attributes.put(key, value); }
+	public void setCustomAttribute(Attribute key, Object value) { customAttributes.put(key, value); }
 	
-	@SuppressWarnings("unchecked") public <T> T getAttribute(RomAttribute key) { 
+	@SuppressWarnings("unchecked") public <T> T getAttribute(Attribute key) { 
 	  return (T)customAttributes.getOrDefault(key, attributes.get(key));
 	}
 	
-  public Stream<Map.Entry<RomAttribute, Object>> getCustomAttributes() { return customAttributes.entrySet().stream(); }
-  public boolean hasCustomAttribute(RomAttribute attrib) { return customAttributes.containsKey(attrib); }
-  public void clearCustomAttribute(RomAttribute attrib) { customAttributes.remove(attrib); }
+  public Stream<Map.Entry<Attribute, Object>> getCustomAttributes() { return customAttributes.entrySet().stream(); }
+  public boolean hasCustomAttribute(Attribute attrib) { return customAttributes.containsKey(attrib); }
+  public void clearCustomAttribute(Attribute attrib) { customAttributes.remove(attrib); }
 
 	
   private boolean favourite;

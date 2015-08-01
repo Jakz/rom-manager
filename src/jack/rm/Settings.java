@@ -7,7 +7,7 @@ import com.pixbits.plugin.PluginManager;
 import com.pixbits.plugin.PluginSet;
 
 import jack.rm.data.console.System;
-import jack.rm.data.rom.RomAttribute;
+import jack.rm.data.rom.Attribute;
 import jack.rm.plugins.*;
 import jack.rm.plugins.downloader.RomDownloaderPlugin;
 import jack.rm.plugins.folder.FolderPlugin;
@@ -20,7 +20,7 @@ public class Settings
 	
 	public PluginSet<ActualPlugin> plugins;
 	
-	public List<RomAttribute> attributes;
+	public List<Attribute> attributes;
 
   Settings()
   {
@@ -72,5 +72,5 @@ public class Settings
 	  return paths;
 	}
 	
-	public List<RomAttribute> getRomAttributes() { return attributes; }
+	public List<Attribute> getRomAttributes() { return attributes; }
 }

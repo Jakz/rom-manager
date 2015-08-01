@@ -3,13 +3,14 @@ package jack.rm.plugins.providers.clrmame;
 import jack.rm.assets.EmptyAssetManager;
 import jack.rm.data.console.System;
 import jack.rm.data.rom.RomAttribute;
+import jack.rm.data.rom.Attribute;
 import jack.rm.data.romset.RomSet;
 import jack.rm.plugins.providers.*;
 
 
 public class ClrMamePlugin extends ProviderPlugin
 {
-  private final static RomAttribute[] GG_ATTRIBUTES = 
+  private final static Attribute[] GG_ATTRIBUTES = 
   {
     RomAttribute.TITLE,
     RomAttribute.CRC,

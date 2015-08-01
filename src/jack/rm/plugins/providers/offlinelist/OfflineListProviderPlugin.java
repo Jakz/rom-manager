@@ -13,6 +13,7 @@ import jack.rm.data.console.NDS;
 import jack.rm.data.console.System;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
+import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.RomSave;
 import jack.rm.data.rom.RomSize;
 import jack.rm.data.romset.Provider;
@@ -43,7 +44,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
     new Asset.Image(Paths.get("gameplay"), new Dimension(320,288))
   };
   
-  private final static RomAttribute[] GBA_ATTRIBUTES = 
+  private final static Attribute[] GBA_ATTRIBUTES = 
   {
     RomAttribute.TITLE,
     RomAttribute.NUMBER,
@@ -57,7 +58,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
     RomAttribute.COMMENT
   };
   
-  private final static RomAttribute[] GB_ATTRIBUTES = 
+  private final static Attribute[] GB_ATTRIBUTES = 
   {
     RomAttribute.TITLE,
     RomAttribute.NUMBER,

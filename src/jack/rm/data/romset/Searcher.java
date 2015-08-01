@@ -14,6 +14,7 @@ import jack.rm.data.rom.Location;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.RomSave;
+import jack.rm.data.rom.RomStatus;
 
 public class Searcher
 {
@@ -47,6 +48,10 @@ public class Searcher
         
         if (isSearchArg(tokens, "is", "favorite", "favourite", "fav"))
           return r -> r.isFavourite();
+        else if (isSearchArg(tokens, "is", "mis", "missing"))
+          return r -> r.status == RomStatus.MISSING;
+        else if (isSearchArg(tokens, "is", "found"))
+          return r -> r.status == RomStatus.MISSING;
         else if (tokens[0].equals("genre"))
         {
           return r -> {
@@ -74,9 +79,7 @@ public class Searcher
         }
         else if (tokens[0].equals("has"))
         {
-          Optional<RomAttribute> attrib = Arrays.stream(RomAttribute.values()).filter(a -> a.caption.text().toLowerCase().equals(tokens[1])).findFirst();
-
-          System.out.println(RomAttribute.TAG.caption.toString().toLowerCase()+" == "+tokens[1]);
+          Optional<RomAttribute> attrib = Arrays.stream(RomAttribute.values()).filter(a -> a.getCaption().toLowerCase().equals(tokens[1])).findFirst();
           
           if (attrib.isPresent())
             return r -> r.getAttribute(attrib.get()) != null;
@@ -95,8 +98,6 @@ public class Searcher
   
   public static Predicate<Rom> buildSeachPredicate(String text)
   {
-    System.out.println("text: "+text);
-    
     Predicate<Rom> predicate = r -> true;
     
     List<String> tokens = new ArrayList<>();

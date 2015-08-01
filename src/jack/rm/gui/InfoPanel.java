@@ -5,6 +5,7 @@ import jack.rm.assets.Asset;
 import jack.rm.assets.AssetManager;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
+import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.RomStatus;
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.Scanner;
@@ -44,9 +45,9 @@ public class InfoPanel extends JPanel implements ActionListener
 	
 	private Mode mode;
 	
-	private AttributeField buildField(RomAttribute attribute, boolean isReal)
+	private AttributeField buildField(Attribute attribute, boolean isReal)
 	{
-	  if (attribute.clazz != null && attribute.clazz.isEnum())
+	  if (attribute.getClazz() != null && attribute.getClazz().isEnum())
 	    return new EnumAttributeField(attribute, isReal);
 	  else
 	    return new TextAttributeField(attribute, isReal);
@@ -63,9 +64,9 @@ public class InfoPanel extends JPanel implements ActionListener
 	  
 	  Object parseValue()
 	  {
-       if (attrib.clazz == String.class)
+       if (attrib.getClazz() == String.class)
           return value.getText();
-        else if (attrib.clazz == Integer.class)
+        else if (attrib.getClazz() == Integer.class)
         {
           try {
             return Integer.parseInt(value.getText());
@@ -75,7 +76,7 @@ public class InfoPanel extends JPanel implements ActionListener
         return null;
 	  }
 	  
-	  TextAttributeField(RomAttribute attrib, boolean isReal)
+	  TextAttributeField(Attribute attrib, boolean isReal)
 	  {
 	    super(attrib, isReal);
 	    
@@ -100,7 +101,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	  
 	  void enableEdit()
 	  {
-      if (attrib.clazz != null)
+      if (attrib.getClazz() != null)
       {
         value.setEditable(true);
         value.setBorder(defaultBorder);
@@ -114,7 +115,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	  
 	  void finishEdit()
     {
-      if (attrib.clazz != null)
+      if (attrib.getClazz() != null)
       {
         Insets insets = defaultBorder.getBorderInsets(value);
         value.setBorder(BorderFactory.createEmptyBorder(insets.top, insets.left, insets.bottom, insets.right));
@@ -180,7 +181,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	  private JPanel panel;
 	  
 	  //@SuppressWarnings("unchecked")
-	  EnumAttributeField(RomAttribute attrib, boolean isReal)
+	  EnumAttributeField(Attribute attrib, boolean isReal)
 	  {
 	    super(attrib, isReal);
 	    value = new JComboBox<Enum<?>>();
@@ -216,7 +217,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	    
 	    try
 	    {
-	      Enum<?>[] values = (Enum<?>[])attrib.clazz.getMethod("values").invoke(null);
+	      Enum<?>[] values = (Enum<?>[])attrib.getClazz().getMethod("values").invoke(null);
 	      Arrays.sort(values, (o1, o2) -> o1.toString().compareTo(o2.toString()));
 	      value.addItem(null);
 	      for (Enum<?> v : values)
@@ -281,7 +282,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	private abstract class AttributeField
 	{
 	  protected JLabel title;
-	  protected RomAttribute attrib;
+	  protected Attribute attrib;
 
 	  protected JButton deleteButton;
 
@@ -291,12 +292,12 @@ public class InfoPanel extends JPanel implements ActionListener
 	  
 	  abstract JComponent getComponent();
 	  
-	  AttributeField(RomAttribute attrib, boolean isReal)
+	  AttributeField(Attribute attrib, boolean isReal)
 	  {
 	    this.attrib = attrib;
 	    title = new JLabel();
 	    title.setHorizontalAlignment(SwingConstants.RIGHT);
-	    title.setText(attrib.caption.text());
+	    title.setText(attrib.getCaption());
 
 	    deleteButton = new JButton();
 	    deleteButton.setIcon(Icon.DELETE.getIcon());
@@ -449,14 +450,14 @@ public class InfoPanel extends JPanel implements ActionListener
 	  JMenu custom = new JMenu("Custom");
 	  customPopup.add(custom);
 	  
-	  RomAttribute[] cattributes = new RomAttribute[] {
+	  Attribute[] cattributes = new Attribute[] {
 	    RomAttribute.GENRE,
 	    RomAttribute.TAG
 	  };
 	  
-	  List<RomAttribute> enabledAttribs = set.getSettings().getRomAttributes();
+	  List<Attribute> enabledAttribs = set.getSettings().getRomAttributes();
 	  
-	  Stream<RomAttribute> eattributes = Arrays.stream(set.getSupportedAttributes());
+	  Stream<Attribute> eattributes = Arrays.stream(set.getSupportedAttributes());
 	  
 	  Runnable menuItemPostAction = () -> {
 	    buildFields();
@@ -465,12 +466,12 @@ public class InfoPanel extends JPanel implements ActionListener
 	    buildPopupMenu();
 	  };
 	  
-	  for (RomAttribute cattrib : cattributes)
+	  for (Attribute cattrib : cattributes)
 	  {
 	    JMenuItem item = null;
 	    if (enabledAttribs.contains(cattrib))
 	    {
-	      item = new JMenuItem("Remove \'"+cattrib.caption.text()+"\'");
+	      item = new JMenuItem("Remove \'"+cattrib.getCaption()+"\'");
 	      item.addActionListener(e -> {
 	        set.getSettings().getRomAttributes().remove(cattrib);
 	        set.list.stream().forEach(r -> r.clearCustomAttribute(cattrib));
@@ -479,7 +480,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	    }
 	    else
 	    {
-	      item = new JMenuItem("Add \'"+cattrib.caption.text()+"\'");
+	      item = new JMenuItem("Add \'"+cattrib.getCaption()+"\'");
 	      item.addActionListener(e -> {
 	        set.getSettings().getRomAttributes().add(cattrib);
           menuItemPostAction.run();
@@ -493,7 +494,7 @@ public class InfoPanel extends JPanel implements ActionListener
       JMenuItem item = null;
       if (enabledAttribs.contains(eattrib))
       {
-        item = new JMenuItem("Hide \'"+eattrib.caption.text()+"\'");
+        item = new JMenuItem("Hide \'"+eattrib.getCaption()+"\'");
         item.addActionListener(e -> {
           set.getSettings().getRomAttributes().remove(eattrib);
           menuItemPostAction.run();
@@ -501,9 +502,9 @@ public class InfoPanel extends JPanel implements ActionListener
       }
       else
       {
-        item = new JMenuItem("Show \'"+eattrib.caption.text()+"\'");
+        item = new JMenuItem("Show \'"+eattrib.getCaption()+"\'");
         item.addActionListener(e -> {
-          List<RomAttribute> newAttributes = Arrays.stream(set.getSupportedAttributes())
+          List<Attribute> newAttributes = Arrays.stream(set.getSupportedAttributes())
           .filter(ee -> enabledAttribs.contains(ee) || ee == eattrib).collect(Collectors.toList());
 
           enabledAttribs.stream().filter(ee -> !Arrays.asList(set.getSupportedAttributes()).contains(ee)).forEach(newAttributes::add);       
@@ -520,7 +521,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	
 	void buildFields()
 	{
-    List<RomAttribute> attributes = set.getSettings().getRomAttributes();
+    List<Attribute> attributes = set.getSettings().getRomAttributes();
     
     fields = attributes.stream().map( a -> buildField(a, true) ).collect(Collectors.toList());
     fields.add(buildField(RomAttribute.FILENAME, false));

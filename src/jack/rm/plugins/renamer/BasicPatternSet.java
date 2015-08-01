@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.Language;
 import jack.rm.data.rom.Location;
 import jack.rm.data.rom.Rom;
@@ -30,8 +31,8 @@ public class BasicPatternSet extends PatternSetPlugin
   
   private static class AttributePattern extends Pattern 
   {
-    RomAttribute attribute;
-    AttributePattern(String code, String desc, RomAttribute attrib)
+    Attribute attribute;
+    AttributePattern(String code, String desc, Attribute attrib)
     {
       super(code, desc);
       this.attribute = attrib;

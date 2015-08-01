@@ -1,15 +1,15 @@
 package jack.rm.json;
 
-import jack.rm.data.rom.RomAttribute;
+import jack.rm.data.rom.Attribute;
 
 public class RomSavedAttribute
 {
-  RomAttribute key;
+  Attribute key;
   Object value;
   
   RomSavedAttribute() { }
   
-  RomSavedAttribute(RomAttribute key, Object value)
+  RomSavedAttribute(Attribute key, Object value)
   {
     this.key = key;
     this.value = value;

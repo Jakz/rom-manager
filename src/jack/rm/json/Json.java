@@ -9,6 +9,7 @@ import com.pixbits.plugin.JsonPluginSetAdapter;
 import com.pixbits.plugin.Plugin;
 import com.pixbits.plugin.PluginSet;
 
+import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.RomID;
 import jack.rm.data.rom.RomPath;
 import jack.rm.data.romset.RomSet;
@@ -32,6 +33,8 @@ public class Json
     registerTypeAdapter(Path.class, new PathAdapter());
     registerTypeAdapter(Plugin.class, new JsonPluginAdapter<Plugin>());
     registerTypeAdapter(PluginSet.class, new JsonPluginSetAdapter<ActualPlugin>());
+    registerTypeAdapter(Attribute.class, new RomAttributeAdapter());
+
   }
   
   public static Gson build()

@@ -4,7 +4,7 @@ import java.util.Set;
 
 import jack.rm.i18n.Text;
 
-public enum RomAttribute
+public enum RomAttribute implements Attribute
 {
   NUMBER(Integer.class, Text.ROM_INFO_NUMBER),
   TITLE(String.class, Text.ROM_INFO_TITLE),
@@ -68,7 +68,15 @@ public enum RomAttribute
     this(null, caption);
   }
   
-  public final Class<?> clazz; 
-  public final Text caption;
-  public String prettyValue(Object value) { return value.toString(); } 
+  private final Class<?> clazz; 
+  private final Text caption;
+  
+  @Override
+  public String prettyValue(Object value) { return value.toString(); }
+
+  @Override
+  public Class<?> getClazz() { return clazz; }
+
+  @Override
+  public String getCaption() { return caption.text(); } 
 }
