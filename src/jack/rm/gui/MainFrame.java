@@ -1,6 +1,7 @@
 package jack.rm.gui;
 
 import jack.rm.*;
+import jack.rm.assets.AssetPacker;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomSize;
 import jack.rm.data.rom.RomStatus;
@@ -192,9 +193,7 @@ public class MainFrame extends JFrame implements WindowListener
 
     
     toolsMenu.removeAll();
-    
-    toolsMenu.add(MenuElement.TOOLS_DOWNLOAD_ART.item);
-    
+
     MenuElement.TOOLS_OPTIONS.item.addActionListener( e -> optionsFrame.showMe() );
     toolsMenu.add(MenuElement.TOOLS_OPTIONS.item);
     
@@ -209,7 +208,7 @@ public class MainFrame extends JFrame implements WindowListener
     assetsMenu.add(MenuElement.TOOLS_DOWNLOAD_ASSETS.item);
     MenuElement.TOOLS_DOWNLOAD_ASSETS.item.addActionListener( e -> Main.downloader.start() );
     assetsMenu.add(MenuElement.TOOLS_PACK_ASSETS.item);
-    MenuElement.TOOLS_PACK_ASSETS.item.addActionListener( e -> AssetPacker.);
+    MenuElement.TOOLS_PACK_ASSETS.item.addActionListener( e -> AssetPacker.packAssets(set) );
     
     toolsMenu.addSeparator();
     toolsMenu.add(assetsMenu);

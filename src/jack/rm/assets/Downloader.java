@@ -49,6 +49,8 @@ public class Downloader
         if (!r.hasAsset(asset))
           pool.submit(new ArtDownloaderTask(r, asset));
     }
+    
+    pool.shutdown();
         
     ProgressDialog.init(Main.mainFrame, "Asset Download", () -> { pool.shutdownNow(); started = false; });
   }

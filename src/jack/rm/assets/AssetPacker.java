@@ -3,7 +3,10 @@ package jack.rm.assets;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import jack.rm.data.rom.Rom;
 import jack.rm.data.romset.RomList;
@@ -17,18 +20,48 @@ import net.lingala.zip4j.util.Zip4jConstants;
 
 public class AssetPacker
 {
-  private static void packAssets(RomSet romSet)
+  public static void packAssets(RomSet romSet)
   {
     Asset[] assets = romSet.getAssetManager().getSupportedAssets();
     
-    Consumer<Boolean> callback = r -> {};
+    Consumer<Boolean> callback = r -> cleanup(romSet);
     
     for (int i = assets.length - 1; i >= 0; --i)
     {
-      callback = b -> new AssetPackerWorker(romSet, assets[i], callback).execute();
+      BiFunction<Integer, Consumer<Boolean>, Consumer<Boolean>> a = (c, cb) -> b -> new AssetPackerWorker(romSet, assets[c], cb).execute();
+      callback = a.apply(i, callback);
     }
     
     callback.accept(true);
+  }
+  
+  private static void cleanup(RomSet romSet)
+  {
+    try
+    {
+      for (Asset asset : romSet.getAssetManager().getSupportedAssets())
+      {
+        Path packPath = romSet.getAssetPath(asset);
+        java.io.File packFile = new java.io.File(packPath.toString()+".zip");
+        
+        if (Files.exists(packFile.toPath()))
+        {
+          for (Rom r : romSet.list)
+          {
+            AssetData data = r.getAssetData(asset);
+            
+            if (data.isPresentAsArchive() && data.isPresentAsFile())
+            {
+              Files.delete(data.getFinalPath());
+            }
+          }
+        }
+      }
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
   }
   
   private static class AssetPackerWorker extends RomSetWorker<BackgroundOperation>
