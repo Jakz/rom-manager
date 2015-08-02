@@ -2,13 +2,12 @@ package jack.rm.data.console;
 
 import jack.rm.data.rom.RomSave;
 import jack.rm.data.rom.RomSize;
+import jack.rm.data.rom.Version;
 
 public class GBA
 {
   public static class Save implements RomSave<Save.Type>
-  {
-    public static interface Version { };
-    
+  {    
     public static enum Type implements RomSave.Type
     {
       EEPROM,

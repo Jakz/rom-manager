@@ -2,6 +2,7 @@ package jack.rm.gui;
 
 import jack.rm.*;
 import jack.rm.assets.Asset;
+import jack.rm.assets.AssetData;
 import jack.rm.assets.AssetManager;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
@@ -595,17 +596,14 @@ public class InfoPanel extends JPanel implements ActionListener
 	
 	void setImage(Rom rom, Asset asset, JLabel dest)
 	{
-		Path path = set.getAssetPath(asset, rom);
-		Asset.Image imageAsset = (Asset.Image)asset;
-
-		long crc = rom.getAssetData(asset).getCRC();
-		boolean shouldCheckCRC = asset.hasCRC();
-		Dimension size = imageAsset.getSize();
-
-		if (Files.exists(path) && (!shouldCheckCRC || crc == Scanner.computeCRC(path)))
+		AssetData data = rom.getAssetData(asset);
+		
+		if (data.isPresent())
 		{
-			ImageIcon i = new ImageIcon(path.toString());
-			
+		  Asset.Image imageAsset = (Asset.Image)asset;
+	    Dimension size = imageAsset.getSize();
+	    ImageIcon i = data.asImage();
+
 			Image img = i.getImage();
 			BufferedImage bi = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 			Graphics g = bi.createGraphics();

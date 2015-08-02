@@ -3,10 +3,13 @@ package jack.rm.assets;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.function.Consumer;
 
 import jack.rm.data.rom.Rom;
 import jack.rm.data.romset.RomList;
 import jack.rm.data.romset.RomSet;
+import jack.rm.files.BackgroundOperation;
+import jack.rm.files.RomSetWorker;
 import net.lingala.zip4j.core.*;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;
@@ -14,41 +17,67 @@ import net.lingala.zip4j.util.Zip4jConstants;
 
 public class AssetPacker
 {
-  public static void packAssets(RomSet romSet)
+  private static void packAssets(RomSet romSet)
   {
     Asset[] assets = romSet.getAssetManager().getSupportedAssets();
     
-    try
+    Consumer<Boolean> callback = r -> {};
+    
+    for (int i = assets.length - 1; i >= 0; --i)
     {
-      for (Asset asset : assets)
-        packAsset(asset, romSet);
+      callback = b -> new AssetPackerWorker(romSet, assets[i], callback).execute();
     }
-    catch (ZipException|IOException e)
-    {
-      e.printStackTrace();
-    }
+    
+    callback.accept(true);
   }
   
-  private static void packAsset(Asset asset, RomSet romSet) throws ZipException, IOException
+  private static class AssetPackerWorker extends RomSetWorker<BackgroundOperation>
   {
-    RomList list = romSet.list;
+    private ZipFile file;
+    private ZipParameters params;
+    private final Asset asset;
     
-    Path packPath = romSet.getAssetPath(asset, null);
-    
-    java.io.File packFile = new java.io.File(packPath.toString()+".zip");
-    if (Files.exists(packFile.toPath()))
-      Files.delete(packFile.toPath());
-    ZipFile file = new ZipFile(packFile);
-    
-    ZipParameters params = new ZipParameters();
-    params.setCompressionLevel(Zip4jConstants.COMP_STORE);
-
-    for (Rom rom : list)
+    AssetPackerWorker(RomSet romSet, Asset asset, Consumer<Boolean> callback)
     {
-      if (rom.hasAsset(asset))
+      super(romSet,
+        new BackgroundOperation()
+        {
+          public String getTitle() { return "Asset Packer"; }
+          public String getProgressText() { return "Packing..."; }
+        },
+        r -> { AssetData data = r.getAssetData(asset); return data.isPresentAsFile() && !data.isPresentAsArchive(); },
+        callback  
+      );
+      
+      this.asset = asset;
+      
+      try
       {
-        file.addFile(romSet.getAssetPath(asset, rom).toFile(), params);
+        Path packPath = romSet.getAssetPath(asset);
+        java.io.File packFile = new java.io.File(packPath.toString()+".zip");
+        file = new ZipFile(packFile);
+      
+        params = new ZipParameters();
+        params.setCompressionLevel(Zip4jConstants.COMP_STORE);
+      }
+      catch (ZipException e)
+      {
+        e.printStackTrace();
+      }
+
+    }
+    
+    public void execute(Rom rom)
+    {
+      try
+      {
+        file.addFile(rom.getAssetData(asset).getFinalPath().toFile(), params);
+      }
+      catch (ZipException e)
+      {
+        e.printStackTrace();
       }
     }
+    
   }
 }

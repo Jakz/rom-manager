@@ -7,11 +7,11 @@ import jack.rm.data.rom.RomStatus;
 import jack.rm.data.romset.RomSet;
 import jack.rm.plugins.renamer.RenamerPlugin;
 
-public class RenamerWorker extends OrganizerWorker<RenamerPlugin>
+public class RenamerWorker extends RomSetWorker<RenamerPlugin>
 {
   public RenamerWorker(RomSet romSet, RenamerPlugin plugin, Consumer<Boolean> callback)
   {
-    super(romSet, plugin, callback);
+    super(romSet, plugin, r -> r.status == RomStatus.UNORGANIZED, callback);
   }
 
   @Override

@@ -81,7 +81,7 @@ public class Downloader
     
     public ArtDownloaderTask(Rom rom, Asset asset)
     {  
-      path = set.getAssetPath(asset, rom);
+      path = rom.getAssetData(asset).getFinalPath();
       url = set.getAssetManager().assetURL(asset, rom);
                 
       this.rom = rom;

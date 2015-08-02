@@ -15,10 +15,11 @@ import jack.rm.data.rom.RomPath;
 import jack.rm.data.rom.RomStatus;
 import jack.rm.data.romset.RomList;
 import jack.rm.data.romset.RomSet;
-import jack.rm.files.OrganizerWorker;
-import jack.rm.plugins.BackgroundPlugin;
+import jack.rm.files.BackgroundOperation;
+import jack.rm.files.BackgroundWorker;
+import jack.rm.files.RomSetWorker;
 
-public class ArchiveMergerPlugin extends CleanupPlugin implements BackgroundPlugin
+public class ArchiveMergerPlugin extends CleanupPlugin implements BackgroundOperation
 {
   @ExposedParameter(name="Archive Path", description="This is the archive that will contain the whole romset", params="files")
   Path path; 
@@ -32,14 +33,14 @@ public class ArchiveMergerPlugin extends CleanupPlugin implements BackgroundPlug
   @Override public String getProgressText() { return "Archiving..."; }
   @Override public String getMenuCaption() { return "Archive RomSet"; }
   
-  public class ArchiverWorker extends OrganizerWorker<ArchiveMergerPlugin>
+  public class ArchiverWorker extends RomSetWorker<ArchiveMergerPlugin>
   {
     ZipFile zfile = null;
     ZipParameters zparams = null, aparams = null;
 
     public ArchiverWorker(RomSet romSet, ArchiveMergerPlugin plugin, Consumer<Boolean> callback)
     {
-      super(romSet, plugin, callback);
+      super(romSet, plugin, r -> r.status != RomStatus.MISSING, callback);
       
       try
       {
@@ -65,34 +66,29 @@ public class ArchiveMergerPlugin extends CleanupPlugin implements BackgroundPlug
     {
       try
       {
-        if (r.status != RomStatus.MISSING)
-        {        
-  
-          if (!r.getPath().isArchive())
-          {
-            zfile.addFile(r.getPath().file().toFile(), zparams);
-          }
-          else
-          {
-            String fileName = r.getPath().file().getFileName().toString();
-            fileName = fileName.substring(0, fileName.lastIndexOf('.'));
-            fileName = fileName + "." + romSet.system.exts[0];
-            
-            aparams.setFileNameInZip(fileName);
-            
-            try (java.util.zip.ZipFile zip = new java.util.zip.ZipFile(r.getPath().file().toFile()))
-            {
-              ZipEntry entry = zip.getEntry(((RomPath.Archive)r.getPath()).internalName);         
-              zfile.addStream(zip.getInputStream(entry), aparams);
-            }
-          }     
+        if (!r.getPath().isArchive())
+        {
+          zfile.addFile(r.getPath().file().toFile(), zparams);
         }
+        else
+        {
+          String fileName = r.getPath().file().getFileName().toString();
+          fileName = fileName.substring(0, fileName.lastIndexOf('.'));
+          fileName = fileName + "." + romSet.system.exts[0];
+          
+          aparams.setFileNameInZip(fileName);
+          
+          try (java.util.zip.ZipFile zip = new java.util.zip.ZipFile(r.getPath().file().toFile()))
+          {
+            ZipEntry entry = zip.getEntry(((RomPath.Archive)r.getPath()).internalName);         
+            zfile.addStream(zip.getInputStream(entry), aparams);
+          }
+        }     
       }
       catch (Exception e)
       {
         e.printStackTrace();
       }
     }
-
   }
 }

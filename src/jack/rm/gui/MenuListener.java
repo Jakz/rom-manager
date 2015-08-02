@@ -59,10 +59,6 @@ class MenuListener implements ActionListener
 			Main.mainFrame.romListModel.isBadlyNamed = !Main.mainFrame.romListModel.isBadlyNamed;
       Main.mainFrame.updateTable();
 		}
-		else if (tag == MenuElement.TOOLS_DOWNLOAD_ART)
-		{
-			Main.downloader.start();
-		}
 		else
 		{
 			//StringManager.loadLanguage(((JMenuItem)source).getText());

@@ -106,10 +106,10 @@ public class RomSet
 	  return FileSystems.getDefault().getPathMatcher(pattern);
 	}
 	
-  public final Path getAssetPath(Asset asset, Rom rom)
+  public final Path getAssetPath(Asset asset)
   {
     Path path = Paths.get("data/", ident(), "assets").resolve(asset.getPath());
-    return rom == null ? path : path.resolve(rom.getAssetData(asset).getPath());
+    return path;
   }
 	
 	public final void cleanup()
@@ -164,7 +164,7 @@ public class RomSet
   	  {
   	    AssetManager assetManager = getAssetManager();
   	    for (Asset asset : assetManager.getSupportedAssets())
-  	      Files.createDirectories(getAssetPath(asset, null));
+  	      Files.createDirectories(getAssetPath(asset));
   	  }
   	  catch (IOException e)
   	  {
@@ -174,7 +174,7 @@ public class RomSet
   	  
   	  if (!Files.exists(settingsPath))
   	  {
-  	    settings = new Settings(Main.manager);
+  	    settings = new Settings(Main.manager, Arrays.asList(this.getSupportedAttributes()));
   	    return false;
   	  }
   	  else

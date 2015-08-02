@@ -53,6 +53,8 @@ public enum RomAttribute implements Attribute
   
   TAG(String.class, Text.ROM_INFO_TAG),
   
+  VERSION(Text.ROM_INFO_VERSION),
+  
   FILENAME(Text.ROM_INFO_FILENAME),
   PATH(Text.ROM_INFO_PATH)
   ;
@@ -70,6 +72,8 @@ public enum RomAttribute implements Attribute
   
   private final Class<?> clazz; 
   private final Text caption;
+  
+  public String toString() { return this.name().toLowerCase(); }
   
   @Override
   public String prettyValue(Object value) { return value.toString(); }

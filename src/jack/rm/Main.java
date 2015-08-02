@@ -208,7 +208,7 @@ public class Main
 		
     loadRomSet(RomSetManager.bySystem(System.GBA));
 
-    AssetPacker.packAssets(RomSet.current);
+    //AssetPacker.packAssets(RomSet.current);
 
 		
 		mainFrame.setLocationRelativeTo(null);

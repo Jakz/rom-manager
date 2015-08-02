@@ -31,9 +31,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import jack.rm.data.rom.Location;
+import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.Version;
 import jack.rm.data.console.GB;
 import jack.rm.data.console.GBC;
+import jack.rm.data.rom.Attribute;
+import jack.rm.data.rom.CustomRomAttribute;
 import jack.rm.data.rom.Language;
 
 
@@ -297,7 +300,7 @@ public class ASParserMain
   {
     try
     {  
-      BufferedReader rdr = Files.newBufferedReader(Paths.get("dat/im-gbc-as.json"));
+      BufferedReader rdr = Files.newBufferedReader(Paths.get("dat/im-gb-as.json"));
       GsonBuilder builder = new GsonBuilder().setPrettyPrinting();
       Gson gson = builder.create();
       entries = gson.fromJson(rdr, new TypeToken<List<RomEntry>>(){}.getType());
@@ -364,10 +367,10 @@ public class ASParserMain
         }
       }
       
-      /*
-      BufferedWriter wrt = Files.newBufferedWriter(Paths.get("gb.json"), StandardOpenOption.CREATE);
+      
+      BufferedWriter wrt = Files.newBufferedWriter(Paths.get("gb.json"), StandardOpenOption.TRUNCATE_EXISTING);
       wrt.write(gson.toJson(jentries));
-      wrt.close();*/
+      wrt.close();
     }
     catch (Exception e)
     {
@@ -434,8 +437,8 @@ public class ASParserMain
       throw new RuntimeException("Location Missing: "+e.region);
     if (!sizeMap.containsKey(e.size))
       throw new RuntimeException("Size Missing: "+e.size+" ("+e.title+")");
-    /*if (!saveMap.containsKey(e.saveType))
-      throw new RuntimeException("Save Missing: "+e.saveType);*/
+    if (!saveMap.containsKey(e.saveType))
+      throw new RuntimeException("Save Missing: "+e.saveType);
     if (!versionMap.containsKey(e.version))
       throw new RuntimeException("Version Missing: "+e.version);
 
@@ -460,14 +463,18 @@ public class ASParserMain
     j.version = versionMap.get(e.version).build();
     j.crc = Long.parseLong(e.crc.toLowerCase(), 16);
     j.size = sizeMap.get(e.size);
-    //j.saveType = saveMap.get(e.saveType).build();
+    j.saveType = saveMap.get(e.saveType).build();
     j.comment = e.releaseNotes;
     j.pocketHeavenRef = Integer.valueOf(e.pocketHeavenRelease);
     
+    j.populate();
+    
     return j;
   }
+  
+  private final static CustomRomAttribute POCKET_HEAVEN_REF = new CustomRomAttribute("Pocket Heaven #", "pocket-heaven-reference", null);
 
-  static class JsonRomField
+  static class JsonRomField extends HashMap<Attribute, Object>
   {
     int number;
     String title;
@@ -481,6 +488,23 @@ public class ASParserMain
     GB.Save saveType;
     String comment;
     int pocketHeavenRef;
+    
+    void populate()
+    {
+      this.put(RomAttribute.NUMBER, number);
+      this.put(RomAttribute.TITLE, title);
+      this.put(RomAttribute.LOCATION, location);
+      this.put(RomAttribute.LANGUAGE, languages);
+      this.put(RomAttribute.PUBLISHER, publisher);
+      this.put(RomAttribute.GROUP, group);
+      if (!(version instanceof Version.Unspecified))
+        this.put(RomAttribute.VERSION, version);
+      this.put(RomAttribute.CRC, crc);
+      this.put(RomAttribute.SIZE, size);
+      this.put(RomAttribute.SAVE_TYPE, saveType);
+      this.put(RomAttribute.COMMENT, comment);
+      this.put(POCKET_HEAVEN_REF, pocketHeavenRef);
+    }
   }
   
   /*

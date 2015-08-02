@@ -16,7 +16,7 @@ public class Asset
     this.basePath = basePath;
   }
   
-  public boolean hasCRC() { return hasCRC; }
+  boolean hasCRC() { return hasCRC; }
   public AssetType getType() { return type; }
   public Path getPath() { return basePath; }
   

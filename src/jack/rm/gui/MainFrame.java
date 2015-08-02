@@ -137,7 +137,7 @@ public class MainFrame extends JFrame implements WindowListener
 		getContentPane().add(cardMain, "main");
 		getContentPane().add(logPanel, "log");
 		getContentPane().add(consolePanel, "console");
-		layout.show(getContentPane(), "console");
+		layout.show(getContentPane(), "main");
 
 		this.setPreferredSize(new Dimension(1440,900));
 		this.addWindowListener(this);
@@ -203,7 +203,17 @@ public class MainFrame extends JFrame implements WindowListener
     
     MenuElement.TOOLS_CONSOLE.item.addActionListener( e -> toggleConsole(((JMenuItem)e.getSource()).isSelected()));
     toolsMenu.add(MenuElement.TOOLS_CONSOLE.item);
-
+    
+    JMenu assetsMenu = new JMenu(Text.MENU_TOOLS_ASSETS.text());
+    
+    assetsMenu.add(MenuElement.TOOLS_DOWNLOAD_ASSETS.item);
+    MenuElement.TOOLS_DOWNLOAD_ASSETS.item.addActionListener( e -> Main.downloader.start() );
+    assetsMenu.add(MenuElement.TOOLS_PACK_ASSETS.item);
+    MenuElement.TOOLS_PACK_ASSETS.item.addActionListener( e -> AssetPacker.);
+    
+    toolsMenu.addSeparator();
+    toolsMenu.add(assetsMenu);
+    
     JMenu pluginsMenu = new JMenu("Plugins"); // TODO: localize
     
     Set<CleanupPlugin> plugins = set.getSettings().plugins.getEnabledPlugins(PluginRealType.ROMSET_CLEANUP);

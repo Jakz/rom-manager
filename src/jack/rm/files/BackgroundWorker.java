@@ -1,5 +1,6 @@
 package jack.rm.files;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -10,38 +11,42 @@ import com.pixbits.gui.ProgressDialog;
 import jack.rm.Main;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.romset.RomSet;
-import jack.rm.plugins.BackgroundPlugin;
 
-public abstract class OrganizerWorker<T extends BackgroundPlugin> extends SwingWorker<Void, Integer>
+public abstract class BackgroundWorker<E, T extends BackgroundOperation> extends SwingWorker<Void, Integer>
 {
-  protected int total = 0;
-  protected final RomSet romSet;
-  protected final T plugin;
+  protected final List<E> data;
+  protected final T operation;
   protected final Consumer<Boolean> callback;
   protected final String title;
   protected final String progressText;
   
-  public OrganizerWorker(RomSet romSet, T plugin, Consumer<Boolean> callback)
+  protected BackgroundWorker(T operation, Consumer<Boolean> callback)
   {
-    this.romSet = romSet;
-    this.plugin = plugin;
-    total = romSet.list.count();
+    this(new ArrayList<E>(), operation, callback);
+  }
+  
+  public BackgroundWorker(List<E> data, T operation, Consumer<Boolean> callback)
+  {
+    this.data = data;
+    this.operation = operation;
     this.callback = callback;
     
-    this.title = plugin.getTitle();
-    this.progressText = plugin.getProgressText();
+    this.title = operation.getTitle();
+    this.progressText = operation.getProgressText();
   }
+  
+  protected void add(E item) { data.add(item); }
 
   @Override
   public Void doInBackground()
   {
     ProgressDialog.init(Main.mainFrame, title, null);
     
-    for (int i = 0; i < romSet.list.count(); ++i)
+    for (int i = 0; i < data.size(); ++i)
     {
-      setProgress((int)((((float)i)/total)*100));
+      setProgress((int)((((float)i)/data.size())*100));
 
-      Rom rom = romSet.list.get(i); 
+      E rom = data.get(i); 
       execute(rom);
 
       publish(i);
@@ -53,7 +58,7 @@ public abstract class OrganizerWorker<T extends BackgroundPlugin> extends SwingW
   @Override
   public void process(List<Integer> v)
   {
-    ProgressDialog.update(this, progressText+" "+v.get(v.size()-1)+" of "+romSet.list.count()+"..");
+    ProgressDialog.update(this, progressText+" "+v.get(v.size()-1)+" of "+data.size()+"..");
     Main.mainFrame.updateTable();
   }
   
@@ -68,5 +73,5 @@ public abstract class OrganizerWorker<T extends BackgroundPlugin> extends SwingW
     //  deleteEmptyFolders();
   }
   
-  public abstract void execute(Rom rom);
+  public abstract void execute(E rom);
 }

@@ -1,6 +1,6 @@
-package jack.rm.plugins;
+package jack.rm.files;
 
-public interface BackgroundPlugin
+public interface BackgroundOperation
 {
   public String getTitle();
   public String getProgressText();

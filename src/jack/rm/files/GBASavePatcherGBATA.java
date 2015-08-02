@@ -7,6 +7,7 @@ import com.pixbits.io.BinaryBuffer;
 import com.pixbits.io.BufferPosition;
 
 import jack.rm.data.console.GBA;
+import jack.rm.data.rom.Version;
 
 public class GBASavePatcherGBATA
 {
@@ -180,7 +181,7 @@ public class GBASavePatcherGBATA
   public static void patch(GBA.Save save, BinaryBuffer buffer)
   {
     GBA.Save.Type type = save.getType();
-    GBA.Save.Version version = save.getVersion();
+    Version version = save.getVersion();
     PatchEntry[] patch = null;
    
     if (type == GBA.Save.Type.SRAM)

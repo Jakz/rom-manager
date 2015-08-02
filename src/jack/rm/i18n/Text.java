@@ -39,6 +39,7 @@ public enum Text
 	ROM_INFO_CLONES,
 	ROM_INFO_SAVE_TYPE,
 	ROM_INFO_COMMENT,
+	ROM_INFO_VERSION,
 	ROM_INFO_PATH,
 	ROM_INFO_FILENAME,
 	
@@ -59,7 +60,9 @@ public enum Text
 	
 	MENU_TOOLS_TITLE,
 	MENU_TOOLS_OPTIONS,
-	MENU_TOOLS_DOWNLOAD_ART,
+	MENU_TOOLS_ASSETS,
+	MENU_TOOLS_DOWNLOAD_ASSETS,
+	MENU_TOOLS_PACK_ASSETS,
 	MENU_TOOLS_SHOW_MESSAGES,
 	MENU_TOOLS_CONSOLE,
 	
@@ -91,4 +94,6 @@ public enum Text
 	{
 		return res.getString(this.name());
 	}
+	
+	public String toString() { return text(); }
 }

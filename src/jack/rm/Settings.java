@@ -28,9 +28,10 @@ public class Settings
     attributes = new ArrayList<>();
   }
   
-	public Settings(PluginManager<ActualPlugin, ActualPluginBuilder> manager)
+	public Settings(PluginManager<ActualPlugin, ActualPluginBuilder> manager, List<Attribute> attributes)
 	{
 	  this();
+	  this.attributes = attributes;
 	  manager.setup(plugins); 
 	  renamingPattern = "%n - %t [%S]";
 	  romsPath = null;

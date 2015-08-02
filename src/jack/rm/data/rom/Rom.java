@@ -48,6 +48,8 @@ public class Rom implements Comparable<Rom>
 	  status = RomStatus.MISSING;
 	}
 	
+	public RomSet getRomSet() { return set; }
+	
 	public boolean shouldSerializeState()
 	{
 	  return isFavourite() || status != RomStatus.MISSING || !customAttributes.isEmpty();
@@ -77,7 +79,7 @@ public class Rom implements Comparable<Rom>
 	
 	public AssetData getAssetData(Asset asset)
 	{
-	  return assetData.computeIfAbsent(asset, k -> new AssetData());
+	  return assetData.computeIfAbsent(asset, k -> new AssetData(k, this));
 	}
 	
 	@Override
@@ -92,26 +94,9 @@ public class Rom implements Comparable<Rom>
 	  path = path.build(dest);
 	}
 	
-	public long getCRCforAsset(Asset asset)
-	{
-	  return assetData.get(asset).getCRC();
-	}
-	
 	public boolean hasAsset(Asset asset)
 	{
-	  Path f = RomSet.current.getAssetPath(asset, this);
-	   
-    if (!Files.exists(f)) return false;
-    else
-    {
-      if (asset.hasCRC())
-      {
-        long icrc = Scanner.computeCRC(f);
-        return icrc == getCRCforAsset(asset);
-      }
-      else
-        return true;
-    }
+	  return getAssetData(asset).isPresent();
 	}
 	
 	public boolean hasAllAssets()

@@ -16,6 +16,7 @@ import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.RomSave;
 import jack.rm.data.rom.RomSize;
+import jack.rm.data.rom.Version;
 import jack.rm.data.romset.Provider;
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.parser.SaveParser;
@@ -124,9 +125,9 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         {
           if (tokens[0].toLowerCase().contains(type.toString().toLowerCase()))
           {
-            GBA.Save.Version[] versions = GBA.Save.valuesForType(type);
+            Version[] versions = GBA.Save.valuesForType(type);
             
-            for (GBA.Save.Version version : versions)
+            for (Version version : versions)
             {
               if (tokens[1].contains(version.toString()))
                 return new GBA.Save(type, version);
@@ -155,14 +156,14 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         
       if (string.toLowerCase().contains("sram"))
       {
-        for (GBA.Save.Version version :  GBA.Save.valuesForType(GBA.Save.Type.SRAM))
+        for (Version version :  GBA.Save.valuesForType(GBA.Save.Type.SRAM))
           if (string.contains(version.toString()))
             return new GBA.Save(GBA.Save.Type.SRAM, version, 32768);
       }
       else if (string.toLowerCase().contains("flash"))
       {
 
-        for (GBA.Save.Version version :  GBA.Save.valuesForType(GBA.Save.Type.FLASH))
+        for (Version version :  GBA.Save.valuesForType(GBA.Save.Type.FLASH))
           if (string.contains(version.toString()))
           {
             int size = (string.contains("512") ? 512 : 1024 ) * (int)RomSize.KBYTE / 8;
@@ -171,7 +172,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
       }
       else if (string.toLowerCase().contains("eeprom"))
       {
-        for (GBA.Save.Version version :  GBA.Save.valuesForType(GBA.Save.Type.EEPROM))
+        for (Version version :  GBA.Save.valuesForType(GBA.Save.Type.EEPROM))
           if (string.contains(version.toString()))
           {
             return new GBA.Save(GBA.Save.Type.EEPROM, version, string.contains("64") ? 8192 : (8192/16));
