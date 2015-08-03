@@ -6,11 +6,14 @@ import jack.rm.data.romset.RomSet;
 import jack.rm.files.Scanner;
 import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.RenamerPlugin;
+import jack.rm.data.attachment.Attachment;
 import jack.rm.data.console.System;
 
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -25,6 +28,7 @@ public class Rom implements Comparable<Rom>
 	private Map<Attribute, Object> attributes = new HashMap<>();
 	private Map<Asset, AssetData> assetData = new HashMap<>();
 	private Map<Attribute, Object> customAttributes = new HashMap<>();
+	private List<Attachment> attachments = new ArrayList<>();
 	
 	public void setAttribute(Attribute key, Object value) { attributes.put(key, value); }
 	public void setCustomAttribute(Attribute key, Object value) { customAttributes.put(key, value); }
@@ -36,6 +40,8 @@ public class Rom implements Comparable<Rom>
   public Stream<Map.Entry<Attribute, Object>> getCustomAttributes() { return customAttributes.entrySet().stream(); }
   public boolean hasCustomAttribute(Attribute attrib) { return customAttributes.containsKey(attrib); }
   public void clearCustomAttribute(Attribute attrib) { customAttributes.remove(attrib); }
+  
+  public List<Attachment> getAttachments() { return attachments; }
 
 	
   private boolean favourite;

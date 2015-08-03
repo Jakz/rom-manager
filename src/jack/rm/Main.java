@@ -8,20 +8,25 @@ import java.io.IOException;
 import java.nio.ByteOrder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import jack.rm.assets.AssetPacker;
 import jack.rm.assets.Downloader;
+import jack.rm.data.console.GBA;
 import jack.rm.data.console.System;
 import jack.rm.data.rom.Language;
 import jack.rm.data.rom.Location;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
+import jack.rm.data.rom.Version;
 import jack.rm.data.romset.*;
+import jack.rm.files.GBASavePatcherGBATA;
 import jack.rm.files.GBASleepHack;
 import jack.rm.files.Scanner;
 import jack.rm.gui.*;
@@ -188,8 +193,91 @@ public class Main
     java.lang.System.exit(0);*/
 	}
 	
+	/*public static void patchTest()
+	{
+
+	  
+	  try
+	  {
+	    Stream<Path> ffiles = Files.list(Paths.get("/Users/jack/Desktop/save test/gbata")).filter(p -> p.getFileName().toString().endsWith(".gba"));
+	    ffiles.forEach(f -> { 
+	      try {
+	        Files.move(f, f.getParent().resolve(
+	          f.getFileName().toString().startsWith("l") ?
+	          Paths.get("f"+f.getFileName()) :
+	          Paths.get("e"+f.getFileName())
+	        )); 
+	      } 
+	      catch (Exception e) 
+	      { 
+	        e.printStackTrace(); 
+	      }
+	    });
+	    
+	    if (true) return; 
+	    
+	    Stream<Path> files = Files.list(Paths.get("/Users/jack/Desktop/save test/original")).filter(p -> p.getFileName().toString().endsWith(".gba"));
+	    Path dest = Paths.get("/Users/jack/Desktop/save test/rm");
+	    files.forEach(p -> {
+	      try
+	      {
+	        Path newFile = dest.resolve(p.getFileName());
+	        Files.copy(p, newFile);
+	        String filename = newFile.getFileName().toString();
+	        
+	        GBA.Save.Type type = null;
+	        Version version = null;
+	        
+	        if (filename.contains("eeprom"))
+	        {
+	          type = GBA.Save.Type.EEPROM;
+	          
+	          for (Version v : GBA.Save.EEPROM.values())
+	          {
+	            if (filename.contains(v.toString().substring(1)))
+	            {
+	              version = v;
+	              break;
+	            }
+	          }
+
+	        }
+	        else if (filename.contains("flash"))
+	        {
+	          type = GBA.Save.Type.FLASH;
+	          
+	           for (Version v : GBA.Save.Flash.values())
+	            {
+	              if (filename.contains(v.toString().substring(1)))
+	              {
+	                version = v;
+	                break;
+	              }
+	            }
+	        }
+	        
+	        GBA.Save save = new GBA.Save(type, version);
+	        BinaryBuffer buffer = new BinaryBuffer(newFile, BinaryBuffer.Mode.WRITE, ByteOrder.LITTLE_ENDIAN);
+	        GBASavePatcherGBATA.patch(save, buffer);
+	        buffer.close();     
+	      }
+	      catch (Exception e)
+	      {
+	        e.printStackTrace();
+	      }
+	      
+	    });
+	  }
+	  catch (Exception e)
+	  {
+	    e.printStackTrace();
+	  }
+	}*/
+	
 	public static void main(String[] args)
 	{
+	  //patchTest();
+	  
 	  if (true)
 	  {
 	  setOS();

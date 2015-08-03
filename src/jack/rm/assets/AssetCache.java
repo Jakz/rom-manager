@@ -40,6 +40,12 @@ public class AssetCache
     return roms.contains(rom);
   }
   
+  void rebuild(RomSet set, Asset asset)
+  {
+    assetCache.clear();
+    fillCache(set, asset);
+  }
+  
   void fillCache(RomSet set, Asset asset)
   {
     try

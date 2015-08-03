@@ -3,6 +3,7 @@ package jack.rm.assets;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -22,9 +23,11 @@ public class AssetPacker
 {
   public static void packAssets(RomSet romSet)
   {
-    Asset[] assets = romSet.getAssetManager().getSupportedAssets();
+    final Asset[] assets = romSet.getAssetManager().getSupportedAssets();
     
-    Consumer<Boolean> callback = r -> {};
+    Consumer<Boolean> callback = r -> {
+      Arrays.stream(assets).forEach(asset -> AssetCache.cache.rebuild(romSet, asset));
+    };
     
     for (int i = assets.length - 1; i >= 0; --i)
     {
