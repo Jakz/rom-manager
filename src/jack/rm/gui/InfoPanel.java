@@ -338,6 +338,7 @@ public class InfoPanel extends JPanel implements ActionListener
 
 	final private JPanel pFields = new JPanel();
 	final private JPanel pTotal = new JPanel();
+	final private AttachmentTable attachments = new AttachmentTable();
 	
 	private AssetImage[] images;
 	
@@ -438,6 +439,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		openArchiveButton.addActionListener(this);
 		
 		pTotal.add(buttons);
+		pTotal.add(attachments);
 		
 		this.add(pTotal);
 	}
@@ -634,6 +636,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	public void updateFields(Rom rom)
 	{
 		this.rom = rom;
+		attachments.setRom(rom);
 		
 		this.setVisible(true);
 		

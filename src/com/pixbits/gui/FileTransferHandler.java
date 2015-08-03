@@ -1,4 +1,4 @@
-package jack.rm.gui;
+package com.pixbits.gui;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;

@@ -93,7 +93,12 @@ public class RomSet
 	{
 		return "dat/"+ident()+"."+providerType.getExtension();
 	}
-
+	
+	public Path getAttachmentPath()
+	{
+	    return settings.romsPath.resolve(Paths.get("attachments"));
+	}
+	
 	public PathMatcher getFileMatcher()
 	{
 	  Stream<String> stream = Arrays.stream(system.exts);

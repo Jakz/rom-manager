@@ -11,6 +11,8 @@ import jack.rm.log.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import com.pixbits.gui.FileTransferHandler;
+
 public class FileDropperListener implements FileTransferHandler.Listener
 {
   @Override

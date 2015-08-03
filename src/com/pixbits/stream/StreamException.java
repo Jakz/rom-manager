@@ -25,6 +25,12 @@ public final class StreamException
   {
     void accept() throws Exception;
   }
+  
+  @FunctionalInterface
+  public interface Predicate_WithExceptions<T>
+  {
+    boolean test(T t) throws Exception;
+  }
 
   public static <T> Consumer<T> rethrowConsumer(Consumer_WithExceptions<T> consumer)
   {
@@ -71,6 +77,20 @@ public final class StreamException
       {
         throwAsUnchecked(exception);
         return null;
+      }
+    };
+  }
+  
+  public static <T> Predicate<T> rethrowPredicate(Predicate_WithExceptions<T> predicate)
+  {
+    return t -> {
+      try
+      {
+        return predicate.test(t);
+      } catch (Exception exception)
+      {
+        throwAsUnchecked(exception);
+        return false;
       }
     };
   }

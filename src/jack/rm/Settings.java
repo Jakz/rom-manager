@@ -1,6 +1,7 @@
 package jack.rm;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 import com.pixbits.plugin.PluginManager;
@@ -60,7 +61,7 @@ public class Settings
 	  
 	  return downloaders.stream().filter( p -> p.isSystemSupported(system)).findFirst().isPresent();
 	}
-	
+		
 	public Set<Path> getIgnoredPaths()
 	{
 	  Set<Path> paths = new HashSet<>();
@@ -69,6 +70,8 @@ public class Settings
 	    Set<Path> ipaths = ((PluginWithIgnorePaths)p).getIgnoredPaths();
 	    ipaths.stream().filter(Objects::nonNull).forEach(paths::add);
 	  });
+	  
+	  paths.add(Paths.get("attachments"));
 
 	  return paths;
 	}

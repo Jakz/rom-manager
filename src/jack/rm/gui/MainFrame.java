@@ -12,6 +12,9 @@ import jack.rm.plugins.cleanup.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
+
+import com.pixbits.gui.FileTransferHandler;
+
 import java.awt.event.*;
 import java.util.Arrays;
 import java.util.Set;
@@ -103,7 +106,7 @@ public class MainFrame extends JFrame implements WindowListener
 		listPane.setPreferredSize(new Dimension(230,500));		
 		
 		
-		this.setTransferHandler(new FileTransferHandler(new FileDropperListener()));
+		listPane.setTransferHandler(new FileTransferHandler(new FileDropperListener()));
 				
 		menu.add(romsMenu);
 		menu.add(viewMenu);
