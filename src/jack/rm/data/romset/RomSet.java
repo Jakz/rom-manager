@@ -106,10 +106,14 @@ public class RomSet
 	  return FileSystems.getDefault().getPathMatcher(pattern);
 	}
 	
-  public final Path getAssetPath(Asset asset)
+  public final Path getAssetPath(Asset asset, boolean asArchive)
   {
-    Path path = Paths.get("data/", ident(), "assets").resolve(asset.getPath());
-    return path;
+    Path base = Paths.get("data/", ident(), "assets").resolve(asset.getPath());
+    
+    if (!asArchive)
+      return base;
+    else
+      return Paths.get(base.toString()+".zip");
   }
 	
 	public final void cleanup()
@@ -164,7 +168,7 @@ public class RomSet
   	  {
   	    AssetManager assetManager = getAssetManager();
   	    for (Asset asset : assetManager.getSupportedAssets())
-  	      Files.createDirectories(getAssetPath(asset));
+  	      Files.createDirectories(getAssetPath(asset,false));
   	  }
   	  catch (IOException e)
   	  {

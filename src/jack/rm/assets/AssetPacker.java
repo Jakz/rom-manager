@@ -24,7 +24,7 @@ public class AssetPacker
   {
     Asset[] assets = romSet.getAssetManager().getSupportedAssets();
     
-    Consumer<Boolean> callback = r -> cleanup(romSet);
+    Consumer<Boolean> callback = r -> {};
     
     for (int i = assets.length - 1; i >= 0; --i)
     {
@@ -33,35 +33,6 @@ public class AssetPacker
     }
     
     callback.accept(true);
-  }
-  
-  private static void cleanup(RomSet romSet)
-  {
-    try
-    {
-      for (Asset asset : romSet.getAssetManager().getSupportedAssets())
-      {
-        Path packPath = romSet.getAssetPath(asset);
-        java.io.File packFile = new java.io.File(packPath.toString()+".zip");
-        
-        if (Files.exists(packFile.toPath()))
-        {
-          for (Rom r : romSet.list)
-          {
-            AssetData data = r.getAssetData(asset);
-            
-            if (data.isPresentAsArchive() && data.isPresentAsFile())
-            {
-              Files.delete(data.getFinalPath());
-            }
-          }
-        }
-      }
-    }
-    catch (IOException e)
-    {
-      e.printStackTrace();
-    }
   }
   
   private static class AssetPackerWorker extends RomSetWorker<BackgroundOperation>
@@ -78,7 +49,7 @@ public class AssetPacker
           public String getTitle() { return "Asset Packer"; }
           public String getProgressText() { return "Packing..."; }
         },
-        r -> { AssetData data = r.getAssetData(asset); return data.isPresentAsFile() && !data.isPresentAsArchive(); },
+        r -> { AssetData data = r.getAssetData(asset); return data.isPresentAsFile() /*&& !data.isPresentAsArchive()*/; },
         callback  
       );
       
@@ -86,8 +57,7 @@ public class AssetPacker
       
       try
       {
-        Path packPath = romSet.getAssetPath(asset);
-        java.io.File packFile = new java.io.File(packPath.toString()+".zip");
+        java.io.File packFile = romSet.getAssetPath(asset, true).toFile();
         file = new ZipFile(packFile);
       
         params = new ZipParameters();
@@ -104,9 +74,12 @@ public class AssetPacker
     {
       try
       {
-        file.addFile(rom.getAssetData(asset).getFinalPath().toFile(), params);
+        Path assetPath = rom.getAssetData(asset).getFinalPath();
+        
+        file.addFile(assetPath.toFile(), params);
+        Files.delete(assetPath);
       }
-      catch (ZipException e)
+      catch (ZipException|IOException e)
       {
         e.printStackTrace();
       }

@@ -245,7 +245,6 @@ public class ASParserMain
     locationMap.put("Germany", Location.GERMANY);
     locationMap.put("Spain", Location.SPAIN);
     locationMap.put("China", Location.CHINA);
-
     
     languageMap.put("English", Language.ENGLISH);
     languageMap.put("French", Language.FRENCH);
