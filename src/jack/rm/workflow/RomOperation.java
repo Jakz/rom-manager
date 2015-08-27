@@ -54,8 +54,16 @@ public abstract class RomOperation implements Mutuator<RomHandle>
   
   public final RomHandle apply(RomHandle handle)
   {
-    return shouldBeProcessed(handle.getRom()) ? doApply(handle) : handle;
+    try
+    {
+      return shouldBeProcessed(handle.getRom()) ? doApply(handle) : handle;
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+      return handle;
+    }
   }
   
-  abstract protected RomHandle doApply(RomHandle handle);
+  abstract protected RomHandle doApply(RomHandle handle) throws Exception;
 }

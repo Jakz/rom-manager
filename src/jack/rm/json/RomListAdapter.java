@@ -52,6 +52,9 @@ public class RomListAdapter implements JsonSerializer<RomList>, JsonDeserializer
           for (RomSavedAttribute attrib : prom.attributes)
             rom.setCustomAttribute(attrib.key, attrib.value);
         
+        if (prom.attachments != null)
+          rom.getAttachments().addAll(prom.attachments);
+        
       }
     }
     

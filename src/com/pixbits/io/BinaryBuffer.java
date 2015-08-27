@@ -119,6 +119,12 @@ public class BinaryBuffer implements AutoCloseable
     buffer.position(position);
   }
   
+  public void advance(int amount)
+  {
+    int value = buffer.position();
+    buffer.position(value+amount);
+  }
+  
   public void resize(long size) throws IOException
   {
     file.setLength(size);
@@ -187,8 +193,10 @@ public class BinaryBuffer implements AutoCloseable
   
   public void read(byte[] bytes, int position)
   {
+    int backup = position();
     buffer.position(position);
     buffer.get(bytes);
+    buffer.position(backup);
   }
   
   public byte readByte()

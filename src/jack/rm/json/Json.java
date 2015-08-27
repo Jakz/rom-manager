@@ -9,6 +9,7 @@ import com.pixbits.plugin.JsonPluginSetAdapter;
 import com.pixbits.plugin.Plugin;
 import com.pixbits.plugin.PluginSet;
 
+import jack.rm.data.attachment.Attachment;
 import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.RomID;
 import jack.rm.data.rom.RomPath;
@@ -34,6 +35,7 @@ public class Json
     registerTypeAdapter(Plugin.class, new JsonPluginAdapter<Plugin>());
     registerTypeAdapter(PluginSet.class, new JsonPluginSetAdapter<ActualPlugin>());
     registerTypeAdapter(Attribute.class, new RomAttributeAdapter());
+    registerTypeAdapter(Attachment.class, new AttachmentAdapter());
 
   }
   

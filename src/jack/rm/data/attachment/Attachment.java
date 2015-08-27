@@ -14,6 +14,8 @@ public class Attachment
   private AttachmentType type;
   private AttachmentType.Subtype subtype;
   
+  public Attachment() { }
+  
   public Attachment(Rom rom, Path file) throws IOException
   {
     // move to attachments folder
@@ -54,8 +56,8 @@ public class Attachment
   public void setDescription(String v) { this.description = v; }
   public void setType(AttachmentType t) { this.type = t; }
   public void setSubType(AttachmentType.Subtype t) { this.subtype = t; }
-  public void setName(String name) {
-    this.name = name;
-    // TODO: rename file
-  }
+  public void setName(String name) { this.name = name; }
+  public void setPath(Path path) { this.path = path; }
+  
+  public void updateName(String name) { setName(name); /*TODO: rename path?*/ }
 }

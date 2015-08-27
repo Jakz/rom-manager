@@ -27,8 +27,6 @@ public class AssetCache
     
   boolean isPresent(Rom rom, Asset asset)
   {
-    
-    
     Set<Rom> roms = assetCache.get(asset);
     
     if (roms == null)
@@ -36,8 +34,8 @@ public class AssetCache
       fillCache(rom.getRomSet(), asset);
       roms = assetCache.get(asset);
     }
-    
-    return roms.contains(rom);
+
+    return roms != null ? roms.contains(rom) : false;
   }
   
   void rebuild(RomSet set, Asset asset)

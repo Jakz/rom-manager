@@ -25,6 +25,8 @@ public class Workflow<T extends WorkflowData>
     
     if (mutuator.isPresent())
       dumper.accept(stream.map(mutuator.get()));
+    else
+      dumper.accept(stream);
   }
   
   public void addBenchmarkedStep(Mutuator<T> mutuator)

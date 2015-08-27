@@ -12,7 +12,7 @@ public abstract class Fetcher<T extends WorkflowData> extends AbstractSpliterato
   {
     super(size, Spliterator.DISTINCT | Spliterator.NONNULL | Spliterator.SIZED | Spliterator.SUBSIZED);
   }
-  
+
   @Override public Stream<T> get()
   {
     return StreamSupport.stream(this, false);

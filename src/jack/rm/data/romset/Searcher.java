@@ -36,6 +36,8 @@ public class Searcher
   
   private static Predicate<Rom> buildPredicate(String token)
   {
+    if (token.startsWith("has:attach"))
+      return r -> r.getAttachments().size() != 0;
     if (token.contains(":"))
     {
       String[] tokens = token.split(":");
@@ -77,6 +79,7 @@ public class Searcher
             return location.fullName.toLowerCase().equals(tokens[1]);
           };
         }
+
         else if (tokens[0].equals("has"))
         {
           Optional<RomAttribute> attrib = Arrays.stream(RomAttribute.values()).filter(a -> a.getCaption().toLowerCase().equals(tokens[1])).findFirst();

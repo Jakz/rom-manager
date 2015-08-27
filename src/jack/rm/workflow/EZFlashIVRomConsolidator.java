@@ -15,7 +15,12 @@ import jack.rm.data.rom.RomAttribute;
 
 public class EZFlashIVRomConsolidator extends Dumper<RomHandle>
 {
-  Path destination = Paths.get("/Users/jack/Documents/dev/gba/ez");
+  Path destination;
+  
+  public EZFlashIVRomConsolidator(Path destination)
+  {
+    this.destination = destination;
+  }
   
   public void accept(RomHandle handle)
   {
@@ -25,6 +30,10 @@ public class EZFlashIVRomConsolidator extends Dumper<RomHandle>
       Path finalBasePath = destination.resolve(handle.getDestPath());
       Path finalPath = finalBasePath.resolve(rom.getTitle()+"."+rom.getSystem().exts[0]);
       Files.createDirectories(finalBasePath);
+      
+      if (handle.getPath() == null)
+        handle.getBuffer();
+      
       Files.move(handle.getPath(), finalPath, StandardCopyOption.REPLACE_EXISTING);
       //Files.deleteIfExists(handle.getPath());
       

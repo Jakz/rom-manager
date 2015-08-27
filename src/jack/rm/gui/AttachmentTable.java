@@ -112,5 +112,6 @@ public class AttachmentTable extends JPanel implements FileTransferHandler.Liste
   void setRom(Rom rom)
   {
     this.rom = rom;
+    model.fireChanges();
   }
 }

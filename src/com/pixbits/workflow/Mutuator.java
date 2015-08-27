@@ -22,13 +22,13 @@ public interface Mutuator<T extends WorkflowData> extends Function<T,T>
   }
   
   @SuppressWarnings("unchecked")
-  default <T> T getArgument(String key)
+  default <K> K getArgument(String key)
   {
     try
     {
       Field field = this.getClass().getField(key);
       field.setAccessible(true);
-      return (T)field.get(this);
+      return (K)field.get(this);
     }
     catch (NoSuchFieldException|IllegalAccessException e)
     {

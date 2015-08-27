@@ -29,6 +29,7 @@ import jack.rm.data.romset.*;
 import jack.rm.files.GBASavePatcherGBATA;
 import jack.rm.files.GBASleepHack;
 import jack.rm.files.Scanner;
+import jack.rm.files.UPSPatch;
 import jack.rm.gui.*;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
@@ -157,24 +158,23 @@ public class Main
 
     /*List<Rom> favourites = set.filter("is:fav");*/
     
-    //Fetcher<RomHandle> source = new MultipleRomSource(favourites);
-    /*Fetcher<RomHandle> source = new SingleRomSource(set.list.getByNumber(256));
-    Dumper<RomHandle> dumper = new EZFlashIVRomConsolidator();
+    /*List<Rom> favs = set.filter("is:fav");
+    final Optional<Integer> c = Optional.of(0);
+    Fetcher<RomHandle> source = new MultipleRomSource(favs);
+    Dumper<RomHandle> dumper = new RomConsolidator(Paths.get("/Volumes/Vicky/nds"));
     Workflow<RomHandle> workflow = new Workflow<>(source, dumper);
+    workflow.addStep(rh -> { java.lang.System.out.println(c.get()+" of "+favs.size()); return rh; });
+    workflow.execute();*/
     
-    IPSPatchOperation ipsOperation = new IPSPatchOperation();
-    ipsOperation.addPatch(set.find("yoshi universal loc:europe"), Paths.get("/Volumes/WinSSD/gba-ips/yoshi-universal-gravitation-tilt-fix.ips"));
-    ipsOperation.addPatch(set.find("wario twisted"), Paths.get("/Volumes/WinSSD/gba-ips/wario-ware-tilt-fix.ips"));
-    ipsOperation.addPatch(set.find("kuru paradise"), Paths.get("/Volumes/WinSSD/gba-ips/kururin-paradise-translation.ips"));
-    
-    workflow.addBenchmarkedStep(new LogOperation());
-    workflow.addBenchmarkedStep(ipsOperation);
-    workflow.addBenchmarkedStep(new GBASavePatchOperationGBATA());
-    workflow.addBenchmarkedStep(new GBASleepHackOperation());
+    //IPSPatchOperation ipsOperation = new IPSPatchOperation();
+    //ipsOperation.toggleAutomaticPatching(true);
+    //workflow.addBenchmarkedStep(new LogOperation());
+    //workflow.addBenchmarkedStep(ipsOperation);
+    //workflow.addBenchmarkedStep(new GBASleepHackOperation());
     //workflow.addBenchmarkedStep(new TrimOperation(new byte[] {0x00, (byte)0xff}));
-    workflow.addStep(new SortByAttributeOperation(RomAttribute.TAG, false));
-    workflow.execute();
-    java.lang.System.exit(0);*/
+    //workflow.addStep(new SortByAttributeOperation(RomAttribute.TAG, false));
+    //workflow.execute();
+    //java.lang.System.exit(0);
     
     
     /*
@@ -277,6 +277,17 @@ public class Main
 	public static void main(String[] args)
 	{
 	  //patchTest();
+	  
+	  /*try {
+	  UPSPatch patch = new UPSPatch(Paths.get("/Volumes/WinSSD/gba-ips/mother3.ups"));
+	  BinaryBuffer buffer = new BinaryBuffer("/Volumes/WinSSD/gba-ips/mother3.gba", BinaryBuffer.Mode.WRITE, ByteOrder.LITTLE_ENDIAN);
+	  patch.apply(buffer);
+	  buffer.close();
+	  }
+	  catch (Exception e)
+	  {
+	    e.printStackTrace();
+	  }*/
 	  
 	  if (true)
 	  {

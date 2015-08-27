@@ -35,19 +35,12 @@ public class RomHandle implements WorkflowData
     Files.copy(source.getInputStream(), path, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
   }
   
-  public BinaryBuffer getBuffer()
+  public BinaryBuffer getBuffer() throws Exception
   {
     if (buffer == null)
     {
-      try
-      {
-        prepareBuffer();
-        buffer = new BinaryBuffer(path, BinaryBuffer.Mode.WRITE, ByteOrder.BIG_ENDIAN);
-      }
-      catch (Exception e)
-      {
-        e.printStackTrace();
-      }
+      prepareBuffer();
+      buffer = new BinaryBuffer(path, BinaryBuffer.Mode.WRITE, ByteOrder.BIG_ENDIAN);
     }
     
     return buffer;
