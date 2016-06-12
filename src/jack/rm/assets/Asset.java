@@ -1,6 +1,7 @@
 package jack.rm.assets;
 
 import java.nio.file.Path;
+
 import java.awt.Dimension;
 
 public class Asset
