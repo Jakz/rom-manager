@@ -14,6 +14,7 @@ import com.pixbits.plugin.PluginManager;
 import com.pixbits.plugin.gui.PluginConfigTable;
 
 import net.miginfocom.swing.MigLayout;
+import jack.rm.Main;
 import jack.rm.data.romset.RomSet;
 import jack.rm.plugins.*;
 
@@ -93,6 +94,7 @@ public class PluginsPanel extends JPanel
       else if (!plugins.get(r).type.isRequired())
         romset.getSettings().plugins.disable(plugins.get(r).getID());
       
+      Main.mainFrame.pluginStateChanged();
       //TODO: enabling or disabling a plugin should have an effect in multiple parts of the UI
       
       fireChanges();

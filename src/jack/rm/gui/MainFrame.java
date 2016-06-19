@@ -73,6 +73,11 @@ public class MainFrame extends JFrame implements WindowListener
     if (e.getStateChange() == ItemEvent.SELECTED)
       Main.loadRomSet(cbRomSets.getItemAt(cbRomSets.getSelectedIndex()));
 	};
+	
+	public void pluginStateChanged()
+	{
+	  optionsFrame.pluginStateChanged();
+	}
 
 	public MainFrame()
 	{

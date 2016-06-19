@@ -56,6 +56,9 @@ public class OptionsFrame extends JFrame implements ActionListener, ComponentLis
 		
 		this.add(all);
 		
+    tabs.addTab(Text.OPTION_ROMSET.text(), Main.romsetPanel);
+    tabs.addTab(Text.OPTION_PLUGINS.text(), Main.pluginsPanel);
+		
 		Main.romsetPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
     Main.pluginsPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		lower.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -67,11 +70,31 @@ public class OptionsFrame extends JFrame implements ActionListener, ComponentLis
 	public void romSetLoaded(RomSet set)
 	{
 	  this.set = set;
-	  
-	  tabs.removeAll();
-	  tabs.addTab(Text.OPTION_ROMSET.text(), Main.romsetPanel);
-	  tabs.addTab(Text.OPTION_PLUGINS.text(), Main.pluginsPanel);
-	  
+	  rebuildGUIComponents();
+	}
+	
+	public void showMe()
+	{
+		if (this.isVisible())
+			return;		  
+		
+		Main.romsetPanel.updateFields();
+
+		for (int i = 2; i < tabs.getTabCount(); ++i)
+		  ((PluginOptionsPanel)tabs.getComponentAt(i)).updateFields();
+		
+		Main.pluginsPanel.populate(set);
+		setLocationRelativeTo(Main.mainFrame);
+		
+		setVisible(true);
+	}
+	
+	public void rebuildGUIComponents()
+	{
+	  int tabCount = tabs.getTabCount();
+	  for (int i = 2; i < tabCount; ++i)
+	    tabs.removeTabAt(2);
+
     manager.stream()
     .map(b -> set.getSettings().plugins.getPlugin(b.getID()))
     .filter(p -> p.isPresent() && p.get().isEnabled())
@@ -81,24 +104,14 @@ public class OptionsFrame extends JFrame implements ActionListener, ComponentLis
       {
         tabs.addTab(panel.getTitle(), panel);
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        panel.updateFields();
       }
     });
 	}
 	
-	public void showMe()
+	public void pluginStateChanged()
 	{
-		if (this.isVisible())
-			return;		  
-		
-		Main.romsetPanel.updateFields();
-		
-		for (int i = 2; i < tabs.getTabCount()-2; ++i)
-		  ((PluginOptionsPanel)tabs.getTabComponentAt(i)).updateFields();
-		
-		Main.pluginsPanel.populate(set);
-		setLocationRelativeTo(Main.mainFrame);
-		
-		setVisible(true);
+	  rebuildGUIComponents();
 	}
 	
 	@Override
