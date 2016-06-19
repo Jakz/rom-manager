@@ -65,7 +65,7 @@ public class MainFrame extends JFrame implements WindowListener
 	final private CountPanel countPanel = new CountPanel(romListModel);
 	final private SearchPanel searchPanel = new SearchPanel(this);
 	final private InfoPanel infoPanel = new InfoPanel();
-	final private OptionsFrame optionsFrame = new OptionsFrame();
+	final private OptionsFrame optionsFrame = new OptionsFrame(Main.manager);
 	
 	final private TextOutputFrame textFrame = new TextOutputFrame();
 	

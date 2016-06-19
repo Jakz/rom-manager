@@ -49,7 +49,6 @@ public class Main
 	//public static InfoPanel infoPanel;
 	
 	public static ManagerPanel romsetPanel;
-	public static PatternRenamerPanel renamerPanel;
 	public static PluginsPanel pluginsPanel;
 	
 	public static ClonesDialog clonesDialog;
@@ -301,7 +300,6 @@ public class Main
 	  RomSetManager.buildRomsetList();
 	  
 	  romsetPanel = new ManagerPanel();
-	  renamerPanel = new PatternRenamerPanel();
 	  pluginsPanel = new PluginsPanel(manager);
 		
 		mainFrame = new MainFrame();

@@ -13,7 +13,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PatternRenamerPanel extends JPanel implements CaretListener
+public class PatternRenamerPanel extends PluginOptionsPanel implements CaretListener
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -107,16 +107,19 @@ public class PatternRenamerPanel extends JPanel implements CaretListener
 
 	public void updateFields()
 	{
-		patternField.setText(RomSet.current.getSettings().renamingPattern);
+		patternField.setText(getRomset().getSettings().renamingPattern);
 		patterns.clear();
-		Organizer.getPatterns(RomSet.current).forEach(patterns::add);
+		Organizer.getPatterns(getRomset()).forEach(patterns::add);
 		// TODO: should be invoked even when plugins are changed
 	}
 
 	@Override
   public void caretUpdate(CaretEvent e)
 	{
-	  RomSet.current.getSettings().renamingPattern = patternField.getText();
+	  getRomset().getSettings().renamingPattern = patternField.getText();
 		exampleField.setText(RomSet.current.list.get(0).getCorrectName());
 	}
+	
+	@Override
+	public String getTitle() { return "Renamer"; }
 }

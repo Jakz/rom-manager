@@ -29,6 +29,7 @@ public class Rom implements Comparable<Rom>
 	private Map<Asset, AssetData> assetData = new HashMap<>();
 	private Map<Attribute, Object> customAttributes = new HashMap<>();
 	private List<Attachment> attachments = new ArrayList<>();
+	private List<RomGroup> groups = new ArrayList<>();
 	
 	public void setAttribute(Attribute key, Object value) { attributes.put(key, value); }
 	public void setCustomAttribute(Attribute key, Object value) { customAttributes.put(key, value); }

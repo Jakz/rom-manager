@@ -72,6 +72,19 @@ public class OfflineListProviderPlugin extends ProviderPlugin
     RomAttribute.COMMENT
   };
   
+  private final static Attribute[] NES_ATTRIBUTES = 
+  {
+    RomAttribute.TITLE,
+    RomAttribute.NUMBER,
+    RomAttribute.LOCATION,
+    RomAttribute.LANGUAGE,
+    RomAttribute.SIZE,
+    RomAttribute.PUBLISHER,
+    RomAttribute.SAVE_TYPE,
+    RomAttribute.CRC,
+    RomAttribute.COMMENT,
+  };
+  
   
   private static class AssetManager implements jack.rm.assets.AssetManager
   {
@@ -282,6 +295,19 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         );
         return romSet;
     }
+    else if (system == System.NES)
+    {
+      RomSet romSet = new RomSet(
+        system,
+        new NoIntroProvider(),
+        new OfflineListProviderType(),
+        NES_ATTRIBUTES,
+        new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20NES%20-%20Famicom/")),
+        new XMLDatLoader(new OfflineListXMLParser(r -> null))
+      );
+      return romSet;
+          
+    }
     
     }
     catch (MalformedURLException e)
@@ -301,7 +327,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
 
   @Override public boolean isSystemSupported(System system)
   {
-    return system == System.GBA || system == System.NDS || system == System.GB || system == System.GBC;
+    return system == System.GBA || system == System.NDS || system == System.GB || system == System.GBC || system == System.NES;
   }
 
 }
