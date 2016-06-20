@@ -76,7 +76,7 @@ public enum RomAttribute implements Attribute
   public String toString() { return this.name().toLowerCase(); }
   
   @Override
-  public String prettyValue(Object value) { return value.toString(); }
+  public String prettyValue(Object value) { return value != null ? value.toString() : null; }
 
   @Override
   public Class<?> getClazz() { return clazz; }

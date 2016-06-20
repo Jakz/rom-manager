@@ -84,7 +84,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	    value = new JTextField(40);
       
       if (isReal)
-        value.setFont(value.getFont().deriveFont(Font.BOLD, 14.0f)); 
+        value.setFont(value.getFont().deriveFont(Font.BOLD, 12.0f)); 
 
       defaultBorder = value.getBorder();
       Insets insets = defaultBorder.getBorderInsets(value);
@@ -650,8 +650,9 @@ public class InfoPanel extends JPanel implements ActionListener
       }
     }
 
-		for (AssetImage image : images)
-		  setImage(rom, image.asset, image.image);
+    if (rom != null)
+      for (AssetImage image : images)
+        setImage(rom, image.asset, image.image);
 		
 		if (rom.status == RomStatus.MISSING)
 		{
