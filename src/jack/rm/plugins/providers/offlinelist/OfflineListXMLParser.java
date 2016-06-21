@@ -15,6 +15,7 @@ import jack.rm.data.rom.Language;
 import jack.rm.data.rom.Location;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
+import jack.rm.data.rom.RomGroup;
 import jack.rm.data.rom.RomSave;
 import jack.rm.data.rom.RomSize;
 import jack.rm.data.romset.RomSet;
@@ -103,6 +104,27 @@ public class OfflineListXMLParser extends XMLHandler
 	}
 
   Map<String, RomSave<?>> saves = new TreeMap<>();
+  Map<Integer, RomGroup> duplicates = new HashMap<>();
+  
+  public RomGroup getRomGroup(int value)
+  {
+    if (value == 0)
+      return null;
+    else
+    {
+      RomGroup group = duplicates.get(value);
+      
+      if (group != null)
+        return group;
+      else
+      {
+        group = new RomGroup();
+        duplicates.put(value, group);
+      }
+      
+      return group;
+    }
+  }
 	
 	@Override
   public void endElement(String namespaceURI, String localName, String qName) throws SAXException

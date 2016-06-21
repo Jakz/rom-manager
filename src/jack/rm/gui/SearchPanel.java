@@ -166,12 +166,16 @@ public class SearchPanel extends JPanel
 
 	  Location location = locations.getItemAt(locations.getSelectedIndex());
     Language language = languages.getItemAt(languages.getSelectedIndex());
-
+    RomSize size = sizes.getItemAt(sizes.getSelectedIndex());
+    
     if (location != null)
       predicate = predicate.and(r -> r.getAttribute(RomAttribute.LOCATION).equals(location));
     
     if (language != null)
       predicate = predicate.and(r -> r.getLanguages().contains(language));
+    
+    if (size != null)
+      predicate = predicate.and(r -> r.getSize().equals(size));
 	  
 	  return predicate;
 	}

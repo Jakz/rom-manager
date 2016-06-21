@@ -9,7 +9,7 @@ public class RomGroup
   private String name;
   private final Set<Rom> roms;
   
-  RomGroup()
+  public RomGroup()
   {
     roms = new HashSet<>();
   }
