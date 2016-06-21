@@ -30,8 +30,19 @@ public enum Icon
   FAVORITE("favorite"),
   EDIT("edit"),
   DELETE("delete"),
-  ADD("add")
+  ADD("add"),
+  ARROW_UP("arrow-up"),
+  ARROW_DOWN("arrow-down"),
+  ARROW_UP_DOWN("arrow-up-down"),
 
+  SYSTEM_GAME_GEAR("systems/game-gear"),
+  SYSTEM_GAMEBOY("systems/gameboy"),
+  SYSTEM_GAMEBOY_ADVANCE("systems/gameboy-advance"),
+  SYSTEM_NES("systems/nes"),
+  SYSTEM_SEGA_MASTER_SYSTEM("systems/sega-master-system"),
+  SYSTEM_SUPER_NINTENDO("systems/super-nintendo"),
+  SYSTEM_WONDERSWAN("systems/wonderswan"),
+  SYSTEM_MISSING("systems/missing"),
   ;
   
   private final String name;

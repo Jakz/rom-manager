@@ -3,6 +3,7 @@ package jack.rm.assets;
 import jack.rm.Main;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.romset.RomSet;
+import jack.rm.gui.Dialogs;
 import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
@@ -51,8 +52,11 @@ public class Downloader
     }
     
     pool.shutdown();
-        
-    ProgressDialog.init(Main.mainFrame, "Asset Download", () -> { pool.shutdownNow(); started = false; });
+    
+    if (!pool.getQueue().isEmpty())
+      ProgressDialog.init(Main.mainFrame, "Asset Download", () -> { pool.shutdownNow(); started = false; });
+    else
+      Dialogs.showMessage("Asset Downloader", "All the assets have already been downloaded.", Main.mainFrame);
   }
   
   public void downloadArt(final Rom r)

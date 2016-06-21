@@ -286,6 +286,8 @@ public class InfoPanel extends JPanel implements ActionListener
 	  protected Attribute attrib;
 
 	  protected JButton deleteButton;
+	  protected JButton moveUpButton;
+	  protected JButton moveDownButton;
 
 	  abstract Object parseValue();
 	  
@@ -310,6 +312,15 @@ public class InfoPanel extends JPanel implements ActionListener
 	      attributeCleared();
 	    });
 	    
+	    moveUpButton = new JButton();
+	    moveUpButton.setIcon(Icon.ARROW_UP.getIcon());
+	    moveUpButton.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
+	    moveUpButton.setVisible(false);
+	    
+	    moveDownButton = new JButton();
+	    moveDownButton.setIcon(Icon.ARROW_DOWN.getIcon());
+	    moveDownButton.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
+	    moveDownButton.setVisible(false);
 	  }
 	  
     void clearCustomAttribute()
@@ -323,7 +334,7 @@ public class InfoPanel extends JPanel implements ActionListener
       }
       deleteButton.setVisible(false);
     }
-	  
+
 	  abstract void enableEdit();
 	  abstract void finishEdit();
 	  
@@ -651,26 +662,28 @@ public class InfoPanel extends JPanel implements ActionListener
     }
 
     if (rom != null)
+    {
       for (AssetImage image : images)
         setImage(rom, image.asset, image.image);
 		
-		if (rom.status == RomStatus.MISSING)
-		{
-		  openFolderButton.setEnabled(false);
-		  openArchiveButton.setEnabled(false);
-			
-		  downloadButton.setEnabled(RomSet.current.getSettings().hasDownloader(RomSet.current.system));
-		}
-		else
-		{
-	    openFolderButton.setEnabled(true);
-	    if (rom.getPath().isArchive())
-	      openArchiveButton.setEnabled(true);
-	      
-		  downloadButton.setEnabled(false);
-		}
-		
-		assetsButton.setEnabled(!rom.hasAllAssets());
+  		if (rom.status == RomStatus.MISSING)
+  		{
+  		  openFolderButton.setEnabled(false);
+  		  openArchiveButton.setEnabled(false);
+  			
+  		  downloadButton.setEnabled(RomSet.current.getSettings().hasDownloader(RomSet.current.system));
+  		}
+  		else
+  		{
+  	    openFolderButton.setEnabled(true);
+  	    if (rom.getPath().isArchive())
+  	      openArchiveButton.setEnabled(true);
+  	      
+  		  downloadButton.setEnabled(false);
+  		}
+  		
+  		assetsButton.setEnabled(!rom.hasAllAssets());
+    }
 
 	}
 	

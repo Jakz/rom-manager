@@ -74,6 +74,18 @@ public class MainFrame extends JFrame implements WindowListener
       Main.loadRomSet(cbRomSets.getItemAt(cbRomSets.getSelectedIndex()));
 	};
 	
+	final private ListCellRenderer<Object> cbRomSetRenderer = new DefaultListCellRenderer()
+	{
+	  @Override
+	  public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus)
+	  {
+	    JLabel c = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+	    RomSet set = (RomSet)value;   
+	    c.setIcon(set.system.icon != null ? set.system.icon.getIcon() : null);
+	    return c;
+	  }
+	};
+	
 	public void pluginStateChanged()
 	{
 	  optionsFrame.pluginStateChanged();
@@ -126,6 +138,7 @@ public class MainFrame extends JFrame implements WindowListener
 			cbRomSets.addItem(rs);
 		
 		cbRomSets.addItemListener(romSetListener);
+		cbRomSets.setRenderer(cbRomSetRenderer);
 
 		JPanel romListPanel = new JPanel(new BorderLayout());
 		romListPanel.add(cbRomSets, BorderLayout.NORTH);

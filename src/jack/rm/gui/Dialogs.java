@@ -5,6 +5,11 @@ import java.awt.Component;
 
 public class Dialogs
 {
+  public static void showMessage(String title, String message, Component parent)
+  {
+    JOptionPane.showMessageDialog(parent, message, title, JOptionPane.INFORMATION_MESSAGE);
+  }
+  
   public static void showWarning(String title, String message, Component parent)
   {
     JOptionPane.showMessageDialog(parent, message, title, JOptionPane.WARNING_MESSAGE);
