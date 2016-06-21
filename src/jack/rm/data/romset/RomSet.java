@@ -43,7 +43,7 @@ public class RomSet
 	public final RomList list;
 	public final System system;
 	public final Provider provider;
-	public final ProviderType providerType;
+	public final DatFormat datFormat;
 	
 	private Settings settings;
 	private final AssetManager assetManager;
@@ -52,12 +52,12 @@ public class RomSet
 	
 	private final Attribute[] attributes;
 
-	public RomSet(System type, Provider provider, ProviderType providerType, Attribute[] attributes, AssetManager assetManager, DatLoader loader)
+	public RomSet(System type, Provider provider, DatFormat datFormat, Attribute[] attributes, AssetManager assetManager, DatLoader loader)
 	{
 		this.list = new RomList(this);
 	  this.system = type;
 		this.provider = provider;
-		this.providerType = providerType;
+		this.datFormat = datFormat;
 		this.attributes = attributes;
 		this.assetManager = assetManager;
 		this.loader = loader;
@@ -86,12 +86,12 @@ public class RomSet
 	
 	public String ident()
 	{
-		return providerType.getIdent()+"-"+system.tag+"-"+provider.getTag();
+		return datFormat.getIdent()+"-"+system.tag+"-"+provider.getTag();
 	}
 	
 	public String datPath()
 	{
-		return "dat/"+ident()+"."+providerType.getExtension();
+		return "dat/"+ident()+"."+datFormat.getExtension();
 	}
 	
 	public Path getAttachmentPath()

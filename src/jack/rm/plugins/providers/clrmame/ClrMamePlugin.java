@@ -25,7 +25,7 @@ public class ClrMamePlugin extends ProviderPlugin
       RomSet romSet = new RomSet(
           system, 
           new NoIntroProvider(), 
-          new ClrMameProviderType(),
+          new ClrMameDatFormat(),
           GG_ATTRIBUTES, 
           new EmptyAssetManager(), 
           new ClrMameParser()

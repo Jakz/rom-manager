@@ -1,8 +1,8 @@
 package jack.rm.plugins.providers;
 
-import jack.rm.data.romset.ProviderType;
+import jack.rm.data.romset.DatFormat;
 
-public class ClrMameProviderType implements ProviderType
+public class ClrMameDatFormat implements DatFormat
 {
   public String getIdent() { return "cm"; }
   public String getExtension() { return "dat"; }

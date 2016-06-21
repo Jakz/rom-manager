@@ -241,22 +241,22 @@ public class OfflineListProviderPlugin extends ProviderPlugin
     
     if (system == System.GBA)
     {
-      /*RomSet romSet = new RomSet(
+      RomSet romSet = new RomSet(
           system, 
-          PROVIDER, 
-          new OfflineListProviderType(),
+          new OfflineListProvider(), 
+          new OfflineListDatFormat(),
           GBA_ATTRIBUTES, 
           new AssetManager(GBA_ASSETS, new URL("http://offlinelistgba.free.fr/imgs/")), 
           new XMLDatLoader(new OfflineListXMLParser(new GBASaveParserOL()))
-      );*/
-      RomSet romSet = new RomSet(
+      );
+      /*RomSet romSet = new RomSet(
           system, 
           new AdvanSceneProvider(), 
-          new OfflineListProviderType(),
+          new OfflineListDatFormat(),
           GBA_ATTRIBUTES, 
           new AssetManager(GBA_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_GBA/")), 
           new XMLDatLoader(new OfflineListXMLParser(new GBASaveParserAS()))
-      );
+      );*/
       return romSet;
     }
     else if (system == System.NDS)
@@ -264,7 +264,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
       RomSet romSet = new RomSet(
           system, 
           new AdvanSceneProvider(), 
-          new OfflineListProviderType(),
+          new OfflineListDatFormat(),
           GBA_ATTRIBUTES, 
           new AssetManager(NDS_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_NDS/")), 
           new XMLDatLoader(new OfflineListXMLParser(new NDSSaveParser()))
@@ -276,7 +276,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
       RomSet romSet = new RomSet(
         system,
         new NoIntroProvider(),
-        new OfflineListProviderType(),
+        new OfflineListDatFormat(),
         GB_ATTRIBUTES,
         new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20Gameboy%20Color/")),
         new XMLDatLoader(new OfflineListXMLParser(r -> null))
@@ -288,7 +288,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
       RomSet romSet = new RomSet(
           system,
           new NoIntroProvider(),
-          new OfflineListProviderType(),
+          new OfflineListDatFormat(),
           GB_ATTRIBUTES,
           new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20Gameboy/")),
           new XMLDatLoader(new OfflineListXMLParser(r -> null))
@@ -300,7 +300,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
       RomSet romSet = new RomSet(
         system,
         new NoIntroProvider(),
-        new OfflineListProviderType(),
+        new OfflineListDatFormat(),
         NES_ATTRIBUTES,
         new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20NES%20-%20Famicom/")),
         new XMLDatLoader(new OfflineListXMLParser(r -> null))

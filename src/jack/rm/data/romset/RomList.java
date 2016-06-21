@@ -3,6 +3,7 @@ package jack.rm.data.romset;
 import jack.rm.*;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
+import jack.rm.data.rom.RomGroup;
 import jack.rm.data.rom.RomID;
 import jack.rm.data.rom.RomStatus;
 import jack.rm.files.MoverWorker;
@@ -18,6 +19,7 @@ public class RomList implements Iterable<Rom>
 {
 	public final RomSet set;
   List<Rom> list;
+  Map<Integer, RomGroup> groups;
 	Map<Long, Rom> crcs;
 	
 	private int countCorrect, countBadlyNamed, countNotFound;
@@ -26,6 +28,7 @@ public class RomList implements Iterable<Rom>
 	{
 		this.set = set;
 	  list = new ArrayList<>();
+	  groups = new HashMap<>();
 		crcs = new HashMap<>();
 	}
 	
@@ -128,6 +131,10 @@ public class RomList implements Iterable<Rom>
   
   public Stream<Rom> stream() { return list.stream(); }
   public Iterator<Rom> iterator() { return list.iterator(); }
+  
+  public Stream<RomGroup> groupsStream() { return groups.values().stream(); }
+  public Iterator<RomGroup> groupsIterator() { return groups.values().iterator(); }
+  
   public Rom find(String search) { 
     Optional<Rom> rom = list.stream().filter(Searcher.buildSeachPredicate(search)).findFirst();
     if (!rom.isPresent()) throw new RuntimeException("RomList::find failed to find any rom");

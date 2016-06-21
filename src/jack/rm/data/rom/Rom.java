@@ -62,6 +62,19 @@ public class Rom implements Comparable<Rom>
 	  return isFavourite() || status != RomStatus.MISSING || !customAttributes.isEmpty();
 	}
 	
+	public void addToGroup(RomGroup group)
+	{
+	  group.addRom(this);
+	  groups.add(group);
+	}
+	
+	public boolean removeFromGroup(RomGroup group)
+	{
+	  boolean willBeEmpty = group.removeRom(this);
+	  groups.remove(group);
+	  return willBeEmpty;
+	}
+	
 	public RomID<?> getID() { return new RomID.CRC(getCRC()); }
 	
 	public RomPath getPath() { return path; }

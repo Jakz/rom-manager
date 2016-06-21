@@ -105,27 +105,20 @@ public class OfflineListXMLParser extends XMLHandler
 
   Map<String, RomSave<?>> saves = new TreeMap<>();
   Map<Integer, RomGroup> duplicates = new HashMap<>();
-  
-  public RomGroup getRomGroup(int value)
+	
+  RomGroup getGroup(int id)
   {
-    if (value == 0)
-      return null;
+    RomGroup group = duplicates.get(id);
+    if (group != null)
+      return group;
     else
     {
-      RomGroup group = duplicates.get(value);
-      
-      if (group != null)
-        return group;
-      else
-      {
-        group = new RomGroup();
-        duplicates.put(value, group);
-      }
-      
+      group = new RomGroup(id);
+      duplicates.put(id, group);
       return group;
     }
   }
-	
+  
 	@Override
   public void endElement(String namespaceURI, String localName, String qName) throws SAXException
 	{
@@ -185,6 +178,15 @@ public class OfflineListXMLParser extends XMLHandler
         rom.getAssetData(assets[1]).setCRC(Long.parseLong(asString(), 16));
         break;
       }
+      case "duplicateID":
+      {
+        RomGroup group = getGroup(asInt());
+        
+        rom.addToGroup(group);
+        
+        
+        break;
+      }
       case "comment": rom.setAttribute(RomAttribute.COMMENT, asString()); break;
       case "game": set.list.add(rom); break;
       case "games":
@@ -193,6 +195,7 @@ public class OfflineListXMLParser extends XMLHandler
         saves.forEach((k,v) -> System.out.println(k+" -> "+v));
         break;
       }
+      
 
 		}
 	}

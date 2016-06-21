@@ -4,13 +4,15 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Iterator;
 
-public class RomGroup
+public class RomGroup implements Iterable<Rom>
 {
   private String name;
   private final Set<Rom> roms;
+  private final int id;
   
-  public RomGroup()
+  public RomGroup(int id)
   {
+    this.id = id;
     roms = new HashSet<>();
   }
   
@@ -24,10 +26,18 @@ public class RomGroup
     roms.add(rom);
   }
   
-  boolean contains(Rom rom)
+  boolean removeRom(Rom rom)
+  {
+    roms.remove(rom);
+    return roms.isEmpty();
+  }
+  
+  public boolean contains(Rom rom)
   {
     return roms.contains(rom);
   }
   
-  Iterator<Rom> iterator() { return roms.iterator(); }
+  public int getId() { return id; }
+  
+  public Iterator<Rom> iterator() { return roms.iterator(); }
 }

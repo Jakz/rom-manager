@@ -1,6 +1,6 @@
 package jack.rm.data.romset;
 
-public interface ProviderType
+public interface DatFormat
 {
   String getIdent();
   String getExtension();

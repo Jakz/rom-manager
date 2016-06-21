@@ -425,7 +425,7 @@ public class InfoPanel extends JPanel implements ActionListener
 
 	  openFolderButton.setEnabled(false);
 		openArchiveButton.setEnabled(false);
-	  
+	  assetsButton.setEnabled(false);
 	  downloadButton.setEnabled(false);
 
     pFields.setLayout(new BorderLayout());
@@ -682,7 +682,7 @@ public class InfoPanel extends JPanel implements ActionListener
   		  downloadButton.setEnabled(false);
   		}
   		
-  		assetsButton.setEnabled(!rom.hasAllAssets());
+  		assetsButton.setEnabled(rom != null && !rom.hasAllAssets());
     }
 
 	}
@@ -717,8 +717,8 @@ public class InfoPanel extends JPanel implements ActionListener
 	  }
 		else if (src == assetsButton)
 		{
-			Rom r = rom;
-			Main.downloader.downloadArt(r);
+			if (rom != null)
+			  Main.downloader.downloadArt(rom);
 		}
 	}
 }
