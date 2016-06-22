@@ -89,6 +89,9 @@ public class MainFrame extends JFrame implements WindowListener
 	public void pluginStateChanged()
 	{
 	  optionsFrame.pluginStateChanged();
+	  
+	  boolean hasSearcher = set.getSettings().plugins.getEnabledPlugin(PluginRealType.SEARCH) != null;
+	  searchPanel.toggle(hasSearcher);
 	}
 
 	public MainFrame()

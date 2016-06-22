@@ -1,8 +1,12 @@
-package jack.rm.data.search;
+package jack.rm.plugins.searcher;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+
+import com.pixbits.plugin.PluginInfo;
+import com.pixbits.plugin.PluginVersion;
 
 import jack.rm.data.rom.Genre;
 import jack.rm.data.rom.Location;
@@ -10,26 +14,16 @@ import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.RomSave;
 import jack.rm.data.rom.RomStatus;
+import jack.rm.data.search.BasicPredicate;
+import jack.rm.data.search.SearchPredicate;
 
-public class Predicates
+public class BaseSearchPredicates extends SearchPredicatesPlugin
 {
-  private static abstract class BasicPredicate extends SearchPredicate
-  {
-    final String name;
-    final String description;
-    final String example;
-    
-    BasicPredicate(String name, String example, String desc)
-    {
-      this.name = name; 
-      this.description = desc;
-      this.example = example;
-    }
-    
-    @Override public abstract Predicate<Rom> buildPredicate(String token);
-    @Override public String getName() { return name; }
-    @Override public String getExample() { return example; }
-    @Override public String getDescription() { return description; }
+  @Override
+  public PluginInfo getInfo()
+  { 
+    return new PluginInfo("Basic Search Predicates", new PluginVersion(1,0), "Jack",
+        "This plugins provides basic search predicates.");
   }
   
   public final static SearchPredicate HAS_ATTACHMENT = new BasicPredicate("has-attachment", "has:attach", "filters roms with attachments included")
@@ -158,4 +152,12 @@ public class Predicates
       return null;
     }
   };
+  
+  
+  @Override
+  public List<SearchPredicate> getPredicates()
+  {
+    return null;
+  }
+
 }

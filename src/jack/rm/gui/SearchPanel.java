@@ -105,6 +105,16 @@ public class SearchPanel extends JPanel
     this.active = active;
   }
   
+  void toggle(boolean enabled)
+  {
+    freeSearchField.setEnabled(enabled);
+    
+    if (!enabled)
+      freeSearchField.setText("");
+    
+    freeSearchField.setPlaceholder(enabled ? Text.TEXT_SEARCH_IN_TITLE.text() : "no search plugin present");
+  }
+  
   private void setComboBoxSelectedBackground(JComboBox<?> comboBox)
   {
     Object child = comboBox.getAccessibleContext().getAccessibleChild(0);

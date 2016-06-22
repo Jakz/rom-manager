@@ -114,6 +114,9 @@ public class Main
 	{
     manager.register(jack.rm.plugins.renamer.BasicRenamerPlugin.class);
     
+    manager.register(jack.rm.plugins.searcher.SimpleSearcherPlugin.class);
+    manager.register(jack.rm.plugins.searcher.BaseSearchPredicates.class);
+    
     manager.register(jack.rm.plugins.folder.NumericalOrganizer.class);
     manager.register(jack.rm.plugins.folder.AlphabeticalOrganizer.class);
     manager.register(jack.rm.plugins.folder.RootOrganizer.class);
@@ -310,10 +313,9 @@ public class Main
 
     //AssetPacker.packAssets(RomSet.current);
 
-		
+    mainFrame.pluginStateChanged();
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setVisible(true);
-		
 	  }
 	}
 

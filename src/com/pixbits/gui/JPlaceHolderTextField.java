@@ -7,12 +7,17 @@ public class JPlaceHolderTextField extends JTextField
 {
 	private static final long serialVersionUID = 1L;
 	
-	private final String placeholder;
+	private String placeholder;
 	
 	public JPlaceHolderTextField(int s, String placeholder)
 	{
 		super(s);
 		this.placeholder = placeholder;
+	}
+	
+	public void setPlaceholder(String str)
+	{
+	  this.placeholder = str;
 	}
 	
   @Override
