@@ -1,15 +1,16 @@
 package jack.rm.data.search;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import jack.rm.data.rom.Rom;
 
 public abstract class SearchParser
 {
-  abstract Predicate<Rom> parse(List<SearchPredicate> predicates, String string);
+  abstract Function<List<SearchPredicate>,Predicate<Rom>> parse(String string);
   
-  private Predicate<Rom> buildSinglePredicate(List<SearchPredicate> predicates, String token)
+  protected Predicate<Rom> buildSinglePredicate(List<SearchPredicate> predicates, String token)
   {
     for (SearchPredicate predicate : predicates)
     {

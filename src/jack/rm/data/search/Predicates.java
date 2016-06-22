@@ -6,7 +6,7 @@ import jack.rm.data.rom.Rom;
 
 public class Predicates
 {
-  private static abstract class BasicPredicate implements SearchPredicate
+  private static abstract class BasicPredicate extends SearchPredicate
   {
     final String name;
     final String description;
@@ -31,6 +31,17 @@ public class Predicates
     {
       if (token.startsWith("has:attach"))
         return r -> r.getAttachments().size() != 0;
+      else
+        return null;
+    }
+  };
+  
+  public final static SearchPredicate IS_FAVORITE = new BasicPredicate("is-favorite", "is:favorite, is:fav", "filters roms set as favorite")
+  {
+    @Override public Predicate<Rom> buildPredicate(String token)
+    {
+      if (isSearchArg(splitWithDelimiter(token, ":"), "is", "favorite", "favourite", "fav"))
+        return r -> r.isFavourite();
       else
         return null;
     }
