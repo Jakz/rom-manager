@@ -16,6 +16,7 @@ import jack.rm.data.rom.Location;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.RomGroup;
+import jack.rm.data.rom.RomGroupID;
 import jack.rm.data.rom.RomSave;
 import jack.rm.data.rom.RomSize;
 import jack.rm.data.romset.RomSet;
@@ -104,19 +105,10 @@ public class OfflineListXMLParser extends XMLHandler
 	}
 
   Map<String, RomSave<?>> saves = new TreeMap<>();
-  Map<Integer, RomGroup> duplicates = new HashMap<>();
 	
   RomGroup getGroup(int id)
   {
-    RomGroup group = duplicates.get(id);
-    if (group != null)
-      return group;
-    else
-    {
-      group = new RomGroup(id);
-      duplicates.put(id, group);
-      return group;
-    }
+    return set.list.getGroup(new RomGroupID(id));
   }
   
 	@Override
@@ -180,10 +172,13 @@ public class OfflineListXMLParser extends XMLHandler
       }
       case "duplicateID":
       {
-        RomGroup group = getGroup(asInt());
+        int ident = asInt();
         
-        rom.addToGroup(group);
-        
+        if (ident != 0)
+        {
+          RomGroup group = getGroup(ident);
+          rom.addToGroup(group);
+        }
         
         break;
       }
@@ -193,6 +188,9 @@ public class OfflineListXMLParser extends XMLHandler
       {
         set.list.sort(); 
         saves.forEach((k,v) -> System.out.println(k+" -> "+v));
+        
+        System.out.println("Groups: "+set.list.groupsCount());
+        
         break;
       }
       

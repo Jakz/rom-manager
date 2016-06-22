@@ -4,6 +4,7 @@ import jack.rm.*;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.RomGroup;
+import jack.rm.data.rom.RomGroupID;
 import jack.rm.data.rom.RomID;
 import jack.rm.data.rom.RomStatus;
 import jack.rm.files.MoverWorker;
@@ -19,7 +20,7 @@ public class RomList implements Iterable<Rom>
 {
 	public final RomSet set;
   List<Rom> list;
-  Map<Integer, RomGroup> groups;
+  Map<RomGroupID, RomGroup> groups;
 	Map<Long, Rom> crcs;
 	
 	private int countCorrect, countBadlyNamed, countNotFound;
@@ -132,8 +133,14 @@ public class RomList implements Iterable<Rom>
   public Stream<Rom> stream() { return list.stream(); }
   public Iterator<Rom> iterator() { return list.iterator(); }
   
+  public int groupsCount() { return groups.size(); }
   public Stream<RomGroup> groupsStream() { return groups.values().stream(); }
   public Iterator<RomGroup> groupsIterator() { return groups.values().iterator(); }
+  
+  public RomGroup getGroup(RomGroupID ident)
+  {
+    return groups.computeIfAbsent(ident, i -> new RomGroup(i));
+  }
   
   public Rom find(String search) { 
     Optional<Rom> rom = list.stream().filter(Searcher.buildSeachPredicate(search)).findFirst();

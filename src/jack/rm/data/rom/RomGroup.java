@@ -8,11 +8,11 @@ public class RomGroup implements Iterable<Rom>
 {
   private String name;
   private final Set<Rom> roms;
-  private final int id;
+  private final RomGroupID ident;
   
-  public RomGroup(int id)
+  public RomGroup(RomGroupID id)
   {
-    this.id = id;
+    this.ident = id;
     roms = new HashSet<>();
   }
   
@@ -37,7 +37,8 @@ public class RomGroup implements Iterable<Rom>
     return roms.contains(rom);
   }
   
-  public int getId() { return id; }
+  public int hashCode() { return ident.hashCode(); }
+  public boolean equals(Object o) { return o instanceof RomGroup && ((RomGroup)o).ident.equals(ident); }
   
   public Iterator<Rom> iterator() { return roms.iterator(); }
 }
