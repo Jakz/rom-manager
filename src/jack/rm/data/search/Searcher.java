@@ -21,6 +21,6 @@ public class Searcher
     
   Predicate<Rom> buildPredicate(String string)
   {
-    return parser.parse(predicates, string);
+    return null;//parser.parse(predicates, string);
   }
 }

@@ -8,7 +8,7 @@ import jack.rm.data.rom.Rom;
 
 public abstract class SearchParser
 {
-  abstract Function<List<SearchPredicate>,Predicate<Rom>> parse(String string);
+  public abstract Function<List<SearchPredicate>,Predicate<Rom>> parse(String string);
   
   protected Predicate<Rom> buildSinglePredicate(List<SearchPredicate> predicates, String token)
   {
