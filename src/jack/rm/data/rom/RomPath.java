@@ -32,6 +32,8 @@ public abstract class RomPath
   public abstract boolean isArchive();
   public abstract String getExtension();
   public abstract InputStream getInputStream() throws IOException;
+  public abstract long size();
+  public abstract long uncompressedSize();
   
   RomPath(Type type)
   {
@@ -54,6 +56,20 @@ public abstract class RomPath
     public String toString() { return file.getFileName().toString(); }
     @Override
     public String plainName() { return file.getFileName().toString().substring(0, file.getFileName().toString().lastIndexOf('.')); }
+    
+    @Override public long size() {
+      try
+      {
+        return Files.size(file);
+      }
+      catch (IOException e)
+      {
+        e.printStackTrace();
+        return 0;
+      }
+    }
+    
+    @Override public long uncompressedSize() { return size(); }
     
     @Override public boolean isArchive() { return false; }
     @Override public String getExtension() {
@@ -97,6 +113,34 @@ public abstract class RomPath
     @Override public boolean isArchive() { return true; }
     
     @Override public String getExtension() { return type.ext; }
+    
+    @Override public long size()
+    {
+      try
+      {
+        return Files.size(file);
+      }
+      catch (IOException e)
+      {
+        e.printStackTrace();
+        return 0;
+      }
+    }
+    
+    @Override public long uncompressedSize()
+    {
+      try
+      {
+        ZipFile zfile = new ZipFile(file.toFile());
+        ZipEntry entry = zfile.getEntry(internalName);
+        return entry.getSize();
+      }
+      catch (Exception e)
+      {
+        e.printStackTrace();
+        return 0;
+      }
+    }
     
     @Override
     public RomPath build(Path file)

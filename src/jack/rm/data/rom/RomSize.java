@@ -98,8 +98,13 @@ public class RomSize implements Comparable<RomSize>
 	{
 		return bytes;
 	}
-
+	
 	public String toString(PrintStyle style, PrintUnit unit)
+	{
+	  return toString(bytes, style, unit);
+	}
+
+	public static String toString(long bytes, PrintStyle style, PrintUnit unit)
 	{
 	  Unit size = unit == PrintUnit.BITS ? Unit.GIGABIT : Unit.GIGABYTE;
 	  
