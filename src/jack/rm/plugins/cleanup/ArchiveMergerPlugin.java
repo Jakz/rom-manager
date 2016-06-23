@@ -31,6 +31,7 @@ public class ArchiveMergerPlugin extends CleanupPlugin implements BackgroundOper
   @Override public String getTitle() { return "Archiving romset"; }
   @Override public String getProgressText() { return "Archiving..."; }
   @Override public String getMenuCaption() { return "Archive RomSet"; }
+  @Override public String getSubmenuCaption() { return "Cleanup"; }
   
   public class ArchiverWorker extends RomSetWorker<ArchiveMergerPlugin>
   {

@@ -7,7 +7,7 @@ import jack.rm.data.rom.RomSize;
 import jack.rm.data.rom.RomStatus;
 import jack.rm.data.romset.*;
 import jack.rm.i18n.*;
-import jack.rm.plugins.PluginRealType;
+import jack.rm.plugins.*;
 import jack.rm.plugins.cleanup.*;
 
 import javax.swing.*;
@@ -16,9 +16,16 @@ import javax.swing.event.*;
 import com.pixbits.gui.FileTransferHandler;
 
 import java.awt.event.*;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.awt.*;
 
 public class MainFrame extends JFrame implements WindowListener
@@ -238,20 +245,32 @@ public class MainFrame extends JFrame implements WindowListener
     toolsMenu.add(assetsMenu);
     
     JMenu pluginsMenu = new JMenu("Plugins"); // TODO: localize
+       
+    Map<String, List<OperationalPlugin>> plugins = new TreeMap<>();
     
-    Set<CleanupPlugin> plugins = set.getSettings().plugins.getEnabledPlugins(PluginRealType.ROMSET_CLEANUP);
-    if (!plugins.isEmpty())
-    {
-      JMenu cleanupMenu = new JMenu("Cleanup");
-      
-      plugins.forEach( p -> {
+    set.getSettings().plugins.stream()
+    .filter(p -> p.isEnabled() && p instanceof OperationalPlugin)
+    .map(p -> (OperationalPlugin)p)
+    .forEach(p -> {
+      String key = p.getSubmenuCaption();
+      plugins.computeIfAbsent(key, k -> new ArrayList<>()).add(p);
+    });
+    
+    plugins.values().forEach(l -> Collections.sort(l, new Comparator<OperationalPlugin>() {
+      @Override public int compare(OperationalPlugin o1, OperationalPlugin o2) {
+        return o1.getMenuCaption().compareTo(o2.getMenuCaption());
+      }
+    }));
+    
+    plugins.entrySet().forEach(e -> {
+      JMenu menu = new JMenu(e.getKey());
+      e.getValue().forEach(p -> {
         JMenuItem item = new JMenuItem(p.getMenuCaption());
-        item.addActionListener( e -> p.execute(set.list));
-        cleanupMenu.add(item);
+        item.addActionListener(ee -> p.execute(set.list));
+        menu.add(item);
       });
-      
-      pluginsMenu.add(cleanupMenu);
-    }
+      pluginsMenu.add(menu);
+    });
     
     if (pluginsMenu.getItemCount() != 0)
     {
