@@ -3,24 +3,40 @@ package jack.rm.data.search;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import jack.rm.data.rom.Rom;
+import jack.rm.data.romset.RomSet;
+import jack.rm.plugins.PluginRealType;
+import jack.rm.plugins.searcher.SearchPlugin;
+import jack.rm.plugins.searcher.SearchPredicatesPlugin;
 
 public class Searcher
 {
   private final SearchParser parser;
   private final List<SearchPredicate> predicates;
   
-  Searcher(SearchParser parser)
+  protected Searcher()
   {
-    this.parser = parser;
-    predicates = new ArrayList<>();
+    parser = null;
+    predicates = null;
   }
-    
-  Predicate<Rom> buildPredicate(String string)
+  
+  public Searcher(RomSet romset)
   {
-    return null;//parser.parse(predicates, string);
+    predicates = new ArrayList<>();
+    
+    SearchPlugin plugin = romset.getSettings().plugins.getEnabledPlugin(PluginRealType.SEARCH);
+    parser = plugin.getSearcher();
+    
+    Set<SearchPredicatesPlugin> predicates = romset.getSettings().plugins.getEnabledPlugins(PluginRealType.SEARCH_PREDICATES);
+    predicates.forEach(p -> this.predicates.addAll(p.getPredicates()));
+  }
+  
+  public Predicate<Rom> search(String text)
+  {
+    return parser.parse(text).apply(predicates);
   }
 }

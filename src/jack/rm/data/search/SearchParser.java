@@ -16,7 +16,9 @@ public abstract class SearchParser
     {
       Predicate<Rom> pred = predicate.buildPredicate(token);
       if (pred != null)
+      {
         return pred;
+      }
     }
     
     return null;

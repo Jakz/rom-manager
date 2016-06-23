@@ -316,6 +316,8 @@ public class Main
     mainFrame.pluginStateChanged();
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setVisible(true);
+		
+		RomSet.current.pluginStateChanged();
 	  }
 	}
 

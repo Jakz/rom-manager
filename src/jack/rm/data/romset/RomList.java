@@ -143,7 +143,7 @@ public class RomList implements Iterable<Rom>
   }
   
   public Rom find(String search) { 
-    Optional<Rom> rom = list.stream().filter(Searcher.buildSeachPredicate(search)).findFirst();
+    Optional<Rom> rom = list.stream().filter(set.getSearcher().search(search)).findFirst();
     if (!rom.isPresent()) throw new RuntimeException("RomList::find failed to find any rom");
     return rom.orElse(null);
   }

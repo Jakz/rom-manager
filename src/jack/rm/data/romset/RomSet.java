@@ -8,6 +8,8 @@ import jack.rm.data.console.System;
 import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
+import jack.rm.data.search.DummySearcher;
+import jack.rm.data.search.Searcher;
 import jack.rm.files.parser.DatLoader;
 import jack.rm.json.Json;
 import jack.rm.json.RomListAdapter;
@@ -49,12 +51,15 @@ public class RomSet
 	private final AssetManager assetManager;
 	private final DatLoader loader;
 	
+	private Searcher searcher;
+	
 	
 	private final Attribute[] attributes;
 
 	public RomSet(System type, Provider provider, DatFormat datFormat, Attribute[] attributes, AssetManager assetManager, DatLoader loader)
 	{
-		this.list = new RomList(this);
+		this.searcher = new DummySearcher(this);
+	  this.list = new RomList(this);
 	  this.system = type;
 		this.provider = provider;
 		this.datFormat = datFormat;
@@ -62,6 +67,14 @@ public class RomSet
 		this.assetManager = assetManager;
 		this.loader = loader;
 		this.loaded = false;
+	}
+	
+	public void pluginStateChanged()
+	{
+	  if (getSettings().getSearchPlugin() != null)
+	    searcher = new Searcher(this);
+	  else
+	    searcher = new DummySearcher(this);
 	}
 	
 	public Settings getSettings() { return settings; }
@@ -96,7 +109,12 @@ public class RomSet
 	
 	public Path getAttachmentPath()
 	{
-	    return settings.romsPath.resolve(Paths.get("attachments"));
+	  return settings.romsPath.resolve(Paths.get("attachments"));
+	}
+	
+	public Searcher getSearcher()
+	{
+	  return searcher;
 	}
 	
 	public PathMatcher getFileMatcher()
@@ -128,7 +146,7 @@ public class RomSet
 	}
 	
 	public Rom find(String query) { return list.find(query); }
-	public List<Rom> filter(String query) { return list.stream().filter(Searcher.buildSeachPredicate(query)).collect(Collectors.toList()); }
+	public List<Rom> filter(String query) { return list.stream().filter(searcher.search(query)).collect(Collectors.toList()); }
 	
 	public void saveStatus()
 	{

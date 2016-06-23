@@ -13,6 +13,7 @@ import jack.rm.plugins.*;
 import jack.rm.plugins.downloader.RomDownloaderPlugin;
 import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.RenamerPlugin;
+import jack.rm.plugins.searcher.SearchPlugin;
 
 public class Settings
 {	
@@ -47,6 +48,12 @@ public class Settings
 	public FolderPlugin getFolderOrganizer()
 	{ 
 	  FolderPlugin plugin = plugins.getEnabledPlugin(PluginRealType.FOLDER_ORGANIZER);
+	  return plugin != null ? plugin : null;
+	}
+	
+	public SearchPlugin getSearchPlugin()
+	{
+	  SearchPlugin plugin = plugins.getEnabledPlugin(PluginRealType.SEARCH);
 	  return plugin != null ? plugin : null;
 	}
 	

@@ -4,6 +4,8 @@ import org.codehaus.jparsec.*;
 import org.codehaus.jparsec.pattern.Pattern;
 import org.codehaus.jparsec.pattern.Patterns;
 
+import jack.rm.data.romset.RomSet;
+
 /*
 
 select "is:favorite"
@@ -22,7 +24,7 @@ consolidate in "path" with ez4
  */
 
 
-import jack.rm.data.romset.Searcher;
+import jack.rm.data.romset.SearcherOld;
 
 /*
 import org.junit.*;
@@ -39,7 +41,7 @@ public class ScriptParser
     return Scanners.stringCaseInsensitive("select")
         .next(WHITESPACE)
         .next(queryExpression())
-        .map(query -> new SelectStatement(Searcher.buildSeachPredicate(query.substring(1, query.length()-1))));
+        .map(query -> new SelectStatement(RomSet.current.getSearcher().search(query.substring(1, query.length()-1))));
   }
   
   private Parser<FindStatement> findStatement()
@@ -47,7 +49,7 @@ public class ScriptParser
     return Scanners.stringCaseInsensitive("find")
         .next(WHITESPACE)
         .next(queryExpression())
-        .map(query -> new FindStatement(Searcher.buildSeachPredicate(query.substring(1, query.length()-1))));
+        .map(query -> new FindStatement(RomSet.current.getSearcher().search(query.substring(1, query.length()-1))));
   }
   
   private Parser<Statement> statement()

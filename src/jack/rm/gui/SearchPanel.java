@@ -5,7 +5,8 @@ import jack.rm.data.rom.Location;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.RomSize;
-import jack.rm.data.romset.Searcher;
+import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.SearcherOld;
 import jack.rm.i18n.Text;
 import javax.swing.*;
 import javax.swing.event.*;
@@ -172,7 +173,7 @@ public class SearchPanel extends JPanel
 	
 	public Predicate<Rom> buildSearchPredicate()
 	{
-	  Predicate<Rom> predicate = Searcher.buildSeachPredicate(freeSearchField.getText());
+	  Predicate<Rom> predicate = RomSet.current.getSearcher().search(freeSearchField.getText());
 
 	  Location location = locations.getItemAt(locations.getSelectedIndex());
     Language language = languages.getItemAt(languages.getSelectedIndex());
