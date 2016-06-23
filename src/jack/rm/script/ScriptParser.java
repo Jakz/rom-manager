@@ -24,8 +24,6 @@ consolidate in "path" with ez4
  */
 
 
-import jack.rm.data.romset.SearcherOld;
-
 /*
 import org.junit.*;
 import static org.junit.Assert.*;

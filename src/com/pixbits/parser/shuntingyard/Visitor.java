@@ -1,9 +1,10 @@
 package com.pixbits.parser.shuntingyard;
 
-public interface Visitor
+public interface Visitor<T>
 {
-  void enterNode(ASTNode node);
-  void exitNode(ASTNode node);
-  void visitNode(ASTNode node);
+  default T doVisitNode(ASTNode node) { return visitNode(node); }
   
+  default void enterNode(ASTNode node) { }
+  default void exitNode(ASTNode node) { }
+  T visitNode(ASTNode node);
 }

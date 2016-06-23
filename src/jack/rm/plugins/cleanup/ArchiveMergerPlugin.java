@@ -16,7 +16,6 @@ import jack.rm.data.rom.RomStatus;
 import jack.rm.data.romset.RomList;
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.BackgroundOperation;
-import jack.rm.files.BackgroundWorker;
 import jack.rm.files.RomSetWorker;
 
 public class ArchiveMergerPlugin extends CleanupPlugin implements BackgroundOperation

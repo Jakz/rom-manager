@@ -90,9 +90,7 @@ public class PluginManager<T extends Plugin, B extends PluginBuilder<T>>
       }
       catch (IllegalAccessException|InstantiationException|InvocationTargetException e)
       {
-        // TODO: unable to load plugin, no default public constructor
-        e.printStackTrace();
-        return false;
+        throw new PluginException("unable to register plugin "+clazz.getName()+", does it have a public constructor?");
       }
     }
   }

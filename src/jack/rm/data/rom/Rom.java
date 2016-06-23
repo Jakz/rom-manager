@@ -3,7 +3,6 @@ package jack.rm.data.rom;
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
 import jack.rm.data.romset.RomSet;
-import jack.rm.files.Scanner;
 import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.RenamerPlugin;
 import jack.rm.data.attachment.Attachment;

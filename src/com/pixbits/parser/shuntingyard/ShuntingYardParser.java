@@ -151,7 +151,7 @@ public class ShuntingYardParser
     return node;
   }
     
-  public void parse(String string) throws ParseException
+  public ASTNode parse(String string) throws ParseException
   {
     nodesStack.clear();
     operatorStack.clear();
@@ -235,6 +235,8 @@ public class ShuntingYardParser
     
     if (insideQuote)
       throw new ParseException("unclosed quote");
+    
+    return nodesStack.pop();
   }
   
   public static void main(String[] args)

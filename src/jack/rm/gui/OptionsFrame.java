@@ -5,11 +5,7 @@ import jack.rm.data.romset.RomSet;
 import jack.rm.i18n.Text;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
-import jack.rm.plugins.PluginRealType;
-
 import java.awt.event.*;
-import java.util.Optional;
-
 import javax.swing.*;
 
 import com.pixbits.plugin.PluginManager;

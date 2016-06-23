@@ -17,7 +17,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 
@@ -34,7 +33,6 @@ import jack.rm.data.rom.Location;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.Version;
 import jack.rm.data.console.GB;
-import jack.rm.data.console.GBC;
 import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.CustomRomAttribute;
 import jack.rm.data.rom.Language;

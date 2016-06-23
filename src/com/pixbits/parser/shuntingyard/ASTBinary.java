@@ -12,13 +12,14 @@ public class ASTBinary implements ASTNode
     this.right = right;
   }
   
-  @Override public void accept(Visitor visitor)
+  @Override public <T> T accept(Visitor<T> visitor)
   {
     visitor.enterNode(this);
-    visitor.visitNode(this);
     left.accept(visitor);
     right.accept(visitor);
+    T value = visitor.doVisitNode(this);
     visitor.exitNode(this);
+    return value;
   }
   
   public String toString() { return "ASTBinary("+operator.mnemonic+")"; }

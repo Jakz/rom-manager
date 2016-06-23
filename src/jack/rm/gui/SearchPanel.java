@@ -6,7 +6,6 @@ import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.RomSize;
 import jack.rm.data.romset.RomSet;
-import jack.rm.data.romset.SearcherOld;
 import jack.rm.i18n.Text;
 import javax.swing.*;
 import javax.swing.event.*;

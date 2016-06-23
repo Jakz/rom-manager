@@ -29,7 +29,6 @@ import jack.rm.data.romset.RomSet;
 import jack.rm.files.Organizer;
 import jack.rm.files.Pattern;
 import jack.rm.gui.PluginOptionsPanel;
-import jack.rm.gui.PatternRenamerPanel.TableModel;
 import jack.rm.i18n.Text;
 
 public class PatternRenamerPlugin extends RenamerPlugin

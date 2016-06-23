@@ -11,12 +11,13 @@ public class ASTUnary implements ASTNode
     this.inner = inner;
   }
   
-  @Override public void accept(Visitor visitor)
+  @Override public <T> T accept(Visitor<T> visitor)
   {
     visitor.enterNode(this);
-    visitor.visitNode(this);
     inner.accept(visitor);
+    T value = visitor.doVisitNode(this);
     visitor.exitNode(this);
+    return value;
   }
   
   public String toString() { return "ASTUnary("+operator.mnemonic+")"; }

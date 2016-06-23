@@ -9,11 +9,12 @@ public class ASTValue implements ASTNode
     this.value = value;
   }
   
-  @Override public void accept(Visitor visitor)
+  @Override public <T> T accept(Visitor<T> visitor)
   {
     visitor.enterNode(this);
-    visitor.visitNode(this);
-    visitor.exitNode(this);
+    T value = visitor.doVisitNode(this);
+    visitor.exitNode(this); 
+    return value;
   }
   
   public String toString() { return "ASTValue("+value+")"; }

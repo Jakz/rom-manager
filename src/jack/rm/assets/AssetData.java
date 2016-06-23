@@ -1,15 +1,8 @@
 package jack.rm.assets;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.HashMap;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 

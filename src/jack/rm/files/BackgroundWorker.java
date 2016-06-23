@@ -9,8 +9,6 @@ import javax.swing.SwingWorker;
 import com.pixbits.gui.ProgressDialog;
 
 import jack.rm.Main;
-import jack.rm.data.rom.Rom;
-import jack.rm.data.romset.RomSet;
 
 public abstract class BackgroundWorker<E, T extends BackgroundOperation> extends SwingWorker<Void, Integer>
 {

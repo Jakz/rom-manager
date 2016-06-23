@@ -4,40 +4,14 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import java.awt.Desktop;
-import java.io.IOException;
-import java.nio.ByteOrder;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import jack.rm.assets.AssetPacker;
 import jack.rm.assets.Downloader;
-import jack.rm.data.console.GBA;
 import jack.rm.data.console.System;
-import jack.rm.data.rom.Language;
-import jack.rm.data.rom.Location;
-import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomAttribute;
-import jack.rm.data.rom.Version;
 import jack.rm.data.romset.*;
-import jack.rm.files.GBASavePatcherGBATA;
-import jack.rm.files.GBASleepHack;
 import jack.rm.files.Scanner;
-import jack.rm.files.UPSPatch;
 import jack.rm.gui.*;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
-import jack.rm.workflow.*;
-
-import com.pixbits.io.BinaryBuffer;
-import com.pixbits.io.BinaryBuffer.Mode;
 import com.pixbits.plugin.PluginManager;
 import com.pixbits.workflow.*;
 
@@ -115,6 +89,7 @@ public class Main
     manager.register(jack.rm.plugins.renamer.BasicRenamerPlugin.class);
     
     manager.register(jack.rm.plugins.searcher.SimpleSearcherPlugin.class);
+    manager.register(jack.rm.plugins.searcher.BooleanSearcherPlugin.class);
     manager.register(jack.rm.plugins.searcher.BaseSearchPredicates.class);
     
     manager.register(jack.rm.plugins.folder.NumericalOrganizer.class);

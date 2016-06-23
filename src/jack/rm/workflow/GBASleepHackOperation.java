@@ -1,8 +1,6 @@
 package jack.rm.workflow;
 
 import jack.rm.data.console.System;
-import jack.rm.data.rom.RomAttribute;
-import jack.rm.files.GBASavePatcherGBATA;
 import jack.rm.files.GBASleepHack;
 
 public class GBASleepHackOperation extends RomOperation

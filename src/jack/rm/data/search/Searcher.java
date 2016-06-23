@@ -1,12 +1,9 @@
 package jack.rm.data.search;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
-
 import jack.rm.data.rom.Rom;
 import jack.rm.data.romset.RomSet;
 import jack.rm.plugins.PluginRealType;

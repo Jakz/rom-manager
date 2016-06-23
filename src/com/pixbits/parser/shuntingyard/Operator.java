@@ -7,7 +7,7 @@ public class Operator implements Comparable<Operator>
   final boolean rightAssociative;
   final boolean unary;
   
-  Operator(String mnemonic, int precedence, boolean unary, boolean rightAssociative)
+  public Operator(String mnemonic, int precedence, boolean unary, boolean rightAssociative)
   {
     this.mnemonic = mnemonic;
     this.precedence = precedence;
@@ -17,7 +17,8 @@ public class Operator implements Comparable<Operator>
   
   @Override 
   public int compareTo(Operator other) { return precedence - other.precedence; } 
-  public boolean isRightAssociative() { return rightAssociative; }
-  public boolean isUnary() { return unary; }
+  boolean isRightAssociative() { return rightAssociative; }
+  boolean isUnary() { return unary; }
   
+  public String getMnemonic() { return mnemonic; }
 }

@@ -7,7 +7,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import com.pixbits.functional.Pair;
 import com.pixbits.parser.SimpleParser;
 import com.pixbits.plugin.PluginInfo;
 import com.pixbits.plugin.PluginVersion;
