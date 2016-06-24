@@ -38,5 +38,6 @@ public class DeleteEmptyFoldersPlugin extends CleanupPlugin
     message("Deleted "+counter+" empty folders");
   }
   
+  @Override public String getSubmenuCaption() { return "Cleanup"; }
   @Override public String getMenuCaption() { return "Delete empty folders"; }
 }
