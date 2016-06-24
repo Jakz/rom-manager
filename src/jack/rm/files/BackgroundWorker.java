@@ -2,6 +2,7 @@ package jack.rm.files;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 import javax.swing.SwingWorker;
@@ -63,8 +64,21 @@ public abstract class BackgroundWorker<E, T extends BackgroundOperation> extends
   @Override
   public void done()
   {
-    ProgressDialog.finished();
-    callback.accept(true);
+    try
+    {
+      get();
+      ProgressDialog.finished();
+      callback.accept(true);
+    }
+    catch (ExecutionException e)
+    {
+      Throwable cause = e.getCause();
+      cause.printStackTrace();
+    }
+    catch (InterruptedException e)
+    {
+      e.printStackTrace();
+    }
     
     
     //if (Main.pref.organizeRomsDeleteEmptyFolders)

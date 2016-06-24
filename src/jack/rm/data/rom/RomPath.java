@@ -2,7 +2,10 @@ package jack.rm.data.rom;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.*;
+import java.util.Collections;
 import java.util.zip.*;
 
 public abstract class RomPath
@@ -29,7 +32,8 @@ public abstract class RomPath
   public abstract Path file();
   public abstract String plainName();
   public abstract String plainInternalName();
-  public abstract RomPath build(Path file);
+  public abstract RomPath relocate(Path file);
+  public abstract RomPath relocateInternal(String internalName);
   public abstract boolean isArchive();
   public abstract String getExtension();
   public abstract String getInternalExtension();
@@ -84,9 +88,15 @@ public abstract class RomPath
     @Override public String getInternalExtension() { return getExtension(); }
     
     @Override
-    public RomPath build(Path file)
+    public RomPath relocate(Path file)
     {
       return new Bin(file);
+    }
+    
+    @Override
+    public RomPath relocateInternal(String internalName)
+    {
+      throw new UnsupportedOperationException("a binary rompath doesn't have an internal filename");
     }
     
     @Override
@@ -138,9 +148,9 @@ public abstract class RomPath
     
     @Override public long uncompressedSize()
     {
-      try
+      try (ZipFile zfile = new ZipFile(file.toFile()))
       {
-        ZipFile zfile = new ZipFile(file.toFile());
+        
         ZipEntry entry = zfile.getEntry(internalName);
         return entry.getSize();
       }
@@ -151,40 +161,44 @@ public abstract class RomPath
       }
     }
     
-    public void renameInternalFile(String newName)
+    public boolean renameInternalFile(String newName)
     {
       try
-      {
-        ZipFile inFile = new ZipFile(file.toFile());
-        //Path tmpFile = Files.createTempFile(null, null);
-        //ZipFile outFile = new ZipFile(tmpFile.toFile());
+      {     
+        URI ouri = file.toUri();
+        URI uri = new URI("jar:file", ouri.getUserInfo(), ouri.getHost(), ouri.getPort(), ouri.getPath(), ouri.getQuery(), ouri.getFragment());
         
-        
-        
-        
-        /*while (inFile.entries().hasMoreElements())
+        try (FileSystem zipfs = FileSystems.newFileSystem(uri, Collections.<String, Object>emptyMap()))
         {
-          ZipEntry entry = inFile.entries().nextElement();
+          Path sourcePath = zipfs.getPath(internalName);
+          Path destPath = zipfs.getPath(newName); 
           
-          entry.
+          Files.move(sourcePath, destPath);
+          return true;
         }
-        
-        for (ZipEntry entry : inFile.entries())
+        catch (IOException e)
         {
-          
-        }*/
-        
+          e.printStackTrace();
+          return false;
+        }
       }
-      catch (IOException e)
+      catch (URISyntaxException e)
       {
-        
+        e.printStackTrace();
+        return false;
       }
     }
     
     @Override
-    public RomPath build(Path file)
+    public RomPath relocate(Path file)
     {
       return new Archive(file, this.internalName);
+    }
+    
+    @Override
+    public RomPath relocateInternal(String internalName)
+    {
+      return new Archive(file, internalName);
     }
     
     @Override

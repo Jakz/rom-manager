@@ -111,7 +111,7 @@ public class Rom implements Comparable<Rom>
 	public void move(Path dest) throws IOException
 	{
 	  Files.move(path.file(), dest);
-	  path = path.build(dest);
+	  path = path.relocate(dest);
 	}
 	
 	public boolean hasAsset(Asset asset)

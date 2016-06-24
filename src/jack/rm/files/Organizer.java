@@ -61,7 +61,11 @@ public class Organizer
 	  {
 	    RomPath path = rom.getPath();
 	    String name = rom.getCorrectInternalName() + "." + path.getInternalExtension();
-	    System.out.println("Renaming "+path.plainInternalName()+" to "+name);
+	    
+	    if (((RomPath.Archive)path).renameInternalFile(name))
+	      rom.setPath(path.relocateInternal(name));
+	    else
+	      Log.error(LogSource.ORGANIZER, LogTarget.rom(rom), "Can't rename internal name of archive: "+path.file());
 	  }
 	}
 	
