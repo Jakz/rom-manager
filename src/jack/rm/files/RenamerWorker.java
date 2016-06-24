@@ -20,6 +20,10 @@ public class RenamerWorker extends RomSetWorker<RenamerPlugin>
     if (rom.status == RomStatus.UNORGANIZED)
     {        
       Organizer.renameRom(rom);  
+      
+      if (romSet.getSettings().shouldRenameInternalName)
+        Organizer.internalRenameRom(rom);
+      
       rom.updateStatus();
       romSet.list.updateStatus();
     }

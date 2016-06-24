@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -24,6 +25,7 @@ import javax.swing.table.AbstractTableModel;
 import com.pixbits.plugin.PluginInfo;
 import com.pixbits.plugin.PluginVersion;
 
+import jack.rm.Settings;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.Organizer;
@@ -52,14 +54,42 @@ public class PatternRenamerPlugin extends RenamerPlugin
     return temp;
   }
   
+  @Override public String getCorrectInternalName(Rom rom)
+  {
+    String temp = new String(RomSet.current.getSettings().internalRenamingPattern != null ? RomSet.current.getSettings().internalRenamingPattern : RomSet.current.getSettings().renamingPattern);
+    
+    Set<Pattern> patterns = Organizer.getPatterns(RomSet.current);
+    
+    for (Pattern p : patterns)
+      temp = p.apply(temp, rom);
+    
+    return temp;
+  }
+  
   @Override public PluginOptionsPanel getGUIPanel() { return new PatternRenamerPanel(); } 
+  
+  private enum ArchiveRenameMode
+  {
+    None("None"),
+    Same("Same"),
+    Custom("Custom")
+    ;
+    public final String caption;
+    
+    ArchiveRenameMode(String caption) { this.caption = caption; }
+  }
   
   private class PatternRenamerPanel extends PluginOptionsPanel implements CaretListener
   {
     private static final long serialVersionUID = 1L;
     
     private JTextField patternField = new JTextField(30);
+    private JTextField internalPatternField = new JTextField(20);
+    
+    private JComboBox<ArchiveRenameMode> internalRenameMode = new JComboBox<ArchiveRenameMode>(ArchiveRenameMode.values()); 
+    
     private JTextField exampleField = new JTextField(30);
+    
 
     private JTable patternsTable;
     private List<Pattern> patterns = new ArrayList<Pattern>();
@@ -86,20 +116,36 @@ public class PatternRenamerPlugin extends RenamerPlugin
       JPanel main = new JPanel(new BorderLayout());
       main.setBorder(BorderFactory.createEmptyBorder(10, 10, 5, 10));
       
+      internalRenameMode.addActionListener(e -> switchToInternalRenamerMode((ArchiveRenameMode)internalRenameMode.getSelectedItem()));
+      
       GridBagConstraints c = new GridBagConstraints();
       
       updateGBC(c, 0,0,1,1);
       c.ipadx = 5;
       fields.add(new JLabel(Text.TEXT_RENAMER_PATTERN.text()+":"), c);
+      
       updateGBC(c, GridBagConstraints.RELATIVE,0,4,1);
       c.ipadx = 0;
       fields.add(patternField,c);
-      updateGBC(c, 0,GridBagConstraints.RELATIVE,1,1);
+            
+      updateGBC(c, 0, GridBagConstraints.RELATIVE,1,1);
       c.ipadx = 5;
       fields.add(new JLabel(Text.TEXT_RENAMER_EXAMPLE.text()+":"),c);
+      
       updateGBC(c, GridBagConstraints.RELATIVE,1,4,1);
       c.ipadx = 0;
       fields.add(exampleField,c);
+      
+      updateGBC(c, 0, GridBagConstraints.RELATIVE,1,1);
+      c.ipadx = 5;
+      fields.add(new JLabel(Text.TEXT_INTERNAL_PATTERN.text()+":"), c);
+      
+      updateGBC(c, GridBagConstraints.RELATIVE,2,1,1);
+      c.ipadx = 0;
+      fields.add(internalRenameMode, c);
+      
+      updateGBC(c, GridBagConstraints.RELATIVE,2,3,1);
+      fields.add(internalPatternField, c);
       
       patternsTable = new JTable(model);
       patternsTable.setAutoCreateRowSorter(true);
@@ -132,6 +178,7 @@ public class PatternRenamerPlugin extends RenamerPlugin
       exampleField.setEnabled(false);
       exampleField.setDisabledTextColor(Color.BLACK);  
       patternField.addCaretListener(this);
+      internalPatternField.addCaretListener(this);
 
       JScrollPane scrollPane = new JScrollPane(patternsTable);
       main.add(fields,BorderLayout.NORTH);
@@ -148,17 +195,65 @@ public class PatternRenamerPlugin extends RenamerPlugin
 
     public void updateFields()
     {
-      patternField.setText(getRomset().getSettings().renamingPattern);
+      Settings settings = getRomset().getSettings();
+      
+      patternField.setText(settings.renamingPattern);
       patterns.clear();
       Organizer.getPatterns(getRomset()).forEach(patterns::add);
       // TODO: should be invoked even when plugins are changed
+      
+      if (!settings.shouldRenameInternalName)
+        switchToInternalRenamerMode(ArchiveRenameMode.None);
+      else if (settings.internalRenamingPattern == null)
+        switchToInternalRenamerMode(ArchiveRenameMode.Same);
+      else
+        switchToInternalRenamerMode(ArchiveRenameMode.Custom);
+    }
+    
+    private void switchToInternalRenamerMode(ArchiveRenameMode mode)
+    {
+      Settings settings = getRomset().getSettings();
+
+      
+      internalRenameMode.setSelectedItem(mode);
+      
+      if (mode == ArchiveRenameMode.None)
+      {
+        internalPatternField.setText("");
+        internalPatternField.setEnabled(false);
+        settings.shouldRenameInternalName = false;
+      }
+      else if (mode == ArchiveRenameMode.Custom)
+      {
+        internalPatternField.setEnabled(true);
+        internalPatternField.setText(settings.internalRenamingPattern);
+        settings.shouldRenameInternalName = true;
+      }
+      else if (mode == ArchiveRenameMode.Same)
+      {
+        internalPatternField.setEnabled(false);
+        internalPatternField.setText(settings.renamingPattern);
+        settings.shouldRenameInternalName = true;
+        settings.internalRenamingPattern = null;
+      }
     }
 
     @Override
     public void caretUpdate(CaretEvent e)
     {
-      getRomset().getSettings().renamingPattern = patternField.getText();
-      exampleField.setText(RomSet.current.list.get(0).getCorrectName());
+      if (e.getSource() == patternField)
+      {
+        getRomset().getSettings().renamingPattern = patternField.getText();
+        exampleField.setText(RomSet.current.list.get(0).getCorrectName());
+        
+        if (internalRenameMode.getSelectedItem() == ArchiveRenameMode.Same)
+          internalPatternField.setText(patternField.getText());
+      }
+      else if (e.getSource() == internalPatternField && internalRenameMode.getSelectedItem() == ArchiveRenameMode.Custom)
+      {
+        getRomset().getSettings().internalRenamingPattern = internalPatternField.getText();
+
+      }
     }
     
     @Override

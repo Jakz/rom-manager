@@ -18,6 +18,8 @@ import jack.rm.plugins.searcher.SearchPlugin;
 public class Settings
 {	
   public String renamingPattern;
+  public String internalRenamingPattern;
+  public boolean shouldRenameInternalName;
 	public Path romsPath;	
 	
 	public PluginSet<ActualPlugin> plugins;

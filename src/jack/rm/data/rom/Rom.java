@@ -1,5 +1,6 @@
 package jack.rm.data.rom;
 
+import jack.rm.Settings;
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
 import jack.rm.data.romset.RomSet;
@@ -143,26 +144,44 @@ public class Rom implements Comparable<Rom>
   
   public String getCorrectName()
   {
-    RenamerPlugin renamer = RomSet.current.getSettings().getRenamer();
+    RenamerPlugin renamer = set.getSettings().getRenamer();
     return renamer.getCorrectName(this);
+  }
+  
+  public String getCorrectInternalName()
+  {
+    RenamerPlugin renamer = set.getSettings().getRenamer();
+    return renamer.getCorrectInternalName(this);
   }
   
   public Path getCorrectFolder()
   {
-    FolderPlugin mover = RomSet.current.getSettings().getFolderOrganizer();
+    FolderPlugin mover = set.getSettings().getFolderOrganizer();
     return mover.getFolderForRom(this);
+  }
+  
+  public boolean hasCorrectInternalName()
+  {
+    return !path.isArchive() || getCorrectInternalName().equals(path.plainInternalName());
   }
   
   public boolean hasCorrectName()
   {
-    return getCorrectName().equals(path.plainName());
+    Settings settings = set.getSettings();
+    
+    boolean hasCorrectName = getCorrectName().equals(path.plainName());
+    
+    if (!settings.shouldRenameInternalName)
+      return hasCorrectName;
+    else
+      return hasCorrectName && hasCorrectInternalName();
   }
   
   public boolean hasCorrectFolder()
   {
     try {
       return RomSet.current.getSettings().getFolderOrganizer() == null || 
-        Files.isSameFile(path.file().getParent(), RomSet.current.getSettings().romsPath.resolve(getCorrectFolder()));
+        Files.isSameFile(path.file().getParent(), set.getSettings().romsPath.resolve(getCorrectFolder()));
     }
     catch (IOException e)
     {

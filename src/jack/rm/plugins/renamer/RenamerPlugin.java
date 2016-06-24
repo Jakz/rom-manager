@@ -17,4 +17,6 @@ public abstract class RenamerPlugin extends OrganizerPlugin implements Function<
   
   public abstract String getCorrectName(Rom rom);
   public final String apply(Rom rom) { return getCorrectName(rom); }
+  
+  public abstract String getCorrectInternalName(Rom rom);
 }

@@ -28,9 +28,11 @@ public abstract class RomPath
   public abstract String toString();
   public abstract Path file();
   public abstract String plainName();
+  public abstract String plainInternalName();
   public abstract RomPath build(Path file);
   public abstract boolean isArchive();
   public abstract String getExtension();
+  public abstract String getInternalExtension();
   public abstract InputStream getInputStream() throws IOException;
   public abstract long size();
   public abstract long uncompressedSize();
@@ -56,6 +58,8 @@ public abstract class RomPath
     public String toString() { return file.getFileName().toString(); }
     @Override
     public String plainName() { return file.getFileName().toString().substring(0, file.getFileName().toString().lastIndexOf('.')); }
+    @Override
+    public String plainInternalName() { return plainName(); }
     
     @Override public long size() {
       try
@@ -77,6 +81,7 @@ public abstract class RomPath
       int lastdot = filename.lastIndexOf('.');
       return lastdot != -1 ? filename.substring(lastdot+1) : "";
     }
+    @Override public String getInternalExtension() { return getExtension(); }
     
     @Override
     public RomPath build(Path file)
@@ -109,6 +114,10 @@ public abstract class RomPath
     public String toString() { return file.getFileName().toString() + " ("+internalName+")"; }
     @Override
     public String plainName() { return file.getFileName().toString().substring(0, file.getFileName().toString().lastIndexOf('.')); }
+    @Override
+    public String plainInternalName() { return internalName.substring(0, internalName.toString().lastIndexOf('.')); }
+    @Override public String getInternalExtension() { return internalName.substring(internalName.toString().lastIndexOf('.')+1); }
+
     
     @Override public boolean isArchive() { return true; }
     
@@ -139,6 +148,36 @@ public abstract class RomPath
       {
         e.printStackTrace();
         return 0;
+      }
+    }
+    
+    public void renameInternalFile(String newName)
+    {
+      try
+      {
+        ZipFile inFile = new ZipFile(file.toFile());
+        //Path tmpFile = Files.createTempFile(null, null);
+        //ZipFile outFile = new ZipFile(tmpFile.toFile());
+        
+        
+        
+        
+        /*while (inFile.entries().hasMoreElements())
+        {
+          ZipEntry entry = inFile.entries().nextElement();
+          
+          entry.
+        }
+        
+        for (ZipEntry entry : inFile.entries())
+        {
+          
+        }*/
+        
+      }
+      catch (IOException e)
+      {
+        
       }
     }
     

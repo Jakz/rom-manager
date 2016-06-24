@@ -19,5 +19,10 @@ public class BasicRenamerPlugin extends RenamerPlugin
     return rom.getTitle();
   }
   
+  @Override public String getCorrectInternalName(Rom rom)
+  {
+    return getCorrectName(rom);
+  }
+  
   @Override public boolean isNative() { return true; }
 }

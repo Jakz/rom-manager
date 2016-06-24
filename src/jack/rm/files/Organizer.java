@@ -44,10 +44,25 @@ public class Organizer
 	public static void organizeRomIfNeeded(Rom rom)
 	{	  
 	  if (!rom.hasCorrectName())
+	  {
 	    renameRom(rom);
+	    internalRenameRom(rom);
+	  }
+	  
+	  if (!rom.hasCorrectName())
 	  
 	  if (!rom.hasCorrectFolder())
 	    moveRom(rom);
+	}
+	
+	public static void internalRenameRom(Rom rom)
+	{
+	  if (!rom.hasCorrectInternalName())
+	  {
+	    RomPath path = rom.getPath();
+	    String name = rom.getCorrectInternalName() + "." + path.getInternalExtension();
+	    System.out.println("Renaming "+path.plainInternalName()+" to "+name);
+	  }
 	}
 	
 	public static void renameRom(Rom rom)
