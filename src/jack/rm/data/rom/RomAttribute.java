@@ -32,7 +32,8 @@ public enum RomAttribute implements Attribute
   CRC(Text.ROM_INFO_CRC)
   {
     public String prettyValue(Object value) {
-      return Long.toHexString((Long)value).toUpperCase();
+      return String.format("%08X", (Long)value);
+      //return Long.toHexString((Long)value).toUpperCase();
     }
   },
   SHA1(Text.ROM_INFO_SHA1)
