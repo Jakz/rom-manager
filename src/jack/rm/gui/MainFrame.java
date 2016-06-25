@@ -74,6 +74,8 @@ public class MainFrame extends JFrame implements WindowListener
 	final private InfoPanel infoPanel = new InfoPanel();
 	final private OptionsFrame optionsFrame = new OptionsFrame(Main.manager);
 	
+	final private RomSetManagerView romSetManagerView = new RomSetManagerView();
+	
 	final private TextOutputFrame textFrame = new TextOutputFrame();
 	
 	final private ItemListener romSetListener = e -> {
@@ -226,6 +228,9 @@ public class MainFrame extends JFrame implements WindowListener
 
     
     toolsMenu.removeAll();
+    
+    MenuElement.TOOLS_ROM_SET_MANAGEMENT.item.addActionListener( e -> romSetManagerView.showMe());
+    toolsMenu.add(MenuElement.TOOLS_ROM_SET_MANAGEMENT.item);
 
     MenuElement.TOOLS_OPTIONS.item.addActionListener( e -> optionsFrame.showMe() );
     toolsMenu.add(MenuElement.TOOLS_OPTIONS.item);
