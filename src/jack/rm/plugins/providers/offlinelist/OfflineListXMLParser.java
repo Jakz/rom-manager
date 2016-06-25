@@ -127,6 +127,7 @@ public class OfflineListXMLParser extends XMLHandler
 		      data.setPath(Paths.get(format.format(asInt())+".png"));
 		      data.setURLData(asInt()+(asset==assets[0]?"a":"b")+".png");
 		    }
+		    rom.setAttribute(RomAttribute.IMAGE_NUMBER, asInt());
 		    break;
 		  }
 		  case "releaseNumber": rom.setAttribute(RomAttribute.NUMBER, asInt()); break;

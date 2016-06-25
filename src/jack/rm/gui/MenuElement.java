@@ -2,7 +2,9 @@ package jack.rm.gui;
 
 import jack.rm.i18n.Text;
 
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 
 import javax.swing.*;
 
@@ -45,6 +47,16 @@ public enum MenuElement {
     
     if (keyStroke != null)
       item.setAccelerator(keyStroke);
+  }
+  
+  public static void clearListeners()
+  {
+    for (MenuElement element : MenuElement.values())
+    {
+      ActionListener[] listeners = Arrays.copyOf(element.item.getActionListeners(), element.item.getActionListeners().length);
+      for (ActionListener listener : listeners)
+        element.item.removeActionListener(listener);
+    }
   }
   
   public JMenuItem item;

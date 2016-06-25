@@ -45,6 +45,12 @@ public class OfflineListProviderPlugin extends ProviderPlugin
     new Asset.Image(Paths.get("gameplay"), new Dimension(320,288))
   };
   
+  private final static Asset[] NES_ASSETS = 
+  {
+    new Asset.Image(Paths.get("title"), new Dimension(320,288)),
+    new Asset.Image(Paths.get("gameplay"), new Dimension(320,288))
+  };
+  
   private final static Attribute[] GBA_ATTRIBUTES = 
   {
     RomAttribute.TITLE,
@@ -75,12 +81,10 @@ public class OfflineListProviderPlugin extends ProviderPlugin
   private final static Attribute[] NES_ATTRIBUTES = 
   {
     RomAttribute.TITLE,
-    RomAttribute.NUMBER,
     RomAttribute.LOCATION,
     RomAttribute.LANGUAGE,
     RomAttribute.SIZE,
     RomAttribute.PUBLISHER,
-    RomAttribute.SAVE_TYPE,
     RomAttribute.CRC,
     RomAttribute.COMMENT,
   };
@@ -104,7 +108,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
     {
       try
       {
-        int number = rom.getAttribute(RomAttribute.NUMBER);
+        int number = rom.getAttribute(RomAttribute.IMAGE_NUMBER);
         
         int first = (((number-1)/500)*500) + 1;
         int last = (((number-1)/500+1)*500);
@@ -297,16 +301,23 @@ public class OfflineListProviderPlugin extends ProviderPlugin
     }
     else if (system == System.NES)
     {
-      RomSet romSet = new RomSet(
+      /*RomSet romSet = new RomSet(
         system,
         new NoIntroProvider(),
         new OfflineListDatFormat(),
         NES_ATTRIBUTES,
         new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20NES%20-%20Famicom/")),
         new XMLDatLoader(new OfflineListXMLParser(r -> null))
-      );
+      );*/
+      RomSet romSet = new RomSet(
+          system,
+          new OfflineListProvider(),
+          new OfflineListDatFormat(),
+          NES_ATTRIBUTES,
+          new AssetManager(NES_ASSETS, new URL("http://nesofflinelist.free.fr/imgs/")),
+          new XMLDatLoader(new OfflineListXMLParser(r -> null))
+        );
       return romSet;
-          
     }
     
     }

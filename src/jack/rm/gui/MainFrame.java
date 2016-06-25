@@ -188,7 +188,9 @@ public class MainFrame extends JFrame implements WindowListener
 
 	private void buildMenu(RomSet set)
 	{	
-		toolsMenu.removeAll();
+		MenuElement.clearListeners();
+	  
+	  toolsMenu.removeAll();
 	  
 		romsMenu.removeAll();
 	  romsMenu.add(MenuElement.ROMS_SCAN_FOR_ROMS.item);

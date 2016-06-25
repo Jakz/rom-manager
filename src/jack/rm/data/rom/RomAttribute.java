@@ -7,6 +7,7 @@ import jack.rm.i18n.Text;
 public enum RomAttribute implements Attribute
 {
   NUMBER(Integer.class, Text.ROM_INFO_NUMBER),
+  IMAGE_NUMBER(Integer.class, Text.ROM_INFO_IMAGE_NUMBER),
   TITLE(String.class, Text.ROM_INFO_TITLE),
   PUBLISHER(Text.ROM_INFO_PUBLISHER),
   GROUP(Text.ROM_INFO_GROUP),
