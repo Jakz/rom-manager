@@ -1,4 +1,4 @@
-package jack.rm.files;
+package com.pixbits.io;
 
 import java.io.IOException;
 import java.nio.file.*;

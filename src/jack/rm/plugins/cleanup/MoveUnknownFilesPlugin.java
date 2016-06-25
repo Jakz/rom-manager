@@ -7,12 +7,12 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.pixbits.io.FolderScanner;
 import com.pixbits.plugin.ExposedParameter;
 
 import jack.rm.Settings;
 import jack.rm.data.rom.RomStatus;
 import jack.rm.data.romset.RomList;
-import jack.rm.files.FolderScanner;
 import jack.rm.plugins.PluginWithIgnorePaths;
 
 public class MoveUnknownFilesPlugin extends CleanupPlugin implements PluginWithIgnorePaths

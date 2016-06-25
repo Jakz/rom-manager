@@ -14,6 +14,7 @@ import java.util.zip.*;
 import javax.swing.SwingWorker;
 
 import com.pixbits.gui.ProgressDialog;
+import com.pixbits.io.FolderScanner;
 
 public class Scanner
 {

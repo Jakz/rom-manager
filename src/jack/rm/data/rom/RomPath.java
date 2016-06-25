@@ -6,6 +6,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.*;
 import java.util.Collections;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 import java.util.zip.*;
 
 public abstract class RomPath
@@ -108,6 +110,25 @@ public abstract class RomPath
   
   public static class Archive extends RomPath
   {
+    public static class Handle
+    {
+      private final Archive archive;
+      private final Path internalPath;
+      
+      public Handle(Archive archive, Path internalPath)
+      {
+        this.archive = archive;
+        this.internalPath = internalPath;
+      }
+      
+      public void delete() throws IOException { Files.delete(internalPath); }
+      
+      public Path fileName() { return internalPath.getFileName(); }
+      
+      @Override public String toString() { return archive.file().toString()+":"+internalPath.toString(); }
+    }
+    
+    
     public final Path file;
     public final String internalName;
     
@@ -118,17 +139,12 @@ public abstract class RomPath
       this.internalName = internalName;
     }
     
-    @Override
-    public Path file() { return file; }
-    @Override
-    public String toString() { return file.getFileName().toString() + " ("+internalName+")"; }
-    @Override
-    public String plainName() { return file.getFileName().toString().substring(0, file.getFileName().toString().lastIndexOf('.')); }
-    @Override
-    public String plainInternalName() { return internalName.substring(0, internalName.toString().lastIndexOf('.')); }
+    @Override public Path file() { return file; }
+    @Override public String toString() { return file.getFileName().toString() + " ("+internalName+")"; }
+    @Override public String plainName() { return file.getFileName().toString().substring(0, file.getFileName().toString().lastIndexOf('.')); }
+    @Override public String plainInternalName() { return internalName.substring(0, internalName.toString().lastIndexOf('.')); }
     @Override public String getInternalExtension() { return internalName.substring(internalName.toString().lastIndexOf('.')+1); }
 
-    
     @Override public boolean isArchive() { return true; }
     
     @Override public String getExtension() { return type.ext; }
@@ -161,32 +177,39 @@ public abstract class RomPath
       }
     }
     
-    public boolean renameInternalFile(String newName)
+    private FileSystem openZipFS() throws URISyntaxException, IOException
     {
-      try
+      URI ouri = file.toUri();
+      URI uri = new URI("jar:file", ouri.getUserInfo(), ouri.getHost(), ouri.getPort(), ouri.getPath(), ouri.getQuery(), ouri.getFragment());
+      return FileSystems.newFileSystem(uri, Collections.<String, Object>emptyMap());
+    }
+    
+    public boolean renameInternalFile(String newName)
+    {       
+      try (FileSystem fs = openZipFS())
       {     
-        URI ouri = file.toUri();
-        URI uri = new URI("jar:file", ouri.getUserInfo(), ouri.getHost(), ouri.getPort(), ouri.getPath(), ouri.getQuery(), ouri.getFragment());
+        Path sourcePath = fs.getPath(internalName);
+        Path destPath = fs.getPath(newName); 
         
-        try (FileSystem zipfs = FileSystems.newFileSystem(uri, Collections.<String, Object>emptyMap()))
-        {
-          Path sourcePath = zipfs.getPath(internalName);
-          Path destPath = zipfs.getPath(newName); 
-          
-          Files.move(sourcePath, destPath);
-          return true;
-        }
-        catch (IOException e)
-        {
-          e.printStackTrace();
-          return false;
-        }
+        Files.move(sourcePath, destPath);
+        return true;
       }
-      catch (URISyntaxException e)
+      catch (URISyntaxException|IOException e)
       {
         e.printStackTrace();
         return false;
       }
+
+      /*
+      forEach(h -> {
+        try {
+        if (!h.fileName().toString().equals(newName))
+          Files.delete(h.internalPath);
+        }
+        catch (Exception ee) { ee.printStackTrace(); }
+      });
+      
+      */
     }
     
     @Override
@@ -229,6 +252,18 @@ public abstract class RomPath
       {
         is.close();
         file.close();
+      }
+    }
+    
+    public void forEach(Consumer<Handle> lambda)
+    {
+      try (FileSystem fs = openZipFS())
+      {    
+        Files.walk(fs.getRootDirectories().iterator().next()).filter(p -> !Files.isDirectory(p)).map(p -> new Handle(this, p)).forEach(lambda);
+      }
+      catch (URISyntaxException|IOException e)
+      {
+        e.printStackTrace();
       }
     }
   }

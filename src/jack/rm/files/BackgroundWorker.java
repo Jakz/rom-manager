@@ -79,11 +79,7 @@ public abstract class BackgroundWorker<E, T extends BackgroundOperation> extends
     {
       e.printStackTrace();
     }
-    
-    
-    //if (Main.pref.organizeRomsDeleteEmptyFolders)
-    //  deleteEmptyFolders();
   }
   
-  public abstract void execute(E rom);
+  public abstract void execute(E element);
 }
