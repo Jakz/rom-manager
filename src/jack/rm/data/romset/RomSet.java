@@ -99,7 +99,7 @@ public class RomSet
 	
 	public String ident()
 	{
-		return datFormat.getIdent()+"-"+system.tag+"-"+provider.getTag();
+		return datFormat.getIdent()+"-"+system.tag+"-"+provider.getTag()+provider.builtSuffix();
 	}
 	
 	public String datPath()

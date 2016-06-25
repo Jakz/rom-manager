@@ -289,16 +289,20 @@ public class Main
 		mainFrame = new MainFrame();
     clonesDialog = new ClonesDialog(mainFrame, "Rom Clones");
 
-		
-    loadRomSet(RomSetManager.bySystem(System.GBA));
-
+    String lastProvider = GlobalSettings.settings.getCurrentProvider();
+ 
+    if (lastProvider != null)
+    {
+      loadRomSet(RomSetManager.byIdent(lastProvider));
+      mainFrame.pluginStateChanged();
+      RomSet.current.pluginStateChanged();
+    }
+    
     //AssetPacker.packAssets(RomSet.current);
 
-    mainFrame.pluginStateChanged();
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setVisible(true);
 		
-		RomSet.current.pluginStateChanged();
 	  }
 	}
 

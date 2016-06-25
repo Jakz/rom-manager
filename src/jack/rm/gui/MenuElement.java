@@ -16,7 +16,6 @@ public enum MenuElement {
   
   ROMS_EXPORT_MISSING(Text.MENU_ROMS_EXPORT_MISSING, false),
   ROMS_EXPORT_FOUND(Text.MENU_ROMS_EXPORT_FOUND, false),
-  ROMS_EXIT(Text.MENU_ROMS_EXIT, false),
   ROMS_RENAME(Text.MENU_ROMS_RENAME, false),
   
   VIEW_SHOW_CORRECT(Text.MENU_VIEW_SHOW_CORRECT, true, KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0)),

@@ -21,7 +21,7 @@ public class ClrMamePlugin extends ProviderPlugin
   };
   
   @Override
-  public RomSet buildRomSet(List<DatParserPlugin> datParsers, System system)
+  public RomSet[] buildRomSets(List<DatParserPlugin> datParsers, System system)
   {
     DatParserPlugin datParser = this.findDatParser(datParsers, "clr-mame");
 
@@ -34,7 +34,7 @@ public class ClrMamePlugin extends ProviderPlugin
           new EmptyAssetManager(), 
           datParser.buildDatLoader("clr-mame")
       );
-      return romSet;
+      return new RomSet[] { romSet };
     }
 
     return null;

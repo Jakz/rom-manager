@@ -2,6 +2,7 @@ package jack.rm.gui;
 
 import jack.rm.*;
 import jack.rm.assets.AssetPacker;
+import jack.rm.data.console.System;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomSize;
 import jack.rm.data.rom.RomStatus;
@@ -90,7 +91,8 @@ public class MainFrame extends JFrame implements WindowListener
 	  {
 	    JLabel c = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 	    RomSet set = (RomSet)value;   
-	    c.setIcon(set.system.icon != null ? set.system.icon.getIcon() : null);
+	    if (set != null)
+	      c.setIcon(set.system.icon != null ? set.system.icon.getIcon() : null);
 	    return c;
 	  }
 	};
@@ -146,9 +148,18 @@ public class MainFrame extends JFrame implements WindowListener
 		
 		setJMenuBar(menu);
 		
-		for (RomSet rs : RomSetManager.sets())
-			cbRomSets.addItem(rs);
+		for (System system : System.values())
+		{
+		  String ident = GlobalSettings.settings.defaultProviderForSystem(system);
+		  if (ident != null)
+		  {
+		    RomSet set = RomSetManager.byIdent(ident);
+		    if (set != null)
+		      cbRomSets.addItem(set);
+		  }
+		}
 		
+
 		cbRomSets.addItemListener(romSetListener);
 		cbRomSets.setRenderer(cbRomSetRenderer);
 
@@ -176,6 +187,8 @@ public class MainFrame extends JFrame implements WindowListener
 		this.setPreferredSize(new Dimension(1440,900));
 		this.addWindowListener(this);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		buildMenu(null);
 			
 		pack();
 		setTitle("Rom Manager v0.6 - build 51");
@@ -191,40 +204,47 @@ public class MainFrame extends JFrame implements WindowListener
 	private void buildMenu(RomSet set)
 	{	
 		MenuElement.clearListeners();
-	  
-	  toolsMenu.removeAll();
-	  
-		romsMenu.removeAll();
-	  romsMenu.add(MenuElement.ROMS_SCAN_FOR_ROMS.item);
-    romsMenu.add(MenuElement.ROMS_SCAN_FOR_NEW_ROMS.item);
-    romsMenu.addSeparator();
-    romsMenu.add(MenuElement.ROMS_RENAME.item);
-    romsMenu.add(MenuElement.ROMS_CLEANUP.item);
-    romsMenu.addSeparator();
+	  	  
+    romsMenu.removeAll();
+		
+	  if (set != null)
+	  {
+	    romsMenu.add(MenuElement.ROMS_SCAN_FOR_ROMS.item);
+	    romsMenu.add(MenuElement.ROMS_SCAN_FOR_NEW_ROMS.item);
+	    romsMenu.addSeparator();
+	    romsMenu.add(MenuElement.ROMS_RENAME.item);
+	    romsMenu.add(MenuElement.ROMS_CLEANUP.item);
+	    romsMenu.addSeparator();
     
-    romsMenu.add(romsExportSubmenu);
+	    romsMenu.add(romsExportSubmenu);
     
-    JMenuItem exportFavorites = new JMenuItem("Export favourites");
-    exportFavorites.addActionListener( e -> { exportList(r -> r.isFavourite()); });
-    romsExportSubmenu.add(exportFavorites);
+      JMenuItem exportFavorites = new JMenuItem("Export favourites");
+      exportFavorites.addActionListener( e -> { exportList(r -> r.isFavourite()); });
+      romsExportSubmenu.add(exportFavorites);
+      
+      JMenuItem exportFound = new JMenuItem(Text.MENU_ROMS_EXPORT_FOUND.text());
+      exportFound.addActionListener( e -> { exportList(r -> r.status != RomStatus.MISSING); });
+      romsExportSubmenu.add(exportFound);
+      
+      JMenuItem exportMissing = new JMenuItem(Text.MENU_ROMS_EXPORT_MISSING.text());
+      exportMissing.addActionListener( e -> { exportList(r -> r.status == RomStatus.MISSING); });
+      romsExportSubmenu.add(exportMissing);
+  
+      romsMenu.addSeparator();
+	  }
     
-    JMenuItem exportFound = new JMenuItem(Text.MENU_ROMS_EXPORT_FOUND.text());
-    exportFound.addActionListener( e -> { exportList(r -> r.status != RomStatus.MISSING); });
-    romsExportSubmenu.add(exportFound);
+	  JMenuItem menuExit = new JMenuItem(Text.MENU_ROMS_EXIT.text());
+    romsMenu.add(menuExit);
+    menuExit.addActionListener(e -> java.lang.System.exit(0));
     
-    JMenuItem exportMissing = new JMenuItem(Text.MENU_ROMS_EXPORT_MISSING.text());
-    exportMissing.addActionListener( e -> { exportList(r -> r.status == RomStatus.MISSING); });
-    romsExportSubmenu.add(exportMissing);
-
-    romsMenu.addSeparator();
-    
-    romsMenu.add(MenuElement.ROMS_EXIT.item);
-    
-    JMenuItem[] filters = { MenuElement.VIEW_SHOW_CORRECT.item, MenuElement.VIEW_SHOW_UNORGANIZED.item, MenuElement.VIEW_SHOW_NOT_FOUND.item };
-    Arrays.stream(filters).forEach( mi -> {
-      viewMenu.add(mi);
-      mi.setSelected(true);
-    });
+    if (set != null)
+    {    
+      JMenuItem[] filters = { MenuElement.VIEW_SHOW_CORRECT.item, MenuElement.VIEW_SHOW_UNORGANIZED.item, MenuElement.VIEW_SHOW_NOT_FOUND.item };
+      Arrays.stream(filters).forEach( mi -> {
+        viewMenu.add(mi);
+        mi.setSelected(true);
+      });
+    }
 
     
     toolsMenu.removeAll();
@@ -232,57 +252,61 @@ public class MainFrame extends JFrame implements WindowListener
     MenuElement.TOOLS_ROM_SET_MANAGEMENT.item.addActionListener( e -> romSetManagerView.showMe());
     toolsMenu.add(MenuElement.TOOLS_ROM_SET_MANAGEMENT.item);
 
-    MenuElement.TOOLS_OPTIONS.item.addActionListener( e -> optionsFrame.showMe() );
-    toolsMenu.add(MenuElement.TOOLS_OPTIONS.item);
-    
-    MenuElement.TOOLS_SHOW_MESSAGES.item.addActionListener( e -> toggleLogPanel(((JMenuItem)e.getSource()).isSelected()));
-    toolsMenu.add(MenuElement.TOOLS_SHOW_MESSAGES.item);
-    
-    MenuElement.TOOLS_CONSOLE.item.addActionListener( e -> toggleConsole(((JMenuItem)e.getSource()).isSelected()));
-    toolsMenu.add(MenuElement.TOOLS_CONSOLE.item);
-    
-    JMenu assetsMenu = new JMenu(Text.MENU_TOOLS_ASSETS.text());
-    
-    assetsMenu.add(MenuElement.TOOLS_DOWNLOAD_ASSETS.item);
-    MenuElement.TOOLS_DOWNLOAD_ASSETS.item.addActionListener( e -> Main.downloader.start() );
-    assetsMenu.add(MenuElement.TOOLS_PACK_ASSETS.item);
-    MenuElement.TOOLS_PACK_ASSETS.item.addActionListener( e -> AssetPacker.packAssets(set) );
-    
-    toolsMenu.addSeparator();
-    toolsMenu.add(assetsMenu);
-    
-    JMenu pluginsMenu = new JMenu("Plugins"); // TODO: localize
-       
-    Map<String, List<OperationalPlugin>> plugins = new TreeMap<>();
-    
-    set.getSettings().plugins.stream()
-    .filter(p -> p.isEnabled() && p instanceof OperationalPlugin)
-    .map(p -> (OperationalPlugin)p)
-    .forEach(p -> {
-      String key = p.getSubmenuCaption();
-      plugins.computeIfAbsent(key, k -> new ArrayList<>()).add(p);
-    });
-    
-    plugins.values().forEach(l -> Collections.sort(l, new Comparator<OperationalPlugin>() {
-      @Override public int compare(OperationalPlugin o1, OperationalPlugin o2) {
-        return o1.getMenuCaption().compareTo(o2.getMenuCaption());
-      }
-    }));
-    
-    plugins.entrySet().forEach(e -> {
-      JMenu menu = new JMenu(e.getKey());
-      e.getValue().forEach(p -> {
-        JMenuItem item = new JMenuItem(p.getMenuCaption());
-        item.addActionListener(ee -> p.execute(set.list));
-        menu.add(item);
-      });
-      pluginsMenu.add(menu);
-    });
-    
-    if (pluginsMenu.getItemCount() != 0)
+    if (set != null)
     {
+      MenuElement.TOOLS_OPTIONS.item.addActionListener( e -> optionsFrame.showMe() );
+      toolsMenu.add(MenuElement.TOOLS_OPTIONS.item);
+      
+      MenuElement.TOOLS_SHOW_MESSAGES.item.addActionListener( e -> toggleLogPanel(((JMenuItem)e.getSource()).isSelected()));
+      toolsMenu.add(MenuElement.TOOLS_SHOW_MESSAGES.item);
+      
+      MenuElement.TOOLS_CONSOLE.item.addActionListener( e -> toggleConsole(((JMenuItem)e.getSource()).isSelected()));
+      toolsMenu.add(MenuElement.TOOLS_CONSOLE.item);
+      
+      JMenu assetsMenu = new JMenu(Text.MENU_TOOLS_ASSETS.text());
+      
+      assetsMenu.add(MenuElement.TOOLS_DOWNLOAD_ASSETS.item);
+      MenuElement.TOOLS_DOWNLOAD_ASSETS.item.addActionListener( e -> Main.downloader.start() );
+      assetsMenu.add(MenuElement.TOOLS_PACK_ASSETS.item);
+      MenuElement.TOOLS_PACK_ASSETS.item.addActionListener( e -> AssetPacker.packAssets(set) );
+      
       toolsMenu.addSeparator();
-      toolsMenu.add(pluginsMenu);
+      toolsMenu.add(assetsMenu);
+      
+      JMenu pluginsMenu = new JMenu("Plugins"); // TODO: localize
+         
+      Map<String, List<OperationalPlugin>> plugins = new TreeMap<>();
+      
+      set.getSettings().plugins.stream()
+      .filter(p -> p.isEnabled() && p instanceof OperationalPlugin)
+      .map(p -> (OperationalPlugin)p)
+      .forEach(p -> {
+        String key = p.getSubmenuCaption();
+        plugins.computeIfAbsent(key, k -> new ArrayList<>()).add(p);
+      });
+      
+      plugins.values().forEach(l -> Collections.sort(l, new Comparator<OperationalPlugin>() {
+        @Override public int compare(OperationalPlugin o1, OperationalPlugin o2) {
+          return o1.getMenuCaption().compareTo(o2.getMenuCaption());
+        }
+      }));
+      
+      plugins.entrySet().forEach(e -> {
+        JMenu menu = new JMenu(e.getKey());
+        e.getValue().forEach(p -> {
+          JMenuItem item = new JMenuItem(p.getMenuCaption());
+          item.addActionListener(ee -> p.execute(set.list));
+          menu.add(item);
+        });
+        pluginsMenu.add(menu);
+      });
+      
+      if (pluginsMenu.getItemCount() != 0)
+      {
+        toolsMenu.addSeparator();
+        toolsMenu.add(pluginsMenu);
+      }
+    
     }
 	}
 			
@@ -410,6 +434,9 @@ public class MainFrame extends JFrame implements WindowListener
 	@Override
   public void windowClosing(WindowEvent e)
 	{
-    set.saveStatus();
+    GlobalSettings.save();
+	  
+	  if (set != null)
+      set.saveStatus();
 	}
 }

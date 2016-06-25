@@ -36,32 +36,46 @@ public class RomSetManager
 	    
 	    for (System system : System.values())
 	    {
+	      List<RomSet> romsets = sets.computeIfAbsent(system, s -> new ArrayList<>());
+	      
 	      if (plugin.isSystemSupported(system))
-	        sets.put(system, plugin.buildRomSet(datParsers, system));
+	        romsets.addAll(Arrays.asList(plugin.buildRomSets(datParsers, system)));
 	    }
 	  }
 	}
   
-  private static Map<System, RomSet> sets = new HashMap<>();
+  private static Map<System, List<RomSet>> sets = new HashMap<>();
 
-	public static RomSet bySystem(System system)
+	public static List<RomSet> bySystem(System system)
 	{
-	   return sets.values().stream().filter( rs -> rs.system == system).findFirst().orElse(null);
+	  return sets.get(system); 
 	}
 	
 	public static RomSet byIdent(String ident)
 	{
-		return sets.values().stream().filter( rs -> rs.ident().equals(ident)).findFirst().orElse(null);
+		for (List<RomSet> sets : RomSetManager.sets.values())
+		{
+		  Optional<RomSet> rs = sets.stream().filter(set -> set.ident().equals(ident)).findFirst();
+		  
+		  if (rs.isPresent())
+		    return rs.get();
+		}
+		
+		return null;
 	}
 	
-	public static Collection<RomSet> sets()
+	public static Collection<RomSet> allSets()
 	{
-		return sets.values();
+		List<RomSet> allSets = new ArrayList<>();
+		
+		sets.values().forEach(allSets::addAll);
+	  
+	  return allSets;
 	}
 	
-	public static RomSet loadSet(System console)
+	public static RomSet loadSet(String ident)
 	{
-		return loadSet(sets.get(console));
+		return loadSet(byIdent(ident));
 	}
 	
 	public static RomSet loadSet(RomSet set)

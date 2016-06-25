@@ -249,7 +249,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
   }
   
   @Override
-  public RomSet buildRomSet(List<DatParserPlugin> datParsers, System system)
+  public RomSet[] buildRomSets(List<DatParserPlugin> datParsers, System system)
   {
     DatParserPlugin parser = this.findDatParser(datParsers, "offline-list");
         
@@ -258,26 +258,36 @@ public class OfflineListProviderPlugin extends ProviderPlugin
     
     if (system == System.GBA)
     {
-      Map<String, Object> args = new HashMap<>();
-      //args.put("save-parser", new GBASaveParserOL());
-      args.put("save-parser", new GBASaveParserAS());
-      DatLoader datParser = parser.buildDatLoader("offline-list", args);
-
-      /*RomSet romSet = new RomSet(
-          system, 
-          KnownProviders.OFFLINE_LIST,
-          GBA_ATTRIBUTES, 
-          new AssetManager(GBA_ASSETS, new URL("http://offlinelistgba.free.fr/imgs/")), 
-          datParser
-      );*/
-      RomSet romSet = new RomSet(
-          system, 
-          KnownProviders.ADVAN_SCENE, 
-          GBA_ATTRIBUTES, 
-          new AssetManager(GBA_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_GBA/")), 
-          datParser
-      );
-      return romSet;
+      RomSet[] gbaSets = new RomSet[2];
+      
+      {
+        Map<String, Object> args = new HashMap<>();
+        args.put("save-parser", new GBASaveParserOL());
+        DatLoader datParser = parser.buildDatLoader("offline-list", args);
+        
+        RomSet romSet = new RomSet(
+            system, 
+            KnownProviders.OFFLINE_LIST,
+            GBA_ATTRIBUTES, 
+            new AssetManager(GBA_ASSETS, new URL("http://offlinelistgba.free.fr/imgs/")), 
+            datParser
+        );
+      }
+      
+      {
+        Map<String, Object> args = new HashMap<>();
+        args.put("save-parser", new GBASaveParserAS());
+        DatLoader datParser = parser.buildDatLoader("offline-list", args);
+  
+        gbaSets[1] = new RomSet(
+            system, 
+            KnownProviders.ADVAN_SCENE, 
+            GBA_ATTRIBUTES, 
+            new AssetManager(GBA_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_GBA/")), 
+            datParser
+        );
+      }
+      return gbaSets;
     }
     else if (system == System.NDS)
     {
@@ -292,7 +302,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
           new AssetManager(NDS_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_NDS/")), 
           datParser
       );
-      return romSet;
+      return new RomSet[] { romSet };
     }
     else if (system == System.GBC)
     {
@@ -307,7 +317,8 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20Gameboy%20Color/")),
         datParser
       );
-      return romSet;
+      
+      return new RomSet[] { romSet };
     }
     else if (system == System.GB)
     {
@@ -322,29 +333,34 @@ public class OfflineListProviderPlugin extends ProviderPlugin
           new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20Gameboy/")),
           datParser
         );
-        return romSet;
+      
+      return new RomSet[] { romSet };
     }
     else if (system == System.NES)
     {
+      RomSet[] nesSets = new RomSet[2];
+      
       Map<String, Object> args = new HashMap<>();
       args.put("save-parser", (SaveParser)(r -> null));
       DatLoader datParser = parser.buildDatLoader("offline-list", args);
       
-      /*RomSet romSet = new RomSet(
+      nesSets[0] = new RomSet(
         system,
         KnownProviders.NO_INTRO,
         NES_ATTRIBUTES,
         new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20NES%20-%20Famicom/")),
         datParser
-      );*/
-      RomSet romSet = new RomSet(
-          system,
-          KnownProviders.OFFLINE_LIST,
-          NES_ATTRIBUTES,
-          new AssetManager(NES_ASSETS, new URL("http://nesofflinelist.free.fr/imgs/")),
-          datParser
-        );
-      return romSet;
+      );
+      
+      nesSets[1] = new RomSet(
+        system,
+        KnownProviders.OFFLINE_LIST,
+        NES_ATTRIBUTES,
+        new AssetManager(NES_ASSETS, new URL("http://nesofflinelist.free.fr/imgs/")),
+        datParser
+      );
+      
+      return nesSets;
     }
     
     }
