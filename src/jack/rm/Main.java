@@ -98,13 +98,19 @@ public class Main
     manager.register(jack.rm.plugins.cleanup.DeleteEmptyFoldersPlugin.class);
     manager.register(jack.rm.plugins.cleanup.MoveUnknownFilesPlugin.class);
     manager.register(jack.rm.plugins.cleanup.ArchiveMergerPlugin.class);
+    
     manager.register(jack.rm.plugins.renamer.BasicPatternSet.class);
     manager.register(jack.rm.plugins.renamer.NumberedRomPattern.class);
     manager.register(jack.rm.plugins.renamer.BasicRenamerPlugin.class);
     manager.register(jack.rm.plugins.renamer.PatternRenamerPlugin.class);
+    
     manager.register(jack.rm.plugins.downloader.EmuParadiseDownloader.class);
-    manager.register(jack.rm.plugins.providers.offlinelist.OfflineListProviderPlugin.class);
-    manager.register(jack.rm.plugins.providers.clrmame.ClrMamePlugin.class);
+    
+    manager.register(jack.rm.plugins.providers.OfflineListProviderPlugin.class);
+    manager.register(jack.rm.plugins.providers.ClrMamePlugin.class);
+    
+    manager.register(jack.rm.plugins.datparsers.ClrMameParserPlugin.class);
+    manager.register(jack.rm.plugins.datparsers.OfflineListParserPlugin.class);
 
 
 	}

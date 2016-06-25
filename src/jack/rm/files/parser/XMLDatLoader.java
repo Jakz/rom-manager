@@ -5,7 +5,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import jack.rm.data.romset.RomSet;
 
-public class XMLDatLoader implements DatLoader
+public abstract class XMLDatLoader implements DatLoader
 {
   XMLHandler handler;
   //String path;

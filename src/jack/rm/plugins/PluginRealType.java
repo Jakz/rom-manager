@@ -9,6 +9,7 @@ public enum PluginRealType implements PluginType<PluginRealType>
   PATTERN_SET("Renamer Pattern Set", false, false),
   RENAMER("Renamer", true, true),
   ROM_DOWNLOADER("ROM Downloader", false, false),
+  DAT_PARSER("DAT Parser", false, false),
   PROVIDER("DAT Provider", false, false),
   SEARCH("Search", true, false),
   SEARCH_PREDICATES("Search Predicates", false, false)

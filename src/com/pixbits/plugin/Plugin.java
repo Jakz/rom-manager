@@ -15,6 +15,7 @@ import com.pixbits.stream.StreamException;
 
 public abstract class Plugin implements JsonnableContext
 {
+  protected PluginManager manager;
   private final PluginID id;
   boolean enabled;
   
@@ -23,6 +24,8 @@ public abstract class Plugin implements JsonnableContext
     id = new PluginID(this);
     enabled = false;
   }
+  
+  public void setManager(PluginManager manager) { this.manager = manager; }
   
   public boolean isEnabled() { return enabled; }
   public void setEnabled(boolean enabled) { this.enabled = enabled; }

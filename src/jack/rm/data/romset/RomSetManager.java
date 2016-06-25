@@ -1,6 +1,7 @@
 package jack.rm.data.romset;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.pixbits.plugin.PluginManager;
 
@@ -11,7 +12,8 @@ import jack.rm.log.*;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
 import jack.rm.plugins.PluginRealType;
-import jack.rm.plugins.providers.ProviderPlugin;;
+import jack.rm.plugins.datparsers.DatParserPlugin;
+import jack.rm.plugins.providers.ProviderPlugin;
 
 
 public class RomSetManager
@@ -20,8 +22,14 @@ public class RomSetManager
   public static void buildRomsetList()
 	{
 	  PluginManager<ActualPlugin, ActualPluginBuilder> manager = Main.manager; 
-	  Set<ActualPluginBuilder> builders = manager.getBuildersByType(PluginRealType.PROVIDER);
 	  
+	  Set<ActualPluginBuilder> parsers = manager.getBuildersByType(PluginRealType.DAT_PARSER);
+	  List<DatParserPlugin> datParsers = parsers.stream()
+	                                            .map(b -> (DatParserPlugin)manager.build((Class<DatParserPlugin>)b.getID().getType())).collect(Collectors.toList());
+	  
+	  
+	  Set<ActualPluginBuilder> builders = manager.getBuildersByType(PluginRealType.PROVIDER);
+
 	  for (ActualPluginBuilder builder : builders)
 	  {
 	    ProviderPlugin plugin = (ProviderPlugin)manager.build((Class<ProviderPlugin>)builder.getID().getType());
@@ -29,7 +37,7 @@ public class RomSetManager
 	    for (System system : System.values())
 	    {
 	      if (plugin.isSystemSupported(system))
-	        sets.put(system, plugin.buildRomSet(system));
+	        sets.put(system, plugin.buildRomSet(datParsers, system));
 	    }
 	  }
 	}

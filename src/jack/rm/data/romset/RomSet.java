@@ -56,13 +56,13 @@ public class RomSet
 	
 	private final Attribute[] attributes;
 
-	public RomSet(System type, Provider provider, DatFormat datFormat, Attribute[] attributes, AssetManager assetManager, DatLoader loader)
+	public RomSet(System type, Provider provider, Attribute[] attributes, AssetManager assetManager, DatLoader loader)
 	{
 		this.searcher = new DummySearcher(this);
 	  this.list = new RomList(this);
 	  this.system = type;
 		this.provider = provider;
-		this.datFormat = datFormat;
+		this.datFormat = loader.getFormat();
 		this.attributes = attributes;
 		this.assetManager = assetManager;
 		this.loader = loader;

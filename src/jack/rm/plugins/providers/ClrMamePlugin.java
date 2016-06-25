@@ -1,10 +1,13 @@
-package jack.rm.plugins.providers.clrmame;
+package jack.rm.plugins.providers;
+
+import java.util.List;
 
 import jack.rm.assets.EmptyAssetManager;
 import jack.rm.data.console.System;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.Attribute;
 import jack.rm.data.romset.RomSet;
+import jack.rm.plugins.datparsers.DatParserPlugin;
 import jack.rm.plugins.providers.*;
 
 
@@ -18,17 +21,18 @@ public class ClrMamePlugin extends ProviderPlugin
   };
   
   @Override
-  public RomSet buildRomSet(System system)
+  public RomSet buildRomSet(List<DatParserPlugin> datParsers, System system)
   {
+    DatParserPlugin datParser = this.findDatParser(datParsers, "clr-mame");
+
     if (system == System.GG)
     {
       RomSet romSet = new RomSet(
           system, 
-          new NoIntroProvider(), 
-          new ClrMameDatFormat(),
+          KnownProviders.NO_INTRO, 
           GG_ATTRIBUTES, 
           new EmptyAssetManager(), 
-          new ClrMameParser()
+          datParser.buildDatLoader("clr-mame")
       );
       return romSet;
     }

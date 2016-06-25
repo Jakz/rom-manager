@@ -83,6 +83,7 @@ public class PluginManager<T extends Plugin, B extends PluginBuilder<T>>
           fatherClass = fatherClass.getSuperclass();
           
         T plugin = clazz.newInstance();
+        plugin.setManager(this);
         B builder = constructor.newInstance(plugin);
         
         plugins.add(builder);
@@ -102,6 +103,7 @@ public class PluginManager<T extends Plugin, B extends PluginBuilder<T>>
     try
     {   
       T plugin = clazz.newInstance();
+      plugin.setManager(this);
       return plugin;
     }
     catch (IllegalAccessException|InstantiationException e)

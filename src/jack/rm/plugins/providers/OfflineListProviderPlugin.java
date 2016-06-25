@@ -1,4 +1,4 @@
-package jack.rm.plugins.providers.offlinelist;
+package jack.rm.plugins.providers;
 
 import java.awt.Dimension;
 import java.net.MalformedURLException;
@@ -6,6 +6,9 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UnknownFormatConversionException;
 import jack.rm.assets.Asset;
 import jack.rm.data.console.GBA;
@@ -17,16 +20,18 @@ import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.RomSave;
 import jack.rm.data.rom.RomSize;
 import jack.rm.data.rom.Version;
+import jack.rm.data.romset.DatFormat;
 import jack.rm.data.romset.Provider;
 import jack.rm.data.romset.RomSet;
+import jack.rm.files.parser.DatLoader;
 import jack.rm.files.parser.SaveParser;
 import jack.rm.files.parser.XMLDatLoader;
+import jack.rm.files.parser.XMLHandler;
+import jack.rm.plugins.datparsers.DatParserPlugin;
 import jack.rm.plugins.providers.*;
 
 public class OfflineListProviderPlugin extends ProviderPlugin
-{
-  private final Provider PROVIDER = new OfflineListProvider();
-  
+{  
   private final static Asset[] GBA_ASSETS =  
   {
     new Asset.Image(Paths.get("title"), new Dimension(480,320)),
@@ -237,85 +242,107 @@ public class OfflineListProviderPlugin extends ProviderPlugin
     }
   }
   
-  @Override
-  public RomSet buildRomSet(System system)
+  class OfflineListXMLDatLoader extends XMLDatLoader
   {
+    protected OfflineListXMLDatLoader(XMLHandler handler) { super(handler); }
+    @Override public DatFormat getFormat() { return new DatFormat("ol", "xml"); }
+  }
+  
+  @Override
+  public RomSet buildRomSet(List<DatParserPlugin> datParsers, System system)
+  {
+    DatParserPlugin parser = this.findDatParser(datParsers, "offline-list");
+        
     try
     {
     
     if (system == System.GBA)
     {
-      RomSet romSet = new RomSet(
-          system, 
-          new OfflineListProvider(), 
-          new OfflineListDatFormat(),
-          GBA_ATTRIBUTES, 
-          new AssetManager(GBA_ASSETS, new URL("http://offlinelistgba.free.fr/imgs/")), 
-          new XMLDatLoader(new OfflineListXMLParser(new GBASaveParserOL()))
-      );
+      Map<String, Object> args = new HashMap<>();
+      //args.put("save-parser", new GBASaveParserOL());
+      args.put("save-parser", new GBASaveParserAS());
+      DatLoader datParser = parser.buildDatLoader("offline-list", args);
+
       /*RomSet romSet = new RomSet(
           system, 
-          new AdvanSceneProvider(), 
-          new OfflineListDatFormat(),
+          KnownProviders.OFFLINE_LIST,
+          GBA_ATTRIBUTES, 
+          new AssetManager(GBA_ASSETS, new URL("http://offlinelistgba.free.fr/imgs/")), 
+          datParser
+      );*/
+      RomSet romSet = new RomSet(
+          system, 
+          KnownProviders.ADVAN_SCENE, 
           GBA_ATTRIBUTES, 
           new AssetManager(GBA_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_GBA/")), 
-          new XMLDatLoader(new OfflineListXMLParser(new GBASaveParserAS()))
-      );*/
+          datParser
+      );
       return romSet;
     }
     else if (system == System.NDS)
     {
+      Map<String, Object> args = new HashMap<>();
+      args.put("save-parser", new NDSSaveParser());
+      DatLoader datParser = parser.buildDatLoader("offline-list", args);
+      
       RomSet romSet = new RomSet(
           system, 
-          new AdvanSceneProvider(), 
-          new OfflineListDatFormat(),
+          KnownProviders.ADVAN_SCENE, 
           GBA_ATTRIBUTES, 
           new AssetManager(NDS_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_NDS/")), 
-          new XMLDatLoader(new OfflineListXMLParser(new NDSSaveParser()))
+          datParser
       );
       return romSet;
     }
     else if (system == System.GBC)
     {
+      Map<String, Object> args = new HashMap<>();
+      args.put("save-parser", (SaveParser)(r -> null));
+      DatLoader datParser = parser.buildDatLoader("offline-list", args);
+      
       RomSet romSet = new RomSet(
         system,
-        new NoIntroProvider(),
-        new OfflineListDatFormat(),
+        KnownProviders.NO_INTRO,
         GB_ATTRIBUTES,
         new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20Gameboy%20Color/")),
-        new XMLDatLoader(new OfflineListXMLParser(r -> null))
+        datParser
       );
       return romSet;
     }
     else if (system == System.GB)
     {
+      Map<String, Object> args = new HashMap<>();
+      args.put("save-parser", (SaveParser)(r -> null));
+      DatLoader datParser = parser.buildDatLoader("offline-list", args);
+      
       RomSet romSet = new RomSet(
           system,
-          new NoIntroProvider(),
-          new OfflineListDatFormat(),
+          KnownProviders.NO_INTRO,
           GB_ATTRIBUTES,
           new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20Gameboy/")),
-          new XMLDatLoader(new OfflineListXMLParser(r -> null))
+          datParser
         );
         return romSet;
     }
     else if (system == System.NES)
     {
+      Map<String, Object> args = new HashMap<>();
+      args.put("save-parser", (SaveParser)(r -> null));
+      DatLoader datParser = parser.buildDatLoader("offline-list", args);
+      
       /*RomSet romSet = new RomSet(
         system,
-        new NoIntroProvider(),
-        new OfflineListDatFormat(),
+        KnownProviders.NO_INTRO,
         NES_ATTRIBUTES,
         new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20NES%20-%20Famicom/")),
-        new XMLDatLoader(new OfflineListXMLParser(r -> null))
+        datParser
       );*/
       RomSet romSet = new RomSet(
           system,
-          new OfflineListProvider(),
-          new OfflineListDatFormat(),
+          KnownProviders.OFFLINE_LIST,
           NES_ATTRIBUTES,
           new AssetManager(NES_ASSETS, new URL("http://nesofflinelist.free.fr/imgs/")),
-          new XMLDatLoader(new OfflineListXMLParser(r -> null))
+          datParser
         );
       return romSet;
     }
