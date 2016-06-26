@@ -38,6 +38,10 @@ public class Rom implements Comparable<Rom>
 	  return (T)customAttributes.getOrDefault(key, attributes.get(key));
 	}
 	
+	public boolean hasAttribute(Attribute key) {
+	  return customAttributes.containsKey(key) || attributes.containsKey(key);
+	}
+	
   public Stream<Map.Entry<Attribute, Object>> getCustomAttributes() { return customAttributes.entrySet().stream(); }
   public boolean hasCustomAttribute(Attribute attrib) { return customAttributes.containsKey(attrib); }
   public void clearCustomAttribute(Attribute attrib) { customAttributes.remove(attrib); }

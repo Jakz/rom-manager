@@ -36,14 +36,15 @@ public enum RomAttribute implements Attribute
       //return Long.toHexString((Long)value).toUpperCase();
     }
   },
-  SHA1(Text.ROM_INFO_SHA1)
+  
+  SHA1(byte[].class, Text.ROM_INFO_SHA1)
   {
     public String prettyValue(Object value) {
       byte[] digest = (byte[])value;
       return javax.xml.bind.DatatypeConverter.printHexBinary(digest);
     }
   },
-  MD5(Text.ROM_INFO_MD5)
+  MD5(byte[].class, Text.ROM_INFO_MD5)
   {
     public String prettyValue(Object value) {
       byte[] digest = (byte[])value;

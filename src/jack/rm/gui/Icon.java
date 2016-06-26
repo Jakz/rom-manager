@@ -23,6 +23,8 @@ public enum Icon
   FLAG_SWEDEN("flag_sweden"),
   FLAG_UNITED_KINGDOM("flag_united_kingdom"),
   FLAG_USA("flag_usa"),
+  FLAG_USA_EUROPE("flag_usa_europe"),
+  FLAG_WORLD("flag_usa"),
   STATUS_ALL("status_all"),
   STATUS_BADLY_NAMED("status_badly_named"),
   STATUS_CORRECT("status_correct"),

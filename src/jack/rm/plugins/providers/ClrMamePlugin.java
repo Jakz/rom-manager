@@ -16,14 +16,20 @@ public class ClrMamePlugin extends ProviderPlugin
   private final static Attribute[] GG_ATTRIBUTES = 
   {
     RomAttribute.TITLE,
+    RomAttribute.LOCATION,
+    RomAttribute.LANGUAGE,
     RomAttribute.CRC,
+    RomAttribute.MD5,
+    RomAttribute.SHA1,
+    RomAttribute.VERSION,
+    RomAttribute.COMMENT,
     RomAttribute.SIZE,
   };
   
   @Override
   public RomSet[] buildRomSets(List<DatParserPlugin> datParsers)
   {
-    DatParserPlugin datParser = this.findDatParser(datParsers, "clr-mame");
+    DatParserPlugin datParser = this.findDatParser(datParsers, "clr-mame-nointro");
     
     RomSet[] sets = new RomSet[1];
 
@@ -32,7 +38,7 @@ public class ClrMamePlugin extends ProviderPlugin
         KnownProviders.NO_INTRO, 
         GG_ATTRIBUTES, 
         new EmptyAssetManager(), 
-        datParser.buildDatLoader("clr-mame")
+        datParser.buildDatLoader("clr-mame-nointro")
     );
 
     return sets;

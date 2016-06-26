@@ -30,15 +30,6 @@ class MenuListener implements ActionListener
 			Main.scanner.scanForRoms(false);
 			Main.mainFrame.updateTable();
 		}
-		else if (tag == MenuElement.ROMS_CLEANUP)
-		{
-		  RomSet.current.cleanup();
-		}
-		else if (tag == MenuElement.ROMS_RENAME)
-		{
-		  list.organize();
-			Main.mainFrame.updateTable();
-		}
 		else if (tag == MenuElement.VIEW_SHOW_CORRECT)
 		{
 			Main.mainFrame.romListModel.isCorrect = !Main.mainFrame.romListModel.isCorrect;

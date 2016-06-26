@@ -40,7 +40,10 @@ public class BasicPatternSet extends PatternSetPlugin
     
     @Override public String apply(String name, Rom rom)
     { 
-      return name.replace(code, attribute.prettyValue(rom.getAttribute(attribute)));
+      if (rom.hasAttribute(attribute))
+        return name.replace(code, attribute.prettyValue(rom.getAttribute(attribute)));
+      else
+        return name;
     }
   }
   

@@ -11,12 +11,9 @@ import javax.swing.*;
 public enum MenuElement {
   ROMS_SCAN_FOR_ROMS(Text.MENU_ROMS_SCAN_FOR_ROMS, false),
   ROMS_SCAN_FOR_NEW_ROMS(Text.MENU_ROMS_SCAN_FOR_NEW_ROMS, false),
-  
-  ROMS_CLEANUP(Text.MENU_ROMS_CLEANUP, false),
-  
+    
   ROMS_EXPORT_MISSING(Text.MENU_ROMS_EXPORT_MISSING, false),
   ROMS_EXPORT_FOUND(Text.MENU_ROMS_EXPORT_FOUND, false),
-  ROMS_RENAME(Text.MENU_ROMS_RENAME, false),
   
   VIEW_SHOW_CORRECT(Text.MENU_VIEW_SHOW_CORRECT, true, KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0)),
   VIEW_SHOW_UNORGANIZED(Text.MENU_VIEW_SHOW_UNORGANIZED, true, KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0)),

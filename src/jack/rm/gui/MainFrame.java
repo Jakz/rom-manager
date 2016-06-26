@@ -225,8 +225,18 @@ public class MainFrame extends JFrame implements WindowListener
 	    romsMenu.add(MenuElement.ROMS_SCAN_FOR_ROMS.item);
 	    romsMenu.add(MenuElement.ROMS_SCAN_FOR_NEW_ROMS.item);
 	    romsMenu.addSeparator();
-	    romsMenu.add(MenuElement.ROMS_RENAME.item);
-	    romsMenu.add(MenuElement.ROMS_CLEANUP.item);
+	    
+	    JMenuItem renameRoms = new JMenuItem(Text.MENU_ROMS_RENAME.text());
+	    renameRoms.addActionListener(e -> {
+	      set.list.organize();
+	      Main.mainFrame.updateTable();
+	    });
+	    romsMenu.add(renameRoms);
+	    
+	    JMenuItem cleanupRoms = new JMenuItem(Text.MENU_ROMS_CLEANUP.text());
+	    cleanupRoms.addActionListener(e -> set.cleanup());
+	    romsMenu.add(cleanupRoms);
+	    
 	    romsMenu.addSeparator();
     
 	    romsMenu.add(romsExportSubmenu);
