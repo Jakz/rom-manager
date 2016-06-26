@@ -265,7 +265,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         args.put("save-parser", new GBASaveParserOL());
         DatLoader datParser = parser.buildDatLoader("offline-list", args);
         
-        RomSet romSet = new RomSet(
+        gbaSets[0] = new RomSet(
             system, 
             KnownProviders.OFFLINE_LIST,
             GBA_ATTRIBUTES, 

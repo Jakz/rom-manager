@@ -1,5 +1,11 @@
 package jack.rm.data.console;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.swing.ImageIcon;
+
 import jack.rm.gui.Icon;
 
 public enum System
@@ -19,9 +25,9 @@ public enum System
 	public final String name;
 	public final boolean acceptsArchives;
 	public final String[] exts;
-	public final Icon icon;
+	private final Icon icon;
 	
-	System(String tag, String name, String[] exts, Icon icon, boolean acceptsArchives)
+	private System(String tag, String name, String[] exts, Icon icon, boolean acceptsArchives)
 	{
 		this.tag = tag;
 		this.name = name;
@@ -30,8 +36,18 @@ public enum System
 		this.icon = icon;
 	}
 	
-	System(String tag, String name, String[] exts, boolean acceptsArchives)
+	private System(String tag, String name, String[] exts, boolean acceptsArchives)
 	{
 	  this(tag, name, exts, null, acceptsArchives);
+	}
+	
+	public ImageIcon getIcon()
+	{
+	  return icon != null ? icon.getIcon() : null;
+	}
+	
+	public static List<System> sortedValues()
+	{
+	  return Arrays.asList(values()).stream().sorted((s1, s2) -> s1.name.compareTo(s2.name)).collect(Collectors.toList());
 	}
 }

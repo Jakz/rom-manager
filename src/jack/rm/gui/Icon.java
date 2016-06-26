@@ -53,7 +53,7 @@ public enum Icon
     this.name = name;
   }
   
-  ImageIcon getIcon()
+  public ImageIcon getIcon()
   {
     if (icon == null)
       icon = new ImageIcon(this.getClass().getClassLoader().getResource("jack/rm/gui/resources/"+name+".png"));

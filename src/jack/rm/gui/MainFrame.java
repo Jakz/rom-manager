@@ -92,7 +92,7 @@ public class MainFrame extends JFrame implements WindowListener
 	    JLabel c = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 	    RomSet set = (RomSet)value;   
 	    if (set != null)
-	      c.setIcon(set.system.icon != null ? set.system.icon.getIcon() : null);
+	      c.setIcon(set.system.getIcon());
 	    return c;
 	  }
 	};
@@ -147,18 +147,8 @@ public class MainFrame extends JFrame implements WindowListener
 		//menu.add(helpMenu);
 		
 		setJMenuBar(menu);
-		
-		for (System system : System.values())
-		{
-		  String ident = GlobalSettings.settings.defaultProviderForSystem(system);
-		  if (ident != null)
-		  {
-		    RomSet set = RomSetManager.byIdent(ident);
-		    if (set != null)
-		      cbRomSets.addItem(set);
-		  }
-		}
-		
+
+		rebuildEnabledDats();
 
 		cbRomSets.addItemListener(romSetListener);
 		cbRomSets.setRenderer(cbRomSetRenderer);
@@ -192,6 +182,29 @@ public class MainFrame extends JFrame implements WindowListener
 			
 		pack();
 		setTitle("Rom Manager v0.6 - build 51");
+	}
+	
+	public void rebuildEnabledDats()
+	{
+	  RomSet current = cbRomSets.getSelectedIndex() != -1 ? cbRomSets.getItemAt(cbRomSets.getSelectedIndex()) : null;
+	  cbRomSets.setSelectedIndex(-1);
+	  
+	  cbRomSets.removeAllItems();
+	  
+	  List<System> systems = System.sortedValues();
+	  List<RomSet> sets = GlobalSettings.settings.getEnabledProviders().stream().map(RomSetManager::byIdent).collect(Collectors.toList());
+	  
+	  systems.forEach(s -> {
+	    sets.stream().filter(rs -> rs.system.equals(s)).forEach(cbRomSets::addItem);
+	  });
+	  
+	  if (current != null && sets.contains(current))
+	    cbRomSets.setSelectedItem(current);
+	  else if (cbRomSets.getItemCount() == 0)
+	  {
+	    romListModel.clear();
+	    list.clearSelection();
+	  }
 	}
 	
 	private void exportList(Predicate<Rom> predicate)
