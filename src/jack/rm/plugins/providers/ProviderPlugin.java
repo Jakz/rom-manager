@@ -15,8 +15,8 @@ import jack.rm.plugins.datparsers.DatParserPlugin;
 
 public abstract class ProviderPlugin extends ActualPlugin
 {
-  public abstract RomSet[] buildRomSets(List<DatParserPlugin> datParsers, System system);
-  public abstract boolean isSystemSupported(System system);
+  public abstract RomSet[] buildRomSets(List<DatParserPlugin> datParsers);
+  //public abstract boolean isSystemSupported(System system);
   
   protected DatParserPlugin findDatParser(List<DatParserPlugin> plugins, String type)
   {

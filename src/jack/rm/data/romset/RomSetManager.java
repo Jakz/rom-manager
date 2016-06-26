@@ -27,21 +27,23 @@ public class RomSetManager
 	  List<DatParserPlugin> datParsers = parsers.stream()
 	                                            .map(b -> (DatParserPlugin)manager.build((Class<DatParserPlugin>)b.getID().getType())).collect(Collectors.toList());
 	  
-	  
 	  Set<ActualPluginBuilder> builders = manager.getBuildersByType(PluginRealType.PROVIDER);
 
 	  for (ActualPluginBuilder builder : builders)
 	  {
 	    ProviderPlugin plugin = (ProviderPlugin)manager.build((Class<ProviderPlugin>)builder.getID().getType());
 	    
-	    for (System system : System.values())
+	    RomSet[] rsets = plugin.buildRomSets(datParsers);
+	    
+	    for (RomSet set : rsets)
 	    {
-	      List<RomSet> romsets = sets.computeIfAbsent(system, s -> new ArrayList<>());
-	      
-	      if (plugin.isSystemSupported(system))
-	        romsets.addAll(Arrays.asList(plugin.buildRomSets(datParsers, system)));
+	      List<RomSet> setsForSystem = sets.computeIfAbsent(set.system, s -> new ArrayList<>());
+	      setsForSystem.add(set);
 	    }
 	  }
+	  
+	  for (System system : System.values())
+	    sets.computeIfAbsent(system, s -> new ArrayList<>());
 	}
   
   private static Map<System, List<RomSet>> sets = new HashMap<>();

@@ -1,6 +1,9 @@
 package jack.rm.plugins.datparsers;
 
 import java.io.FileInputStream;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 
 import com.pixbits.parser.SimpleParser;
@@ -39,13 +42,10 @@ public class ClrMameParserPlugin extends DatParserPlugin
       load(set.datPath());
     }
     
-    
-    
-    public void load(String datFile)
+    public void load(Path datFile)
     {
-      try
+      try (InputStream fis = Files.newInputStream(datFile))
       {
-        FileInputStream fis = new FileInputStream(datFile);
 
         //StringReader sr = new StringReader(input);  new ByteArrayInputStream(input.getBytes("UTF-8"))
         SimpleParser parser = new SimpleParser(fis);

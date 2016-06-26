@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,6 +15,7 @@ import jack.rm.Main;
 import jack.rm.data.console.System;
 import jack.rm.data.romset.RomSet;
 import jack.rm.data.romset.RomSetManager;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
@@ -163,10 +166,21 @@ public class RomSetManagerView extends JFrame
     private final JTable datTable;
     private final DatTableModel datModel;
     
+    private final SingleProviderInfo info;
+    
     SystemRomSetInfo()
     {
+      info = new SingleProviderInfo();
+
       datModel = new DatTableModel();
       datTable = new JTable(datModel);
+      datTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+      
+      datTable.getSelectionModel().addListSelectionListener(e -> {
+        if (!e.getValueIsAdjusting())
+          info.updateFields(datModel.data.get(e.getFirstIndex()));
+      });
+      
       JScrollPane datScrollPane = new JScrollPane(datTable);
       
       TableCellRenderer renderer = datTable.getDefaultRenderer(Boolean.class);
@@ -177,10 +191,11 @@ public class RomSetManagerView extends JFrame
       
       countLabel = new JLabel();
       countLabel.setHorizontalAlignment(SwingConstants.LEFT);
-      
+           
       setLayout(new BorderLayout());
       add(countLabel, BorderLayout.NORTH);
       add(datScrollPane, BorderLayout.CENTER);
+      add(info, BorderLayout.SOUTH);
     }
     
     public void updateFields(System system)
@@ -194,8 +209,58 @@ public class RomSetManagerView extends JFrame
         countLabel.setText(count+" available DATs for "+system.name);
       else
         countLabel.setText("No available DATs for "+system.name);
-      
+            
+      datTable.clearSelection();
       datModel.setData(sets);
+      info.updateFields(null);
     }
   }
+  
+  class SingleProviderInfo extends JPanel
+  {
+    private final JLabel name;
+    private final JLabel status;
+    private final MigLayout layout;
+    
+    private RomSet set;
+    
+    SingleProviderInfo()
+    {
+      name = new JLabel();
+      status = new JLabel();
+      
+      layout = new MigLayout();
+      this.setLayout(new MigLayout("wrap 2, fill"));
+      this.add(name, "spanx 2");
+      this.add(status, "spanx 2");
+    }
+    
+    public void updateFields(RomSet set)
+    {
+      this.set = set;
+      
+      if (set != null)
+      {
+        name.setText(set.provider.prettyName());
+        
+        try
+        {
+          if (Files.exists(set.datPath()))
+            status.setText("Downloaded: YES ("+Files.getLastModifiedTime(set.datPath())+")");
+          else
+            status.setText("Downloaded: NO");
+        }
+        catch (IOException e)
+        {
+          e.printStackTrace();
+        }
+      }
+      else
+      {
+        name.setText("");
+        status.setText("");
+      }
+      
+    }
+  };
 }

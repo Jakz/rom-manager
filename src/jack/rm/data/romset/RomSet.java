@@ -103,9 +103,9 @@ public class RomSet
 		return datFormat.getIdent()+"-"+system.tag+"-"+provider.getTag()+provider.builtSuffix();
 	}
 	
-	public String datPath()
+	public Path datPath()
 	{
-		return "dat/"+ident()+"."+datFormat.getExtension();
+		return Paths.get("dat/"+ident()+"."+datFormat.getExtension());
 	}
 	
 	public Path getAttachmentPath()
@@ -202,7 +202,7 @@ public class RomSet
   	  
   	  if (!Files.exists(settingsPath))
   	  {
-  	    settings = new Settings(Main.manager, Arrays.asList(this.getSupportedAttributes()));
+  	    settings = new Settings(Main.manager, Arrays.asList(getSupportedAttributes()));
   	    return false;
   	  }
   	  else

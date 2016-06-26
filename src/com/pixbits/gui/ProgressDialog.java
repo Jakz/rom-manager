@@ -2,6 +2,7 @@ package com.pixbits.gui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ConcurrentModificationException;
 
 public class ProgressDialog extends JDialog
 {
@@ -38,6 +39,7 @@ public class ProgressDialog extends JDialog
 		  cancelButton.addActionListener( e -> { callback.run(); finished(); });
 		}
 		
+		panel.setPreferredSize(new Dimension(400,80));
 		panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
 		this.add(panel);
@@ -55,6 +57,9 @@ public class ProgressDialog extends JDialog
 	
 	public static void init(Frame parent, String title, Runnable callback)
 	{
+	  if (dialog != null)
+	    throw new ConcurrentModificationException("Progress dialog reinit while it was already displayed");
+	  
 	  dialog = new ProgressDialog(parent, title, callback);
 	  dialog.progress.setMaximum(100);
 	  dialog.progress.setValue(0);

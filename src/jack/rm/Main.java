@@ -4,10 +4,15 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import java.awt.Desktop;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.function.Consumer;
 import jack.rm.assets.Downloader;
 import jack.rm.data.console.System;
 import jack.rm.data.romset.*;
+import jack.rm.files.BackgroundOperation;
+import jack.rm.files.DownloadWorker;
 import jack.rm.files.Scanner;
 import jack.rm.gui.*;
 import jack.rm.plugins.ActualPlugin;
@@ -301,11 +306,27 @@ public class Main
       RomSet.current.pluginStateChanged();
     }
     
-    //AssetPacker.packAssets(RomSet.current);
-
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setVisible(true);
 		
+  	/*	try
+  		{
+  		  URL test = new URL("http://www.advanscene.com/offline/datas/ADVANsCEne_GBA.zip");
+  		  
+  		  //URL test = new URL("http://ubunturel.mirror.garr.it/mirrors/ubuntu-releases/16.04/ubuntu-16.04-desktop-amd64.iso");
+  		  Path savePath = Paths.get("/Users/jack/Desktop/gba.zip");
+  		
+    		DownloadWorker<?> worker = new DownloadWorker<BackgroundOperation>(test, savePath, new BackgroundOperation() {
+    		  public String getTitle() { return "Downloading"; }
+    		  public String getProgressText() { return "Progress.."; }
+    		}, r -> {}, mainFrame);
+    		
+    		worker.execute();
+  	  }
+  		catch (Exception e)
+  		{
+  		  e.printStackTrace();
+  		}*/
 	  }
 	}
 

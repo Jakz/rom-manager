@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -249,29 +250,26 @@ public class OfflineListProviderPlugin extends ProviderPlugin
   }
   
   @Override
-  public RomSet[] buildRomSets(List<DatParserPlugin> datParsers, System system)
+  public RomSet[] buildRomSets(List<DatParserPlugin> datParsers)
   {
     DatParserPlugin parser = this.findDatParser(datParsers, "offline-list");
+    
+    List<RomSet> sets = new ArrayList<>();
         
     try
     {
-    
-    if (system == System.GBA)
-    {
-      RomSet[] gbaSets = new RomSet[2];
-      
       {
         Map<String, Object> args = new HashMap<>();
         args.put("save-parser", new GBASaveParserOL());
         DatLoader datParser = parser.buildDatLoader("offline-list", args);
         
-        gbaSets[0] = new RomSet(
-            system, 
+        sets.add(new RomSet(
+            System.GBA, 
             KnownProviders.OFFLINE_LIST,
             GBA_ATTRIBUTES, 
             new AssetManager(GBA_ASSETS, new URL("http://offlinelistgba.free.fr/imgs/")), 
             datParser
-        );
+        ));
       }
       
       {
@@ -279,96 +277,87 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         args.put("save-parser", new GBASaveParserAS());
         DatLoader datParser = parser.buildDatLoader("offline-list", args);
   
-        gbaSets[1] = new RomSet(
-            system, 
+        sets.add(new RomSet(
+            System.GBA, 
             KnownProviders.ADVAN_SCENE, 
             GBA_ATTRIBUTES, 
             new AssetManager(GBA_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_GBA/")), 
             datParser
-        );
+        ));
       }
-      return gbaSets;
-    }
-    else if (system == System.NDS)
-    {
-      Map<String, Object> args = new HashMap<>();
-      args.put("save-parser", new NDSSaveParser());
-      DatLoader datParser = parser.buildDatLoader("offline-list", args);
       
-      RomSet romSet = new RomSet(
-          system, 
-          KnownProviders.ADVAN_SCENE, 
-          GBA_ATTRIBUTES, 
-          new AssetManager(NDS_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_NDS/")), 
-          datParser
-      );
-      return new RomSet[] { romSet };
-    }
-    else if (system == System.GBC)
-    {
-      Map<String, Object> args = new HashMap<>();
-      args.put("save-parser", (SaveParser)(r -> null));
-      DatLoader datParser = parser.buildDatLoader("offline-list", args);
+      {
+        Map<String, Object> args = new HashMap<>();
+        args.put("save-parser", new NDSSaveParser());
+        DatLoader datParser = parser.buildDatLoader("offline-list", args);
+        
+        sets.add(new RomSet(
+            System.NDS, 
+            KnownProviders.ADVAN_SCENE, 
+            GBA_ATTRIBUTES, 
+            new AssetManager(NDS_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_NDS/")), 
+            datParser
+        ));
+      }
       
-      RomSet romSet = new RomSet(
-        system,
-        KnownProviders.NO_INTRO,
-        GB_ATTRIBUTES,
-        new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20Gameboy%20Color/")),
-        datParser
-      );
-      
-      return new RomSet[] { romSet };
-    }
-    else if (system == System.GB)
-    {
-      Map<String, Object> args = new HashMap<>();
-      args.put("save-parser", (SaveParser)(r -> null));
-      DatLoader datParser = parser.buildDatLoader("offline-list", args);
-      
-      RomSet romSet = new RomSet(
-          system,
+      {
+        Map<String, Object> args = new HashMap<>();
+        args.put("save-parser", (SaveParser)(r -> null));
+        DatLoader datParser = parser.buildDatLoader("offline-list", args);
+        
+        sets.add(new RomSet(
+          System.GBC,
           KnownProviders.NO_INTRO,
           GB_ATTRIBUTES,
-          new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20Gameboy/")),
+          new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20Gameboy%20Color/")),
           datParser
-        );
+        ));
+      }
       
-      return new RomSet[] { romSet };
-    }
-    else if (system == System.NES)
-    {
-      RomSet[] nesSets = new RomSet[2];
+      {
+        Map<String, Object> args = new HashMap<>();
+        args.put("save-parser", (SaveParser)(r -> null));
+        DatLoader datParser = parser.buildDatLoader("offline-list", args);
+        
+        sets.add(new RomSet(
+            System.GB,
+            KnownProviders.NO_INTRO,
+            GB_ATTRIBUTES,
+            new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20Gameboy/")),
+            datParser
+          ));
+      }
       
-      Map<String, Object> args = new HashMap<>();
-      args.put("save-parser", (SaveParser)(r -> null));
-      DatLoader datParser = parser.buildDatLoader("offline-list", args);
+      {
+        Map<String, Object> args = new HashMap<>();
+        args.put("save-parser", (SaveParser)(r -> null));
+        DatLoader datParser = parser.buildDatLoader("offline-list", args);
+        
+        sets.add(new RomSet(
+          System.NES,
+          KnownProviders.NO_INTRO,
+          NES_ATTRIBUTES,
+          new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20NES%20-%20Famicom/")),
+          datParser
+        ));
+        
+        sets.add(new RomSet(
+          System.NES,
+          KnownProviders.OFFLINE_LIST,
+          NES_ATTRIBUTES,
+          new AssetManager(NES_ASSETS, new URL("http://nesofflinelist.free.fr/imgs/")),
+          datParser
+        ));
+      }
       
-      nesSets[0] = new RomSet(
-        system,
-        KnownProviders.NO_INTRO,
-        NES_ATTRIBUTES,
-        new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20NES%20-%20Famicom/")),
-        datParser
-      );
+      return sets.toArray(new RomSet[sets.size()]);
       
-      nesSets[1] = new RomSet(
-        system,
-        KnownProviders.OFFLINE_LIST,
-        NES_ATTRIBUTES,
-        new AssetManager(NES_ASSETS, new URL("http://nesofflinelist.free.fr/imgs/")),
-        datParser
-      );
-      
-      return nesSets;
-    }
-    
     }
     catch (MalformedURLException e)
     {
       e.printStackTrace();
     }
-    
+
     // 3DS 268,240 http://www.advanscene.com/offline/imgs/ADVANsCEne_3DS/
     // GB 320,288 http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20Gameboy/
     // GBC 320,288 http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20Gameboy%20Color/
@@ -378,10 +367,4 @@ public class OfflineListProviderPlugin extends ProviderPlugin
     
     return null;
   }
-
-  @Override public boolean isSystemSupported(System system)
-  {
-    return system == System.GBA || system == System.NDS || system == System.GB || system == System.GBC || system == System.NES;
-  }
-
 }

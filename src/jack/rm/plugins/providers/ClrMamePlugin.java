@@ -21,28 +21,20 @@ public class ClrMamePlugin extends ProviderPlugin
   };
   
   @Override
-  public RomSet[] buildRomSets(List<DatParserPlugin> datParsers, System system)
+  public RomSet[] buildRomSets(List<DatParserPlugin> datParsers)
   {
     DatParserPlugin datParser = this.findDatParser(datParsers, "clr-mame");
+    
+    RomSet[] sets = new RomSet[1];
 
-    if (system == System.GG)
-    {
-      RomSet romSet = new RomSet(
-          system, 
-          KnownProviders.NO_INTRO, 
-          GG_ATTRIBUTES, 
-          new EmptyAssetManager(), 
-          datParser.buildDatLoader("clr-mame")
-      );
-      return new RomSet[] { romSet };
-    }
+    sets[0] = new RomSet(
+        System.GG, 
+        KnownProviders.NO_INTRO, 
+        GG_ATTRIBUTES, 
+        new EmptyAssetManager(), 
+        datParser.buildDatLoader("clr-mame")
+    );
 
-    return null;
+    return sets;
   }
-
-  @Override public boolean isSystemSupported(System system)
-  {
-    return system == System.GG;
-  }
-
 }

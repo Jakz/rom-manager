@@ -23,7 +23,7 @@ public abstract class XMLDatLoader implements DatLoader
       handler.setRomSet(set);
       XMLReader reader = XMLReaderFactory.createXMLReader();
       reader.setContentHandler(handler);
-      reader.parse(set.datPath());
+      reader.parse(set.datPath().toString());
     }
     catch (Exception e)
     {
