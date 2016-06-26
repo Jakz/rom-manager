@@ -276,9 +276,12 @@ public class Main
 	  
 	  if (true)
 	  {
+	  
+	    
 	  setOS();
 	  setLNF();
 	  
+	  GlobalSettings.load();
 	  loadPlugins();
 	  
 	  RomSetManager.buildRomsetList();

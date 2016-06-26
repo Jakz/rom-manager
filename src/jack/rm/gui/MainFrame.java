@@ -371,6 +371,9 @@ public class MainFrame extends JFrame implements WindowListener
 	{
 	  this.set = set;
 	  
+	  if (set != null)
+	    GlobalSettings.settings.markCurrentProvider(set.ident());
+	  
 	  buildMenu(set);
 	  
 	  searchPanel.activate(false);

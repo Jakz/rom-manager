@@ -1,5 +1,6 @@
 package jack.rm.data.romset;
 
+import jack.rm.GlobalSettings;
 import jack.rm.Main;
 import jack.rm.Settings;
 import jack.rm.assets.Asset;
@@ -152,7 +153,7 @@ public class RomSet
 	{
 	  try
 	  {
-  	  Path basePath = Paths.get("data/", ident());
+  	  Path basePath = GlobalSettings.DATA_PATH.resolve(ident());
   	  
   	  Files.createDirectories(basePath);
   	  
