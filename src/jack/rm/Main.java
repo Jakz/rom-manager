@@ -17,6 +17,12 @@ import jack.rm.files.Scanner;
 import jack.rm.gui.*;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
+import net.sf.sevenzipjbinding.ArchiveFormat;
+import net.sf.sevenzipjbinding.IOutArchive;
+import net.sf.sevenzipjbinding.IOutCreateArchive;
+import net.sf.sevenzipjbinding.IOutCreateArchive7z;
+import net.sf.sevenzipjbinding.SevenZip;
+
 import com.pixbits.plugin.PluginManager;
 import com.pixbits.workflow.*;
 

@@ -73,10 +73,15 @@ public class AssetPacker
     {
       try
       {
-        Path assetPath = rom.getAssetData(asset).getFinalPath();
+        AssetData data = rom.getAssetData(asset);
         
-        file.addFile(assetPath.toFile(), params);
-        Files.delete(assetPath);
+        if (data.isPresentAsFile())
+        {
+          Path assetPath = data.getFinalPath();
+        
+          file.addFile(assetPath.toFile(), params);
+          Files.delete(assetPath);
+        }
       }
       catch (ZipException|IOException e)
       {

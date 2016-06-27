@@ -56,6 +56,12 @@ public enum MenuElement {
     }
   }
   
+  public static void addListeners()
+  {
+    for (MenuElement element : MenuElement.values())
+      element.item.addActionListener(MenuListener.listener);
+  }
+  
   public JMenuItem item;
   
   public static MenuElement elementForItem(JMenuItem item)

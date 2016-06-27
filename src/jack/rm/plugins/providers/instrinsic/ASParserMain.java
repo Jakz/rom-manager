@@ -68,16 +68,20 @@ public class ASParserMain
     
     String assetTitle;
     String assetGame;
+    
+    RomEntry()
+    {
+    }
   }
 
   static List<RomEntry> entries = Collections.synchronizedList(new ArrayList<RomEntry>());
-  
+    
   static public void parseField(RomEntry entry, String name, String value)
   {
     switch (name)
     {
       case "Region": entry.region = value; break;
-      case "Language(s)": entry.languages = value; break;
+      case "Language(s)": entry.languages = value;
       case "Genre": entry.genre = value; break;
       case "Publishing Company": entry.publisher = value; break;
       case "Group": entry.group = value; break;
@@ -293,6 +297,14 @@ public class ASParserMain
 
   }
   
+  static Language getLanguage(String name)
+  {
+    if (languageMap.containsKey(name))
+      return languageMap.get(name);
+    else
+      throw new IllegalArgumentException("Unknown language: "+name);
+  }
+  
   public static void checkDat()
   {
     try
@@ -470,7 +482,7 @@ public class ASParserMain
   }
   
   private final static CustomRomAttribute POCKET_HEAVEN_REF = new CustomRomAttribute("Pocket Heaven #", "pocket-heaven-reference", null);
-
+  
   static class JsonRomField extends HashMap<Attribute, Object>
   {
     int number;

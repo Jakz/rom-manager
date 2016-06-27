@@ -43,7 +43,8 @@ public abstract class BackgroundWorker<E, T extends BackgroundOperation> extends
     
     for (int i = 0; i < data.size(); ++i)
     {
-      setProgress((int)((((float)i)/data.size())*100));
+      int progress = (int)((((float)i)/data.size())*100);
+      setProgress(progress);
 
       E rom = data.get(i); 
       execute(rom);

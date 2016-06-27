@@ -254,6 +254,8 @@ public class MainFrame extends JFrame implements WindowListener
       romsExportSubmenu.add(exportMissing);
   
       romsMenu.addSeparator();
+      
+      MenuElement.addListeners();
 	  }
     
 	  JMenuItem menuExit = new JMenuItem(Text.MENU_ROMS_EXIT.text());

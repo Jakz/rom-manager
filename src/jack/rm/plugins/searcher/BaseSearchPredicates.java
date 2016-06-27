@@ -37,6 +37,17 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
   
+  private final static SearchPredicate HAS_ASSETS = new BasicPredicate("has-assets", "has:assets", "filters roms with assets downloaded")
+  {
+    @Override public Predicate<Rom> buildPredicate(String token)
+    {
+      if (token.equals("has:assets"))
+        return r -> r.hasAllAssets();
+      else
+        return null;
+    }
+  };
+  
   private final static SearchPredicate IS_FAVORITE = new BasicPredicate("is-favorite", "is:favorite, is:fav", "filters roms set as favorite")
   {
     @Override public Predicate<Rom> buildPredicate(String token)
@@ -155,6 +166,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
    
   private final SearchPredicate[] predicates = {
     HAS_ATTACHMENT,
+    HAS_ASSETS,
     HAS_ATTRIBUTE,
     IS_FAVORITE,
     IS_FOUND,

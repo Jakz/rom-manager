@@ -52,9 +52,24 @@ public class Downloader
     }
     
     pool.shutdown();
-    
+        
     if (!pool.getQueue().isEmpty())
+    {
       ProgressDialog.init(Main.mainFrame, "Asset Download", () -> { pool.shutdownNow(); started = false; });
+      
+      new Thread( () -> {
+        try
+        {
+          pool.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+          ProgressDialog.finished();
+        }
+        catch (InterruptedException e)
+        {
+          // cancelled by user
+        }
+        
+      }).start();
+    }
     else
       Dialogs.showMessage("Asset Downloader", "All the assets have already been downloaded.", Main.mainFrame);
   }
@@ -134,7 +149,7 @@ public class Downloader
         long completed = pool.getCompletedTaskCount();
         long total = pool.getTaskCount(); 
       
-        ProgressDialog.update(completed/(float)total, completed+" of "+total);
+        ProgressDialog.update(completed/(float)total, (completed+1)+" of "+total);
       }
 
       return true;

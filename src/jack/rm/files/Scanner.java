@@ -8,6 +8,7 @@ import jack.rm.data.romset.RomSet;
 import jack.rm.gui.Dialogs;
 import jack.rm.log.*;
 
+import java.nio.channels.ClosedByInterruptException;
 import java.nio.file.*;
 import java.util.*;
 import java.util.zip.*;
@@ -42,6 +43,10 @@ public class Scanner
 			long crc = cis.getChecksum().getValue();
 			
 			return crc;
+		}
+		catch (ClosedByInterruptException e)
+		{
+		  // thrown when cancelling a BackgroundOperation with the stream opened
 		}
 		catch (Exception e)
 		{
@@ -178,7 +183,8 @@ public class Scanner
 	      if (isCancelled())
 	        return null;
 
-	      setProgress((int)((((float)i)/total)*100));
+	      int progress = (int)((((float)i)/total)*100);
+	      setProgress(progress);
 
 	      Path f = files.get(i);
 	      ScanResult result = scanFile(f);

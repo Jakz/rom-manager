@@ -29,6 +29,8 @@ public class ProgressDialog extends JDialog
 		desc = new JLabel("...");
 		desc.setHorizontalAlignment(SwingConstants.CENTER);
 		
+		//progress.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		
 		panel.add(progress, BorderLayout.CENTER);
 		panel.add(desc, BorderLayout.NORTH);
 		
@@ -39,7 +41,7 @@ public class ProgressDialog extends JDialog
 		  cancelButton.addActionListener( e -> { callback.run(); finished(); });
 		}
 		
-		panel.setPreferredSize(new Dimension(400,80));
+		panel.setPreferredSize(new Dimension(400,100));
 		panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
 		this.add(panel);
