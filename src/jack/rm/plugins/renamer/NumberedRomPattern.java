@@ -40,7 +40,7 @@ public class NumberedRomPattern extends PatternSetPlugin
     @Override
     public String apply(Pattern.RenamingOptions options, String name, Rom rom)
     { 
-      return apply(options, name, code, format.format((int)rom.getAttribute(RomAttribute.NUMBER)));
+      return name.replaceAll(code, format.format((int)rom.getAttribute(RomAttribute.NUMBER)));
     }
   }
   
