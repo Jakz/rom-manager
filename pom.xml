@@ -11,6 +11,7 @@
 		<gson.version>2.3.1</gson.version>
 		<miglayout.version>5.0</miglayout.version>
 		<zip4j.version>1.3.2</zip4j.version>
+		<zip7.version>9.20-2.00beta</zip7.version>
 	</properties>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
@@ -129,10 +130,21 @@
 			<version>${zip4j.version}</version>
 		</dependency>
 		<dependency>
+		    <groupId>net.sf.sevenzipjbinding</groupId>
+		    <artifactId>sevenzipjbinding</artifactId>
+		    <version>${zip7.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>net.sf.sevenzipjbinding</groupId>
+		    <artifactId>sevenzipjbinding-all-platforms</artifactId>
+		    <version>${zip7.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
 			<version>1.8.2</version>
 			<optional>true</optional>
 		</dependency>
+		
 	</dependencies>
 </project>
