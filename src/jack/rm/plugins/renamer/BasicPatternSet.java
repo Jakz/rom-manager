@@ -31,61 +31,64 @@ public class BasicPatternSet extends PatternSetPlugin
   
   private static class AttributePattern extends Pattern 
   {
-    Attribute attribute;
-    AttributePattern(String code, String desc, Attribute attrib)
+    final private Attribute attribute;
+    final private boolean applyQuotes;
+    AttributePattern(String code, String desc, Attribute attrib, boolean applyQuotes)
     {
       super(code, desc);
       this.attribute = attrib;
+      this.applyQuotes = applyQuotes;
     }
     
-    @Override public String apply(String name, Rom rom)
+    AttributePattern(String code, String desc, Attribute attrib)
+    {
+      this(code, desc, attrib, true);
+    }
+       
+    @Override public String apply(Pattern.RenamingOptions options, String name, Rom rom)
     { 
-      if (rom.hasAttribute(attribute))
-        return name.replace(code, attribute.prettyValue(rom.getAttribute(attribute)));
-      else
-        return name;
+      return applyQuotes ? apply(options, name, code, rom.getAttribute(attribute)) : name.replace(code, rom.getAttribute(attribute));
     }
   }
   
   private static class MegabyteSizePattern extends Pattern {
     MegabyteSizePattern() { super("%s", "Size of the game dump in bytes (long)"); }
     @Override
-    public String apply(String name, Rom rom) { return name.replace(code,rom.getSize().toString(RomSize.PrintStyle.LONG, RomSize.PrintUnit.BYTES)); }
+    public String apply(Pattern.RenamingOptions options, String name, Rom rom) { return apply(options, name, code, rom.getSize().toString(RomSize.PrintStyle.LONG, RomSize.PrintUnit.BYTES)); }
   }
   
   private static class MegabitSizePattern extends Pattern {
     MegabitSizePattern() { super("%S", "Size of the game dump in bits (short)"); }
     @Override
-    public String apply(String name, Rom rom) { return name.replace(code,rom.getSize().toString(RomSize.PrintStyle.SHORT, RomSize.PrintUnit.BITS)); }
+    public String apply(Pattern.RenamingOptions options, String name, Rom rom) { return apply(options, name, code, rom.getSize().toString(RomSize.PrintStyle.SHORT, RomSize.PrintUnit.BITS)); }
   }
   
   private static class FullLocationPattern extends Pattern {
     FullLocationPattern() { super("%L", "Full location name"); }
     @Override
-    public String apply(String name, Rom rom) { return name.replace(code,((Location)rom.getAttribute(RomAttribute.LOCATION)).fullName); }
+    public String apply(Pattern.RenamingOptions options, String name, Rom rom) { return apply(options, name, code, ((Location)rom.getAttribute(RomAttribute.LOCATION)).fullName); }
   }
   
   private static class ShortLocationPattern extends Pattern {
     ShortLocationPattern() { super("%a", "Short location name"); }
     @Override
-    public String apply(String name, Rom rom) { return name.replace(code,((Location)rom.getAttribute(RomAttribute.LOCATION)).shortName); }
+    public String apply(Pattern.RenamingOptions options, String name, Rom rom) { return apply(options, name, code, ((Location)rom.getAttribute(RomAttribute.LOCATION)).shortName); }
   }
   
   private static class TinyLocationPattern extends Pattern {
     TinyLocationPattern() { super("%l", "Tiny location name"); }
     @Override
-    public String apply(String name, Rom rom) { return name.replace(code,((Location)rom.getAttribute(RomAttribute.LOCATION)).tinyName); }
+    public String apply(Pattern.RenamingOptions options, String name, Rom rom) { return apply(options, name, code, ((Location)rom.getAttribute(RomAttribute.LOCATION)).tinyName); }
   }
   
   private static class ShortLanguagePattern extends Pattern {
     ShortLanguagePattern() { super("%i", "Short language"); }
     @Override
-    public String apply(String name, Rom rom) {
-      Stream<Language> stream = rom.getLanguages().stream();
+    public String apply(Pattern.RenamingOptions options, String name, Rom rom) {
       long langCount = rom.getLanguages().size();
 
       if (langCount == 1)
-        return name.replace(code,stream.findFirst().get().iso639_1);
+        return name.replace(code,rom.getLanguages().iterator().next().iso639_1);
       else 
         return name.replace(code,"M"+langCount);
     }
@@ -100,7 +103,8 @@ public class BasicPatternSet extends PatternSetPlugin
     new ShortLanguagePattern(),
     new ShortLocationPattern(),
     new TinyLocationPattern(),
-    new AttributePattern("%t", "Game title", RomAttribute.TITLE)
+    new AttributePattern("%t", "Game title", RomAttribute.TITLE, false),
+    new AttributePattern("%C", "Comment", RomAttribute.COMMENT, true)
   };
   
   @Override

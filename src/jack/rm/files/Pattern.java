@@ -11,7 +11,15 @@ public abstract class Pattern implements Comparable<Pattern>
 		this.desc = desc;
 	}
 	
-	public abstract String apply(String name, Rom rom);
+  protected String apply(Pattern.RenamingOptions options, String name, String pattern, String replacement)
+  {
+    if (replacement != null && !replacement.isEmpty())
+      return name.replace(pattern, options.open + replacement + options.close);
+    else
+      return name.replace(pattern, "");
+  }
+	
+	public abstract String apply(RenamingOptions options, String name, Rom rom);
 	
 	public boolean equals(Object other)
 	{
@@ -22,4 +30,12 @@ public abstract class Pattern implements Comparable<Pattern>
 	{
 	  return desc.compareTo(other.desc);
 	}
+	
+  public static class RenamingOptions
+  {
+    public final String open;
+    public final String close;
+    
+    public RenamingOptions(String open, String close) { this.open = open; this.close = close; }
+  }
 }

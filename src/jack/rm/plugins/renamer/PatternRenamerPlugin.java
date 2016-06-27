@@ -22,6 +22,7 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.table.AbstractTableModel;
 
+import com.pixbits.plugin.ExposedParameter;
 import com.pixbits.plugin.PluginInfo;
 import com.pixbits.plugin.PluginVersion;
 
@@ -35,6 +36,9 @@ import jack.rm.i18n.Text;
 
 public class PatternRenamerPlugin extends RenamerPlugin
 {
+  @ExposedParameter(name="Open Block") private String openBlock = " [";
+  @ExposedParameter(name="Close Block") private String closeBlock = "]";
+    
   @Override
   public PluginInfo getInfo()
   { 
@@ -44,24 +48,29 @@ public class PatternRenamerPlugin extends RenamerPlugin
   
   @Override public String getCorrectName(Rom rom)
   {
+    Pattern.RenamingOptions options = new Pattern.RenamingOptions(openBlock, closeBlock);
+    
     String temp = new String(RomSet.current.getSettings().renamingPattern);
     
     Set<Pattern> patterns = Organizer.getPatterns(RomSet.current);
     
     for (Pattern p : patterns)
-      temp = p.apply(temp, rom);
+      temp = p.apply(options, temp, rom);
     
     return temp;
   }
   
   @Override public String getCorrectInternalName(Rom rom)
   {
+    Pattern.RenamingOptions options = new Pattern.RenamingOptions(openBlock, closeBlock);
+
+    
     String temp = new String(RomSet.current.getSettings().internalRenamingPattern != null ? RomSet.current.getSettings().internalRenamingPattern : RomSet.current.getSettings().renamingPattern);
     
     Set<Pattern> patterns = Organizer.getPatterns(RomSet.current);
     
     for (Pattern p : patterns)
-      temp = p.apply(temp, rom);
+      temp = p.apply(options, temp, rom);
     
     return temp;
   }
