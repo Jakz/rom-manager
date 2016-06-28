@@ -10,7 +10,7 @@ import com.pixbits.io.BinaryBuffer;
 import com.pixbits.workflow.WorkflowData;
 
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomPath;
+import jack.rm.files.romhandles.RomPath;
 
 public class RomHandle implements WorkflowData
 {

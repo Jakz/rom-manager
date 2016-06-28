@@ -2,20 +2,29 @@ package jack.rm.files;
 
 import jack.rm.Main;
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomPath;
 import jack.rm.data.rom.RomStatus;
 import jack.rm.data.romset.RomSet;
+import jack.rm.files.romhandles.BinaryHandle;
+import jack.rm.files.romhandles.RomPath;
 import jack.rm.gui.Dialogs;
 import jack.rm.log.*;
+import jack.rm.plugins.ActualPlugin;
+import jack.rm.plugins.ActualPluginBuilder;
+import jack.rm.plugins.PluginRealType;
+import jack.rm.plugins.datparsers.DatParserPlugin;
+import jack.rm.plugins.scanners.ScannerPlugin;
 
+import java.io.BufferedInputStream;
 import java.nio.channels.ClosedByInterruptException;
 import java.nio.file.*;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.zip.*;
 import javax.swing.SwingWorker;
 
 import com.pixbits.gui.ProgressDialog;
 import com.pixbits.io.FolderScanner;
+import com.pixbits.plugin.PluginManager;
 
 public class Scanner
 {
@@ -25,16 +34,21 @@ public class Scanner
 	private Set<Path> foundFiles = new HashSet<>();
 	private Set<ScanResult> clones = new TreeSet<>();
 	
+	List<ScannerPlugin> scanners = new ArrayList<>();
+	
 	private PathMatcher archiveMatcher = FileSystems.getDefault().getPathMatcher("glob:*.{zip}");
 	
-	public Scanner(RomSet set)
+	public Scanner(PluginManager<ActualPlugin, ActualPluginBuilder> manager, RomSet set)
 	{
-		this.set = set;
+	  Set<ActualPluginBuilder> parsers = manager.getBuildersByType(PluginRealType.SCANNER);
+	  scanners = parsers.stream().map(b -> (ScannerPlugin)manager.build((Class<ScannerPlugin>)b.getID().getType())).collect(Collectors.toList());
+	  
+	  this.set = set;
 	}
 	
 	public static long computeCRC(Path file)
 	{
-		try (CheckedInputStream cis = new CheckedInputStream(Files.newInputStream(file), new CRC32()))
+		try (CheckedInputStream cis = new CheckedInputStream(new BufferedInputStream(Files.newInputStream(file)), new CRC32()))
 		{
 			byte[] buf = new byte[1024];
 			
@@ -82,6 +96,20 @@ public class Scanner
 	{
 	  ScanResult result = null;
 	  
+	  if (!existing.contains(file))
+	  {
+	    Iterator<ScannerPlugin> it = scanners.iterator();
+	    while (result == null && it.hasNext())
+	    {
+	      ScannerPlugin scanner = it.next();
+	      
+	      if (scanner.getPathMatcher().matches(file.getFileName()))
+	        result = scanner.scanRom(set.list, file);
+	    }
+	  }
+	  
+	  return result;
+	  /*
 	  if (archiveMatcher.matches(file.getFileName()))
     {	          	    
 	    if (!existing.contains(file))
@@ -95,10 +123,10 @@ public class Scanner
             ZipEntry entry = enu.nextElement();
             long curCrc = entry.getCrc();
             
-            Rom rom = set.list.getByCRC(curCrc);
+            Rom rom = set.list.getByCRC32(curCrc);
             
             if (rom != null)
-              result = new ScanResult(rom, new RomPath.Archive(file, entry.getName()));
+              result = new ScanResult(rom, RomPath.build(RomPath.Type.ZIP, file, entry.getName()));
           }
         }
         catch (Exception e)
@@ -113,15 +141,15 @@ public class Scanner
       {    
         long crc = computeCRC(file);
         
-        Rom rom = set.list.getByCRC(crc);
+        Rom rom = set.list.getByCRC32(crc);
         
         if (rom != null)
-          return new ScanResult(rom, new RomPath.Bin(file));
+          return new ScanResult(rom, new BinaryHandle(file));
         else return null;
       }
     }
 	  
-	  return result;
+	  return result;*/
 	}
 	
 	public void scanForRoms(boolean total)

@@ -12,8 +12,9 @@ import com.pixbits.plugin.PluginSet;
 import jack.rm.data.attachment.Attachment;
 import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.RomID;
-import jack.rm.data.rom.RomPath;
 import jack.rm.data.romset.RomSet;
+import jack.rm.files.romhandles.RomPath;
+import jack.rm.files.romhandles.RomPathAdapter;
 import jack.rm.plugins.ActualPlugin;
 
 public class Json

@@ -1,5 +1,6 @@
 package jack.rm.plugins.datparsers;
 
+import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -132,7 +133,7 @@ public class ClrMameParserPlugin extends DatParserPlugin
     
     public void load(Path datFile)
     {
-      try (InputStream fis = Files.newInputStream(datFile))
+      try (InputStream fis = new BufferedInputStream(Files.newInputStream(datFile)))
       {
 
         //StringReader sr = new StringReader(input);  new ByteArrayInputStream(input.getBytes("UTF-8"))

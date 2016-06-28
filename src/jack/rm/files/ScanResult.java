@@ -1,7 +1,7 @@
 package jack.rm.files;
 
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomPath;
+import jack.rm.files.romhandles.RomPath;
 
 public class ScanResult implements Comparable<ScanResult>
 {

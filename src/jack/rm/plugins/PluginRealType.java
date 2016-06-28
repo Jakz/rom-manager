@@ -12,7 +12,8 @@ public enum PluginRealType implements PluginType<PluginRealType>
   DAT_PARSER("DAT Parser", false, false),
   PROVIDER("DAT Provider", false, false),
   SEARCH("Search", true, false),
-  SEARCH_PREDICATES("Search Predicates", false, false)
+  SEARCH_PREDICATES("Search Predicates", false, false),
+  SCANNER("Scanner", false, false)
   ;
   
   public final String caption;

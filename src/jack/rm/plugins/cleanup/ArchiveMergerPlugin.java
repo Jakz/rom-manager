@@ -11,7 +11,6 @@ import net.lingala.zip4j.util.Zip4jConstants;
 import com.pixbits.plugin.ExposedParameter;
 
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomPath;
 import jack.rm.data.rom.RomStatus;
 import jack.rm.data.romset.RomList;
 import jack.rm.data.romset.RomSet;
@@ -76,13 +75,10 @@ public class ArchiveMergerPlugin extends CleanupPlugin implements BackgroundOper
           fileName = fileName.substring(0, fileName.lastIndexOf('.'));
           fileName = fileName + "." + romSet.system.exts[0];
           
+          aparams.setSourceExternalStream(true);
           aparams.setFileNameInZip(fileName);
-          
-          try (java.util.zip.ZipFile zip = new java.util.zip.ZipFile(r.getPath().file().toFile()))
-          {
-            ZipEntry entry = zip.getEntry(((RomPath.Archive)r.getPath()).internalName);         
-            zfile.addStream(zip.getInputStream(entry), aparams);
-          }
+       
+          zfile.addStream(r.getPath().getInputStream(), aparams);
         }     
       }
       catch (Exception e)

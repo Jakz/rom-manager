@@ -2,7 +2,6 @@ package jack.rm.gui;
 
 import jack.rm.Main;
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomPath;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -17,6 +16,7 @@ import java.util.stream.Collectors;
 
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.ScanResult;
+import jack.rm.files.romhandles.RomPath;
 
 public class ClonesDialog extends JDialog
 {

@@ -4,6 +4,7 @@ import jack.rm.Settings;
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
 import jack.rm.data.romset.RomSet;
+import jack.rm.files.romhandles.RomPath;
 import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.RenamerPlugin;
 import jack.rm.data.attachment.Attachment;

@@ -123,7 +123,8 @@ public class Main
     manager.register(jack.rm.plugins.datparsers.ClrMameParserPlugin.class);
     manager.register(jack.rm.plugins.datparsers.OfflineListParserPlugin.class);
 
-
+    manager.register(jack.rm.plugins.scanners.BinaryScannerPlugin.class);
+    manager.register(jack.rm.plugins.scanners.NativeZipScanner.class);
 	}
 	
 	public static void loadRomSet(RomSet romSet)
@@ -137,7 +138,7 @@ public class Main
 
     mainFrame.romSetLoaded(set);
     
-    scanner = new Scanner(set);
+    scanner = new Scanner(manager, set);
     scanner.scanForRoms(!wasInit);
 
 

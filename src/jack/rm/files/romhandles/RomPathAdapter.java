@@ -1,6 +1,8 @@
-package jack.rm.json;
+package jack.rm.files.romhandles;
 
 import java.lang.reflect.Type;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -9,10 +11,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-
-import jack.rm.data.rom.RomPath;
-import jack.rm.data.rom.RomPath.Archive;
-import jack.rm.data.rom.RomPath.Bin;
 
 public class RomPathAdapter implements JsonDeserializer<RomPath>, JsonSerializer<RomPath>
 {
@@ -23,12 +21,14 @@ public class RomPathAdapter implements JsonDeserializer<RomPath>, JsonSerializer
     
     RomPath.Type type = (RomPath.Type)context.deserialize(obj.get("type"), RomPath.Type.class);
     
+    Path file = Paths.get((String)context.deserialize(obj.get("file"), String.class));
+    
     if (type != null)
     {
       if (type == RomPath.Type.BIN)
-        return new Bin(java.nio.file.Paths.get((String)context.deserialize(obj.get("file"), String.class)));
+        return new BinaryHandle(file);
       else if (type == RomPath.Type.ZIP)
-        return new Archive(java.nio.file.Paths.get((String)context.deserialize(obj.get("file"), String.class)), obj.get("internalName").getAsString());
+        return new ZipHandle(file, obj.get("internalName").getAsString());
     }      
     return null;
   }
@@ -50,7 +50,7 @@ public class RomPathAdapter implements JsonDeserializer<RomPath>, JsonSerializer
       case ZIP:
       {
         json.add("file", context.serialize(entry.file().toString(), String.class));
-        json.add("internalName", context.serialize(((Archive)entry).internalName, String.class));
+        json.add("internalName", context.serialize(((ZipHandle)entry).internalName, String.class));
         break;
       }
     }

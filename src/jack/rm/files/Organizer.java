@@ -1,9 +1,10 @@
 package jack.rm.files;
 
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomPath;
 import jack.rm.data.rom.RomStatus;
 import jack.rm.data.romset.*;
+import jack.rm.files.romhandles.ArchiveHandle;
+import jack.rm.files.romhandles.RomPath;
 import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
@@ -62,7 +63,7 @@ public class Organizer
 	    RomPath path = rom.getPath();
 	    String name = rom.getCorrectInternalName() + "." + path.getInternalExtension();
 	    
-	    if (((RomPath.Archive)path).renameInternalFile(name))
+	    if (((ArchiveHandle)path).renameInternalFile(name))
 	      rom.setPath(path.relocateInternal(name));
 	    else
 	      Log.error(LogSource.ORGANIZER, LogTarget.rom(rom), "Can't rename internal name of archive: "+path.file());

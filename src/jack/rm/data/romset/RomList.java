@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-public class RomList implements Iterable<Rom>
+public class RomList implements Iterable<Rom>, RomHashFinder
 {
 	public final RomSet set;
   List<Rom> list;
@@ -73,10 +73,10 @@ public class RomList implements Iterable<Rom>
 		
 	public Rom getByID(RomID<?> id)
 	{
-	  return getByCRC(((RomID.CRC)id).value);
+	  return getByCRC32(((RomID.CRC)id).value);
 	}
 	
-	public Rom getByCRC(long crc)
+	@Override public Rom getByCRC32(long crc)
 	{
 		return crcs.get(crc);
 	}

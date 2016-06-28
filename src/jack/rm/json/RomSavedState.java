@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import jack.rm.data.attachment.Attachment;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomID;
-import jack.rm.data.rom.RomPath;
 import jack.rm.data.rom.RomStatus;
+import jack.rm.files.romhandles.RomPath;
 
 public class RomSavedState
 {
