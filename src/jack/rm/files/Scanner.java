@@ -35,13 +35,13 @@ public class Scanner
 	private Set<ScanResult> clones = new TreeSet<>();
 	
 	List<ScannerPlugin> scanners = new ArrayList<>();
-	
-	private PathMatcher archiveMatcher = FileSystems.getDefault().getPathMatcher("glob:*.{zip}");
-	
-	public Scanner(PluginManager<ActualPlugin, ActualPluginBuilder> manager, RomSet set)
+		
+	@SuppressWarnings("unchecked")
+  public Scanner(PluginManager<ActualPlugin, ActualPluginBuilder> manager, RomSet set)
 	{
 	  Set<ActualPluginBuilder> parsers = manager.getBuildersByType(PluginRealType.SCANNER);
 	  scanners = parsers.stream().map(b -> (ScannerPlugin)manager.build((Class<ScannerPlugin>)b.getID().getType())).collect(Collectors.toList());
+	  Collections.sort(scanners);
 	  
 	  this.set = set;
 	}

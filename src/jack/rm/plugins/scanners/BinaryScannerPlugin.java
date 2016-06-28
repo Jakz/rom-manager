@@ -28,6 +28,8 @@ public class BinaryScannerPlugin extends ScannerPlugin
 {
   final static PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:*.{*}");
   
+  @Override protected int getPriority() { return 1; }
+  
   @Override
   public PluginInfo getInfo()
   { 

@@ -2,6 +2,7 @@ package jack.rm.files.romhandles;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.FileSystem;
@@ -13,9 +14,20 @@ import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import jack.rm.data.rom.Rom;
+import net.sf.sevenzipjbinding.ExtractAskMode;
+import net.sf.sevenzipjbinding.ExtractOperationResult;
+import net.sf.sevenzipjbinding.IArchiveExtractCallback;
+import net.sf.sevenzipjbinding.IInArchive;
+import net.sf.sevenzipjbinding.ISequentialOutStream;
+import net.sf.sevenzipjbinding.PropID;
+import net.sf.sevenzipjbinding.SevenZip;
+import net.sf.sevenzipjbinding.SevenZipException;
+import net.sf.sevenzipjbinding.impl.RandomAccessFileInStream;
+
 public class Zip7Handle extends ArchiveHandle
 {
-  public static class Handle
+  /*public static class Handle
   {
     private final Zip7Handle archive;
     private final Path internalPath;
@@ -31,15 +43,31 @@ public class Zip7Handle extends ArchiveHandle
     public Path fileName() { return internalPath.getFileName(); }
     
     @Override public String toString() { return archive.file().toString()+":"+internalPath.toString(); }
-  }
+  }*/
   
   
+  public final int indexInArchive;
   public final String internalName;
   
-  public Zip7Handle(Path file, String internalName)
+  public Zip7Handle(Path file, String internalName, Integer indexInArchive)
   {
-    super(Type.ZIP, file.normalize());
+    super(Type._7ZIP, file.normalize());
     this.internalName = internalName;
+    this.indexInArchive = indexInArchive;
+  }
+  
+  protected IInArchive open()
+  {
+    try (RandomAccessFileInStream rfile = new RandomAccessFileInStream(new RandomAccessFile(file.toFile(), "r")))
+    {
+      return SevenZip.openInArchive(null, rfile);
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+    
+    return null;
   }
   
   @Override public Path file() { return file; }
@@ -52,9 +80,10 @@ public class Zip7Handle extends ArchiveHandle
   
   @Override public long size()
   {
-    try
+    try (IInArchive archive = open())
     {
-      return Files.size(file);
+      Long size = (Long)archive.getProperty(indexInArchive, PropID.PACKED_SIZE);
+      return size != null ? size : 0;
     }
     catch (IOException e)
     {
@@ -65,41 +94,21 @@ public class Zip7Handle extends ArchiveHandle
   
   @Override public long uncompressedSize()
   {
-    try (ZipFile zfile = new ZipFile(file.toFile()))
+    try (IInArchive archive = open())
     {
-      
-      ZipEntry entry = zfile.getEntry(internalName);
-      return entry.getSize();
+      Long size = (Long)archive.getProperty(indexInArchive, PropID.SIZE);
+      return size != null ? size : 0;
     }
-    catch (Exception e)
+    catch (IOException e)
     {
       e.printStackTrace();
       return 0;
     }
   }
-  
-  private FileSystem openZipFS() throws URISyntaxException, IOException
-  {
-    URI ouri = file.toUri();
-    URI uri = new URI("jar:file", ouri.getUserInfo(), ouri.getHost(), ouri.getPort(), ouri.getPath(), ouri.getQuery(), ouri.getFragment());
-    return FileSystems.newFileSystem(uri, Collections.<String, Object>emptyMap());
-  }
-  
+
   public boolean renameInternalFile(String newName)
   {       
-    try (FileSystem fs = openZipFS())
-    {     
-      Path sourcePath = fs.getPath(internalName);
-      Path destPath = fs.getPath(newName); 
-      
-      Files.move(sourcePath, destPath);
-      return true;
-    }
-    catch (URISyntaxException|IOException e)
-    {
-      e.printStackTrace();
-      return false;
-    }
+    return false;
 
     /*
     forEach(h -> {
@@ -116,55 +125,69 @@ public class Zip7Handle extends ArchiveHandle
   @Override
   public RomPath relocate(Path file)
   {
-    return new Zip7Handle(file, this.internalName);
+    return new Zip7Handle(file, this.internalName, this.indexInArchive);
   }
   
   @Override
   public RomPath relocateInternal(String internalName)
   {
-    return new Zip7Handle(file, internalName);
+    return null;//new Zip7Handle(file, internalName);
   }
   
   @Override
   public InputStream getInputStream() throws IOException
   {
-    return new RomZipInputStream(this);
+    IInArchive archive = open();
+    return null;
   }
   
-  private class RomZipInputStream extends InputStream
+  private class ExtractStream implements ISequentialOutStream
   {
-    private final ZipFile file;
-    private final ZipEntry entry;
-    private final InputStream is;
-    
-    RomZipInputStream(Zip7Handle archive) throws IOException
+    @Override public int write(byte[] data)
     {
-      this.file = new ZipFile(archive.file.toFile());
-      this.entry = file.getEntry(archive.internalName);
-      this.is = file.getInputStream(entry);
-    }
-    
-    @Override public int read() throws IOException
-    {
-      return is.read();
-    }
-    
-    @Override public void close() throws IOException
-    {
-      is.close();
-      file.close();
+      return data.length;
     }
   }
   
-  public void forEach(Consumer<Zip7Handle.Handle> lambda)
+  private class ExtractCallback implements IArchiveExtractCallback
   {
-    try (FileSystem fs = openZipFS())
-    {    
-      Files.walk(fs.getRootDirectories().iterator().next()).filter(p -> !Files.isDirectory(p)).map(p -> new Handle(this, p)).forEach(lambda);
-    }
-    catch (URISyntaxException|IOException e)
+    private final IInArchive archive;
+    private int index;
+    
+    ExtractCallback(IInArchive archive, int index)
     {
-      e.printStackTrace();
+      this.archive = archive;
+      this.index = index;
+    }
+    
+    public ISequentialOutStream getStream(int index, ExtractAskMode mode)
+    {
+      this.index = index;
+      if (mode != ExtractAskMode.EXTRACT) return null;
+      
+      return new ExtractStream();
+      
+    }
+    
+    public void prepareOperation(ExtractAskMode extractAskMode) throws SevenZipException
+    {
+      
+    }
+    
+    public void setOperationResult(ExtractOperationResult result) throws SevenZipException
+    {
+      
+    }
+    
+    public void setCompleted(long completeValue) throws SevenZipException
+    {
+      
+    }
+
+    public void setTotal(long total) throws SevenZipException
+    {
+      
     }
   }
+  
 }

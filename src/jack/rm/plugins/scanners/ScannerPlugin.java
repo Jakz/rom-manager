@@ -12,13 +12,16 @@ import jack.rm.files.ScanResult;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.PluginRealType;
 
-public abstract class ScannerPlugin extends ActualPlugin
+public abstract class ScannerPlugin extends ActualPlugin implements Comparable<ScannerPlugin>
 {
   @Override public final boolean isNative() { return true; }
   @Override public final PluginType<?> getPluginType() { return PluginRealType.SCANNER; }
   
+  protected abstract int getPriority();
   protected final Predicate<RomSet> compatibility() { return rs -> false; }
   
   abstract public PathMatcher getPathMatcher();
   abstract public ScanResult scanRom(RomHashFinder finder, Path file);
+  
+  @Override public int compareTo(ScannerPlugin other) { return Integer.compare(getPriority(), other.getPriority()); }
 }

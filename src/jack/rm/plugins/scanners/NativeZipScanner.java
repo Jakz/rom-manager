@@ -23,6 +23,8 @@ public class NativeZipScanner extends ScannerPlugin
 {
   final static PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:*.{zip}");
   
+  @Override protected int getPriority() { return 0; }
+  
   @Override
   public PluginInfo getInfo()
   { 

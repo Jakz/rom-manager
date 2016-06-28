@@ -125,6 +125,8 @@ public class Main
 
     manager.register(jack.rm.plugins.scanners.BinaryScannerPlugin.class);
     manager.register(jack.rm.plugins.scanners.NativeZipScanner.class);
+    manager.register(jack.rm.plugins.scanners.Zip7Scanner.class);
+
 	}
 	
 	public static void loadRomSet(RomSet romSet)
