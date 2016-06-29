@@ -110,12 +110,20 @@ public class OfflineListParserPlugin extends DatParserPlugin
     
     public int asInt()
     {
-      return Integer.parseInt(asString());
+      String value = asString();
+      return !value.isEmpty() ? Integer.parseInt(asString()) : 0;
     }
     
     public long asLong()
     {
-      return Long.parseLong(asString());
+      String value = asString();
+      return !value.isEmpty() ? Long.parseLong(asString()) : 0;
+    }
+    
+    public long asHexLong()
+    {
+      String value = asString();
+      return !value.isEmpty() ? Long.parseLong(asString(), 16) : 0;
     }
 
     Map<String, RomSave<?>> saves = new TreeMap<>();
@@ -174,15 +182,15 @@ public class OfflineListParserPlugin extends DatParserPlugin
           break;
         }
         case "sourceRom": rom.setAttribute(RomAttribute.GROUP, asString()); break;
-        case "romCRC": rom.setCRC(Long.parseLong(asString(), 16)); break;
+        case "romCRC": rom.setCRC(asHexLong()); break;
         case "im1CRC": 
         {
-          rom.getAssetData(assets[0]).setCRC(Long.parseLong(asString(), 16));
+          rom.getAssetData(assets[0]).setCRC(asHexLong());
           break;
         }
         case "im2CRC": 
         {
-          rom.getAssetData(assets[1]).setCRC(Long.parseLong(asString(), 16));
+          rom.getAssetData(assets[1]).setCRC(asHexLong());
           break;
         }
         case "duplicateID":

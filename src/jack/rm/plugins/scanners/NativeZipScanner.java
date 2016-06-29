@@ -21,7 +21,7 @@ import jack.rm.log.LogType;
 
 public class NativeZipScanner extends ScannerPlugin
 {
-  final static PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:*.{zip}");
+  final static String[] extensions = new String[] { "zip" };
   
   @Override protected int getPriority() { return 0; }
   
@@ -32,7 +32,7 @@ public class NativeZipScanner extends ScannerPlugin
         "This plugin scans zip archives.");
   }
   
-  @Override public PathMatcher getPathMatcher() { return matcher; }
+  @Override public String[] getHandledExtensions() { return extensions; }
 
   @Override public ScanResult scanRom(RomHashFinder finder, Path file)
   {

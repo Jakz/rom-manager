@@ -20,7 +20,7 @@ public abstract class ScannerPlugin extends ActualPlugin implements Comparable<S
   protected abstract int getPriority();
   protected final Predicate<RomSet> compatibility() { return rs -> false; }
   
-  abstract public PathMatcher getPathMatcher();
+  abstract public String[] getHandledExtensions();
   abstract public ScanResult scanRom(RomHashFinder finder, Path file);
   
   @Override public int compareTo(ScannerPlugin other) { return Integer.compare(getPriority(), other.getPriority()); }

@@ -61,7 +61,8 @@ public class Downloader
         try
         {
           pool.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
-          ProgressDialog.finished();
+          if (!pool.isShutdown())
+            ProgressDialog.finished();
         }
         catch (InterruptedException e)
         {

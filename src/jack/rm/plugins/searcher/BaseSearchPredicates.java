@@ -163,6 +163,27 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
       return null;
     }
   };
+  
+  private final static SearchPredicate IS_FORMAT = new BasicPredicate("is-format", "format:zip", "filters games by format on disk")
+  {
+    @Override public Predicate<Rom> buildPredicate(String token)
+    {
+      String[] tokens = splitWithDelimiter(token, ":");
+      
+      if (tokens != null)
+      {
+        if (tokens[0].equals("format") && !tokens[1].isEmpty())
+        {
+          if (tokens[1].equals("bin") || tokens[1].equals("binary"))
+            return r -> r.status != RomStatus.MISSING && !r.getPath().isArchive();
+          else 
+            return r -> r.status != RomStatus.MISSING && r.getPath().isArchive() && r.getPath().getExtension().equals(tokens[1]);
+        }
+      }
+     
+      return null;
+    }
+  };
    
   private final SearchPredicate[] predicates = {
     HAS_ATTACHMENT,
@@ -173,7 +194,8 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     IS_LOCATION,
     IS_MISSING,
     OF_GENRE,
-    OF_SAVE_TYPE
+    OF_SAVE_TYPE,
+    IS_FORMAT
   };
   
   @Override

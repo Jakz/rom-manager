@@ -2,6 +2,8 @@ package jack.rm.files.romhandles;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.io.RandomAccessFile;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -58,8 +60,9 @@ public class Zip7Handle extends ArchiveHandle
   
   protected IInArchive open()
   {
-    try (RandomAccessFileInStream rfile = new RandomAccessFileInStream(new RandomAccessFile(file.toFile(), "r")))
+    try
     {
+      RandomAccessFileInStream rfile = new RandomAccessFileInStream(new RandomAccessFile(file.toFile(), "r"));
       return SevenZip.openInArchive(null, rfile);
     }
     catch (IOException e)
@@ -137,15 +140,53 @@ public class Zip7Handle extends ArchiveHandle
   @Override
   public InputStream getInputStream() throws IOException
   {
-    IInArchive archive = open();
-    return null;
+    final IInArchive archive = open();    
+    final ExtractCallback callback = new ExtractCallback(archive, indexInArchive); 
+    
+    Runnable r = () -> {
+      try
+      {
+        archive.extract(new int[] { indexInArchive }, false, callback);
+      }
+      catch (SevenZipException e)
+      {
+        e.printStackTrace();
+      }
+    };
+    
+    new Thread(r).start();
+    
+    return callback.stream.getInputStream();
   }
   
   private class ExtractStream implements ISequentialOutStream
   {
-    @Override public int write(byte[] data)
+    private PipedInputStream pis;
+    private PipedOutputStream pos;
+            
+    ExtractStream() throws IOException
     {
+      pis = new PipedInputStream(1024 * 8);
+      pos = new PipedOutputStream(pis);
+    }
+    
+    @Override public int write(byte[] data)
+    { 
+      try
+      {
+        pos.write(data);
+      }
+      catch (IOException e)
+      {
+        e.printStackTrace();
+      }
+      
       return data.length;
+    }
+    
+    public InputStream getInputStream()
+    {
+      return pis;
     }
   }
   
@@ -153,20 +194,27 @@ public class Zip7Handle extends ArchiveHandle
   {
     private final IInArchive archive;
     private int index;
+    private ExtractStream stream;
     
     ExtractCallback(IInArchive archive, int index)
     {
       this.archive = archive;
       this.index = index;
+      try
+      {
+        this.stream = new ExtractStream();
+      }
+      catch (IOException e)
+      {
+        e.printStackTrace();
+      }
     }
     
     public ISequentialOutStream getStream(int index, ExtractAskMode mode)
     {
       this.index = index;
       if (mode != ExtractAskMode.EXTRACT) return null;
-      
-      return new ExtractStream();
-      
+      return stream;
     }
     
     public void prepareOperation(ExtractAskMode extractAskMode) throws SevenZipException
@@ -176,7 +224,7 @@ public class Zip7Handle extends ArchiveHandle
     
     public void setOperationResult(ExtractOperationResult result) throws SevenZipException
     {
-      
+
     }
     
     public void setCompleted(long completeValue) throws SevenZipException

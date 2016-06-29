@@ -118,18 +118,6 @@ public class RomSet
 	  return searcher;
 	}
 	
-	public PathMatcher getFileMatcher()
-	{
-	  Stream<String> stream = Arrays.stream(system.exts);
-	  
-	  if (system.acceptsArchives)
-	    stream = Stream.concat(stream, Arrays.stream(new String[]{"zip"}));
-	  
-	  String pattern = stream.collect(Collectors.joining(",", "glob:*.{", "}"));
-	  	  
-	  return FileSystems.getDefault().getPathMatcher(pattern);
-	}
-	
   public final Path getAssetPath(Asset asset, boolean asArchive)
   {
     Path base = Paths.get("data/", ident(), "assets").resolve(asset.getPath());

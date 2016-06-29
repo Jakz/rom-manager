@@ -6,6 +6,7 @@ import java.nio.file.StandardCopyOption;
 import com.pixbits.workflow.*;
 
 import jack.rm.data.rom.Rom;
+import jack.rm.files.romhandles.RomPath;
 
 public class RomConsolidator extends Dumper<RomHandle>
 {
@@ -30,17 +31,35 @@ public class RomConsolidator extends Dumper<RomHandle>
       if (!overwrite && Files.exists(finalPath))
         return;
       
-      if (handle.getBuffer() == null)
-        handle.prepareBuffer();
-      
       Files.createDirectories(basePath);
-      Files.move(handle.getPath(), finalPath, StandardCopyOption.REPLACE_EXISTING);
+      
+      if (handle.hasBeenModified())
+      {
+        Files.move(handle.getPath(), finalPath, StandardCopyOption.REPLACE_EXISTING);
+      }
+      else
+      {
+        RomPath path = rom.getPath();
+        
+        if (!path.isArchive())
+          Files.copy(path.file(), finalPath, StandardCopyOption.REPLACE_EXISTING);
+        else
+          Files.copy(path.getInputStream(), finalPath, StandardCopyOption.REPLACE_EXISTING);
+      }
+      
+      //if (handle.getBuffer() == null)
+      //  handle.prepareBuffer();
+      
+
       //Files.deleteIfExists(handle.getPath());
     }
     catch (Exception e)
     {
       System.out.println("Error on "+handle.getRom().getPath().toString());
-      e.printStackTrace();
+      if (e.getCause() != e)
+        e.getCause().printStackTrace();
+      else
+        e.printStackTrace();
     }
   }
 }

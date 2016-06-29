@@ -7,9 +7,11 @@ import java.awt.Desktop;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.function.Consumer;
 import jack.rm.assets.Downloader;
 import jack.rm.data.console.System;
+import jack.rm.data.rom.Rom;
 import jack.rm.data.romset.*;
 import jack.rm.files.BackgroundOperation;
 import jack.rm.files.DownloadWorker;
@@ -17,6 +19,10 @@ import jack.rm.files.Scanner;
 import jack.rm.gui.*;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
+import jack.rm.workflow.LogOperation;
+import jack.rm.workflow.RomConsolidator;
+import jack.rm.workflow.RomHandle;
+import jack.rm.workflow.SingleRomSource;
 import net.sf.sevenzipjbinding.ArchiveFormat;
 import net.sf.sevenzipjbinding.IOutArchive;
 import net.sf.sevenzipjbinding.IOutCreateArchive;
@@ -137,6 +143,9 @@ public class Main
 	  RomSet set = RomSetManager.loadSet(romSet);
     RomSet.current = set;
     boolean wasInit = set.loadStatus();
+    
+    RomSet.current.pluginStateChanged();
+
 
     mainFrame.romSetLoaded(set);
     
@@ -145,6 +154,14 @@ public class Main
 
 
     downloader = new Downloader(set);
+    
+    /*List<Rom> zip7 = set.filter("format:7z");
+    Fetcher<RomHandle> source = new SingleRomSource(zip7.get(0));
+    Dumper<RomHandle> dumper = new RomConsolidator(Paths.get("/Users/jack/Desktop/CAH"));
+    Workflow<RomHandle> workflow = new Workflow<>(source,dumper);
+    workflow.addStep(new LogOperation());
+    workflow.execute();
+    java.lang.System.exit(0);*/
     
     /*List<Rom> favourites = set.filter("is:fav");
     Fetcher<RomHandle> source = new MultipleRomSource(favourites);
@@ -312,7 +329,6 @@ public class Main
     {
       loadRomSet(RomSetManager.byIdent(lastProvider));
       mainFrame.pluginStateChanged();
-      RomSet.current.pluginStateChanged();
     }
     
 		mainFrame.setLocationRelativeTo(null);

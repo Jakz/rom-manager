@@ -25,9 +25,7 @@ import jack.rm.files.ScanResult;
 import jack.rm.files.romhandles.RomPath;
 
 public class BinaryScannerPlugin extends ScannerPlugin
-{
-  final static PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:*.{*}");
-  
+{  
   @Override protected int getPriority() { return 1; }
   
   @Override
@@ -38,7 +36,7 @@ public class BinaryScannerPlugin extends ScannerPlugin
   }
   
   @Override
-  public PathMatcher getPathMatcher() { return matcher; }
+  public String[] getHandledExtensions() { return null; }
   
   public static long calculateCRCFast(Path filename)
   {

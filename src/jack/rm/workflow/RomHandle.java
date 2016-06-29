@@ -46,6 +46,8 @@ public class RomHandle implements WorkflowData
     return buffer;
   }
   
+  public boolean hasBeenModified() { return buffer != null; }
+  
   public Path getDestPath() { return destPath; }
   public void setDestPath(Path path) { this.destPath = path; }
   

@@ -18,7 +18,9 @@ import java.io.BufferedInputStream;
 import java.nio.channels.ClosedByInterruptException;
 import java.nio.file.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.*;
 import javax.swing.SwingWorker;
 
@@ -35,6 +37,7 @@ public class Scanner
 	private Set<ScanResult> clones = new TreeSet<>();
 	
 	List<ScannerPlugin> scanners = new ArrayList<>();
+	List<PathMatcher> matchers = new ArrayList<>();
 		
 	@SuppressWarnings("unchecked")
   public Scanner(PluginManager<ActualPlugin, ActualPluginBuilder> manager, RomSet set)
@@ -42,6 +45,16 @@ public class Scanner
 	  Set<ActualPluginBuilder> parsers = manager.getBuildersByType(PluginRealType.SCANNER);
 	  scanners = parsers.stream().map(b -> (ScannerPlugin)manager.build((Class<ScannerPlugin>)b.getID().getType())).collect(Collectors.toList());
 	  Collections.sort(scanners);
+	  
+	  scanners.stream().map(ScannerPlugin::getHandledExtensions).forEachOrdered(s -> {
+	    if (s != null)
+	    {
+	      String smatcher = Arrays.stream(s).collect(Collectors.joining(",", "glob:*.{", "}"));
+	      matchers.add(FileSystems.getDefault().getPathMatcher(smatcher));
+	    }
+	    else
+	      matchers.add(null);
+	  });
 	  
 	  this.set = set;
 	}
@@ -99,11 +112,13 @@ public class Scanner
 	  if (!existing.contains(file))
 	  {
 	    Iterator<ScannerPlugin> it = scanners.iterator();
+	    Iterator<PathMatcher> pit = matchers.iterator();
 	    while (result == null && it.hasNext())
 	    {
 	      ScannerPlugin scanner = it.next();
+	      PathMatcher matcher = pit.next();
 	      
-	      if (scanner.getPathMatcher().matches(file.getFileName()))
+	      if (matcher != null && matcher.matches(file.getFileName()))
 	        result = scanner.scanRom(set.list, file);
 	    }
 	  }
@@ -152,6 +167,21 @@ public class Scanner
 	  return result;*/
 	}
 	
+	protected PathMatcher buildPathMatcher()
+	{
+    Stream<String> stream = Arrays.stream(set.system.exts);
+    
+    final AtomicReference<Stream<String>> astream = new AtomicReference<Stream<String>>(stream); 
+        
+    scanners.stream().map(ScannerPlugin::getHandledExtensions).filter(i -> i != null).forEach(e -> {
+      astream.set(Stream.concat(astream.get(), Arrays.stream(e)));
+    });
+
+    String pattern = astream.get().collect(Collectors.joining(",", "glob:*.{", "}"));
+        
+    return FileSystems.getDefault().getPathMatcher(pattern);
+	}
+	
 	public void scanForRoms(boolean total)
 	{
 		existing.clear();
@@ -184,7 +214,7 @@ public class Scanner
 		  return;
 		}
 			
-		foundFiles = new FolderScanner(set.getFileMatcher(), set.getSettings().getIgnoredPaths()).scan(folder);
+		foundFiles = new FolderScanner(buildPathMatcher(), set.getSettings().getIgnoredPaths()).scan(folder);
 
 		ScannerWorker worker = new ScannerWorker(foundFiles);
 		worker.execute();
