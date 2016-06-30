@@ -30,7 +30,9 @@ public class RomPathAdapter implements JsonDeserializer<RomPath>, JsonSerializer
       else if (type == RomPath.Type.ZIP)
         return new ZipHandle(file, obj.get("internalName").getAsString());
       else if (type == RomPath.Type._7ZIP)
-        return new Zip7Handle(file, obj.get("internalName").getAsString(), obj.get("indexInArchive").getAsInt());
+        return new Zip7MultiHandle(type, file, obj.get("internalName").getAsString(), obj.get("indexInArchive").getAsInt());
+      else if (type == RomPath.Type.RAR)
+        return new Zip7MultiHandle(type, file, obj.get("internalName").getAsString(), obj.get("indexInArchive").getAsInt());
     }      
     return null;
   }
@@ -55,12 +57,13 @@ public class RomPathAdapter implements JsonDeserializer<RomPath>, JsonSerializer
         json.add("internalName", context.serialize(((ZipHandle)entry).internalName, String.class));
         break;
       }
+      case RAR:
       case _7ZIP:
       {
         json.add("file", context.serialize(entry.file().toString(), String.class));
-        json.add("internalName", context.serialize(((Zip7Handle)entry).internalName, String.class));
-        json.add("indexInArchive", context.serialize(((Zip7Handle)entry).indexInArchive, Integer.class));
-
+        json.add("internalName", context.serialize(((Zip7MultiHandle)entry).internalName, String.class));
+        json.add("indexInArchive", context.serialize(((Zip7MultiHandle)entry).indexInArchive, Integer.class));
+        break;
       }
     }
     

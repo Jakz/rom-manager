@@ -12,6 +12,7 @@ public abstract class RomPath
   {
     BIN(""),
     ZIP("zip"),
+    RAR("rar"),
     _7ZIP("7z")
     ;
     

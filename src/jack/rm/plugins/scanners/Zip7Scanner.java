@@ -17,11 +17,12 @@ import jack.rm.data.rom.Rom;
 import jack.rm.data.romset.RomHashFinder;
 import jack.rm.files.ScanResult;
 import jack.rm.files.romhandles.RomPath;
-import jack.rm.files.romhandles.Zip7Handle;
+import jack.rm.files.romhandles.Zip7MultiHandle;
 import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.log.LogType;
+import net.sf.sevenzipjbinding.ArchiveFormat;
 import net.sf.sevenzipjbinding.IInArchive;
 import net.sf.sevenzipjbinding.PropID;
 import net.sf.sevenzipjbinding.SevenZip;
@@ -29,7 +30,7 @@ import net.sf.sevenzipjbinding.impl.RandomAccessFileInStream;
 
 public class Zip7Scanner extends ScannerPlugin
 {
-  final static String[] extensions = new String[] { "7z" };
+  final static String[] extensions = new String[] { "7z", "rar" };
   
   @Override protected int getPriority() { return 0; }
   
@@ -56,7 +57,14 @@ public class Zip7Scanner extends ScannerPlugin
           Rom rom = finder.getByCRC32(crc);
           
           if (rom != null)
-            return new ScanResult(rom, new Zip7Handle(path, (String)archive.getProperty(i, PropID.PATH), i));
+          {
+            if (archive.getArchiveFormat() == ArchiveFormat.SEVEN_ZIP)
+              return new ScanResult(rom, new Zip7MultiHandle(RomPath.Type._7ZIP, path, (String)archive.getProperty(i, PropID.PATH), i));
+            else if (archive.getArchiveFormat() == ArchiveFormat.RAR)
+              return new ScanResult(rom, new Zip7MultiHandle(RomPath.Type.RAR, path, (String)archive.getProperty(i, PropID.PATH), i));
+
+          }
+            
         }
       }
     }

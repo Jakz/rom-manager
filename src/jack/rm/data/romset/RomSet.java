@@ -23,6 +23,7 @@ import jack.rm.plugins.cleanup.CleanupPlugin;
 
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
@@ -214,9 +215,12 @@ public class RomSet
   	    try (BufferedReader rdr = Files.newBufferedReader(statusPath))
   	    {
   	      gson.fromJson(rdr, RomList.class);
+  	      return true;
   	    }
-  	    
-  	    return true;
+  	    catch (NoSuchFileException e)
+  	    {
+  	      return false;
+  	    }
   	  }
 	  }
 	  catch (FileNotFoundException e)

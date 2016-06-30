@@ -27,33 +27,14 @@ import net.sf.sevenzipjbinding.SevenZip;
 import net.sf.sevenzipjbinding.SevenZipException;
 import net.sf.sevenzipjbinding.impl.RandomAccessFileInStream;
 
-public class Zip7Handle extends ArchiveHandle
+public class Zip7MultiHandle extends ArchiveHandle
 {
-  /*public static class Handle
-  {
-    private final Zip7Handle archive;
-    private final Path internalPath;
-    
-    public Handle(Zip7Handle archive, Path internalPath)
-    {
-      this.archive = archive;
-      this.internalPath = internalPath;
-    }
-    
-    public void delete() throws IOException { Files.delete(internalPath); }
-    
-    public Path fileName() { return internalPath.getFileName(); }
-    
-    @Override public String toString() { return archive.file().toString()+":"+internalPath.toString(); }
-  }*/
-  
-  
   public final int indexInArchive;
   public final String internalName;
   
-  public Zip7Handle(Path file, String internalName, Integer indexInArchive)
+  public Zip7MultiHandle(Type type, Path file, String internalName, Integer indexInArchive)
   {
-    super(Type._7ZIP, file.normalize());
+    super(type, file.normalize());
     this.internalName = internalName;
     this.indexInArchive = indexInArchive;
   }
@@ -128,7 +109,7 @@ public class Zip7Handle extends ArchiveHandle
   @Override
   public RomPath relocate(Path file)
   {
-    return new Zip7Handle(file, this.internalName, this.indexInArchive);
+    return new Zip7MultiHandle(type, file, this.internalName, this.indexInArchive);
   }
   
   @Override
