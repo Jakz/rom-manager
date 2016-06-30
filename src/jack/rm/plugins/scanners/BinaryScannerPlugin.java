@@ -16,6 +16,7 @@ import java.nio.file.PathMatcher;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 
+import com.pixbits.io.FileUtils;
 import com.pixbits.plugin.PluginInfo;
 import com.pixbits.plugin.PluginVersion;
 
@@ -37,34 +38,6 @@ public class BinaryScannerPlugin extends ScannerPlugin
   
   @Override
   public String[] getHandledExtensions() { return null; }
-  
-  public static long calculateCRCFast(Path filename)
-  {
-    final int SIZE = 16 * 1024;
-    try (FileChannel channel = (FileChannel)Files.newByteChannel(filename))
-    {
-      CRC32 crc = new CRC32();
-      int length = (int) channel.size();
-      MappedByteBuffer mb = channel.map(FileChannel.MapMode.READ_ONLY, 0, length);
-      byte[] bytes = new byte[SIZE];
-      int nGet;
-      
-      while (mb.hasRemaining())
-      {
-         nGet = Math.min(mb.remaining(), SIZE);
-         mb.get(bytes, 0, nGet);
-         crc.update(bytes, 0, nGet);
-      }
-      
-      return crc.getValue();
-    }
-    catch (IOException e)
-    {
-      e.printStackTrace();
-    }
-    
-    throw new RuntimeException("unknown IO error occurred ");
-  }
   
   private static long computeCRC(Path file)
   {
@@ -92,9 +65,17 @@ public class BinaryScannerPlugin extends ScannerPlugin
 
   @Override public ScanResult scanRom(RomHashFinder finder, Path file)
   {
-    long crc = calculateCRCFast(file);
-    Rom rom = finder.getByCRC32(crc);
+    try
+    {
+      long crc = FileUtils.calculateCRCFast(file);
+      Rom rom = finder.getByCRC32(crc);
+      return rom != null ? new ScanResult(rom, RomPath.build(RomPath.Type.BIN, file)) : null;
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
     
-    return rom != null ? new ScanResult(rom, RomPath.build(RomPath.Type.BIN, file)) : null;
+    return null;
   }
 }

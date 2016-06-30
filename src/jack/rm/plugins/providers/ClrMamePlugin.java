@@ -35,7 +35,7 @@ public class ClrMamePlugin extends ProviderPlugin
 
     sets[0] = new RomSet(
         System.GG, 
-        KnownProviders.NO_INTRO, 
+        KnownProviders.NO_INTRO.derive(null, null, "", new URL()), 
         GG_ATTRIBUTES, 
         new EmptyAssetManager(), 
         datParser.buildDatLoader("clr-mame-nointro")

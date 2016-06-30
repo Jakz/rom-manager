@@ -4,11 +4,17 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import jack.rm.GlobalSettings;
 import jack.rm.Main;
@@ -20,6 +26,8 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -29,12 +37,14 @@ import javax.swing.JTable;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
 import com.pixbits.gui.AlternateColorTableCellRenderer;
+import com.pixbits.gui.LambdaTableCellRenderer;
 
 public class RomSetManagerView extends JFrame
 {
@@ -72,8 +82,8 @@ public class RomSetManagerView extends JFrame
   {
     private final List<RomSet> data;
     
-    private final String[] names = new String[] { "Provider", "Flavour", "Identifier", "Enable" };
-    private final Class<?>[] classes = new Class<?>[] { String.class, String.class, String.class, Boolean.class };
+    private final String[] names = new String[] { "Enable", "Provider", "Flavour", "Identifier" };
+    private final Class<?>[] classes = new Class<?>[] { Boolean.class, String.class, String.class, String.class };
     
     DatTableModel()
     {
@@ -92,15 +102,15 @@ public class RomSetManagerView extends JFrame
       
       switch (c)
       {
-        case 0: return rs.provider.getName();
-        case 1: return rs.provider.getFlavour();
-        case 2: return rs.ident();
-        case 3: return GlobalSettings.settings.getEnabledProviders().contains(rs.ident());
+        case 0: return GlobalSettings.settings.getEnabledProviders().contains(rs.ident()); 
+        case 1: return rs.provider.getName();
+        case 2: return rs.provider.getFlavour();
+        case 3: return rs.ident();
         default: return null;
       }
     }
     
-    @Override public boolean isCellEditable(int r, int c) { return c == 3; }
+    @Override public boolean isCellEditable(int r, int c) { return c == 0; }
     
     @Override public void setValueAt(Object value, int r, int c)
     {
@@ -186,6 +196,17 @@ public class RomSetManagerView extends JFrame
       TableCellRenderer renderer = datTable.getDefaultRenderer(Boolean.class);
       datTable.setDefaultRenderer(Boolean.class, new AlternateColorTableCellRenderer(renderer));
       
+      /*{
+        TableCellRenderer stringRenderer = datTable.getDefaultRenderer(String.class);
+      
+        Predicate<RomSet> predicate = r -> r.canBeLoaded();
+        Consumer<JComponent> trueEffect = c -> c.setForeground(Color.GREEN);
+        Consumer<JComponent> falseEffect = c -> c.setForeground(UIManager.getColor("Table.foreground"));
+        
+        datTable.setDefaultRenderer(String.class, new LambdaTableCellRenderer<RomSet>(predicate, trueEffect, falseEffect, stringRenderer));
+      }*/
+      
+      
       JTableHeader header = datTable.getTableHeader();
       header.setFont(header.getFont().deriveFont(header.getFont().getSize2D()-4));
       
@@ -220,19 +241,36 @@ public class RomSetManagerView extends JFrame
   {
     private final JLabel name;
     private final JLabel status;
+    private final JLabel type;
+    private final JButton update;
+    
+    
     private final MigLayout layout;
+    
+    private final DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
     
     private RomSet set;
     
     SingleProviderInfo()
     {
-      name = new JLabel();
-      status = new JLabel();
+      name = new JLabel(" ");
+      status = new JLabel(" ");
+      type = new JLabel(" ");
+      update = new JButton(" ");
+      
+      name.setFont(name.getFont().deriveFont(Font.BOLD));
       
       layout = new MigLayout();
-      this.setLayout(new MigLayout("wrap 2, fill"));
-      this.add(name, "spanx 2");
-      this.add(status, "spanx 2");
+      this.setLayout(new MigLayout("wrap 8, fill"));
+      this.add(name, "spanx 6");
+      this.add(type, "spanx 2, wrap");
+      this.add(status);
+      this.add(update, "gapleft 20, wrap");
+      
+      update.setVisible(false);
+      
+      this.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.DARK_GRAY));
+
     }
     
     public void updateFields(RomSet set)
@@ -245,20 +283,34 @@ public class RomSetManagerView extends JFrame
         
         try
         {
-          if (Files.exists(set.datPath()))
-            status.setText("Downloaded: YES ("+Files.getLastModifiedTime(set.datPath())+")");
+          boolean isPresent = Files.exists(set.datPath());
+          
+          update.setVisible(true);
+          
+          if (isPresent)
+          {
+            status.setText("Status: PRESENT ("+format.format(new Date(Files.getLastModifiedTime(set.datPath()).toMillis()))+")");
+            update.setText("Update");
+          }
           else
-            status.setText("Downloaded: NO");
+          {
+            status.setText("Status: MISSING");
+            update.setText("Download");
+          }
         }
         catch (IOException e)
         {
           e.printStackTrace();
         }
+        
+        type.setText("("+set.provider.getType().caption+")");
       }
       else
       {
-        name.setText("");
-        status.setText("");
+        name.setText(" ");
+        status.setText(" ");
+        type.setText(" ");
+        update.setVisible(false);
       }
       
     }

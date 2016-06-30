@@ -86,6 +86,11 @@ public class RomSet
 	public boolean doesSupportAttribute(Attribute attribute) { return Arrays.stream(attributes).anyMatch( a -> a == RomAttribute.NUMBER); }
 	public final Attribute[] getSupportedAttributes() { return attributes; }
 			
+	public boolean canBeLoaded()
+	{
+	  return Files.exists(GlobalSettings.DATA_PATH.resolve(datPath()));
+	}
+	
 	public final void load()
 	{ 
 	  if (!loaded)

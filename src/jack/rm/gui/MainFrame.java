@@ -75,7 +75,7 @@ public class MainFrame extends JFrame implements WindowListener
 	final private InfoPanel infoPanel = new InfoPanel();
 	final private OptionsFrame optionsFrame = new OptionsFrame(Main.manager);
 	
-	final private RomSetManagerView romSetManagerView = new RomSetManagerView();
+	final public RomSetManagerView romSetManagerView = new RomSetManagerView();
 	
 	final private TextOutputFrame textFrame = new TextOutputFrame();
 	

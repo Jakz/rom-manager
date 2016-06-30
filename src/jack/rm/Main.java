@@ -16,6 +16,7 @@ import jack.rm.data.romset.*;
 import jack.rm.files.BackgroundOperation;
 import jack.rm.files.DownloadWorker;
 import jack.rm.files.Scanner;
+import jack.rm.files.ZipExtractWorker;
 import jack.rm.gui.*;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
@@ -334,24 +335,35 @@ public class Main
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setVisible(true);
 		
-  	/*	try
+  		try
   		{
   		  URL test = new URL("http://www.advanscene.com/offline/datas/ADVANsCEne_GBA.zip");
   		  
   		  //URL test = new URL("http://ubunturel.mirror.garr.it/mirrors/ubuntu-releases/16.04/ubuntu-16.04-desktop-amd64.iso");
-  		  Path savePath = Paths.get("/Users/jack/Desktop/gba.zip");
+  		  Path savePath = Paths.get("/Users/jack/Desktop/CAH/gba.zip");
+  		  Path extractPath = Paths.get("/Users/jack/Desktop/CAH/gba.xml");
+  		  
+        Consumer<Boolean> uncompressStep = a -> {
+          ZipExtractWorker<?> worker =  new ZipExtractWorker<BackgroundOperation>(savePath, extractPath, new BackgroundOperation() {
+            public String getTitle() { return "Uncompressing"; }
+            public String getProgressText() { return "Progress.."; }
+          }, r -> {}, mainFrame);
+          worker.execute();
+        };
   		
     		DownloadWorker<?> worker = new DownloadWorker<BackgroundOperation>(test, savePath, new BackgroundOperation() {
-    		  public String getTitle() { return "Downloading"; }
-    		  public String getProgressText() { return "Progress.."; }
-    		}, r -> {}, mainFrame);
+          public String getTitle() { return "Downloading"; }
+          public String getProgressText() { return "Progress.."; }
+        }, uncompressStep, mainFrame);
     		
     		worker.execute();
+    		
+
   	  }
   		catch (Exception e)
   		{
   		  e.printStackTrace();
-  		}*/
+  		}
 	  }
 	}
 

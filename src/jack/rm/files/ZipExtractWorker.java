@@ -1,5 +1,6 @@
 package jack.rm.files;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,10 +12,13 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import javax.swing.JFrame;
 import javax.swing.SwingWorker;
@@ -22,26 +26,25 @@ import javax.swing.SwingWorker;
 import com.pixbits.gui.ProgressDialog;
 import com.pixbits.strings.StringUtils;
 
-public class DownloadWorker<T extends BackgroundOperation> extends SwingWorker<Path, Long>
+public class ZipExtractWorker<T extends BackgroundOperation> extends SwingWorker<Path, Long>
 {
   protected final T operation;
   protected final Consumer<Boolean> callback;
   protected final String title;
   protected final String progressText;
-  protected final URL url;
-  protected final Path savePath;
-  protected Path tmpPath;
+  protected final Path src;
+  protected final Path dest;
   
   protected final JFrame parent;
   
-  protected long downloadStatus;
-  protected long downloadSize;
+  protected long size;
+  protected long processed;
   protected int BUFFER_SIZE = 8192;
   
-  public DownloadWorker(URL url, Path dest, T operation, Consumer<Boolean> callback, JFrame parent)
+  public ZipExtractWorker(Path src, Path dest, T operation, Consumer<Boolean> callback, JFrame parent)
   {
-    this.url = url;
-    this.savePath = dest;
+    this.src = src;
+    this.dest = dest;
     
     this.parent = parent;
     
@@ -50,8 +53,6 @@ public class DownloadWorker<T extends BackgroundOperation> extends SwingWorker<P
     
     this.title = operation.getTitle();
     this.progressText = operation.getProgressText();
-    
-    this.downloadStatus = 0;
   }
   
   @Override
@@ -59,51 +60,30 @@ public class DownloadWorker<T extends BackgroundOperation> extends SwingWorker<P
   {
     ProgressDialog.init(parent, title, null);
     
-    try
+    try (ZipFile zfile = new ZipFile(src.toFile()))
     { 
-      tmpPath = Files.createTempFile(null, null);
+      ZipEntry entry = zfile.entries().nextElement();
+      size = entry.getSize();
       
-      try (OutputStream os = Files.newOutputStream(tmpPath))
+      try (InputStream is = new BufferedInputStream(zfile.getInputStream(entry)))
       {
-        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-        connection.connect();
-        
-        if ((connection.getResponseCode() / 100) != 2)
-          return null;
-        
-        downloadSize = connection.getContentLengthLong();
-        
-        byte[] buffer = new byte[BUFFER_SIZE];
-                
-        try (InputStream is = connection.getInputStream())
-        {
-        
-          while (true)
-          {
-            int read = is.read(buffer, 0, BUFFER_SIZE);
-            
-            if (read == -1)
-              break;
-            else
-              downloadStatus += read;
-            
-            os.write(buffer, 0, read);
-            
-            setProgress((int)((downloadStatus / (float)downloadSize)*100));
-            publish(downloadStatus);
-            
-            if (downloadSize == downloadStatus)
-              break;
-          }
+        try (OutputStream os = Files.newOutputStream(dest, StandardOpenOption.CREATE))
+        {   
+          byte[] buffer = new byte[8192];
           
-          connection.disconnect();
-        
-          if (downloadSize == downloadStatus)
-            return tmpPath;
-          else
-            return null;
-        }
-      
+          int chunk = 0;
+          
+          while ((chunk = is.read(buffer)) > 0)
+          {
+            processed += chunk;
+            
+            setProgress((int)((processed / (float)size)*100));
+            publish(processed);
+            
+            os.write(buffer, 0, chunk);
+          }
+ 
+        } 
       }
     }
     catch (IOException e)
@@ -121,7 +101,7 @@ public class DownloadWorker<T extends BackgroundOperation> extends SwingWorker<P
     ProgressDialog.update(this, progressText + " " + 
                                 StringUtils.humanReadableByteCount(v.get(v.size()-1)) +
                                 " of " + 
-                                StringUtils.humanReadableByteCount(downloadSize)+"..");
+                                StringUtils.humanReadableByteCount(size)+"..");
   }
   
   @Override
@@ -129,17 +109,9 @@ public class DownloadWorker<T extends BackgroundOperation> extends SwingWorker<P
   {
     try
     {
-      Path tmpPath = get();
-      
-      if (tmpPath != null)
-        Files.move(tmpPath, savePath, StandardCopyOption.REPLACE_EXISTING);
-      
+      get();
       ProgressDialog.finished();
       callback.accept(true);
-    }
-    catch (IOException e)
-    {
-      e.printStackTrace();
     }
     catch (ExecutionException e)
     {
