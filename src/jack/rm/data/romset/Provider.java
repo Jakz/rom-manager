@@ -1,10 +1,40 @@
 package jack.rm.data.romset;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class Provider
 {
+  public static final class Source
+  {
+    private URL url;
+    private final Map<String, String> postArguments;
+    
+    public Source(String url, String... args)
+    {
+      try { this.url = new URL(url); } catch (MalformedURLException e) { e.printStackTrace(); }
+      
+      if (args != null)
+      {
+        if (args.length % 2 != 0)
+          throw new IllegalArgumentException("post arguments for Provider.Source must be in pairs of key,value");
+        
+        postArguments = new HashMap<String,String>();
+        
+        for (int i = 0; i < args.length/2; ++i)
+          postArguments.put(args[i*2], args[i*2 + 1]);
+      }
+      else
+        postArguments = null;
+    }
+    
+    public URL getURL() { return url; }
+    public Map<String,String> getPostArguments() { return postArguments; }
+  }
+  
   public static enum Type
   {
     DAT_FILE("Dat File"),
@@ -24,11 +54,12 @@ public final class Provider
   private final String tag;
   private final String suffix;
   
+  private final String author;
   private final String description;
   
-  private URL url;
+  private Source source;
   
-  public Provider(String name, String tag, String flavour, String suffix, String description, String url)
+  public Provider(String name, String tag, String flavour, String suffix, String description, String author, Source source)
   {
     this.name = name;
     this.tag = tag;
@@ -36,22 +67,18 @@ public final class Provider
     this.suffix = suffix;
     this.description = description;
     this.type = Type.DAT_FILE;
-    
-    try {this.url = new URL(url);}
-    catch (MalformedURLException e)
-    {
-      e.printStackTrace(); 
-    }
+    this.author = author;
+    this.source = source;
   }
   
-  public Provider(String name, String tag, String url)
+  public Provider(String name, String tag, Source source)
   {
-    this(name, tag, null, null, null, url);
+    this(name, tag, null, null, null, null, source);
   }
   
-  public Provider derive(String flavour, String suffix, String description, String url)
+  public Provider derive(String flavour, String suffix, String description, String author, Source source)
   {
-    return new Provider(name, tag, flavour, suffix, description, url);
+    return new Provider(name, tag, flavour, suffix, description, author, source);
   }
   
   public Type getType() { return type; }
@@ -59,13 +86,16 @@ public final class Provider
   public String getName() { return name; }
   public String getSuffix() { return suffix; }
   public String getFlavour() { return flavour; }
-  public URL getURL() { return url; }
+  public String getAuthor() { return author; }
+  
+  public boolean canBeUpdated() { return source != null; }
+  public Source getSource() { return source; }
  
-  public boolean hasSuffix() { return getSuffix() != null; }
+  public boolean hasSuffix() { return getSuffix() != null && !getSuffix().isEmpty(); }
   public String builtSuffix() { return hasSuffix() ? "-" + getSuffix() : ""; }
   
   public String prettyName() {
-    if (getSuffix() != null)
+    if (hasSuffix())
       return getName()+" ("+getFlavour()+")";
     else
       return getName();

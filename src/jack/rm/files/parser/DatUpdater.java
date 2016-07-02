@@ -20,12 +20,15 @@ import jack.rm.files.BackgroundOperation;
 import jack.rm.files.DownloadWorker;
 import jack.rm.files.ZipExtractWorker;
 import jack.rm.gui.Dialogs;
+import jack.rm.log.Log;
+import jack.rm.log.LogSource;
+import jack.rm.log.LogTarget;
 
 public class DatUpdater
 {
-  public static void updateDat(RomSet set, URL url) throws IOException
+  public static void updateDat(RomSet set, Consumer<Boolean> callback) throws IOException
   {
-    Path destDat = GlobalSettings.DATA_PATH.resolve(set.datPath());
+    Path destDat = set.datPath();
     AtomicReference<Path> tmpDownloadPath = new AtomicReference<Path>(Files.createTempFile(null, null));
     AtomicReference<Path> tmpZippedPath = new AtomicReference<Path>();
 
@@ -50,13 +53,15 @@ public class DatUpdater
           long ncrc = FileUtils.calculateCRCFast(src);
           long nsize = Files.size(src);
           
-          if (ncrc != crc.get() || nsize != size.get())
-            Files.move(src, destDat, StandardCopyOption.REPLACE_EXISTING);
-          else
+          if (ncrc == crc.get() && nsize == size.get())
           {
             Dialogs.showWarning("Dat alrady up-to-date", "Your DAT version is already up to date!", Main.mainFrame.romSetManagerView);
+            return;
           }
         }
+        
+        Files.move(src, destDat, StandardCopyOption.REPLACE_EXISTING);
+
       }
       catch (IOException e)
       {
@@ -74,6 +79,7 @@ public class DatUpdater
       catch (IOException e)
       {
         e.printStackTrace();
+        callback.accept(false);
       }
     };
     
@@ -94,25 +100,32 @@ public class DatUpdater
         {
           tmpZippedPath.set(tmpDownloadPath.get());
           tmpDownloadPath.set(Files.createTempFile(null, null));
+          Log.message(LogSource.DAT_DOWNLOADER, LogTarget.romset(set), "Extracting DAT for "+set.ident()+" to "+tmpDownloadPath);
+
           
           ZipExtractWorker<?> worker =  new ZipExtractWorker<BackgroundOperation>(tmpZippedPath.get(), tmpDownloadPath.get(), new BackgroundOperation() {
             public String getTitle() { return "Uncompressing"; }
             public String getProgressText() { return "Progress.."; }
-            }, consolidationStep.andThen(cleanupStep), Main.mainFrame);
+            }, consolidationStep.andThen(cleanupStep).andThen(callback), Main.mainFrame.romSetManagerView);
             
           worker.execute();
-        };
+        }
+        else
+          consolidationStep.andThen(cleanupStep).andThen(callback).accept(true);
       }
       catch (IOException e)
       {
         e.printStackTrace();
+        callback.accept(false);
       } 
     };
     
-    DownloadWorker<?> worker = new DownloadWorker<BackgroundOperation>(url, tmpDownloadPath.get(), new BackgroundOperation() {
+    Log.message(LogSource.DAT_DOWNLOADER, LogTarget.romset(set), "Downloading DAT for "+set.ident()+" to "+tmpDownloadPath);
+    
+    DownloadWorker<?> worker = new DownloadWorker<BackgroundOperation>(set.provider.getSource().getURL(), tmpDownloadPath.get(), new BackgroundOperation() {
       public String getTitle() { return "Downloading"; }
       public String getProgressText() { return "Progress.."; }
-    }, extractionStep, Main.mainFrame);
+    }, extractionStep, Main.mainFrame.romSetManagerView, set.provider.getSource().getPostArguments());
     
     worker.execute();    
     

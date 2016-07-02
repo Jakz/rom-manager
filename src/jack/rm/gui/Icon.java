@@ -41,10 +41,19 @@ public enum Icon
   SYSTEM_GAME_GEAR("systems/game-gear"),
   SYSTEM_GAMEBOY("systems/gameboy"),
   SYSTEM_GAMEBOY_ADVANCE("systems/gameboy-advance"),
+  SYSTEM_GAMEBOY_COLOR("systems/gameboy-color"),
+  SYSTEM_NINTENDO_DS("systems/nintendo-ds"),
+  
   SYSTEM_NES("systems/nes"),
-  SYSTEM_SEGA_MASTER_SYSTEM("systems/sega-master-system"),
   SYSTEM_SUPER_NINTENDO("systems/super-nintendo"),
+  SYSTEM_NINTENDO_64("systems/nintendo-64"),
+  
+  SYSTEM_SEGA_MASTER_SYSTEM("systems/sega-master-system"),
+  
+  SYSTEM_COMMODORE_64("systems/commodore-64"),
+  
   SYSTEM_WONDERSWAN("systems/wonderswan"),
+  SYSTEM_NEO_GEO_POCKET("systems/neo-geo-pocket"),
   SYSTEM_MISSING("systems/missing"),
   ;
   

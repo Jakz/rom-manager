@@ -4,15 +4,18 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
@@ -32,6 +35,8 @@ public class DownloadWorker<T extends BackgroundOperation> extends SwingWorker<P
   protected final Path savePath;
   protected Path tmpPath;
   
+  protected final Map<String,String> postArguments;
+  
   protected final JFrame parent;
   
   protected long downloadStatus;
@@ -39,6 +44,11 @@ public class DownloadWorker<T extends BackgroundOperation> extends SwingWorker<P
   protected int BUFFER_SIZE = 8192;
   
   public DownloadWorker(URL url, Path dest, T operation, Consumer<Boolean> callback, JFrame parent)
+  {
+    this(url, dest, operation, callback, parent, null);
+  }
+  
+  public DownloadWorker(URL url, Path dest, T operation, Consumer<Boolean> callback, JFrame parent, Map<String,String> postArguments)
   {
     this.url = url;
     this.savePath = dest;
@@ -50,6 +60,8 @@ public class DownloadWorker<T extends BackgroundOperation> extends SwingWorker<P
     
     this.title = operation.getTitle();
     this.progressText = operation.getProgressText();
+    
+    this.postArguments = postArguments;
     
     this.downloadStatus = 0;
   }
@@ -66,6 +78,33 @@ public class DownloadWorker<T extends BackgroundOperation> extends SwingWorker<P
       try (OutputStream os = Files.newOutputStream(tmpPath))
       {
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+        
+        if (postArguments != null && !postArguments.isEmpty())
+        {
+          final StringBuilder postData = new StringBuilder();
+          postArguments.forEach((k,v) -> {
+            try
+            {
+              if (postData.length() != 0)
+                postData.append('&');
+            
+              postData.append(URLEncoder.encode(k, "UTF-8")).append('=').append(URLEncoder.encode(v, "UTF-8"));
+             
+            }
+            catch (UnsupportedEncodingException e)
+            {
+              e.printStackTrace();
+            }
+          });
+          
+          byte[] postDataBytes = postData.toString().getBytes("UTF-8");
+          
+          connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+          connection.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
+          connection.setDoOutput(true);
+          connection.getOutputStream().write(postDataBytes);
+        }
+        
         connection.connect();
         
         if ((connection.getResponseCode() / 100) != 2)

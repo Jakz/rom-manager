@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.text.DateFormat;
@@ -21,6 +22,7 @@ import jack.rm.Main;
 import jack.rm.data.console.System;
 import jack.rm.data.romset.RomSet;
 import jack.rm.data.romset.RomSetManager;
+import jack.rm.files.parser.DatUpdater;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.BorderFactory;
@@ -158,7 +160,7 @@ public class RomSetManagerView extends JFrame
     getContentPane().add(systemScrollPane, BorderLayout.WEST);
     getContentPane().add(systemSetInfo, BorderLayout.CENTER);
     
-    setPreferredSize(new Dimension(600,400));
+    setPreferredSize(new Dimension(800,600));
     setTitle("Rom Sets Management");
     pack();
   }
@@ -187,7 +189,7 @@ public class RomSetManagerView extends JFrame
       datTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
       
       datTable.getSelectionModel().addListSelectionListener(e -> {
-        if (!e.getValueIsAdjusting())
+        if (!e.getValueIsAdjusting() && e.getFirstIndex() < datModel.data.size())
           info.updateFields(datModel.data.get(e.getFirstIndex()));
       });
       
@@ -268,9 +270,23 @@ public class RomSetManagerView extends JFrame
       this.add(update, "gapleft 20, wrap");
       
       update.setVisible(false);
+      update.addActionListener(e -> {
+        if (set != null)
+        {
+          try
+          {
+            Consumer<Boolean> postStep = r -> { if (r) updateFields(set); };
+            
+            DatUpdater.updateDat(set, postStep);
+          }
+          catch (IOException ex)
+          {
+            ex.printStackTrace();
+          }
+        }
+      });
       
       this.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.DARK_GRAY));
-
     }
     
     public void updateFields(RomSet set)
@@ -286,14 +302,17 @@ public class RomSetManagerView extends JFrame
           boolean isPresent = Files.exists(set.datPath());
           
           update.setVisible(true);
+          update.setEnabled(set.provider.canBeUpdated());
           
           if (isPresent)
           {
+            status.setForeground(new Color(0,180,0));
             status.setText("Status: PRESENT ("+format.format(new Date(Files.getLastModifiedTime(set.datPath()).toMillis()))+")");
             update.setText("Update");
           }
           else
           {
+            status.setForeground(new Color(180,0,0));
             status.setText("Status: MISSING");
             update.setText("Download");
           }
@@ -302,7 +321,7 @@ public class RomSetManagerView extends JFrame
         {
           e.printStackTrace();
         }
-        
+
         type.setText("("+set.provider.getType().caption+")");
       }
       else

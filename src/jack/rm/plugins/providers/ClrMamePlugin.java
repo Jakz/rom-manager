@@ -6,6 +6,7 @@ import jack.rm.assets.EmptyAssetManager;
 import jack.rm.data.console.System;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.Attribute;
+import jack.rm.data.romset.Provider;
 import jack.rm.data.romset.RomSet;
 import jack.rm.plugins.datparsers.DatParserPlugin;
 import jack.rm.plugins.providers.*;
@@ -32,10 +33,19 @@ public class ClrMamePlugin extends ProviderPlugin
     DatParserPlugin datParser = this.findDatParser(datParsers, "clr-mame-nointro");
     
     RomSet[] sets = new RomSet[1];
+    
+    Provider.Source gameGearSource = new Provider.Source("http://datomatic.no-intro.org/?page=download&fun=dat",
+      "inc_unl", "1",
+      "format", "clrmamepro",
+      "language_filter", "all_languages",
+      "region_filter", "all_regions",
+      "dbutton", "Download",
+      "Download27", ""
+    );
 
     sets[0] = new RomSet(
         System.GG, 
-        KnownProviders.NO_INTRO.derive(null, null, "", new URL()), 
+        KnownProviders.NO_INTRO.derive(null, null, "", "", gameGearSource), 
         GG_ATTRIBUTES, 
         new EmptyAssetManager(), 
         datParser.buildDatLoader("clr-mame-nointro")

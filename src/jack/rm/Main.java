@@ -4,6 +4,7 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import java.awt.Desktop;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -136,7 +137,7 @@ public class Main
 
 	}
 	
-	public static void loadRomSet(RomSet romSet)
+	public static void loadRomSet(RomSet romSet) throws FileNotFoundException
 	{
 	  if (RomSet.current != null)
 	    RomSet.current.saveStatus();
@@ -328,14 +329,21 @@ public class Main
  
     if (lastProvider != null)
     {
-      loadRomSet(RomSetManager.byIdent(lastProvider));
-      mainFrame.pluginStateChanged();
+      try
+      {
+        loadRomSet(RomSetManager.byIdent(lastProvider));
+        mainFrame.pluginStateChanged();
+      }
+      catch (FileNotFoundException e)
+      {
+        Dialogs.showError("DAT File not found!", "Missing DAT file for set "+lastProvider, Main.mainFrame);
+      }
     }
     
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setVisible(true);
 		
-  		try
+  	/*	try
   		{
   		  URL test = new URL("http://www.advanscene.com/offline/datas/ADVANsCEne_GBA.zip");
   		  
@@ -363,7 +371,7 @@ public class Main
   		catch (Exception e)
   		{
   		  e.printStackTrace();
-  		}
+  		}*/
 	  }
 	}
 

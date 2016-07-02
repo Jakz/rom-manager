@@ -88,7 +88,7 @@ public class RomSet
 			
 	public boolean canBeLoaded()
 	{
-	  return Files.exists(GlobalSettings.DATA_PATH.resolve(datPath()));
+	  return Files.exists(datPath());
 	}
 	
 	public final void load()

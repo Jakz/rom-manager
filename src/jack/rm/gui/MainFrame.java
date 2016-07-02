@@ -79,9 +79,25 @@ public class MainFrame extends JFrame implements WindowListener
 	
 	final private TextOutputFrame textFrame = new TextOutputFrame();
 	
+	private RomSet lastSet = null;
 	final private ItemListener romSetListener = e -> {
-    if (e.getStateChange() == ItemEvent.SELECTED)
-      Main.loadRomSet(cbRomSets.getItemAt(cbRomSets.getSelectedIndex()));
+    if (e.getStateChange() == ItemEvent.DESELECTED)
+    {
+      lastSet = (RomSet)e.getItem();
+    }
+    else if (e.getStateChange() == ItemEvent.SELECTED)
+    {
+      RomSet set = cbRomSets.getItemAt(cbRomSets.getSelectedIndex());    
+      try
+      {
+        Main.loadRomSet(set);
+      }
+      catch (java.io.FileNotFoundException ee)
+      {
+        Dialogs.showError("DAT File not found!", "Missing DAT file for set "+set.ident(), Main.mainFrame);
+        cbRomSets.setSelectedItem(lastSet);
+      }
+    }
 	};
 	
 	final private ListCellRenderer<Object> cbRomSetRenderer = new DefaultListCellRenderer()

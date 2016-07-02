@@ -1,5 +1,7 @@
 package jack.rm.data.romset;
 
+import java.io.FileNotFoundException;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -75,14 +77,17 @@ public class RomSetManager
 	  return allSets;
 	}
 	
-	public static RomSet loadSet(String ident)
+	public static RomSet loadSet(String ident) throws FileNotFoundException
 	{
 		return loadSet(byIdent(ident));
 	}
 	
-	public static RomSet loadSet(RomSet set)
+	public static RomSet loadSet(RomSet set) throws FileNotFoundException
 	{
-		Log.log(LogType.MESSAGE, LogSource.STATUS, LogTarget.romset(set), "Loading romset");
+		if (!Files.exists(set.datPath()))
+		  throw new FileNotFoundException("missing DAT files");
+	  
+	  Log.log(LogType.MESSAGE, LogSource.STATUS, LogTarget.romset(set), "Loading romset");
 	  			
 		RomSize.mapping.clear();
 		set.load();

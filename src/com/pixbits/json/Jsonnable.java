@@ -2,8 +2,8 @@ package com.pixbits.json;
 
 import com.google.gson.JsonElement;
 
-public interface Jsonnable
+public interface Jsonnable<T>
 {
-  JsonElement serialize();
-  void unserialize(JsonElement element);
+  public JsonElement serialize();
+  public void unserialize(JsonElement element);
 }
