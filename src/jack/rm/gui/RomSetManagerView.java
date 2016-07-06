@@ -48,7 +48,7 @@ import javax.swing.table.TableCellRenderer;
 import com.pixbits.gui.AlternateColorTableCellRenderer;
 import com.pixbits.gui.LambdaTableCellRenderer;
 
-public class RomSetManagerView extends JFrame
+public class RomSetManagerView extends JPanel
 {
   private final JList<System> systemList;
   private final DefaultListModel<System> systemModel;
@@ -155,22 +155,12 @@ public class RomSetManagerView extends JFrame
     JScrollPane systemScrollPane = new JScrollPane(systemList);
     systemScrollPane.setBorder(BorderFactory.createEmptyBorder(2, 10, 2, 10));
        
-    getContentPane().setLayout(new BorderLayout());
+    setLayout(new BorderLayout());
     
-    getContentPane().add(systemScrollPane, BorderLayout.WEST);
-    getContentPane().add(systemSetInfo, BorderLayout.CENTER);
+    add(systemScrollPane, BorderLayout.WEST);
+    add(systemSetInfo, BorderLayout.CENTER);
+  }
     
-    setPreferredSize(new Dimension(800,600));
-    setTitle("Rom Sets Management");
-    pack();
-  }
-  
-  void showMe()
-  {
-    setLocationRelativeTo(Main.mainFrame);
-    setVisible(true);
-  }
-  
   class SystemRomSetInfo extends JPanel
   {
     private final JLabel countLabel;

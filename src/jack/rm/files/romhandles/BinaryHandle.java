@@ -6,8 +6,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import jack.rm.files.romhandles.RomPath.Type;
-
 public class BinaryHandle extends RomPath
 {
   public final Path file;

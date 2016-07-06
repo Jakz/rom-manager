@@ -26,19 +26,23 @@ public class GlobalSettings
 {  
   public static final Path DATA_PATH = Paths.get("data/");
   
-  private final Set<String> enabledProviders;
+  private final List<String> enabledProviders;
   private String currentProvider;
+  private boolean alwaysScanWhenLoadingRomset;
   
   public GlobalSettings()
   {
-    enabledProviders = new HashSet<>();
+    enabledProviders = new ArrayList<>();
+    alwaysScanWhenLoadingRomset = false;
   }
   
   public void markCurrentProvider(String ident) { currentProvider = ident; }
   public String getCurrentProvider() { return currentProvider; }
-  public Set<String> getEnabledProviders() { return enabledProviders; }
+  public List<String> getEnabledProviders() { return enabledProviders; }
   public void enableProvider(String ident) { enabledProviders.add(ident); }
   public void disableProvider(String ident) { enabledProviders.remove(ident); }
+  
+  public boolean shouldScanWhenLoadingRomset() { return alwaysScanWhenLoadingRomset; }
   
   public static GlobalSettings settings = new GlobalSettings();
   

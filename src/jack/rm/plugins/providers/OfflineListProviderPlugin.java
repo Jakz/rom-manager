@@ -57,6 +57,13 @@ public class OfflineListProviderPlugin extends ProviderPlugin
     new Asset.Image(Paths.get("gameplay"), new Dimension(320,288))
   };
   
+  private final static Asset[] LYNX_ASSETS = 
+  {
+    new Asset.Image(Paths.get("title"), new Dimension(320,320)),
+    new Asset.Image(Paths.get("gameplay"), new Dimension(320,320))
+  };
+  
+  
   private final static Attribute[] GBA_ATTRIBUTES = 
   {
     RomAttribute.TITLE,
@@ -348,6 +355,22 @@ public class OfflineListProviderPlugin extends ProviderPlugin
           new AssetManager(NES_ASSETS, new URL("http://nesofflinelist.free.fr/imgs/")),
           datParser
         ));
+      }
+      
+      {
+        Map<String, Object> args = new HashMap<>();
+        args.put("save-parser", (SaveParser)(r -> null));
+        DatLoader datParser = parser.buildDatLoader("offline-list", args);
+        
+        sets.add(new RomSet(
+            System.LYNX,
+            KnownProviders.NO_INTRO.derive("", "", "", "Atari Lynx", new Provider.Source("http://nointro.free.fr/datas/Official%20No-Intro%20Atari%20Lynx.zip")),
+            NES_ATTRIBUTES,
+            new AssetManager(LYNX_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Atari%20Lynx/")),
+            datParser
+          ));
+        
+        
       }
       
       return sets.toArray(new RomSet[sets.size()]);

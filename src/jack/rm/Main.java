@@ -41,6 +41,7 @@ public class Main
   public static MainFrame mainFrame;
 	//public static InfoPanel infoPanel;
 	
+  public static GlobalSettingsView gsettingsView;
 	public static ManagerPanel romsetPanel;
 	public static PluginsPanel pluginsPanel;
 	
@@ -152,7 +153,7 @@ public class Main
     mainFrame.romSetLoaded(set);
     
     scanner = new Scanner(manager, set);
-    scanner.scanForRoms(!wasInit);
+    scanner.scanForRoms(!wasInit && GlobalSettings.settings.shouldScanWhenLoadingRomset());
 
 
     downloader = new Downloader(set);
@@ -321,7 +322,8 @@ public class Main
 	  
 	  romsetPanel = new ManagerPanel();
 	  pluginsPanel = new PluginsPanel(manager);
-		
+		gsettingsView = new GlobalSettingsView();
+	  
 		mainFrame = new MainFrame();
     clonesDialog = new ClonesDialog(mainFrame, "Rom Clones");
 

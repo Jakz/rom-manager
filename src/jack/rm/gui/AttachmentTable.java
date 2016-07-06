@@ -105,6 +105,7 @@ public class AttachmentTable extends JPanel implements FileTransferHandler.Liste
     model = new AttachmentTableModel();
     table = new JTable(model);
     JScrollPane pane = new JScrollPane(table);
+    pane.setPreferredSize(new Dimension(600,200));
     this.add(pane);
     pane.setTransferHandler(new FileTransferHandler(this));
   }

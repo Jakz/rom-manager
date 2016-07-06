@@ -19,6 +19,7 @@ public enum System
 	NDS("nds", "Nintendo DS", new String[] {"nds", "dsi"}, Icon.SYSTEM_NINTENDO_DS, true),
   _3DS("3ds", "Nintendo 3DS", new String[] {"3ds"}, true),
 
+  LYNX("lynx", "Atary Lynx", new String[] { "lnx" }, true),
   
 	WS("ws", "WonderSwan", new String[] {"ws"}, Icon.SYSTEM_WONDERSWAN, true),
 	GG("gg", "Game Gear", new String[] {"gg"}, Icon.SYSTEM_GAME_GEAR, true),

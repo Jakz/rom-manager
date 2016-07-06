@@ -55,7 +55,7 @@ public class DatUpdater
           
           if (ncrc == crc.get() && nsize == size.get())
           {
-            Dialogs.showWarning("Dat alrady up-to-date", "Your DAT version is already up to date!", Main.mainFrame.romSetManagerView);
+            Dialogs.showWarning("Dat alrady up-to-date", "Your DAT version is already up to date!", Main.gsettingsView);
             return;
           }
         }
@@ -106,7 +106,7 @@ public class DatUpdater
           ZipExtractWorker<?> worker =  new ZipExtractWorker<BackgroundOperation>(tmpZippedPath.get(), tmpDownloadPath.get(), new BackgroundOperation() {
             public String getTitle() { return "Uncompressing"; }
             public String getProgressText() { return "Progress.."; }
-            }, consolidationStep.andThen(cleanupStep).andThen(callback), Main.mainFrame.romSetManagerView);
+            }, consolidationStep.andThen(cleanupStep).andThen(callback), Main.gsettingsView);
             
           worker.execute();
         }
@@ -125,7 +125,7 @@ public class DatUpdater
     DownloadWorker<?> worker = new DownloadWorker<BackgroundOperation>(set.provider.getSource().getURL(), tmpDownloadPath.get(), new BackgroundOperation() {
       public String getTitle() { return "Downloading"; }
       public String getProgressText() { return "Progress.."; }
-    }, extractionStep, Main.mainFrame.romSetManagerView, set.provider.getSource().getPostArguments());
+    }, extractionStep, Main.gsettingsView, set.provider.getSource().getPostArguments());
     
     worker.execute();    
     

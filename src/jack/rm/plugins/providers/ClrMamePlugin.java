@@ -32,7 +32,7 @@ public class ClrMamePlugin extends ProviderPlugin
   {
     DatParserPlugin datParser = this.findDatParser(datParsers, "clr-mame-nointro");
     
-    RomSet[] sets = new RomSet[1];
+    RomSet[] sets = new RomSet[2];
     
     Provider.Source gameGearSource = new Provider.Source("http://datomatic.no-intro.org/?page=download&fun=dat",
       "inc_unl", "1",
@@ -45,7 +45,15 @@ public class ClrMamePlugin extends ProviderPlugin
 
     sets[0] = new RomSet(
         System.GG, 
-        KnownProviders.NO_INTRO.derive(null, null, "", "", gameGearSource), 
+        KnownProviders.NO_INTRO.derive(null, null, "", "", null), 
+        GG_ATTRIBUTES, 
+        new EmptyAssetManager(), 
+        datParser.buildDatLoader("clr-mame-nointro")
+    );
+    
+    sets[1] = new RomSet(
+        System.LYNX, 
+        KnownProviders.NO_INTRO.derive(null, null, "", "", null), 
         GG_ATTRIBUTES, 
         new EmptyAssetManager(), 
         datParser.buildDatLoader("clr-mame-nointro")

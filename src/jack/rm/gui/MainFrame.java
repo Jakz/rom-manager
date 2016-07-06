@@ -74,9 +74,7 @@ public class MainFrame extends JFrame implements WindowListener
 	final private SearchPanel searchPanel = new SearchPanel(this);
 	final private InfoPanel infoPanel = new InfoPanel();
 	final private OptionsFrame optionsFrame = new OptionsFrame(Main.manager);
-	
-	final public RomSetManagerView romSetManagerView = new RomSetManagerView();
-	
+		
 	final private TextOutputFrame textFrame = new TextOutputFrame();
 	
 	private RomSet lastSet = null;
@@ -100,18 +98,7 @@ public class MainFrame extends JFrame implements WindowListener
     }
 	};
 	
-	final private ListCellRenderer<Object> cbRomSetRenderer = new DefaultListCellRenderer()
-	{
-	  @Override
-	  public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus)
-	  {
-	    JLabel c = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-	    RomSet set = (RomSet)value;   
-	    if (set != null)
-	      c.setIcon(set.system.getIcon());
-	    return c;
-	  }
-	};
+	final private ListCellRenderer<Object> cbRomSetRenderer = new RomSetListCellRenderer();
 	
 	public void pluginStateChanged()
 	{
@@ -197,7 +184,7 @@ public class MainFrame extends JFrame implements WindowListener
 		buildMenu(null);
 			
 		pack();
-		setTitle("Rom Manager v0.6 - build 51");
+		setTitle("Rom Manager v0.8 - build 161");
 	}
 	
 	public void rebuildEnabledDats()
@@ -290,8 +277,8 @@ public class MainFrame extends JFrame implements WindowListener
     
     toolsMenu.removeAll();
     
-    MenuElement.TOOLS_ROM_SET_MANAGEMENT.item.addActionListener( e -> romSetManagerView.showMe());
-    toolsMenu.add(MenuElement.TOOLS_ROM_SET_MANAGEMENT.item);
+    MenuElement.TOOLS_GLOBAL_SETTINGS.item.addActionListener( e -> Main.gsettingsView.showMe());
+    toolsMenu.add(MenuElement.TOOLS_GLOBAL_SETTINGS.item);
 
     if (set != null)
     {
