@@ -1,11 +1,13 @@
 package jack.rm.gui;
 
-import jack.rm.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JMenuItem;
+
+import jack.rm.Main;
 import jack.rm.data.romset.RomList;
 import jack.rm.data.romset.RomSet;
-
-import java.awt.event.*;
-import javax.swing.*;
 
 class MenuListener implements ActionListener
 {

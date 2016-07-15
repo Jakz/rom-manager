@@ -1,7 +1,7 @@
 package com.pixbits.workflow;
 
-import java.util.stream.Stream;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public abstract class Dumper<T extends WorkflowData> implements Consumer<Stream<T>>
 {

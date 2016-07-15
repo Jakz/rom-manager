@@ -1,13 +1,11 @@
 package com.pixbits.gui;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import javax.swing.JComponent;
 import javax.swing.JTable;
-import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 
 public class LambdaTableCellRenderer<T> implements TableCellRenderer

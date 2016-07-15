@@ -1,11 +1,19 @@
 package jack.rm.gui;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.ListCellRenderer;
+
 import jack.rm.data.rom.Location;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
-
-import javax.swing.*;
-import java.awt.*;
 
 class RomCellRenderer extends JPanel implements ListCellRenderer<Rom>
 {

@@ -2,7 +2,7 @@ package jack.rm.workflow;
 
 import java.util.function.Consumer;
 
-import com.pixbits.workflow.*;
+import com.pixbits.workflow.Fetcher;
 
 import jack.rm.data.rom.Rom;
 

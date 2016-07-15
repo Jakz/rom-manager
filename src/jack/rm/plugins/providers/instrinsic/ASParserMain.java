@@ -1,5 +1,7 @@
 package jack.rm.plugins.providers.instrinsic;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
@@ -17,25 +19,22 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 
-import org.jsoup.*;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import jack.rm.data.rom.Location;
-import jack.rm.data.rom.RomAttribute;
-import jack.rm.data.rom.Version;
 import jack.rm.data.console.GB;
 import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.CustomRomAttribute;
 import jack.rm.data.rom.Language;
+import jack.rm.data.rom.Location;
+import jack.rm.data.rom.RomAttribute;
+import jack.rm.data.rom.Version;
 
 
 public class ASParserMain

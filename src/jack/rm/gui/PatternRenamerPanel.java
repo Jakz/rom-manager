@@ -1,17 +1,29 @@
 package jack.rm.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
+import javax.swing.table.AbstractTableModel;
+
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.Organizer;
 import jack.rm.files.Pattern;
 import jack.rm.i18n.Text;
-
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
-import java.awt.event.*;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class PatternRenamerPanel extends PluginOptionsPanel implements CaretListener
 {

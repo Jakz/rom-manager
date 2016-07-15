@@ -1,7 +1,7 @@
 package jack.rm.gui;
 
-import java.util.Random;
 import java.awt.Color;
+import java.util.Random;
 
 public class GUI
 {

@@ -1,9 +1,11 @@
 package jack.rm.gui;
 
-import javax.swing.*;
-
 import java.awt.Component;
 import java.awt.Dimension;
+
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 public class TextOutputFrame extends JFrame
 {

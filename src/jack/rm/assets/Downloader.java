@@ -1,5 +1,21 @@
 package jack.rm.assets;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import com.pixbits.gui.ProgressDialog;
+
 import jack.rm.Main;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.romset.RomSet;
@@ -8,15 +24,6 @@ import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.log.LogType;
-
-import java.util.concurrent.*;
-
-import com.pixbits.gui.ProgressDialog;
-
-import java.nio.channels.*;
-import java.nio.file.*;
-import java.net.*;
-import java.io.*;
 
 public class Downloader
 {

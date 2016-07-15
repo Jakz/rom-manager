@@ -1,7 +1,12 @@
 package com.pixbits.gui;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.KeyboardFocusManager;
+import java.awt.RenderingHints;
+
+import javax.swing.JTextField;
 
 public class JPlaceHolderTextField extends JTextField
 {

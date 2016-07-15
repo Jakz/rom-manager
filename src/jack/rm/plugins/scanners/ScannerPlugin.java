@@ -1,7 +1,6 @@
 package jack.rm.plugins.scanners;
 
 import java.nio.file.Path;
-import java.nio.file.PathMatcher;
 import java.util.function.Predicate;
 
 import com.pixbits.plugin.PluginType;

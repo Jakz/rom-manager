@@ -1,8 +1,13 @@
 package com.pixbits.gui;
 
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.border.*;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Graphics;
+import java.awt.Insets;
+
+import javax.swing.JComponent;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 
 /**
  *  The ComponentBorder class allows you to place a real component in

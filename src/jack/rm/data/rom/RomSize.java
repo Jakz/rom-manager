@@ -1,6 +1,7 @@
 package jack.rm.data.rom;
 
-import java.util.*;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class RomSize implements Comparable<RomSize>
 {

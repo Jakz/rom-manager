@@ -1,13 +1,13 @@
 package jack.rm.plugins.folder;
 
-import jack.rm.data.rom.Rom;
-import jack.rm.plugins.OrganizerPlugin;
-import jack.rm.plugins.PluginRealType;
-
 import java.nio.file.Path;
 import java.util.function.Function;
 
 import com.pixbits.plugin.PluginType;
+
+import jack.rm.data.rom.Rom;
+import jack.rm.plugins.OrganizerPlugin;
+import jack.rm.plugins.PluginRealType;
 
 public abstract class FolderPlugin extends OrganizerPlugin implements Function<Rom, Path>
 {

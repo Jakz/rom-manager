@@ -1,6 +1,6 @@
 package jack.rm.gui;
 
-import javax.swing.*;
+import javax.swing.JPanel;
 
 import jack.rm.data.romset.RomSet;
 

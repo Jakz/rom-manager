@@ -1,7 +1,8 @@
 package jack.rm.script;
 
-import org.codehaus.jparsec.*;
-import org.codehaus.jparsec.pattern.Pattern;
+import org.codehaus.jparsec.Parser;
+import org.codehaus.jparsec.Parsers;
+import org.codehaus.jparsec.Scanners;
 import org.codehaus.jparsec.pattern.Patterns;
 
 import jack.rm.data.romset.RomSet;

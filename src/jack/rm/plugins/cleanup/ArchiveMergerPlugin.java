@@ -1,12 +1,7 @@
 package jack.rm.plugins.cleanup;
 
-import java.util.function.Consumer;
-import java.util.zip.ZipEntry;
-
 import java.nio.file.Path;
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.model.ZipParameters;
-import net.lingala.zip4j.util.Zip4jConstants;
+import java.util.function.Consumer;
 
 import com.pixbits.plugin.ExposedParameter;
 
@@ -16,6 +11,9 @@ import jack.rm.data.romset.RomList;
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.BackgroundOperation;
 import jack.rm.files.RomSetWorker;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.util.Zip4jConstants;
 
 public class ArchiveMergerPlugin extends CleanupPlugin implements BackgroundOperation
 {

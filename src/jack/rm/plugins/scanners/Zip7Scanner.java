@@ -1,14 +1,8 @@
 package jack.rm.plugins.scanners;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.nio.file.PathMatcher;
-import java.util.Enumeration;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import com.pixbits.plugin.PluginInfo;
 import com.pixbits.plugin.PluginVersion;
@@ -18,10 +12,6 @@ import jack.rm.data.romset.RomHashFinder;
 import jack.rm.files.ScanResult;
 import jack.rm.files.romhandles.RomPath;
 import jack.rm.files.romhandles.Zip7MultiHandle;
-import jack.rm.log.Log;
-import jack.rm.log.LogSource;
-import jack.rm.log.LogTarget;
-import jack.rm.log.LogType;
 import net.sf.sevenzipjbinding.ArchiveFormat;
 import net.sf.sevenzipjbinding.IInArchive;
 import net.sf.sevenzipjbinding.PropID;

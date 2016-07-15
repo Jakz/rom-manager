@@ -1,7 +1,8 @@
 package jack.rm.files;
 
-import com.pixbits.io.BinaryBuffer;
 import java.io.IOException;
+
+import com.pixbits.io.BinaryBuffer;
 
 public class Trimmer
 {

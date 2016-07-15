@@ -6,6 +6,7 @@ public enum Icon
 {
   FLAG_AUSTRALIA("flag_australia"),
   FLAG_BRAZIL("flag_brazil"),
+  FLAG_CANADA("flag_canada"),
   FLAG_CHINA("flag_china"),
   FLAG_DENMARK("flag_denmark"),
   FLAG_EUROPE("flag_europe"),

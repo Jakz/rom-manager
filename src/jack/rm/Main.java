@@ -1,38 +1,29 @@
 package jack.rm;
 
+import java.awt.Desktop;
+import java.io.FileNotFoundException;
+import java.util.function.Consumer;
+
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-import java.awt.Desktop;
-import java.io.FileNotFoundException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.function.Consumer;
+import com.pixbits.plugin.PluginManager;
+import com.pixbits.workflow.Dumper;
+import com.pixbits.workflow.Fetcher;
+import com.pixbits.workflow.WorkflowData;
+
 import jack.rm.assets.Downloader;
-import jack.rm.data.console.System;
-import jack.rm.data.rom.Rom;
-import jack.rm.data.romset.*;
-import jack.rm.files.BackgroundOperation;
-import jack.rm.files.DownloadWorker;
+import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.RomSetManager;
 import jack.rm.files.Scanner;
-import jack.rm.files.ZipExtractWorker;
-import jack.rm.gui.*;
+import jack.rm.gui.ClonesDialog;
+import jack.rm.gui.Dialogs;
+import jack.rm.gui.GlobalSettingsView;
+import jack.rm.gui.MainFrame;
+import jack.rm.gui.ManagerPanel;
+import jack.rm.gui.PluginsPanel;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
-import jack.rm.workflow.LogOperation;
-import jack.rm.workflow.RomConsolidator;
-import jack.rm.workflow.RomHandle;
-import jack.rm.workflow.SingleRomSource;
-import net.sf.sevenzipjbinding.ArchiveFormat;
-import net.sf.sevenzipjbinding.IOutArchive;
-import net.sf.sevenzipjbinding.IOutCreateArchive;
-import net.sf.sevenzipjbinding.IOutCreateArchive7z;
-import net.sf.sevenzipjbinding.SevenZip;
-
-import com.pixbits.plugin.PluginManager;
-import com.pixbits.workflow.*;
 
 public class Main
 {		
@@ -132,6 +123,9 @@ public class Main
     manager.register(jack.rm.plugins.datparsers.ClrMameParserPlugin.class);
     manager.register(jack.rm.plugins.datparsers.OfflineListParserPlugin.class);
 
+    manager.register(jack.rm.plugins.misc.ExportRomsPlugin.class);
+
+    
     manager.register(jack.rm.plugins.scanners.BinaryScannerPlugin.class);
     manager.register(jack.rm.plugins.scanners.NativeZipScanner.class);
     manager.register(jack.rm.plugins.scanners.Zip7Scanner.class);

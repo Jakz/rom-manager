@@ -4,12 +4,11 @@ import java.util.List;
 
 import jack.rm.assets.EmptyAssetManager;
 import jack.rm.data.console.System;
-import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.Attribute;
+import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.romset.Provider;
 import jack.rm.data.romset.RomSet;
 import jack.rm.plugins.datparsers.DatParserPlugin;
-import jack.rm.plugins.providers.*;
 
 
 public class ClrMamePlugin extends ProviderPlugin

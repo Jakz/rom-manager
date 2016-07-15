@@ -1,16 +1,27 @@
 package jack.rm.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+
+import com.pixbits.plugin.PluginManager;
+
 import jack.rm.Main;
 import jack.rm.data.romset.RomSet;
 import jack.rm.i18n.Text;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
-import java.awt.event.*;
-import javax.swing.*;
-
-import com.pixbits.plugin.PluginManager;
-
-import java.awt.*;
 
 public class OptionsFrame extends JFrame implements ActionListener, ComponentListener
 {

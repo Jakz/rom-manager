@@ -1,5 +1,6 @@
 package jack.rm.plugins.folder;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Predicate;
 
@@ -7,11 +8,9 @@ import com.pixbits.plugin.ExposedParameter;
 import com.pixbits.plugin.PluginInfo;
 import com.pixbits.plugin.PluginVersion;
 
-import java.nio.file.Path;
-
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
-import jack.rm.data.romset.*;
+import jack.rm.data.romset.RomSet;
 import jack.rm.files.Organizer;
 
 public class NumericalOrganizer extends FolderPlugin

@@ -1,8 +1,15 @@
 package jack.rm.files;
 
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.text.DecimalFormat;
+import java.util.Set;
+import java.util.TreeSet;
+
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomStatus;
-import jack.rm.data.romset.*;
+import jack.rm.data.romset.RomSet;
 import jack.rm.files.romhandles.ArchiveHandle;
 import jack.rm.files.romhandles.RomPath;
 import jack.rm.log.Log;
@@ -10,12 +17,6 @@ import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.renamer.PatternSetPlugin;
-
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.text.DecimalFormat;
-import java.util.*;
 
 public class Organizer
 {	

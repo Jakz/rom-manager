@@ -1,6 +1,16 @@
 package jack.rm.data.romset;
 
-import jack.rm.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
+
+import jack.rm.Main;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.RomGroup;
@@ -8,13 +18,9 @@ import jack.rm.data.rom.RomGroupID;
 import jack.rm.data.rom.RomID;
 import jack.rm.data.rom.RomStatus;
 import jack.rm.files.MoverWorker;
-import jack.rm.files.*;
+import jack.rm.files.RenamerWorker;
 import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.RenamerPlugin;
-
-import java.util.*;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 public class RomList implements Iterable<Rom>, RomHashFinder
 {

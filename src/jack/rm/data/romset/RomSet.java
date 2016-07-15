@@ -1,5 +1,21 @@
 package jack.rm.data.romset;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
+
 import jack.rm.GlobalSettings;
 import jack.rm.Main;
 import jack.rm.Settings;
@@ -20,23 +36,6 @@ import jack.rm.log.LogTarget;
 import jack.rm.log.LogType;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.cleanup.CleanupPlugin;
-
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
-import java.nio.file.PathMatcher;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.stream.*;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 public class RomSet
 {

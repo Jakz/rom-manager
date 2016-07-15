@@ -1,27 +1,37 @@
 package jack.rm.gui;
 
-import jack.rm.Settings;
-import jack.rm.data.romset.Provider;
-import jack.rm.data.romset.RomSet;
-import jack.rm.data.console.System;
-import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomSize;
-import jack.rm.data.rom.RomSize.PrintStyle;
-import jack.rm.data.rom.RomSize.PrintUnit;
-import jack.rm.data.rom.RomStatus;
-import jack.rm.i18n.Text;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.function.Supplier;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 
-import java.io.*;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.util.function.Supplier;
+import jack.rm.Settings;
+import jack.rm.data.console.System;
+import jack.rm.data.rom.RomSize;
+import jack.rm.data.rom.RomSize.PrintStyle;
+import jack.rm.data.rom.RomSize.PrintUnit;
+import jack.rm.data.romset.RomSet;
+import jack.rm.i18n.Text;
 
 public class ManagerPanel extends JPanel implements ActionListener
 {

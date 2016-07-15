@@ -1,5 +1,23 @@
 package jack.rm.gui;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.function.Predicate;
+
+import javax.swing.BoxLayout;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.ListCellRenderer;
+import javax.swing.SwingUtilities;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
+
+import com.pixbits.gui.JPlaceHolderTextField;
+
 import jack.rm.data.rom.Language;
 import jack.rm.data.rom.Location;
 import jack.rm.data.rom.Rom;
@@ -7,13 +25,6 @@ import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.RomSize;
 import jack.rm.data.romset.RomSet;
 import jack.rm.i18n.Text;
-import javax.swing.*;
-import javax.swing.event.*;
-
-import com.pixbits.gui.JPlaceHolderTextField;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.function.Predicate;
 
 public class SearchPanel extends JPanel
 {

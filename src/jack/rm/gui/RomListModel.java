@@ -1,12 +1,14 @@
 package jack.rm.gui;
 
-import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomStatus;
-
-import javax.swing.AbstractListModel;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
+
+import javax.swing.AbstractListModel;
+
+import jack.rm.data.rom.Rom;
+import jack.rm.data.rom.RomStatus;
 
 public class RomListModel extends AbstractListModel<Rom>
 {

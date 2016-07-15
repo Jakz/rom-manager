@@ -3,6 +3,7 @@ package jack.rm.assets;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 

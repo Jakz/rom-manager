@@ -1,11 +1,13 @@
 package jack.rm.gui;
 
-import java.awt.*;
-import java.util.stream.Collectors;
-import java.util.Map;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-import javax.swing.*;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import jack.rm.data.rom.RomStatus;
 

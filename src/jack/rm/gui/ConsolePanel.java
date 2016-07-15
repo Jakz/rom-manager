@@ -6,14 +6,18 @@ import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 import org.codehaus.jparsec.Parser;
-import org.codehaus.jparsec.error.ParseErrorDetails;
 import org.codehaus.jparsec.error.ParserException;
 
 import jack.rm.data.romset.RomSet;
-import jack.rm.script.*;
+import jack.rm.script.Script;
+import jack.rm.script.ScriptEnvironment;
+import jack.rm.script.ScriptParser;
+import jack.rm.script.ScriptStdout;
 
 public class ConsolePanel extends JPanel implements KeyListener, ScriptStdout
 {

@@ -5,13 +5,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
+import com.pixbits.plugin.PluginInfo;
+import com.pixbits.plugin.PluginVersion;
+
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.Pattern;
-
-import com.pixbits.plugin.PluginInfo;
-import com.pixbits.plugin.PluginVersion;
 
 public class NumberedRomPattern extends PatternSetPlugin
 {

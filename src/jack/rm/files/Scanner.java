@@ -1,32 +1,44 @@
 package jack.rm.files;
 
-import jack.rm.Main;
-import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomStatus;
-import jack.rm.data.romset.RomSet;
-import jack.rm.files.romhandles.BinaryHandle;
-import jack.rm.files.romhandles.RomPath;
-import jack.rm.gui.Dialogs;
-import jack.rm.log.*;
-import jack.rm.plugins.ActualPlugin;
-import jack.rm.plugins.ActualPluginBuilder;
-import jack.rm.plugins.PluginRealType;
-import jack.rm.plugins.datparsers.DatParserPlugin;
-import jack.rm.plugins.scanners.ScannerPlugin;
-
 import java.io.BufferedInputStream;
 import java.nio.channels.ClosedByInterruptException;
-import java.nio.file.*;
-import java.util.*;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.zip.*;
+import java.util.zip.CRC32;
+import java.util.zip.CheckedInputStream;
+
 import javax.swing.SwingWorker;
 
 import com.pixbits.gui.ProgressDialog;
 import com.pixbits.io.FolderScanner;
 import com.pixbits.plugin.PluginManager;
+
+import jack.rm.Main;
+import jack.rm.data.rom.Rom;
+import jack.rm.data.rom.RomStatus;
+import jack.rm.data.romset.RomSet;
+import jack.rm.gui.Dialogs;
+import jack.rm.log.Log;
+import jack.rm.log.LogSource;
+import jack.rm.log.LogTarget;
+import jack.rm.log.LogType;
+import jack.rm.plugins.ActualPlugin;
+import jack.rm.plugins.ActualPluginBuilder;
+import jack.rm.plugins.PluginRealType;
+import jack.rm.plugins.scanners.ScannerPlugin;
 
 public class Scanner
 {

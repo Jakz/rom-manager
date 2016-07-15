@@ -2,18 +2,16 @@ package jack.rm.plugins.renamer;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
+
+import com.pixbits.plugin.PluginInfo;
+import com.pixbits.plugin.PluginVersion;
 
 import jack.rm.data.rom.Attribute;
-import jack.rm.data.rom.Language;
 import jack.rm.data.rom.Location;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.RomSize;
 import jack.rm.files.Pattern;
-
-import com.pixbits.plugin.PluginInfo;
-import com.pixbits.plugin.PluginVersion;
 
 public class BasicPatternSet extends PatternSetPlugin
 {

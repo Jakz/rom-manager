@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.pixbits.io.*;
+import com.pixbits.io.BinaryBuffer;
 
 public class GBASleepHack
 {

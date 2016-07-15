@@ -1,26 +1,36 @@
 package jack.rm.gui;
 
-import java.util.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.ItemEvent;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import javax.swing.*;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
+
 import com.pixbits.plugin.PluginBuilder;
 import com.pixbits.plugin.PluginManager;
 import com.pixbits.plugin.gui.PluginConfigTable;
 
-import net.miginfocom.swing.MigLayout;
 import jack.rm.Main;
 import jack.rm.data.romset.RomSet;
-import jack.rm.plugins.*;
-
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.ItemEvent;
+import jack.rm.plugins.ActualPlugin;
+import jack.rm.plugins.ActualPluginBuilder;
+import jack.rm.plugins.PluginRealType;
+import net.miginfocom.swing.MigLayout;
 
 public class PluginsPanel extends JPanel
 {

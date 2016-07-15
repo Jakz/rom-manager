@@ -7,7 +7,6 @@ import java.util.function.Predicate;
 
 import com.pixbits.plugin.PluginType;
 
-import jack.rm.data.console.System;
 import jack.rm.data.romset.RomSet;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.PluginRealType;

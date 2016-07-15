@@ -2,7 +2,6 @@ package jack.rm.plugins.cleanup;
 
 import com.pixbits.plugin.PluginType;
 
-import jack.rm.data.romset.RomList;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.OperationalPlugin;
 import jack.rm.plugins.PluginRealType;

@@ -8,19 +8,9 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import com.google.gson.JsonParseException;
-
-import jack.rm.data.console.System;
 import jack.rm.json.Json;
-import jack.rm.log.Log;
-import jack.rm.log.LogSource;
-import jack.rm.log.LogType;
 
 public class GlobalSettings
 {  

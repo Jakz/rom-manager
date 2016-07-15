@@ -1,11 +1,14 @@
 package jack.rm.gui;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 import com.pixbits.gui.FileTransferHandler;

@@ -1,17 +1,20 @@
 package jack.rm.gui;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import com.pixbits.gui.FileTransferHandler;
+
 import jack.rm.Main;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomStatus;
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.Organizer;
 import jack.rm.files.ScanResult;
-import jack.rm.log.*;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import com.pixbits.gui.FileTransferHandler;
+import jack.rm.log.Log;
+import jack.rm.log.LogSource;
+import jack.rm.log.LogTarget;
+import jack.rm.log.LogType;
 
 public class FileDropperListener implements FileTransferHandler.Listener
 {

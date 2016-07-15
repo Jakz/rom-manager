@@ -1,14 +1,25 @@
 package jack.rm.gui;
 
-import javax.swing.table.*;
-
-import jack.rm.log.*;
-
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.GridLayout;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+
+import jack.rm.log.Log;
+import jack.rm.log.LogMessage;
+import jack.rm.log.LogSource;
+import jack.rm.log.LogTarget;
+import jack.rm.log.LogType;
 
 public class LogPanel extends JPanel
 {

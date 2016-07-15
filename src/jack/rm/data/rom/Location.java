@@ -1,8 +1,9 @@
 package jack.rm.data.rom;
 
-import jack.rm.i18n.*;
+import java.util.HashMap;
+
 import jack.rm.gui.Icon;
-import java.util.*;
+import jack.rm.i18n.Text;
 
 public enum Location
 {

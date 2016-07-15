@@ -1,19 +1,16 @@
 package jack.rm.files.parser;
 
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
-import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import com.pixbits.io.FileUtils;
 
-import jack.rm.GlobalSettings;
 import jack.rm.Main;
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.BackgroundOperation;

@@ -1,17 +1,8 @@
 package jack.rm.data.rom;
 
-import jack.rm.Settings;
-import jack.rm.assets.Asset;
-import jack.rm.assets.AssetData;
-import jack.rm.data.romset.RomSet;
-import jack.rm.files.romhandles.RomPath;
-import jack.rm.plugins.folder.FolderPlugin;
-import jack.rm.plugins.renamer.RenamerPlugin;
-import jack.rm.data.attachment.Attachment;
-import jack.rm.data.console.System;
-
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +10,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Stream;
+
+import jack.rm.Settings;
+import jack.rm.assets.Asset;
+import jack.rm.assets.AssetData;
+import jack.rm.data.attachment.Attachment;
+import jack.rm.data.console.System;
+import jack.rm.data.romset.RomSet;
+import jack.rm.files.romhandles.RomPath;
+import jack.rm.plugins.folder.FolderPlugin;
+import jack.rm.plugins.renamer.RenamerPlugin;
 
 public class Rom implements Comparable<Rom>
 {

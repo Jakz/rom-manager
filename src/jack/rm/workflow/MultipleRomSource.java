@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.pixbits.workflow.*;
+import com.pixbits.workflow.Fetcher;
 
 import jack.rm.data.rom.Rom;
 

@@ -3,9 +3,7 @@ package jack.rm.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.text.DateFormat;
@@ -15,22 +13,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
-
-import jack.rm.GlobalSettings;
-import jack.rm.Main;
-import jack.rm.data.console.System;
-import jack.rm.data.romset.RomSet;
-import jack.rm.data.romset.RomSetManager;
-import jack.rm.files.parser.DatUpdater;
-import net.miginfocom.swing.MigLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -39,14 +26,19 @@ import javax.swing.JTable;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
 import com.pixbits.gui.AlternateColorTableCellRenderer;
-import com.pixbits.gui.LambdaTableCellRenderer;
+
+import jack.rm.GlobalSettings;
+import jack.rm.Main;
+import jack.rm.data.console.System;
+import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.RomSetManager;
+import jack.rm.files.parser.DatUpdater;
+import net.miginfocom.swing.MigLayout;
 
 public class RomSetManagerView extends JPanel
 {

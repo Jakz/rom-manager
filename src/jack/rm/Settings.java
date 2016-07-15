@@ -2,14 +2,21 @@ package jack.rm;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 import com.pixbits.plugin.PluginManager;
 import com.pixbits.plugin.PluginSet;
 
 import jack.rm.data.console.System;
 import jack.rm.data.rom.Attribute;
-import jack.rm.plugins.*;
+import jack.rm.plugins.ActualPlugin;
+import jack.rm.plugins.ActualPluginBuilder;
+import jack.rm.plugins.PluginRealType;
+import jack.rm.plugins.PluginWithIgnorePaths;
 import jack.rm.plugins.downloader.RomDownloaderPlugin;
 import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.RenamerPlugin;

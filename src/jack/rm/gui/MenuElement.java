@@ -1,12 +1,14 @@
 package jack.rm.gui;
 
-import jack.rm.i18n.Text;
-
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Arrays;
 
-import javax.swing.*;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
+
+import jack.rm.i18n.Text;
 
 public enum MenuElement {
   ROMS_SCAN_FOR_ROMS(Text.MENU_ROMS_SCAN_FOR_ROMS, false),

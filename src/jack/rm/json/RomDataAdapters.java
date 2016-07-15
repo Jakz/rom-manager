@@ -1,7 +1,5 @@
 package jack.rm.json;
 
-import jack.rm.data.rom.Version;
-
 import java.lang.reflect.Type;
 
 import com.google.gson.JsonDeserializationContext;
@@ -11,6 +9,8 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+
+import jack.rm.data.rom.Version;
 
 public class RomDataAdapters
 {

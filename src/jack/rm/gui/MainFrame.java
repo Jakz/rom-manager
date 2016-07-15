@@ -1,33 +1,56 @@
 package jack.rm.gui;
 
-import jack.rm.*;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.ListCellRenderer;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import com.pixbits.gui.FileTransferHandler;
+
+import jack.rm.GlobalSettings;
+import jack.rm.Main;
 import jack.rm.assets.AssetPacker;
 import jack.rm.data.console.System;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomSize;
 import jack.rm.data.rom.RomStatus;
-import jack.rm.data.romset.*;
-import jack.rm.i18n.*;
-import jack.rm.plugins.*;
-import jack.rm.plugins.cleanup.*;
-
-import javax.swing.*;
-import javax.swing.event.*;
-
-import com.pixbits.gui.FileTransferHandler;
-
-import java.awt.event.*;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.awt.*;
+import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.RomSetManager;
+import jack.rm.i18n.Text;
+import jack.rm.plugins.OperationalPlugin;
+import jack.rm.plugins.PluginRealType;
 
 public class MainFrame extends JFrame implements WindowListener
 {	

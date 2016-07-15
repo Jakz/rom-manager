@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 
-import com.pixbits.workflow.*;
+import com.pixbits.workflow.Dumper;
 
 import jack.rm.data.console.GBA;
 import jack.rm.data.rom.Rom;

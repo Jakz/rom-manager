@@ -3,7 +3,8 @@ package jack.rm.workflow;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import com.pixbits.workflow.*;
+
+import com.pixbits.workflow.Dumper;
 
 import jack.rm.data.rom.Rom;
 import jack.rm.files.romhandles.RomPath;
