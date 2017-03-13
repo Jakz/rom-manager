@@ -10,9 +10,9 @@ import com.pixbits.lib.io.BinaryBuffer;
 import com.pixbits.workflow.WorkflowData;
 
 import jack.rm.data.rom.Rom;
-import jack.rm.files.romhandles.RomPath;
+import jack.rm.files.romhandles.RomHandle;
 
-public class RomHandle implements WorkflowData
+public class RomWorkflowEntry implements WorkflowData
 {
   private final Rom rom;
   private BinaryBuffer buffer;
@@ -20,7 +20,7 @@ public class RomHandle implements WorkflowData
   private Path destPath;
 
 
-  public RomHandle(Rom rom)
+  public RomWorkflowEntry(Rom rom)
   {
     this.rom = rom;
     destPath = Paths.get(".");
@@ -30,7 +30,7 @@ public class RomHandle implements WorkflowData
   
   public void prepareBuffer() throws IOException
   {
-    RomPath source = rom.getPath();
+    RomHandle source = rom.getPath();
     this.path = Files.createTempFile(null, null);
     Files.copy(source.getInputStream(), path, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
   }

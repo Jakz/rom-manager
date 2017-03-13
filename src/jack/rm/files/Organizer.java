@@ -11,7 +11,7 @@ import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomStatus;
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.romhandles.ArchiveHandle;
-import jack.rm.files.romhandles.RomPath;
+import jack.rm.files.romhandles.RomHandle;
 import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
@@ -61,7 +61,7 @@ public class Organizer
 	{
 	  if (!rom.hasCorrectInternalName())
 	  {
-	    RomPath path = rom.getPath();
+	    RomHandle path = rom.getPath();
 	    String name = rom.getCorrectInternalName() + "." + path.getInternalExtension();
 	    
 	    if (((ArchiveHandle)path).renameInternalFile(name))
@@ -73,7 +73,7 @@ public class Organizer
 	
 	public static void renameRom(Rom rom)
 	{
-    RomPath romPath = rom.getPath();
+    RomHandle romPath = rom.getPath();
 	  Path renameTo = romPath.file().getParent();
 	  
 	  //TODO: should fix extensions if wrong and crc is verified but now just keeps them
@@ -108,7 +108,7 @@ public class Organizer
           Log.message(LogSource.ORGANIZER, LogTarget.none(), "Creating folder "+finalPath);
         }
         
-        RomPath romPath = rom.getPath();
+        RomHandle romPath = rom.getPath();
         Path newFile = finalPath.resolve(romPath.file().getFileName());
                 
         if (!newFile.equals(romPath.file()) && Files.exists(newFile))

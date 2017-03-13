@@ -62,14 +62,14 @@ public class Downloader
         
     if (!pool.getQueue().isEmpty())
     {
-      ProgressDialog.init(Main.mainFrame, "Asset Download", () -> { pool.shutdownNow(); started = false; });
+      Main.progress.show(Main.mainFrame, "Asset Download", () -> { pool.shutdownNow(); started = false; });
       
       new Thread( () -> {
         try
         {
           pool.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
           if (!pool.isShutdown())
-            ProgressDialog.finished();
+            Main.progress.finished();
         }
         catch (InterruptedException e)
         {
@@ -157,7 +157,7 @@ public class Downloader
         long completed = pool.getCompletedTaskCount();
         long total = pool.getTaskCount(); 
       
-        ProgressDialog.update(completed/(float)total, (completed+1)+" of "+total);
+        Main.progress.update(completed/(float)total, (completed+1)+" of "+total);
       }
 
       return true;

@@ -8,12 +8,12 @@ import jack.rm.data.attachment.Attachment;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomID;
 import jack.rm.data.rom.RomStatus;
-import jack.rm.files.romhandles.RomPath;
+import jack.rm.files.romhandles.RomHandle;
 
 public class RomSavedState
 {
 	RomID<?> id;
-	RomPath file;
+	RomHandle file;
 	RomStatus status;
 	boolean favourite;
 	List<RomSavedAttribute> attributes;

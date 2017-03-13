@@ -114,13 +114,13 @@ class ZipHandle extends ArchiveHandle
   }
   
   @Override
-  public RomPath relocate(Path file)
+  public RomHandle relocate(Path file)
   {
     return new ZipHandle(file, this.internalName);
   }
   
   @Override
-  public RomPath relocateInternal(String internalName)
+  public RomHandle relocateInternal(String internalName)
   {
     return new ZipHandle(file, internalName);
   }

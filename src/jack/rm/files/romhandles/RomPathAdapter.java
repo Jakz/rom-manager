@@ -12,37 +12,37 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-public class RomPathAdapter implements JsonDeserializer<RomPath>, JsonSerializer<RomPath>
+public class RomPathAdapter implements JsonDeserializer<RomHandle>, JsonSerializer<RomHandle>
 {
   @Override
-  public RomPath deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+  public RomHandle deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
   {
     JsonObject obj = json.getAsJsonObject();
     
-    RomPath.Type type = (RomPath.Type)context.deserialize(obj.get("type"), RomPath.Type.class);
+    RomHandle.Type type = (RomHandle.Type)context.deserialize(obj.get("type"), RomHandle.Type.class);
     
     Path file = Paths.get((String)context.deserialize(obj.get("file"), String.class));
     
     if (type != null)
     {
-      if (type == RomPath.Type.BIN)
+      if (type == RomHandle.Type.BIN)
         return new BinaryHandle(file);
-      else if (type == RomPath.Type.ZIP)
+      else if (type == RomHandle.Type.ZIP)
         return new ZipHandle(file, obj.get("internalName").getAsString());
-      else if (type == RomPath.Type._7ZIP)
+      else if (type == RomHandle.Type._7ZIP)
         return new Zip7MultiHandle(type, file, obj.get("internalName").getAsString(), obj.get("indexInArchive").getAsInt());
-      else if (type == RomPath.Type.RAR)
+      else if (type == RomHandle.Type.RAR)
         return new Zip7MultiHandle(type, file, obj.get("internalName").getAsString(), obj.get("indexInArchive").getAsInt());
     }      
     return null;
   }
   
   @Override
-  public JsonElement serialize(RomPath entry, Type typeOfT, JsonSerializationContext context)
+  public JsonElement serialize(RomHandle entry, Type typeOfT, JsonSerializationContext context)
   {
     JsonObject json = new JsonObject();
-    RomPath.Type entryType = entry.type;
-    json.add("type", context.serialize(entryType, RomPath.Type.class));
+    RomHandle.Type entryType = entry.type;
+    json.add("type", context.serialize(entryType, RomHandle.Type.class));
     
     switch (entryType)
     {

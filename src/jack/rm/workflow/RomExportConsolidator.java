@@ -6,7 +6,7 @@ import java.nio.file.Path;
 
 import com.pixbits.workflow.Dumper;
 
-public class RomExportConsolidator extends Dumper<RomHandle>
+public class RomExportConsolidator extends Dumper<RomWorkflowEntry>
 {
   Path destination;
   boolean overwrite;
@@ -17,7 +17,7 @@ public class RomExportConsolidator extends Dumper<RomHandle>
     this.overwrite = false;
   }
   
-  public void accept(RomHandle handle)
+  public void accept(RomWorkflowEntry handle)
   {
     Path finalPath = destination.resolve(handle.getRom().getPath().file().getFileName());
     

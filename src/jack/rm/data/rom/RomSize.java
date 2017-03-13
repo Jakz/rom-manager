@@ -136,6 +136,6 @@ public class RomSize implements Comparable<RomSize>
 	@Override
   public int compareTo(RomSize s)
 	{
-		return bytes < s.bytes ? -1 : (bytes == s.bytes ? 0 : 1);
+		return Long.compare(this.bytes, s.bytes);
 	}
 }

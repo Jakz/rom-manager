@@ -39,7 +39,7 @@ public abstract class BackgroundWorker<E, T extends BackgroundOperation> extends
   @Override
   public Void doInBackground()
   {
-    ProgressDialog.init(Main.mainFrame, title, null);
+    Main.progress.show(Main.mainFrame, title, null);
     
     for (int i = 0; i < data.size(); ++i)
     {
@@ -58,7 +58,7 @@ public abstract class BackgroundWorker<E, T extends BackgroundOperation> extends
   @Override
   public void process(List<Integer> v)
   {
-    ProgressDialog.update(this, progressText+" "+v.get(v.size()-1)+" of "+data.size()+"..");
+    Main.progress.update(this, progressText+" "+v.get(v.size()-1)+" of "+data.size()+"..");
     Main.mainFrame.updateTable();
   }
   
@@ -68,7 +68,7 @@ public abstract class BackgroundWorker<E, T extends BackgroundOperation> extends
     try
     {
       get();
-      ProgressDialog.finished();
+      Main.progress.finished();
       callback.accept(true);
     }
     catch (ExecutionException e)

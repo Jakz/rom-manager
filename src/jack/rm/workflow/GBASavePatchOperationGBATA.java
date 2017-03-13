@@ -14,7 +14,7 @@ public class GBASavePatchOperationGBATA extends RomOperation
 
   }
   
-  protected RomHandle doApply(RomHandle handle) throws Exception
+  protected RomWorkflowEntry doApply(RomWorkflowEntry handle) throws Exception
   {
     GBASavePatcherGBATA.patch(handle.getRom().getAttribute(RomAttribute.SAVE_TYPE), handle.getBuffer());
     return handle;

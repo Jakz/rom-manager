@@ -2,7 +2,7 @@ package jack.rm.files.romhandles;
 
 import java.nio.file.Path;
 
-public abstract class ArchiveHandle extends RomPath
+public abstract class ArchiveHandle extends RomHandle
 {
   public final Path file;
 

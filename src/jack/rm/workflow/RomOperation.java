@@ -8,7 +8,7 @@ import com.pixbits.workflow.Mutuator;
 import jack.rm.data.console.System;
 import jack.rm.data.rom.Rom;
 
-public abstract class RomOperation implements Mutuator<RomHandle>
+public abstract class RomOperation implements Mutuator<RomWorkflowEntry>
 {  
   public static enum Mode
   {
@@ -53,7 +53,7 @@ public abstract class RomOperation implements Mutuator<RomHandle>
   abstract String getDescription();
   boolean isSystemSupported(System system) { return true; }
   
-  public final RomHandle apply(RomHandle handle)
+  public final RomWorkflowEntry apply(RomWorkflowEntry handle)
   {
     try
     {
@@ -66,5 +66,5 @@ public abstract class RomOperation implements Mutuator<RomHandle>
     }
   }
   
-  abstract protected RomHandle doApply(RomHandle handle) throws Exception;
+  abstract protected RomWorkflowEntry doApply(RomWorkflowEntry handle) throws Exception;
 }

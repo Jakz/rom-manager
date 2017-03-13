@@ -13,7 +13,7 @@ import jack.rm.data.console.GBA;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
 
-public class EZFlashIVRomConsolidator extends Dumper<RomHandle>
+public class EZFlashIVRomConsolidator extends Dumper<RomWorkflowEntry>
 {
   Path destination;
   
@@ -22,7 +22,7 @@ public class EZFlashIVRomConsolidator extends Dumper<RomHandle>
     this.destination = destination;
   }
   
-  public void accept(RomHandle handle)
+  public void accept(RomWorkflowEntry handle)
   {
     try
     {

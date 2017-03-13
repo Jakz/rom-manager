@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 
-public abstract class RomPath
+public abstract class RomHandle
 {
   public static enum Type
   {
@@ -29,8 +29,8 @@ public abstract class RomPath
   public abstract Path file();
   public abstract String plainName();
   public abstract String plainInternalName();
-  public abstract RomPath relocate(Path file);
-  public abstract RomPath relocateInternal(String internalName);
+  public abstract RomHandle relocate(Path file);
+  public abstract RomHandle relocateInternal(String internalName);
   public abstract boolean isArchive();
   public abstract String getExtension();
   public abstract String getInternalExtension();
@@ -38,12 +38,12 @@ public abstract class RomPath
   public abstract long size();
   public abstract long uncompressedSize();
   
-  RomPath(Type type)
+  RomHandle(Type type)
   {
     this.type = type;
   }
   
-  public static RomPath build(Type type, Path path, String... args)
+  public static RomHandle build(Type type, Path path, String... args)
   {
     switch (type)
     {

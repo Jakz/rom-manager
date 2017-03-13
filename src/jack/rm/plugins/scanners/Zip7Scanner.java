@@ -10,7 +10,7 @@ import com.pixbits.lib.plugin.PluginVersion;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.romset.RomHashFinder;
 import jack.rm.files.ScanResult;
-import jack.rm.files.romhandles.RomPath;
+import jack.rm.files.romhandles.RomHandle;
 import jack.rm.files.romhandles.Zip7MultiHandle;
 import net.sf.sevenzipjbinding.ArchiveFormat;
 import net.sf.sevenzipjbinding.IInArchive;
@@ -49,9 +49,9 @@ public class Zip7Scanner extends ScannerPlugin
           if (rom != null)
           {
             if (archive.getArchiveFormat() == ArchiveFormat.SEVEN_ZIP)
-              return new ScanResult(rom, new Zip7MultiHandle(RomPath.Type._7ZIP, path, (String)archive.getProperty(i, PropID.PATH), i));
+              return new ScanResult(rom, new Zip7MultiHandle(RomHandle.Type._7ZIP, path, (String)archive.getProperty(i, PropID.PATH), i));
             else if (archive.getArchiveFormat() == ArchiveFormat.RAR)
-              return new ScanResult(rom, new Zip7MultiHandle(RomPath.Type.RAR, path, (String)archive.getProperty(i, PropID.PATH), i));
+              return new ScanResult(rom, new Zip7MultiHandle(RomHandle.Type.RAR, path, (String)archive.getProperty(i, PropID.PATH), i));
 
           }
             

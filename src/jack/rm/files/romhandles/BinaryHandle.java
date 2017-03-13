@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class BinaryHandle extends RomPath
+public class BinaryHandle extends RomHandle
 {
   public final Path file;
 
@@ -48,13 +48,13 @@ public class BinaryHandle extends RomPath
   @Override public String getInternalExtension() { return getExtension(); }
   
   @Override
-  public RomPath relocate(Path file)
+  public RomHandle relocate(Path file)
   {
     return new BinaryHandle(file);
   }
   
   @Override
-  public RomPath relocateInternal(String internalName)
+  public RomHandle relocateInternal(String internalName)
   {
     throw new UnsupportedOperationException("a binary rompath doesn't have an internal filename");
   }

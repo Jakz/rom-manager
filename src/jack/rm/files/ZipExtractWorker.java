@@ -17,6 +17,9 @@ import javax.swing.JFrame;
 import javax.swing.SwingWorker;
 
 import com.pixbits.lib.ui.elements.ProgressDialog;
+
+import jack.rm.Main;
+
 import com.pixbits.lib.lang.StringUtils;
 
 public class ZipExtractWorker<T extends BackgroundOperation> extends SwingWorker<Path, Long>
@@ -51,7 +54,7 @@ public class ZipExtractWorker<T extends BackgroundOperation> extends SwingWorker
   @Override
   public Path doInBackground()
   {
-    ProgressDialog.init(parent, title, null);
+    Main.progress.show(parent, title, null);
     
     try (ZipFile zfile = new ZipFile(src.toFile()))
     { 
@@ -91,7 +94,7 @@ public class ZipExtractWorker<T extends BackgroundOperation> extends SwingWorker
   @Override
   public void process(List<Long> v)
   {
-    ProgressDialog.update(this, progressText + " " + 
+    Main.progress.update(this, progressText + " " + 
                                 StringUtils.humanReadableByteCount(v.get(v.size()-1)) +
                                 " of " + 
                                 StringUtils.humanReadableByteCount(size)+"..");
@@ -103,7 +106,7 @@ public class ZipExtractWorker<T extends BackgroundOperation> extends SwingWorker
     try
     {
       get();
-      ProgressDialog.finished();
+      Main.progress.finished();
       callback.accept(true);
     }
     catch (ExecutionException e)

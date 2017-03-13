@@ -17,7 +17,7 @@ import jack.rm.assets.AssetData;
 import jack.rm.data.attachment.Attachment;
 import jack.rm.data.console.System;
 import jack.rm.data.romset.RomSet;
-import jack.rm.files.romhandles.RomPath;
+import jack.rm.files.romhandles.RomHandle;
 import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.RenamerPlugin;
 
@@ -53,7 +53,7 @@ public class Rom implements Comparable<Rom>
 	
   private boolean favourite;
 		
-	private RomPath path;
+	private RomHandle path;
 	
 	public Rom(RomSet set)
 	{
@@ -83,8 +83,8 @@ public class Rom implements Comparable<Rom>
 	
 	public RomID<?> getID() { return new RomID.CRC(getCRC()); }
 	
-	public RomPath getPath() { return path; }
-	public void setPath(RomPath path) { this.path = path; }
+	public RomHandle getPath() { return path; }
+	public void setPath(RomHandle path) { this.path = path; }
 	
 	public void setTitle(String title) { setAttribute(RomAttribute.TITLE, title); }
 	public String getTitle() { return getAttribute(RomAttribute.TITLE); }

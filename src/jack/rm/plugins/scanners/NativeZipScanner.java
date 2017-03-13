@@ -11,7 +11,7 @@ import com.pixbits.lib.plugin.PluginVersion;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.romset.RomHashFinder;
 import jack.rm.files.ScanResult;
-import jack.rm.files.romhandles.RomPath;
+import jack.rm.files.romhandles.RomHandle;
 import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
@@ -46,7 +46,7 @@ public class NativeZipScanner extends ScannerPlugin
         Rom rom = finder.getByCRC32(curCrc);
         
         if (rom != null)
-          return new ScanResult(rom, RomPath.build(RomPath.Type.ZIP, file, entry.getName()));
+          return new ScanResult(rom, RomHandle.build(RomHandle.Type.ZIP, file, entry.getName()));
       }
     }
     catch (Exception e)

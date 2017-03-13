@@ -15,7 +15,7 @@ import com.pixbits.lib.plugin.PluginVersion;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.romset.RomHashFinder;
 import jack.rm.files.ScanResult;
-import jack.rm.files.romhandles.RomPath;
+import jack.rm.files.romhandles.RomHandle;
 
 public class BinaryScannerPlugin extends ScannerPlugin
 {  
@@ -61,7 +61,7 @@ public class BinaryScannerPlugin extends ScannerPlugin
     {
       long crc = FileUtils.calculateCRCFast(file);
       Rom rom = finder.getByCRC32(crc);
-      return rom != null ? new ScanResult(rom, RomPath.build(RomPath.Type.BIN, file)) : null;
+      return rom != null ? new ScanResult(rom, RomHandle.build(RomHandle.Type.BIN, file)) : null;
     }
     catch (IOException e)
     {

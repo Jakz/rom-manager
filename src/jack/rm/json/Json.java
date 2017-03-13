@@ -14,7 +14,7 @@ import jack.rm.data.attachment.Attachment;
 import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.RomID;
 import jack.rm.data.romset.RomSet;
-import jack.rm.files.romhandles.RomPath;
+import jack.rm.files.romhandles.RomHandle;
 import jack.rm.files.romhandles.RomPathAdapter;
 import jack.rm.plugins.ActualPlugin;
 
@@ -31,7 +31,7 @@ public class Json
   {
     registerTypeAdapter(RomSet.class, new RomSetAdapter());
     registerTypeAdapter(RomID.class, new RomIdAdapter());
-    registerTypeAdapter(RomPath.class, new RomPathAdapter());
+    registerTypeAdapter(RomHandle.class, new RomPathAdapter());
     registerTypeAdapter(RomSavedAttribute.class, new RomSavedAttributeAdapter());
     registerTypeAdapter(Path.class, new PathAdapter());
     registerTypeAdapter(Plugin.class, new JsonPluginAdapter<Plugin>());

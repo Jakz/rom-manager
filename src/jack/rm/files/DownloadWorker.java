@@ -19,6 +19,9 @@ import javax.swing.JFrame;
 import javax.swing.SwingWorker;
 
 import com.pixbits.lib.ui.elements.ProgressDialog;
+
+import jack.rm.Main;
+
 import com.pixbits.lib.lang.StringUtils;
 
 public class DownloadWorker<T extends BackgroundOperation> extends SwingWorker<Path, Long>
@@ -65,7 +68,7 @@ public class DownloadWorker<T extends BackgroundOperation> extends SwingWorker<P
   @Override
   public Path doInBackground()
   {
-    ProgressDialog.init(parent, title, null);
+    Main.progress.show(parent, title, null);
     
     try
     { 
@@ -153,7 +156,7 @@ public class DownloadWorker<T extends BackgroundOperation> extends SwingWorker<P
   @Override
   public void process(List<Long> v)
   {
-    ProgressDialog.update(this, progressText + " " + 
+    Main.progress.update(this, progressText + " " + 
                                 StringUtils.humanReadableByteCount(v.get(v.size()-1)) +
                                 " of " + 
                                 StringUtils.humanReadableByteCount(downloadSize)+"..");
@@ -169,7 +172,7 @@ public class DownloadWorker<T extends BackgroundOperation> extends SwingWorker<P
       if (tmpPath != null)
         Files.move(tmpPath, savePath, StandardCopyOption.REPLACE_EXISTING);
       
-      ProgressDialog.finished();
+      Main.progress.finished();
       callback.accept(true);
     }
     catch (IOException e)

@@ -9,6 +9,7 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import com.pixbits.lib.plugin.PluginManager;
+import com.pixbits.lib.ui.elements.ProgressDialog;
 import com.pixbits.workflow.Dumper;
 import com.pixbits.workflow.Fetcher;
 import com.pixbits.workflow.WorkflowData;
@@ -29,6 +30,8 @@ import jack.rm.plugins.ActualPluginBuilder;
 public class Main
 {		
 	public static PluginManager<ActualPlugin, ActualPluginBuilder> manager = new PluginManager<>(ActualPluginBuilder.class);
+	
+	public static ProgressDialog.Manager progress = new ProgressDialog.Manager();
 
   public static MainFrame mainFrame;
 	//public static InfoPanel infoPanel;

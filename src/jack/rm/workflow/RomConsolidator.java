@@ -7,9 +7,9 @@ import java.nio.file.StandardCopyOption;
 import com.pixbits.workflow.Dumper;
 
 import jack.rm.data.rom.Rom;
-import jack.rm.files.romhandles.RomPath;
+import jack.rm.files.romhandles.RomHandle;
 
-public class RomConsolidator extends Dumper<RomHandle>
+public class RomConsolidator extends Dumper<RomWorkflowEntry>
 {
   Path destination;
   boolean overwrite;
@@ -21,7 +21,7 @@ public class RomConsolidator extends Dumper<RomHandle>
     this.overwrite = false;
   }
   
-  public void accept(RomHandle handle)
+  public void accept(RomWorkflowEntry handle)
   {
     try
     {
@@ -40,7 +40,7 @@ public class RomConsolidator extends Dumper<RomHandle>
       }
       else
       {
-        RomPath path = rom.getPath();
+        RomHandle path = rom.getPath();
         
         if (!path.isArchive())
           Files.copy(path.file(), finalPath, StandardCopyOption.REPLACE_EXISTING);

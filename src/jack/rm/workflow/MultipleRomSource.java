@@ -9,7 +9,7 @@ import com.pixbits.workflow.Fetcher;
 
 import jack.rm.data.rom.Rom;
 
-public class MultipleRomSource extends Fetcher<RomHandle>
+public class MultipleRomSource extends Fetcher<RomWorkflowEntry>
 {
   private final List<Rom> roms;
   private int current;
@@ -29,11 +29,11 @@ public class MultipleRomSource extends Fetcher<RomHandle>
     this.current = 0;
   }
   
-  @Override public boolean tryAdvance(Consumer<? super RomHandle> operation)
+  @Override public boolean tryAdvance(Consumer<? super RomWorkflowEntry> operation)
   {
     if (current < roms.size())
     {
-      operation.accept(new RomHandle(roms.get(current++)));
+      operation.accept(new RomWorkflowEntry(roms.get(current++)));
       return true;
     }
     else

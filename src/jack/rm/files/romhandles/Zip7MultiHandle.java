@@ -97,13 +97,13 @@ public class Zip7MultiHandle extends ArchiveHandle
   }
   
   @Override
-  public RomPath relocate(Path file)
+  public RomHandle relocate(Path file)
   {
     return new Zip7MultiHandle(type, file, this.internalName, this.indexInArchive);
   }
   
   @Override
-  public RomPath relocateInternal(String internalName)
+  public RomHandle relocateInternal(String internalName)
   {
     return null;//new Zip7Handle(file, internalName);
   }

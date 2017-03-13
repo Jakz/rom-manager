@@ -247,7 +247,7 @@ public class Scanner
 	  @Override
 	  public Void doInBackground()
 	  {
-	    ProgressDialog.init(Main.mainFrame, "Rom Scan", () -> cancel(true) );
+	    Main.progress.show(Main.mainFrame, "Rom Scan", () -> cancel(true) );
 	    
 	    for (int i = 0; i < total; ++i)
 	    {
@@ -275,7 +275,7 @@ public class Scanner
 	    if (isCancelled())
         return;
       	    
-	    ProgressDialog.update(this, "Scanning "+v.get(v.size()-1)+" of "+foundFiles.size()+"..");
+	    Main.progress.update(this, "Scanning "+v.get(v.size()-1)+" of "+foundFiles.size()+"..");
 	    Main.mainFrame.updateTable();
 	  }
 	  
@@ -286,7 +286,7 @@ public class Scanner
 	      return;
 
 	    
-	    ProgressDialog.finished();
+	    Main.progress.finished();
 	    
 	    if (!clones.isEmpty())
 	      Main.clonesDialog.activate(set, clones);

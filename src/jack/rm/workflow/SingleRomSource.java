@@ -6,7 +6,7 @@ import com.pixbits.workflow.Fetcher;
 
 import jack.rm.data.rom.Rom;
 
-public class SingleRomSource extends Fetcher<RomHandle>
+public class SingleRomSource extends Fetcher<RomWorkflowEntry>
 {
   private final Rom rom;
   private boolean done;
@@ -18,11 +18,11 @@ public class SingleRomSource extends Fetcher<RomHandle>
     this.done = false;
   }
   
-  @Override public boolean tryAdvance(Consumer<? super RomHandle> operation)
+  @Override public boolean tryAdvance(Consumer<? super RomWorkflowEntry> operation)
   {
     if (!done)
     {
-      operation.accept(new RomHandle(rom));
+      operation.accept(new RomWorkflowEntry(rom));
       done = true;
       return true;
     }
