@@ -70,9 +70,9 @@ public abstract class LogTarget
   
   public static class Plugin extends LogTarget
   {
-    private final com.pixbits.plugin.Plugin plugin;
+    private final com.pixbits.lib.plugin.Plugin plugin;
     
-    Plugin(com.pixbits.plugin.Plugin plugin)
+    Plugin(com.pixbits.lib.plugin.Plugin plugin)
     {
       super(Type.PLUGIN);
       this.plugin = plugin;
@@ -86,6 +86,6 @@ public abstract class LogTarget
   public static LogTarget file(java.nio.file.Path file) { return new File(file); }
   public static LogTarget rom(jack.rm.data.rom.Rom rom) { return new Rom(rom); }
   public static LogTarget romset(jack.rm.data.romset.RomSet set) { return new RomSet(set); }
-  public static LogTarget plugin(com.pixbits.plugin.Plugin plugin) { return new Plugin(plugin); }
+  public static LogTarget plugin(com.pixbits.lib.plugin.Plugin plugin) { return new Plugin(plugin); }
 
 }

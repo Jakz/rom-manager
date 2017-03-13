@@ -2,6 +2,7 @@ package jack.rm.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JMenuItem;
 
@@ -22,34 +23,41 @@ class MenuListener implements ActionListener
 		
 		RomList list = RomSet.current.list;
 
-		if (tag == MenuElement.ROMS_SCAN_FOR_ROMS)
+		try
 		{
-			Main.scanner.scanForRoms(true);
-			Main.mainFrame.updateTable();
+  		if (tag == MenuElement.ROMS_SCAN_FOR_ROMS)
+  		{
+  			Main.scanner.scanForRoms(true);
+  			Main.mainFrame.updateTable();
+  		}
+  		else if (tag == MenuElement.ROMS_SCAN_FOR_NEW_ROMS)
+  		{
+  			Main.scanner.scanForRoms(false);
+  			Main.mainFrame.updateTable();
+  		}
+  		else if (tag == MenuElement.VIEW_SHOW_CORRECT)
+  		{
+  			Main.mainFrame.romListModel.isCorrect = !Main.mainFrame.romListModel.isCorrect;
+  			Main.mainFrame.updateTable();
+  		}
+  		else if (tag == MenuElement.VIEW_SHOW_NOT_FOUND)
+  		{
+  			Main.mainFrame.romListModel.isMissing = !Main.mainFrame.romListModel.isMissing;
+        Main.mainFrame.updateTable();
+  		}
+  		else if (tag == MenuElement.VIEW_SHOW_UNORGANIZED)
+  		{
+  			Main.mainFrame.romListModel.isBadlyNamed = !Main.mainFrame.romListModel.isBadlyNamed;
+        Main.mainFrame.updateTable();
+  		}
+  		else
+  		{
+  			//StringManager.loadLanguage(((JMenuItem)source).getText());
+  		}
 		}
-		else if (tag == MenuElement.ROMS_SCAN_FOR_NEW_ROMS)
+		catch (IOException ee)
 		{
-			Main.scanner.scanForRoms(false);
-			Main.mainFrame.updateTable();
-		}
-		else if (tag == MenuElement.VIEW_SHOW_CORRECT)
-		{
-			Main.mainFrame.romListModel.isCorrect = !Main.mainFrame.romListModel.isCorrect;
-			Main.mainFrame.updateTable();
-		}
-		else if (tag == MenuElement.VIEW_SHOW_NOT_FOUND)
-		{
-			Main.mainFrame.romListModel.isMissing = !Main.mainFrame.romListModel.isMissing;
-      Main.mainFrame.updateTable();
-		}
-		else if (tag == MenuElement.VIEW_SHOW_UNORGANIZED)
-		{
-			Main.mainFrame.romListModel.isBadlyNamed = !Main.mainFrame.romListModel.isBadlyNamed;
-      Main.mainFrame.updateTable();
-		}
-		else
-		{
-			//StringManager.loadLanguage(((JMenuItem)source).getText());
+		  ee.printStackTrace();
 		}
 	}
 }

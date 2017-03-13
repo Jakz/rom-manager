@@ -9,8 +9,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.pixbits.io.FolderScanner;
-import com.pixbits.plugin.ExposedParameter;
+import com.pixbits.lib.io.FolderScanner;
+import com.pixbits.lib.plugin.ExposedParameter;
 
 import jack.rm.Settings;
 import jack.rm.data.rom.RomStatus;
@@ -37,7 +37,7 @@ public class MoveUnknownFilesPlugin extends CleanupPlugin implements PluginWithI
         .collect(Collectors.toSet());
   
       Settings settings = list.set.getSettings();
-      Set<Path> total = new FolderScanner(FileSystems.getDefault().getPathMatcher("glob:*.*"), settings.getIgnoredPaths()).scan(settings.romsPath);
+      Set<Path> total = new FolderScanner(FileSystems.getDefault().getPathMatcher("glob:*.*"), settings.getIgnoredPaths(), true).scan(settings.romsPath);
       
       total.removeAll(existing);
       

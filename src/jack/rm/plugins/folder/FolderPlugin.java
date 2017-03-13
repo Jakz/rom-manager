@@ -3,7 +3,7 @@ package jack.rm.plugins.folder;
 import java.nio.file.Path;
 import java.util.function.Function;
 
-import com.pixbits.plugin.PluginType;
+import com.pixbits.lib.plugin.PluginType;
 
 import jack.rm.data.rom.Rom;
 import jack.rm.plugins.OrganizerPlugin;

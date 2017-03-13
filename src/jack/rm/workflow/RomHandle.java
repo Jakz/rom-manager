@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.pixbits.io.BinaryBuffer;
+import com.pixbits.lib.io.BinaryBuffer;
 import com.pixbits.workflow.WorkflowData;
 
 import jack.rm.data.rom.Rom;

@@ -15,7 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-import com.pixbits.plugin.PluginManager;
+import com.pixbits.lib.plugin.PluginManager;
 
 import jack.rm.Main;
 import jack.rm.data.romset.RomSet;

@@ -1,6 +1,7 @@
 package jack.rm.files;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.nio.channels.ClosedByInterruptException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -22,9 +23,9 @@ import java.util.zip.CheckedInputStream;
 
 import javax.swing.SwingWorker;
 
-import com.pixbits.gui.ProgressDialog;
-import com.pixbits.io.FolderScanner;
-import com.pixbits.plugin.PluginManager;
+import com.pixbits.lib.ui.elements.ProgressDialog;
+import com.pixbits.lib.io.FolderScanner;
+import com.pixbits.lib.plugin.PluginManager;
 
 import jack.rm.Main;
 import jack.rm.data.rom.Rom;
@@ -194,7 +195,7 @@ public class Scanner
     return FileSystems.getDefault().getPathMatcher(pattern);
 	}
 	
-	public void scanForRoms(boolean total)
+	public void scanForRoms(boolean total) throws IOException
 	{
 		existing.clear();
 		foundFiles.clear();
@@ -226,7 +227,7 @@ public class Scanner
 		  return;
 		}
 			
-		foundFiles = new FolderScanner(buildPathMatcher(), set.getSettings().getIgnoredPaths()).scan(folder);
+		foundFiles = new FolderScanner(buildPathMatcher(), set.getSettings().getIgnoredPaths(), true).scan(folder);
 
 		ScannerWorker worker = new ScannerWorker(foundFiles);
 		worker.execute();

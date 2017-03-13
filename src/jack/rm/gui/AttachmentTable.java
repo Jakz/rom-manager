@@ -11,8 +11,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
-import com.pixbits.gui.FileTransferHandler;
-import com.pixbits.stream.StreamException;
+import com.pixbits.lib.ui.FileTransferHandler;
+import com.pixbits.lib.functional.StreamException;
 
 import jack.rm.data.attachment.Attachment;
 import jack.rm.data.attachment.AttachmentType;

@@ -30,7 +30,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
-import com.pixbits.gui.AlternateColorTableCellRenderer;
+import com.pixbits.lib.ui.table.renderers.AlternateColorTableCellRenderer;
 
 import jack.rm.GlobalSettings;
 import jack.rm.Main;

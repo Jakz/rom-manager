@@ -11,6 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,7 +38,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.pixbits.gui.FileTransferHandler;
+import com.pixbits.lib.ui.FileTransferHandler;
 
 import jack.rm.GlobalSettings;
 import jack.rm.Main;
@@ -117,6 +118,10 @@ public class MainFrame extends JFrame implements WindowListener
       {
         Dialogs.showError("DAT File not found!", "Missing DAT file for set "+set.ident(), Main.mainFrame);
         cbRomSets.setSelectedItem(lastSet);
+      } 
+      catch (IOException e1)
+      {
+        e1.printStackTrace();
       }
     }
 	};

@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import com.pixbits.gui.ProgressDialog;
+import com.pixbits.lib.ui.elements.ProgressDialog;
 
 import jack.rm.Main;
 import jack.rm.data.rom.Rom;

@@ -16,7 +16,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
-import com.pixbits.gui.JPlaceHolderTextField;
+import com.pixbits.lib.ui.elements.JPlaceHolderTextField;
 
 import jack.rm.data.rom.Language;
 import jack.rm.data.rom.Location;

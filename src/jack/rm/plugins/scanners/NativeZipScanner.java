@@ -5,8 +5,8 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import com.pixbits.plugin.PluginInfo;
-import com.pixbits.plugin.PluginVersion;
+import com.pixbits.lib.plugin.PluginInfo;
+import com.pixbits.lib.plugin.PluginVersion;
 
 import jack.rm.data.rom.Rom;
 import jack.rm.data.romset.RomHashFinder;

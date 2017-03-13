@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.pixbits.io.BinaryBuffer;
+import com.pixbits.lib.io.BinaryBuffer;
 
 public class IPSPatch
 {

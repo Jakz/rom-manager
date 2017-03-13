@@ -2,7 +2,7 @@ package jack.rm.plugins;
 
 import java.util.function.Predicate;
 
-import com.pixbits.plugin.Plugin;
+import com.pixbits.lib.plugin.Plugin;
 
 import jack.rm.data.romset.RomSet;
 import jack.rm.gui.PluginOptionsPanel;

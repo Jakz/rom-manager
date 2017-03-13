@@ -2,7 +2,7 @@ package jack.rm.plugins.renamer;
 
 import java.util.List;
 
-import com.pixbits.plugin.PluginType;
+import com.pixbits.lib.plugin.PluginType;
 
 import jack.rm.files.Pattern;
 import jack.rm.plugins.ActualPlugin;

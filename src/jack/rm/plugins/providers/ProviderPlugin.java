@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import com.pixbits.plugin.PluginType;
+import com.pixbits.lib.plugin.PluginType;
 
 import jack.rm.data.romset.RomSet;
 import jack.rm.plugins.ActualPlugin;

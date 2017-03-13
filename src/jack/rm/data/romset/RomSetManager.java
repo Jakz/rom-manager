@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.pixbits.plugin.PluginManager;
+import com.pixbits.lib.plugin.PluginManager;
 
 import jack.rm.Main;
 import jack.rm.data.console.System;

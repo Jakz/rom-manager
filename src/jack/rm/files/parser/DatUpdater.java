@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.zip.ZipFile;
 
-import com.pixbits.io.FileUtils;
+import com.pixbits.lib.io.FileUtils;
 
 import jack.rm.Main;
 import jack.rm.data.romset.RomSet;

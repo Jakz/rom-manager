@@ -3,8 +3,8 @@ package jack.rm.plugins.renamer;
 import java.util.Arrays;
 import java.util.List;
 
-import com.pixbits.plugin.PluginInfo;
-import com.pixbits.plugin.PluginVersion;
+import com.pixbits.lib.plugin.PluginInfo;
+import com.pixbits.lib.plugin.PluginVersion;
 
 import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.Location;

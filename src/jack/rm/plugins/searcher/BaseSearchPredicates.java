@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import com.pixbits.plugin.PluginInfo;
-import com.pixbits.plugin.PluginVersion;
+import com.pixbits.lib.plugin.PluginInfo;
+import com.pixbits.lib.plugin.PluginVersion;
 
 import jack.rm.data.rom.Genre;
 import jack.rm.data.rom.Location;

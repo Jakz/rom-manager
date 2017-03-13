@@ -4,15 +4,15 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import com.pixbits.parser.shuntingyard.ASTBinary;
-import com.pixbits.parser.shuntingyard.ASTNode;
-import com.pixbits.parser.shuntingyard.ASTUnary;
-import com.pixbits.parser.shuntingyard.ASTValue;
-import com.pixbits.parser.shuntingyard.Operator;
-import com.pixbits.parser.shuntingyard.ShuntingYardParser;
-import com.pixbits.parser.shuntingyard.StackVisitor;
-import com.pixbits.plugin.PluginInfo;
-import com.pixbits.plugin.PluginVersion;
+import com.pixbits.lib.parser.shuntingyard.ASTBinary;
+import com.pixbits.lib.parser.shuntingyard.ASTNode;
+import com.pixbits.lib.parser.shuntingyard.ASTUnary;
+import com.pixbits.lib.parser.shuntingyard.ASTValue;
+import com.pixbits.lib.parser.shuntingyard.Operator;
+import com.pixbits.lib.parser.shuntingyard.ShuntingYardParser;
+import com.pixbits.lib.parser.shuntingyard.StackVisitor;
+import com.pixbits.lib.plugin.PluginInfo;
+import com.pixbits.lib.plugin.PluginVersion;
 
 import jack.rm.data.rom.Rom;
 import jack.rm.data.search.SearchParser;

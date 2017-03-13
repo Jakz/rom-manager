@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import com.pixbits.plugin.PluginManager;
-import com.pixbits.plugin.PluginSet;
+import com.pixbits.lib.plugin.PluginManager;
+import com.pixbits.lib.plugin.PluginSet;
 
 import jack.rm.data.console.System;
 import jack.rm.data.rom.Attribute;

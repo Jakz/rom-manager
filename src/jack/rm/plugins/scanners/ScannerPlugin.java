@@ -3,7 +3,7 @@ package jack.rm.plugins.scanners;
 import java.nio.file.Path;
 import java.util.function.Predicate;
 
-import com.pixbits.plugin.PluginType;
+import com.pixbits.lib.plugin.PluginType;
 
 import jack.rm.data.romset.RomHashFinder;
 import jack.rm.data.romset.RomSet;

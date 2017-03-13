@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.pixbits</groupId>
-	<artifactId>rom-manager</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>Rom Manager</name>
+	<groupId>com.github.jakz</groupId>
+	<artifactId>romizer</artifactId>
+	<version>0.1</version>
+	<name>Romizer</name>
 	<properties>
 		<jdk.version>1.8</jdk.version>
 		<jparsec.version>2.2.1</jparsec.version>
@@ -27,7 +27,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.3</version>
+				<version>3.6.0</version>
 				<configuration>
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
@@ -102,6 +102,12 @@
 			</plugin>
 		</plugins>
 	</build>
+  <repositories>
+    <repository>
+      <id>jitpack.io</id>
+      <url>https://jitpack.io</url>
+    </repository>
+  </repositories>
 	<dependencies>
 		<dependency>
 			<groupId>org.jparsec</groupId>

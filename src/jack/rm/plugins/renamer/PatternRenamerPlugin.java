@@ -22,9 +22,9 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.table.AbstractTableModel;
 
-import com.pixbits.plugin.ExposedParameter;
-import com.pixbits.plugin.PluginInfo;
-import com.pixbits.plugin.PluginVersion;
+import com.pixbits.lib.plugin.ExposedParameter;
+import com.pixbits.lib.plugin.PluginInfo;
+import com.pixbits.lib.plugin.PluginVersion;
 
 import jack.rm.Settings;
 import jack.rm.data.rom.Rom;

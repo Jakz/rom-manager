@@ -6,9 +6,9 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.pixbits.plugin.JsonPluginSetAdapter;
-import com.pixbits.plugin.Plugin;
-import com.pixbits.plugin.PluginSet;
+import com.pixbits.lib.plugin.JsonPluginSetAdapter;
+import com.pixbits.lib.plugin.Plugin;
+import com.pixbits.lib.plugin.PluginSet;
 
 import jack.rm.data.attachment.Attachment;
 import jack.rm.data.rom.Attribute;

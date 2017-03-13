@@ -1,6 +1,6 @@
 package jack.rm.plugins.cleanup;
 
-import com.pixbits.plugin.PluginType;
+import com.pixbits.lib.plugin.PluginType;
 
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.OperationalPlugin;

@@ -3,7 +3,7 @@ package jack.rm.plugins.datparsers;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import com.pixbits.plugin.PluginType;
+import com.pixbits.lib.plugin.PluginType;
 
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.parser.DatLoader;

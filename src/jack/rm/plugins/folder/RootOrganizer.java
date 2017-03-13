@@ -3,8 +3,8 @@ package jack.rm.plugins.folder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.pixbits.plugin.PluginInfo;
-import com.pixbits.plugin.PluginVersion;
+import com.pixbits.lib.plugin.PluginInfo;
+import com.pixbits.lib.plugin.PluginVersion;
 
 import jack.rm.data.rom.Rom;
 

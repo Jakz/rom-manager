@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.Path;
 
-import com.pixbits.plugin.PluginInfo;
-import com.pixbits.plugin.PluginVersion;
+import com.pixbits.lib.plugin.PluginInfo;
+import com.pixbits.lib.plugin.PluginVersion;
 
 import jack.rm.data.rom.Rom;
 import jack.rm.data.romset.RomHashFinder;

@@ -2,7 +2,7 @@ package jack.rm.plugins.downloader;
 
 import java.net.URL;
 
-import com.pixbits.plugin.PluginType;
+import com.pixbits.lib.plugin.PluginType;
 
 import jack.rm.data.console.System;
 import jack.rm.data.rom.Rom;

@@ -3,7 +3,7 @@ package jack.rm.plugins.cleanup;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 
-import com.pixbits.plugin.ExposedParameter;
+import com.pixbits.lib.plugin.ExposedParameter;
 
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomStatus;

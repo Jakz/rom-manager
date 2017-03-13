@@ -21,9 +21,9 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
-import com.pixbits.plugin.PluginBuilder;
-import com.pixbits.plugin.PluginManager;
-import com.pixbits.plugin.gui.PluginConfigTable;
+import com.pixbits.lib.plugin.PluginBuilder;
+import com.pixbits.lib.plugin.PluginManager;
+import com.pixbits.lib.plugin.ui.PluginConfigTable;
 
 import jack.rm.Main;
 import jack.rm.data.romset.RomSet;

@@ -7,7 +7,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.pixbits.io.BinaryBuffer;
+import com.pixbits.lib.io.BinaryBuffer;
 
 public class UPSPatch
 {  

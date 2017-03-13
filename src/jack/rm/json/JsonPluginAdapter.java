@@ -8,7 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import com.pixbits.json.JsonnableContext;
+import com.pixbits.lib.json.JsonnableContext;
 
 
 public class JsonPluginAdapter<T extends JsonnableContext> implements JsonSerializer<T>, JsonDeserializer<T>

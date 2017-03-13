@@ -7,8 +7,8 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import com.pixbits.plugin.ExposedParameter;
-import com.pixbits.plugin.PluginType;
+import com.pixbits.lib.plugin.ExposedParameter;
+import com.pixbits.lib.plugin.PluginType;
 
 import jack.rm.Main;
 import jack.rm.data.rom.Rom;

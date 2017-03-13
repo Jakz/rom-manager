@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 
 import javax.swing.SwingWorker;
 
-import com.pixbits.gui.ProgressDialog;
+import com.pixbits.lib.ui.elements.ProgressDialog;
 
 import jack.rm.Main;
 

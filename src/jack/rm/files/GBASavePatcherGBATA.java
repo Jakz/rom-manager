@@ -3,8 +3,8 @@ package jack.rm.files;
 import java.io.IOException;
 import java.util.Optional;
 
-import com.pixbits.io.BinaryBuffer;
-import com.pixbits.io.BufferPosition;
+import com.pixbits.lib.io.BinaryBuffer;
+import com.pixbits.lib.io.BufferPosition;
 
 import jack.rm.data.console.GBA;
 import jack.rm.data.rom.Version;

@@ -2,12 +2,13 @@ package jack.rm;
 
 import java.awt.Desktop;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.function.Consumer;
 
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-import com.pixbits.plugin.PluginManager;
+import com.pixbits.lib.plugin.PluginManager;
 import com.pixbits.workflow.Dumper;
 import com.pixbits.workflow.Fetcher;
 import com.pixbits.workflow.WorkflowData;
@@ -132,7 +133,7 @@ public class Main
 
 	}
 	
-	public static void loadRomSet(RomSet romSet) throws FileNotFoundException
+	public static void loadRomSet(RomSet romSet) throws FileNotFoundException, IOException
 	{
 	  if (RomSet.current != null)
 	    RomSet.current.saveStatus();
@@ -333,6 +334,10 @@ public class Main
       catch (FileNotFoundException e)
       {
         Dialogs.showError("DAT File not found!", "Missing DAT file for set "+lastProvider, Main.mainFrame);
+      } 
+      catch (IOException e)
+      {
+        e.printStackTrace();
       }
     }
     

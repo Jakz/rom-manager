@@ -12,8 +12,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
-import com.pixbits.parser.SimpleParser;
-import com.pixbits.parser.SimpleTreeBuilder;
+import com.pixbits.lib.parser.SimpleParser;
+import com.pixbits.lib.parser.SimpleTreeBuilder;
 
 import jack.rm.data.rom.Language;
 import jack.rm.data.rom.Location;

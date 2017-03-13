@@ -16,8 +16,8 @@ import java.util.zip.ZipFile;
 import javax.swing.JFrame;
 import javax.swing.SwingWorker;
 
-import com.pixbits.gui.ProgressDialog;
-import com.pixbits.strings.StringUtils;
+import com.pixbits.lib.ui.elements.ProgressDialog;
+import com.pixbits.lib.lang.StringUtils;
 
 public class ZipExtractWorker<T extends BackgroundOperation> extends SwingWorker<Path, Long>
 {

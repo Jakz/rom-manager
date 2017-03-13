@@ -3,7 +3,7 @@ package jack.rm.gui;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import com.pixbits.gui.FileTransferHandler;
+import com.pixbits.lib.ui.FileTransferHandler;
 
 import jack.rm.Main;
 import jack.rm.data.rom.Rom;
