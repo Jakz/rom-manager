@@ -25,6 +25,8 @@ import javax.swing.SwingWorker;
 
 import com.pixbits.lib.ui.elements.ProgressDialog;
 import com.pixbits.lib.io.FolderScanner;
+import com.pixbits.lib.log.Log;
+import com.pixbits.lib.log.Logger;
 import com.pixbits.lib.plugin.PluginManager;
 
 import jack.rm.Main;
@@ -32,10 +34,8 @@ import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomStatus;
 import jack.rm.data.romset.RomSet;
 import jack.rm.gui.Dialogs;
-import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
-import jack.rm.log.LogType;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
 import jack.rm.plugins.PluginRealType;
@@ -43,7 +43,9 @@ import jack.rm.plugins.scanners.ScannerPlugin;
 
 public class Scanner
 {
-	RomSet set;
+	private static final Logger logger = Log.getLogger(LogSource.SCANNER);
+  
+  RomSet set;
 	
 	private Set<Path> existing = new HashSet<>();
 	private Set<Path> foundFiles = new HashSet<>();
@@ -106,7 +108,7 @@ public class Scanner
 	  if (rom.status != RomStatus.MISSING)
 	  {	    
 	    clones.add(result);
-	    Log.warning(LogSource.SCANNER, LogTarget.file(set.getSettings().romsPath.relativize(result.path.file())), "File contains a rom already present in romset: "+rom.getPath());
+	    logger.w(LogTarget.file(set.getSettings().romsPath.relativize(result.path.file())), "File contains a rom already present in romset: "+rom.getPath());
 	    return;
 	  }
 	  
@@ -203,12 +205,12 @@ public class Scanner
 		
 		if (total)
 		{
-			Log.log(LogType.MESSAGE, LogSource.SCANNER, LogTarget.romset(set), "Scanning for roms");
+		  logger.i(LogTarget.romset(set), "Scanning for roms");
 			set.list.resetStatus();
 		}
 		else
 		{
-	    Log.log(LogType.MESSAGE, LogSource.SCANNER, LogTarget.romset(set), "Scanning for new roms");
+		  logger.i(LogTarget.romset(set), "Scanning for new roms");
 
 	    set.list.stream()
 	    .filter(r -> r.status != RomStatus.MISSING)
@@ -220,7 +222,7 @@ public class Scanner
 			
 		if (folder == null || !Files.exists(folder) || !Files.isDirectory(folder))
 		{
-		  Log.log(LogType.ERROR, LogSource.SCANNER, LogTarget.romset(set), "Roms path doesn't exist! Scanning interrupted");
+		  logger.e(LogTarget.romset(set), "Roms path doesn't exist! Scanning interrupted");
 		  Dialogs.showError("Romset Path", "Romset path is not set, or it doesn't exists as a folder.\nPlease set one in Options.", Main.mainFrame);
 		  set.list.resetStatus();
 		  Main.mainFrame.updateTable();

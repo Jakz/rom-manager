@@ -3,6 +3,8 @@ package jack.rm.gui;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import com.pixbits.lib.log.Log;
+import com.pixbits.lib.log.Logger;
 import com.pixbits.lib.ui.FileTransferHandler;
 
 import jack.rm.Main;
@@ -11,13 +13,13 @@ import jack.rm.data.rom.RomStatus;
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.Organizer;
 import jack.rm.files.ScanResult;
-import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
-import jack.rm.log.LogType;
 
 public class FileDropperListener implements FileTransferHandler.Listener
 {
+  private static final Logger logger = Log.getLogger(LogSource.IMPORTER);
+  
   @Override
   public void filesDropped(Path[] files)
   {
@@ -66,10 +68,10 @@ public class FileDropperListener implements FileTransferHandler.Listener
               RomSet.current.list.updateStatus();
               Main.mainFrame.updateTable();
               
-              Log.log(LogType.MESSAGE, LogSource.IMPORTER, LogTarget.rom(result.rom), "Successfully imported new rom");
+              logger.i(LogTarget.rom(result.rom), "Successfully imported new rom");
             }
             else
-              Log.log(LogType.WARNING, LogSource.IMPORTER, LogTarget.rom(result.rom), "Imported file is a rom already included in romset, skipping import");
+              logger.w(LogTarget.rom(result.rom), "Imported file is a rom already included in romset, skipping import");
             }
             catch (Exception e)
             {
@@ -79,7 +81,7 @@ public class FileDropperListener implements FileTransferHandler.Listener
             }  
           }
           else
-            Log.log(LogType.WARNING, LogSource.IMPORTER, LogTarget.file(file), "The file is not any recognized rom for this romset");
+            logger.w(LogTarget.file(file), "The file is not any recognized rom for this romset");
         }
       }
     }

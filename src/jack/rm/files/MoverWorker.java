@@ -4,16 +4,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 
+import com.pixbits.lib.log.Log;
+import com.pixbits.lib.log.Logger;
+
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomStatus;
 import jack.rm.data.romset.RomSet;
-import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.plugins.folder.FolderPlugin;
 
 public class MoverWorker extends RomSetWorker<FolderPlugin>
 {
+  private static final Logger logger = Log.getLogger(LogSource.ORGANIZER);
+  
   public MoverWorker(RomSet romSet, FolderPlugin plugin, Consumer<Boolean> callback)
   {
     super(romSet, plugin, r -> r.status != RomStatus.MISSING, callback);
@@ -29,7 +33,7 @@ public class MoverWorker extends RomSetWorker<FolderPlugin>
       if (!Files.exists(finalPath) || !Files.isDirectory(finalPath))
       {
         Files.createDirectories(finalPath);
-        Log.message(LogSource.ORGANIZER, LogTarget.none(), "Creating folder "+finalPath);
+        logger.i(LogTarget.none(), "Creating folder "+finalPath);
       }
       
       Path currentFile = rom.getPath().file();
@@ -38,12 +42,12 @@ public class MoverWorker extends RomSetWorker<FolderPlugin>
       if (!newFile.equals(currentFile) && Files.exists(newFile))
       {
         
-        Log.error(LogSource.ORGANIZER, LogTarget.rom(rom), "Cannot rename to "+newFile.toString()+", file exists");
+        logger.e(LogTarget.rom(rom), "Cannot rename to "+newFile.toString()+", file exists");
       }
       else if (!newFile.equals(currentFile))
       {  
         rom.move(newFile);
-        Log.message(LogSource.ORGANIZER, LogTarget.rom(rom), "Moved rom to "+finalPath);
+        logger.i(LogTarget.rom(rom), "Moved rom to "+finalPath);
       }
       
       rom.updateStatus();

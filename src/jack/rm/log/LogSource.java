@@ -1,6 +1,8 @@
 package jack.rm.log;
 
-public enum LogSource
+import com.pixbits.lib.log.LogScope;
+
+public enum LogSource implements LogScope
 {
   STATUS,
   DOWNLOADER,

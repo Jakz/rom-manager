@@ -8,7 +8,11 @@ import java.util.function.Consumer;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
+import com.pixbits.lib.log.Log;
+import com.pixbits.lib.log.LogBuffer;
+import com.pixbits.lib.log.LoggerFactory;
 import com.pixbits.lib.plugin.PluginManager;
+import com.pixbits.lib.ui.UIUtils;
 import com.pixbits.lib.ui.elements.ProgressDialog;
 import com.pixbits.workflow.Dumper;
 import com.pixbits.workflow.Fetcher;
@@ -45,23 +49,7 @@ public class Main
 	
 	public static Scanner scanner;
 	public static Downloader downloader;
-	
-	public static void setLNF()
-	{
-		try {
-		  for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-		      if ("Nimbus".equals(info.getName())) {
-		        
-		        UIManager.setLookAndFeel(info.getClassName());
-		        //UIManager.getLookAndFeelDefaults().put("defaultFont", new Font("Helvetica", Font.PLAIN, 14));
-		        break;
-		      }
-		  }
-		} catch (Exception e) {
-		    // If Nimbus is not available, you can set the GUI to another look and feel.
-		}
-	}
-	
+		
 	static class IntHolder implements WorkflowData
 	{
 	  public int value;
@@ -98,6 +86,19 @@ public class Main
 	  @Override public void accept(IntHolder holder) { /*System.out.println(holder.get());*/ }
 	}
 
+	
+	public static LogBuffer logBuffer;
+	public static void initLogging()
+	{
+	  logBuffer = new LogBuffer();
+	  logBuffer.setCallback(b -> {
+	    if (mainFrame != null)
+	      mainFrame.logPanel.populate();
+	  });
+	  
+	  LoggerFactory factory = new LoggerFactory.BufferLoggerFactory(logBuffer);
+	  Log.setFactory(factory);
+	}
 	
 	public static void loadPlugins()
 	{
@@ -309,9 +310,9 @@ public class Main
 	  if (true)
 	  {
 	  
-	    
+	  initLogging();
 	  setOS();
-	  setLNF();
+	  UIUtils.setNimbusLNF();
 	  
 	  GlobalSettings.load();
 	  loadPlugins();

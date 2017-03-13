@@ -7,12 +7,14 @@ import java.text.DecimalFormat;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.pixbits.lib.log.Log;
+import com.pixbits.lib.log.Logger;
+
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomStatus;
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.romhandles.ArchiveHandle;
 import jack.rm.files.romhandles.RomHandle;
-import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.plugins.PluginRealType;
@@ -20,7 +22,8 @@ import jack.rm.plugins.renamer.PatternSetPlugin;
 
 public class Organizer
 {	
-	private static DecimalFormat format;
+	private static final Logger logger = Log.getLogger(LogSource.ORGANIZER);
+  private static DecimalFormat format;
 	
 	static
 	{
@@ -67,7 +70,7 @@ public class Organizer
 	    if (((ArchiveHandle)path).renameInternalFile(name))
 	      rom.setPath(path.relocateInternal(name));
 	    else
-	      Log.error(LogSource.ORGANIZER, LogTarget.rom(rom), "Can't rename internal name of archive: "+path.file());
+	      logger.e(LogTarget.rom(rom), "Can't rename internal name of archive: "+path.file());
 	  }
 	}
 	
@@ -85,7 +88,7 @@ public class Organizer
     }
     catch (FileAlreadyExistsException e)
     {
-      Log.error(LogSource.ORGANIZER, LogTarget.rom(rom), "Can't rename file, already exists: "+e.getFile());
+      logger.e(LogTarget.rom(rom), "Can't rename file, already exists: "+e.getFile());
     }
     catch (Exception e)
     {
@@ -105,7 +108,7 @@ public class Organizer
         if (!Files.exists(finalPath) || !Files.isDirectory(finalPath))
         {
           Files.createDirectories(finalPath);
-          Log.message(LogSource.ORGANIZER, LogTarget.none(), "Creating folder "+finalPath);
+          logger.i(LogTarget.none(), "Creating folder "+finalPath);
         }
         
         RomHandle romPath = rom.getPath();
@@ -113,12 +116,12 @@ public class Organizer
                 
         if (!newFile.equals(romPath.file()) && Files.exists(newFile))
         {
-          Log.error(LogSource.ORGANIZER, LogTarget.rom(rom), "Cannot rename to "+newFile.toString()+", file exists");
+          logger.e(LogTarget.rom(rom), "Cannot rename to "+newFile.toString()+", file exists");
         }
         else if (!newFile.equals(romPath.file()))
         {  
           rom.move(newFile);
-          Log.message(LogSource.ORGANIZER, LogTarget.rom(rom), "Moved rom to "+finalPath);
+          logger.e(LogTarget.rom(rom), "Moved rom to "+finalPath);
         }    
       }
       catch (Exception e)

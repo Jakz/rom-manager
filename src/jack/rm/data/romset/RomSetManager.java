@@ -11,15 +11,14 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.pixbits.lib.log.Log;
 import com.pixbits.lib.plugin.PluginManager;
 
 import jack.rm.Main;
 import jack.rm.data.console.System;
 import jack.rm.data.rom.RomSize;
-import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
-import jack.rm.log.LogType;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
 import jack.rm.plugins.PluginRealType;
@@ -96,7 +95,7 @@ public class RomSetManager
 		if (!Files.exists(set.datPath()))
 		  throw new FileNotFoundException("missing DAT files");
 	  
-	  Log.log(LogType.MESSAGE, LogSource.STATUS, LogTarget.romset(set), "Loading romset");
+		Log.getLogger(LogSource.STATUS).i(LogTarget.romset(set), "Loading romset");
 	  			
 		RomSize.mapping.clear();
 		set.load();

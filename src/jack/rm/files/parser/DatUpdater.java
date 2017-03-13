@@ -10,6 +10,8 @@ import java.util.function.Consumer;
 import java.util.zip.ZipFile;
 
 import com.pixbits.lib.io.FileUtils;
+import com.pixbits.lib.log.Log;
+import com.pixbits.lib.log.Logger;
 
 import jack.rm.Main;
 import jack.rm.data.romset.RomSet;
@@ -17,12 +19,13 @@ import jack.rm.files.BackgroundOperation;
 import jack.rm.files.DownloadWorker;
 import jack.rm.files.ZipExtractWorker;
 import jack.rm.gui.Dialogs;
-import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 
 public class DatUpdater
 {
+  private static final Logger logger = Log.getLogger(LogSource.DAT_DOWNLOADER);
+  
   public static void updateDat(RomSet set, Consumer<Boolean> callback) throws IOException
   {
     Path destDat = set.datPath();
@@ -97,7 +100,7 @@ public class DatUpdater
         {
           tmpZippedPath.set(tmpDownloadPath.get());
           tmpDownloadPath.set(Files.createTempFile(null, null));
-          Log.message(LogSource.DAT_DOWNLOADER, LogTarget.romset(set), "Extracting DAT for "+set.ident()+" to "+tmpDownloadPath);
+          logger.i(LogTarget.romset(set), "Extracting DAT for "+set.ident()+" to "+tmpDownloadPath);
 
           
           ZipExtractWorker<?> worker =  new ZipExtractWorker<BackgroundOperation>(tmpZippedPath.get(), tmpDownloadPath.get(), new BackgroundOperation() {
@@ -117,7 +120,7 @@ public class DatUpdater
       } 
     };
     
-    Log.message(LogSource.DAT_DOWNLOADER, LogTarget.romset(set), "Downloading DAT for "+set.ident()+" to "+tmpDownloadPath);
+    logger.i(LogTarget.romset(set), "Downloading DAT for "+set.ident()+" to "+tmpDownloadPath);
     
     DownloadWorker<?> worker = new DownloadWorker<BackgroundOperation>(set.provider.getSource().getURL(), tmpDownloadPath.get(), new BackgroundOperation() {
       public String getTitle() { return "Downloading"; }

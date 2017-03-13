@@ -15,11 +15,11 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import jack.rm.log.Log;
-import jack.rm.log.LogMessage;
+import com.pixbits.lib.log.LogBuffer;
+
+import jack.rm.Main;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
-import jack.rm.log.LogType;
 
 public class LogPanel extends JPanel
 {
@@ -27,7 +27,7 @@ public class LogPanel extends JPanel
 	
 	class LogTableModel extends AbstractTableModel
 	{
-	  final List<LogMessage> messages = new ArrayList<>();
+	  final List<LogBuffer.Entry> messages = new ArrayList<>();
 	  final String[] columnNames = {"Source", "Target", "Message"};
 	  final Class<?>[] columnClasses = {LogSource.class, LogTarget.class, String.class};
 	  
@@ -41,12 +41,12 @@ public class LogPanel extends JPanel
 	  
 	  @Override public Object getValueAt(int r, int c)
 	  {
-	    LogMessage m = messages.get(r);
+	    LogBuffer.Entry m = messages.get(r);
 	    
 	    switch (c)
 	    {
-	      case 0: return m.source;
-	      case 1: return m.target;
+	      case 0: return m.scope;
+	      case 1: return m.attrbute;
 	      case 2: return m.message;
 	      default: return null;
 	    }
@@ -55,11 +55,7 @@ public class LogPanel extends JPanel
 	  void populate()
 	  {
 	    messages.clear();
-	    
-	    List<LogMessage> tmessages = Log.get();
-	    
-	    for (LogMessage msg : tmessages)
-	      messages.add(msg);
+	    Main.logBuffer.stream().forEach(messages::add);
 	  }
 	  
 	  void fireChanges()
@@ -74,11 +70,11 @@ public class LogPanel extends JPanel
 	    {
 	      JLabel label = (JLabel)super.getTableCellRendererComponent(table, value, isSelected, hasFocus, r, c);
 
-	      LogMessage msg = messages.get(r);
+	      LogBuffer.Entry msg = messages.get(r);
 	      
-	      if (msg.type == LogType.WARNING)
+	      if (msg.level.isWarning())
 	        label.setForeground(new Color(255,153,0));
-	      else if (msg.type == LogType.ERROR)
+	      else if (msg.level.isError())
 	        label.setForeground(new Color(180,0,0));
 	      else
 	        label.setForeground(table.getForeground());
@@ -108,7 +104,7 @@ public class LogPanel extends JPanel
 		this.add(scroll,BorderLayout.CENTER);
 		
 		clearButton.addActionListener(e -> {
-		  Log.wipe(); 
+		  Main.logBuffer.wipe();
 		  populate();
 		});
 		

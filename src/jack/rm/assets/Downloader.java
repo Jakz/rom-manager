@@ -14,19 +14,21 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import com.pixbits.lib.log.Log;
+import com.pixbits.lib.log.Logger;
 import com.pixbits.lib.ui.elements.ProgressDialog;
 
 import jack.rm.Main;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.romset.RomSet;
 import jack.rm.gui.Dialogs;
-import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
-import jack.rm.log.LogType;
 
 public class Downloader
 {
+  private static final Logger logger = Log.getLogger(LogSource.DOWNLOADER);
+  
   public ThreadPoolExecutor pool;
   int totalTasks;
   int missingTasks;
@@ -129,7 +131,7 @@ public class Downloader
       }
       catch (FileNotFoundException e)
       {
-        Log.log(LogType.ERROR, LogSource.DOWNLOADER, LogTarget.rom(rom), "Asset not found at "+url);
+        logger.e(LogTarget.rom(rom), "Asset not found at "+url);
         Main.mainFrame.updateInfoPanel(rom);
         return false;
       }

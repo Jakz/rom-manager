@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
+import com.pixbits.lib.log.Log;
 
 import jack.rm.GlobalSettings;
 import jack.rm.Main;
@@ -30,10 +31,8 @@ import jack.rm.data.search.Searcher;
 import jack.rm.files.parser.DatLoader;
 import jack.rm.json.Json;
 import jack.rm.json.RomListAdapter;
-import jack.rm.log.Log;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
-import jack.rm.log.LogType;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.cleanup.CleanupPlugin;
 
@@ -164,7 +163,7 @@ public class RomSet
       try (BufferedWriter wrt = Files.newBufferedWriter(statusPath))
       {
         wrt.write(gson.toJson(list));
-        Log.message(LogSource.STATUS, LogTarget.romset(this), "Romset status saved on json");
+        Log.getLogger(LogSource.STATUS).i(LogTarget.romset(this), "Romset status saved on json");
       }
 	  }
 	  catch (Exception e)
@@ -207,7 +206,7 @@ public class RomSet
   	    catch (JsonParseException e)
   	    {
   	      if (e.getCause() instanceof ClassNotFoundException)
-  	        Log.log(LogType.ERROR, LogSource.PLUGINS, null, "Error while loading plugin state: "+e.getCause().toString());
+  	        Log.getLogger(LogSource.STATUS).e("Error while loading plugin state: %s", e.getCause().toString());
   	      
   	      e.printStackTrace();
   	    }

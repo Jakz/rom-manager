@@ -1,6 +1,9 @@
 package jack.rm.log;
 
-public abstract class LogTarget
+import com.pixbits.lib.log.LogAttribute;
+import com.pixbits.lib.log.LogScope;
+
+public abstract class LogTarget implements LogAttribute
 {
   public static enum Type
   {
@@ -24,6 +27,8 @@ public abstract class LogTarget
     {
       super(Type.NONE);
     }
+    
+    @Override public String toString() { return ""; }
   }
   
   public static class Rom extends LogTarget
