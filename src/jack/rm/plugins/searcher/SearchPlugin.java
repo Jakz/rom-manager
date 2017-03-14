@@ -1,6 +1,6 @@
 package jack.rm.plugins.searcher;
 
-import com.pixbits.lib.functional.searcher.SearchParser;
+import com.pixbits.lib.searcher.SearchParser;
 import com.pixbits.lib.plugin.PluginType;
 
 import jack.rm.data.rom.Rom;

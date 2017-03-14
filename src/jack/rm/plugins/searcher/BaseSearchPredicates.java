@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import com.pixbits.lib.functional.searcher.BasicPredicate;
-import com.pixbits.lib.functional.searcher.SearchPredicate;
+import com.pixbits.lib.searcher.BasicPredicate;
+import com.pixbits.lib.searcher.SearchPredicate;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
 

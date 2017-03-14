@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import com.pixbits.lib.functional.searcher.SearchParser;
-import com.pixbits.lib.functional.searcher.SearchPredicate;
+import com.pixbits.lib.searcher.SearchParser;
+import com.pixbits.lib.searcher.SearchPredicate;
 import com.pixbits.lib.parser.shuntingyard.ASTBinary;
 import com.pixbits.lib.parser.shuntingyard.ASTNode;
 import com.pixbits.lib.parser.shuntingyard.ASTUnary;

@@ -7,10 +7,10 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import com.pixbits.lib.functional.searcher.BasicSearcher;
-import com.pixbits.lib.functional.searcher.DummyPredicate;
-import com.pixbits.lib.functional.searcher.SearchParser;
-import com.pixbits.lib.functional.searcher.SearchPredicate;
+import com.pixbits.lib.searcher.BasicSearchParser;
+import com.pixbits.lib.searcher.DummyPredicate;
+import com.pixbits.lib.searcher.SearchParser;
+import com.pixbits.lib.searcher.SearchPredicate;
 import com.pixbits.lib.parser.SimpleParser;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
@@ -35,7 +35,7 @@ public class SimpleSearcherPlugin extends SearchPlugin
     } 
   };
   
-  final private BasicSearcher<Rom> searcher = new BasicSearcher<>(freeSearch);
+  final private BasicSearchParser<Rom> searcher = new BasicSearchParser<>(freeSearch);
   
   @Override
   public SearchParser<Rom> getSearcher()

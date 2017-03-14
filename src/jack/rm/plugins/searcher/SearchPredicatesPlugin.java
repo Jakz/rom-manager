@@ -2,7 +2,7 @@ package jack.rm.plugins.searcher;
 
 import java.util.List;
 
-import com.pixbits.lib.functional.searcher.SearchPredicate;
+import com.pixbits.lib.searcher.SearchPredicate;
 import com.pixbits.lib.plugin.PluginType;
 
 import jack.rm.data.rom.Rom;

@@ -16,10 +16,10 @@ import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
-import com.pixbits.lib.functional.searcher.DummySearcher;
-import com.pixbits.lib.functional.searcher.SearchParser;
-import com.pixbits.lib.functional.searcher.SearchPredicate;
-import com.pixbits.lib.functional.searcher.Searcher;
+import com.pixbits.lib.searcher.DummySearcher;
+import com.pixbits.lib.searcher.SearchParser;
+import com.pixbits.lib.searcher.SearchPredicate;
+import com.pixbits.lib.searcher.Searcher;
 import com.pixbits.lib.log.Log;
 
 import jack.rm.GlobalSettings;
