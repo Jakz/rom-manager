@@ -18,7 +18,6 @@ public abstract class RomSetWorker<T extends BackgroundOperation> extends Backgr
 
   }
   
-  
   @Override
   public abstract void execute(Rom rom);
 

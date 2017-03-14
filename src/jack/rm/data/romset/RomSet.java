@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -15,6 +16,10 @@ import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
+import com.pixbits.lib.functional.searcher.DummySearcher;
+import com.pixbits.lib.functional.searcher.SearchParser;
+import com.pixbits.lib.functional.searcher.SearchPredicate;
+import com.pixbits.lib.functional.searcher.Searcher;
 import com.pixbits.lib.log.Log;
 
 import jack.rm.GlobalSettings;
@@ -26,8 +31,6 @@ import jack.rm.data.console.System;
 import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
-import jack.rm.data.search.DummySearcher;
-import jack.rm.data.search.Searcher;
 import jack.rm.files.parser.DatLoader;
 import jack.rm.json.Json;
 import jack.rm.json.RomListAdapter;
@@ -35,6 +38,8 @@ import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.cleanup.CleanupPlugin;
+import jack.rm.plugins.searcher.SearchPlugin;
+import jack.rm.plugins.searcher.SearchPredicatesPlugin;
 
 public class RomSet
 {
@@ -51,14 +56,14 @@ public class RomSet
 	private final AssetManager assetManager;
 	private final DatLoader loader;
 	
-	private Searcher searcher;
+	private Searcher<Rom> searcher;
 	
 	
 	private final Attribute[] attributes;
 
 	public RomSet(System type, Provider provider, Attribute[] attributes, AssetManager assetManager, DatLoader loader)
 	{
-		this.searcher = new DummySearcher(this);
+		this.searcher = new DummySearcher<>();
 	  this.list = new RomList(this);
 	  this.system = type;
 		this.provider = provider;
@@ -72,9 +77,18 @@ public class RomSet
 	public void pluginStateChanged()
 	{
 	  if (getSettings().getSearchPlugin() != null)
-	    searcher = new Searcher(this);
+	  {
+	    List<SearchPredicate<Rom>> predicates = new ArrayList<>();
+	    
+	    SearchPlugin plugin = getSettings().plugins.getEnabledPlugin(PluginRealType.SEARCH);
+	    SearchParser<Rom> parser = plugin.getSearcher();
+	    
+	    Set<SearchPredicatesPlugin> predicatePlugins = getSettings().plugins.getEnabledPlugins(PluginRealType.SEARCH_PREDICATES);
+	    predicatePlugins.stream().flatMap(p -> p.getPredicates().stream()).forEach(predicates::add);    
+	    searcher = new Searcher<>(parser, predicates);
+	  }
 	  else
-	    searcher = new DummySearcher(this);
+	    searcher = new DummySearcher<>();
 	}
 	
 	public Settings getSettings() { return settings; }
@@ -117,7 +131,7 @@ public class RomSet
 	  return settings.romsPath.resolve(Paths.get("attachments"));
 	}
 	
-	public Searcher getSearcher()
+	public Searcher<Rom> getSearcher()
 	{
 	  return searcher;
 	}

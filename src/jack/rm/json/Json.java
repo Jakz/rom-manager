@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.pixbits.lib.io.json.PathAdapter;
 import com.pixbits.lib.plugin.JsonPluginSetAdapter;
 import com.pixbits.lib.plugin.Plugin;
 import com.pixbits.lib.plugin.PluginSet;

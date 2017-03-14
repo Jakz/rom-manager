@@ -18,8 +18,6 @@ import java.util.function.Consumer;
 import javax.swing.JFrame;
 import javax.swing.SwingWorker;
 
-import com.pixbits.lib.ui.elements.ProgressDialog;
-
 import jack.rm.Main;
 
 import com.pixbits.lib.lang.StringUtils;

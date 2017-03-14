@@ -7,8 +7,6 @@ import java.util.function.Consumer;
 
 import javax.swing.SwingWorker;
 
-import com.pixbits.lib.ui.elements.ProgressDialog;
-
 import jack.rm.Main;
 
 public abstract class BackgroundWorker<E, T extends BackgroundOperation> extends SwingWorker<Void, Integer>
@@ -16,8 +14,9 @@ public abstract class BackgroundWorker<E, T extends BackgroundOperation> extends
   protected final List<E> data;
   protected final T operation;
   protected final Consumer<Boolean> callback;
-  protected final String title;
-  protected final String progressText;
+  
+  private String getTitle() { return operation.getTitle(); }
+  private String getProgressText() { return operation.getProgressText(); }
   
   protected BackgroundWorker(T operation, Consumer<Boolean> callback)
   {
@@ -29,9 +28,6 @@ public abstract class BackgroundWorker<E, T extends BackgroundOperation> extends
     this.data = data;
     this.operation = operation;
     this.callback = callback;
-    
-    this.title = operation.getTitle();
-    this.progressText = operation.getProgressText();
   }
   
   protected void add(E item) { data.add(item); }
@@ -39,7 +35,7 @@ public abstract class BackgroundWorker<E, T extends BackgroundOperation> extends
   @Override
   public Void doInBackground()
   {
-    Main.progress.show(Main.mainFrame, title, null);
+    Main.progress.show(Main.mainFrame, getTitle(), null);
     
     for (int i = 0; i < data.size(); ++i)
     {
@@ -58,7 +54,7 @@ public abstract class BackgroundWorker<E, T extends BackgroundOperation> extends
   @Override
   public void process(List<Integer> v)
   {
-    Main.progress.update(this, progressText+" "+v.get(v.size()-1)+" of "+data.size()+"..");
+    Main.progress.update(this, getProgressText()+" "+v.get(v.size()-1)+" of "+data.size()+"..");
     Main.mainFrame.updateTable();
   }
   

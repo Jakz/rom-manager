@@ -1,10 +1,13 @@
 package jack.rm.plugins.searcher;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import com.pixbits.lib.functional.searcher.BasicPredicate;
+import com.pixbits.lib.functional.searcher.SearchPredicate;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
 
@@ -14,8 +17,6 @@ import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.RomSave;
 import jack.rm.data.rom.RomStatus;
-import jack.rm.data.search.BasicPredicate;
-import jack.rm.data.search.SearchPredicate;
 
 public class BaseSearchPredicates extends SearchPredicatesPlugin
 {
@@ -26,7 +27,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
         "This plugins provides basic search predicates.");
   }
   
-  private final static SearchPredicate HAS_ATTACHMENT = new BasicPredicate("has-attachment", "has:attach", "filters roms with attachments included")
+  private final static SearchPredicate<Rom> HAS_ATTACHMENT = new BasicPredicate<Rom>("has-attachment", "has:attach", "filters roms with attachments included")
   {
     @Override public Predicate<Rom> buildPredicate(String token)
     {
@@ -37,7 +38,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
   
-  private final static SearchPredicate HAS_ASSETS = new BasicPredicate("has-assets", "has:assets", "filters roms with assets downloaded")
+  private final static SearchPredicate<Rom> HAS_ASSETS = new BasicPredicate<Rom>("has-assets", "has:assets", "filters roms with assets downloaded")
   {
     @Override public Predicate<Rom> buildPredicate(String token)
     {
@@ -48,7 +49,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
   
-  private final static SearchPredicate IS_FAVORITE = new BasicPredicate("is-favorite", "is:favorite, is:fav", "filters roms set as favorite")
+  private final static SearchPredicate<Rom> IS_FAVORITE = new BasicPredicate<Rom>("is-favorite", "is:favorite, is:fav", "filters roms set as favorite")
   {
     @Override public Predicate<Rom> buildPredicate(String token)
     {
@@ -59,7 +60,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
   
-  private final static SearchPredicate IS_MISSING = new BasicPredicate("is-missing", "is:missing, is:mis", "filters roms which are missing")
+  private final static SearchPredicate<Rom> IS_MISSING = new BasicPredicate<Rom>("is-missing", "is:missing, is:mis", "filters roms which are missing")
   {
     @Override public Predicate<Rom> buildPredicate(String token)
     {
@@ -70,7 +71,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
   
-  private final static SearchPredicate IS_FOUND = new BasicPredicate("is-found", "is:found", "filters roms which are present")
+  private final static SearchPredicate<Rom> IS_FOUND = new BasicPredicate<Rom>("is-found", "is:found", "filters roms which are present")
   {
     @Override public Predicate<Rom> buildPredicate(String token)
     {
@@ -81,7 +82,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
   
-  private final static SearchPredicate OF_GENRE = new BasicPredicate("genre", "genre:action", "filters games of a specified genre")
+  private final static SearchPredicate<Rom> OF_GENRE = new BasicPredicate<Rom>("genre", "genre:action", "filters games of a specified genre")
   {
     @Override public Predicate<Rom> buildPredicate(String token)
     {
@@ -101,7 +102,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
   
-  private final static SearchPredicate OF_SAVE_TYPE = new BasicPredicate("save", "save:\"sram 112\"", "filters games with specified save type")
+  private final static SearchPredicate<Rom> OF_SAVE_TYPE = new BasicPredicate<Rom>("save", "save:\"sram 112\"", "filters games with specified save type")
   {
     @Override public Predicate<Rom> buildPredicate(String token)
     {
@@ -120,7 +121,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
   
-  private final static SearchPredicate IS_LOCATION = new BasicPredicate("location", "loc:usa, location:usa", "filters games with specified location")
+  private final static SearchPredicate<Rom> IS_LOCATION = new BasicPredicate<Rom>("location", "loc:usa, location:usa", "filters games with specified location")
   {
     @Override public Predicate<Rom> buildPredicate(String token)
     {
@@ -141,7 +142,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
   
-  private final static SearchPredicate HAS_ATTRIBUTE = new BasicPredicate("has-attribute", "has:tag", "filters games with specified attribute present")
+  private final static SearchPredicate<Rom> HAS_ATTRIBUTE = new BasicPredicate<Rom>("has-attribute", "has:tag", "filters games with specified attribute present")
   {
     @Override public Predicate<Rom> buildPredicate(String token)
     {
@@ -164,7 +165,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
   
-  private final static SearchPredicate IS_FORMAT = new BasicPredicate("is-format", "format:zip", "filters games by format on disk")
+  private final static SearchPredicate<Rom> IS_FORMAT = new BasicPredicate<Rom>("is-format", "format:zip", "filters games by format on disk")
   {
     @Override public Predicate<Rom> buildPredicate(String token)
     {
@@ -185,23 +186,28 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
    
-  private final SearchPredicate[] predicates = {
-    HAS_ATTACHMENT,
-    HAS_ASSETS,
-    HAS_ATTRIBUTE,
-    IS_FAVORITE,
-    IS_FOUND,
-    IS_LOCATION,
-    IS_MISSING,
-    OF_GENRE,
-    OF_SAVE_TYPE,
-    IS_FORMAT
-  };
+  private final List<SearchPredicate<Rom>> predicates;
   
-  @Override
-  public List<SearchPredicate> getPredicates()
+  public BaseSearchPredicates()
   {
-    return Arrays.asList(predicates);
+    predicates = new ArrayList<>();
+    predicates.add(HAS_ATTACHMENT);
+    predicates.add(HAS_ASSETS);
+    predicates.add(HAS_ATTRIBUTE);
+    predicates.add(IS_FAVORITE);
+    predicates.add(IS_FOUND);
+    predicates.add(IS_LOCATION);
+    predicates.add(IS_MISSING);
+    predicates.add(OF_GENRE);
+    predicates.add(OF_SAVE_TYPE);
+    predicates.add(IS_FORMAT);
+
+  }
+
+  @Override
+  public List<SearchPredicate<Rom>> getPredicates()
+  {
+    return predicates;
   }
 
 }

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import com.pixbits.lib.functional.searcher.SearchParser;
+import com.pixbits.lib.functional.searcher.SearchPredicate;
 import com.pixbits.lib.parser.shuntingyard.ASTBinary;
 import com.pixbits.lib.parser.shuntingyard.ASTNode;
 import com.pixbits.lib.parser.shuntingyard.ASTUnary;
@@ -15,8 +17,6 @@ import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
 
 import jack.rm.data.rom.Rom;
-import jack.rm.data.search.SearchParser;
-import jack.rm.data.search.SearchPredicate;
 
 public class BooleanSearcherPlugin extends SearchPlugin
 {
@@ -27,7 +27,7 @@ public class BooleanSearcherPlugin extends SearchPlugin
         "This plugins provides boolean expression search parsing.");
   }
     
-  private class SimpleSearcher extends SearchParser
+  private class SimpleSearcher extends SearchParser<Rom>
   {
     final private ShuntingYardParser parser;
     final private EvaluateVisitor visitor;
@@ -44,9 +44,9 @@ public class BooleanSearcherPlugin extends SearchPlugin
     }
     
     @Override
-    public Function<List<SearchPredicate>, Predicate<Rom>> parse(String text)
+    public Function<List<SearchPredicate<Rom>>, Predicate<Rom>> parse(String text)
     {
-      Function<List<SearchPredicate>, Predicate<Rom>> lambda = predicates -> {
+      Function<List<SearchPredicate<Rom>>, Predicate<Rom>> lambda = predicates -> {
               
         ASTNode node = null;
         
@@ -72,9 +72,9 @@ public class BooleanSearcherPlugin extends SearchPlugin
     
     private class EvaluateVisitor extends StackVisitor<Predicate<Rom>>
     {
-      private List<SearchPredicate> predicates;
+      private List<SearchPredicate<Rom>> predicates;
 
-      void setPredicates(List<SearchPredicate> predicates)
+      void setPredicates(List<SearchPredicate<Rom>> predicates)
       {
         reset();
         this.predicates = predicates;
@@ -110,7 +110,7 @@ public class BooleanSearcherPlugin extends SearchPlugin
   final private SimpleSearcher searcher = new SimpleSearcher();
   
   @Override
-  public SearchParser getSearcher()
+  public SearchParser<Rom> getSearcher()
   {
     return searcher;
   }
