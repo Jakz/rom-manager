@@ -6,7 +6,9 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.pixbits.lib.io.json.PathAdapter;
+import com.pixbits.lib.io.archive.handles.Handle;
+import com.pixbits.lib.io.archive.handles.JsonHandleAdapter;
+import com.pixbits.lib.json.PathAdapter;
 import com.pixbits.lib.plugin.JsonPluginSetAdapter;
 import com.pixbits.lib.plugin.Plugin;
 import com.pixbits.lib.plugin.PluginSet;
@@ -15,26 +17,31 @@ import jack.rm.data.attachment.Attachment;
 import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.RomID;
 import jack.rm.data.romset.RomSet;
-import jack.rm.files.romhandles.RomHandle;
-import jack.rm.files.romhandles.RomPathAdapter;
 import jack.rm.plugins.ActualPlugin;
 
 public class Json
 {
   private static Map<Class<?>, Object> typeAdapters = new HashMap<>();
+  private static Map<Class<?>, Object> hierarchyAdapters = new HashMap<>();
+
   
   public static void registerTypeAdapter(Class<?> clazz, Object adapter)
   {
     typeAdapters.put(clazz, adapter);
   }
   
+  public static void registerHiearchyAdapter(Class<?> clazz, Object adapter)
+  {
+    hierarchyAdapters.put(clazz, adapter);
+  }
+  
   static
   {
     registerTypeAdapter(RomSet.class, new RomSetAdapter());
     registerTypeAdapter(RomID.class, new RomIdAdapter());
-    registerTypeAdapter(RomHandle.class, new RomPathAdapter());
+    registerHiearchyAdapter(Handle.class, new JsonHandleAdapter());
     registerTypeAdapter(RomSavedAttribute.class, new RomSavedAttributeAdapter());
-    registerTypeAdapter(Path.class, new PathAdapter());
+    registerHiearchyAdapter(Path.class, new PathAdapter());
     registerTypeAdapter(Plugin.class, new JsonPluginAdapter<Plugin>());
     registerTypeAdapter(PluginSet.class, new JsonPluginSetAdapter<ActualPlugin>());
     registerTypeAdapter(Attribute.class, new RomAttributeAdapter());
@@ -51,6 +58,7 @@ public class Json
   {
     GsonBuilder builder = new GsonBuilder();   
     typeAdapters.forEach( (k,v) -> builder.registerTypeHierarchyAdapter(k, v) );
+    hierarchyAdapters.forEach( (k, v) -> builder.registerTypeHierarchyAdapter(k, v) );
     return builder.setPrettyPrinting();
   }
 }

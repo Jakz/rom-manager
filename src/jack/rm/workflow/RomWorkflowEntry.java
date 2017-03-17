@@ -7,10 +7,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import com.pixbits.lib.io.BinaryBuffer;
+import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.workflow.WorkflowData;
 
 import jack.rm.data.rom.Rom;
-import jack.rm.files.romhandles.RomHandle;
 
 public class RomWorkflowEntry implements WorkflowData
 {
@@ -30,7 +30,7 @@ public class RomWorkflowEntry implements WorkflowData
   
   public void prepareBuffer() throws IOException
   {
-    RomHandle source = rom.getPath();
+    Handle source = rom.getPath();
     this.path = Files.createTempFile(null, null);
     Files.copy(source.getInputStream(), path, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
   }

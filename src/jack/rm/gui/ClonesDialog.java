@@ -32,11 +32,15 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
+import com.pixbits.lib.io.archive.handles.ArchiveHandle;
+import com.pixbits.lib.io.archive.handles.BinaryHandle;
+import com.pixbits.lib.io.archive.handles.Handle;
+import com.pixbits.lib.io.archive.handles.NestedArchiveHandle;
+
 import jack.rm.Main;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.ScanResult;
-import jack.rm.files.romhandles.RomHandle;
 
 public class ClonesDialog extends JDialog
 {
@@ -150,15 +154,16 @@ public class ClonesDialog extends JDialog
   private enum ClonePriority
   {
     ANY("Any", null),
-    ARCHIVE("Archive", RomHandle.Type.ZIP),
-    BINARY("Binary", RomHandle.Type.BIN)
+    NESTED("Nested Aarchive", NestedArchiveHandle.class),
+    ARCHIVED("Archive", ArchiveHandle.class),
+    BINARY("Binary", BinaryHandle.class)
     ;
     
-    ClonePriority(String caption, RomHandle.Type type) { this.caption = caption; this.type = type; }
+    ClonePriority(String caption, Class<? extends Handle> type) { this.caption = caption; this.type = type; }
     public String toString() { return caption; }
     
     public final String caption;
-    public final RomHandle.Type type;
+    public final Class<? extends Handle> type;
   }
   
   private final JComboBox<ClonePolicy> clonePolicy = new JComboBox<>(ClonePolicy.values());
@@ -317,7 +322,7 @@ public class ClonesDialog extends JDialog
   {
     if (priority != ClonePriority.ANY)
     {
-      List<ScanResult> filtered = results.stream().filter(r -> r.path.type == priority.type).collect(Collectors.toList());
+      List<ScanResult> filtered = results.stream().filter(r -> r.path.getClass() == priority.type).collect(Collectors.toList());
       if (!filtered.isEmpty())
         results = filtered;
     }

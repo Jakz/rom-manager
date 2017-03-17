@@ -4,16 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.pixbits.lib.io.archive.handles.Handle;
+
 import jack.rm.data.attachment.Attachment;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomID;
 import jack.rm.data.rom.RomStatus;
-import jack.rm.files.romhandles.RomHandle;
 
 public class RomSavedState
 {
 	RomID<?> id;
-	RomHandle file;
+	Handle file;
 	RomStatus status;
 	boolean favourite;
 	List<RomSavedAttribute> attributes;

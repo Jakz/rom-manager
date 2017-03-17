@@ -11,13 +11,14 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Stream;
 
+import com.pixbits.lib.io.archive.handles.Handle;
+
 import jack.rm.Settings;
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
 import jack.rm.data.attachment.Attachment;
 import jack.rm.data.console.System;
 import jack.rm.data.romset.RomSet;
-import jack.rm.files.romhandles.RomHandle;
 import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.RenamerPlugin;
 
@@ -53,7 +54,7 @@ public class Rom implements Comparable<Rom>
 	
   private boolean favourite;
 		
-	private RomHandle path;
+	private Handle path;
 	
 	public Rom(RomSet set)
 	{
@@ -83,8 +84,8 @@ public class Rom implements Comparable<Rom>
 	
 	public RomID<?> getID() { return new RomID.CRC(getCRC()); }
 	
-	public RomHandle getPath() { return path; }
-	public void setPath(RomHandle path) { this.path = path; }
+	public Handle getPath() { return path; }
+	public void setPath(Handle path) { this.path = path; }
 	
 	public void setTitle(String title) { setAttribute(RomAttribute.TITLE, title); }
 	public String getTitle() { return getAttribute(RomAttribute.TITLE); }
@@ -116,8 +117,9 @@ public class Rom implements Comparable<Rom>
 	
 	public void move(Path dest) throws IOException
 	{
-	  Files.move(path.file(), dest);
-	  path = path.relocate(dest);
+	  throw new UnsupportedOperationException("Move is not implemented anymore");
+	  //Files.move(path.file(), dest);
+	  //path = path.relocate(dest);
 	}
 	
 	public boolean hasAsset(Asset asset)

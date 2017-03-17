@@ -130,11 +130,7 @@ public class Main
 
     manager.register(jack.rm.plugins.misc.ExportRomsPlugin.class);
 
-    
-    manager.register(jack.rm.plugins.scanners.BinaryScannerPlugin.class);
-    manager.register(jack.rm.plugins.scanners.NativeZipScanner.class);
-    manager.register(jack.rm.plugins.scanners.Zip7Scanner.class);
-
+    manager.register(jack.rm.plugins.scanners.EmbeddedScanner.class);
 	}
 	
 	public static void loadRomSet(RomSet romSet) throws FileNotFoundException, IOException

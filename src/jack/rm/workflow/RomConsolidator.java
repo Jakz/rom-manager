@@ -4,10 +4,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
+import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.workflow.Dumper;
 
 import jack.rm.data.rom.Rom;
-import jack.rm.files.romhandles.RomHandle;
 
 public class RomConsolidator extends Dumper<RomWorkflowEntry>
 {
@@ -40,7 +40,7 @@ public class RomConsolidator extends Dumper<RomWorkflowEntry>
       }
       else
       {
-        RomHandle path = rom.getPath();
+        Handle path = rom.getPath();
         
         if (!path.isArchive())
           Files.copy(path.file(), finalPath, StandardCopyOption.REPLACE_EXISTING);
