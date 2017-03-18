@@ -45,7 +45,7 @@ public class RomListAdapter implements JsonSerializer<RomList>, JsonDeserializer
       
       if (rom != null)
       {
-        rom.setPath(prom.file);
+        rom.setHandle(prom.file);
         rom.status = prom.status;
         rom.setFavourite(prom.favourite);
         

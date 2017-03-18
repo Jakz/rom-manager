@@ -24,7 +24,7 @@ public class FindStatement implements Statement
     
         env.out.append("  "+r.getTitle());
       else
-        env.out.append("  "+r.getTitle()+" ==> "+env.set.getSettings().romsPath.relativize(r.getPath().path()));
+        env.out.append("  "+r.getTitle()+" ==> "+env.set.getSettings().romsPath.relativize(r.getHandle().path()));
     }   
   }
 }

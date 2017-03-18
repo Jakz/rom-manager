@@ -40,7 +40,7 @@ public class RomConsolidator extends Dumper<RomWorkflowEntry>
       }
       else
       {
-        Handle path = rom.getPath();
+        Handle path = rom.getHandle();
         
         if (!path.isArchive())
           Files.copy(path.path(), finalPath, StandardCopyOption.REPLACE_EXISTING);
@@ -56,7 +56,7 @@ public class RomConsolidator extends Dumper<RomWorkflowEntry>
     }
     catch (Exception e)
     {
-      System.out.println("Error on "+handle.getRom().getPath().toString());
+      System.out.println("Error on "+handle.getRom().getHandle().toString());
       if (e.getCause() != e)
         e.getCause().printStackTrace();
       else

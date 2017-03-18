@@ -16,6 +16,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.pixbits.lib.log.LogBuffer;
+import com.pixbits.lib.ui.UIUtils;
 
 import jack.rm.Main;
 import jack.rm.log.LogSource;
@@ -65,6 +66,10 @@ public class LogPanel extends JPanel
 	  
 	  class Renderer extends DefaultTableCellRenderer
 	  {
+	    private final Color errorColor = new Color(180,0,0);
+	    private final Color warningColor = new Color(255,153,0);
+	    private final Color debugColor = new Color(180,180,180);
+	    
 	    @Override
       public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int r, int c)
 	    {
@@ -73,9 +78,11 @@ public class LogPanel extends JPanel
 	      LogBuffer.Entry msg = messages.get(r);
 	      
 	      if (msg.level.isWarning())
-	        label.setForeground(new Color(255,153,0));
+	        label.setForeground(warningColor);
 	      else if (msg.level.isError())
-	        label.setForeground(new Color(180,0,0));
+	        label.setForeground(errorColor);
+	      else if (msg.level.isDebug())
+	        label.setForeground(debugColor);
 	      else
 	        label.setForeground(table.getForeground());
 	      
@@ -122,5 +129,7 @@ public class LogPanel extends JPanel
 	{
 	  model.populate();
 	  model.fireChanges();
+	  UIUtils.packTableColumn(table, table.getColumnModel().getColumn(0), 20);
+	  UIUtils.packTableColumn(table, table.getColumnModel().getColumn(1), 20);
 	}
 }

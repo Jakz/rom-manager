@@ -85,8 +85,8 @@ public class Rom implements Comparable<Rom>, Verifiable
 	
 	public RomID<?> getID() { return new RomID.CRC(getCRC()); }
 	
-	public Handle getPath() { return path; }
-	public void setPath(Handle path) { this.path = path; }
+	public Handle getHandle() { return path; }
+	public void setHandle(Handle path) { this.path = path; }
 	
 	public void setTitle(String title) { setAttribute(RomAttribute.TITLE, title); }
 	public String getTitle() { return getAttribute(RomAttribute.TITLE); }

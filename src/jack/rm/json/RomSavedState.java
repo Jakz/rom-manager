@@ -26,7 +26,7 @@ public class RomSavedState
 	{
 	  this.id = rom.getID();
 	  this.status = rom.status;
-	  this.file = rom.getPath();
+	  this.file = rom.getHandle();
 	  this.favourite = rom.isFavourite();
 	 
 	  this.attributes = rom.getCustomAttributes()

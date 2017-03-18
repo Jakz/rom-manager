@@ -8,6 +8,7 @@ public abstract class LogTarget implements LogAttribute
   public static enum Type
   {
     FILE,
+    HANDLE,
     ROM,
     ROM_SET,
     PLUGIN,
@@ -73,6 +74,19 @@ public abstract class LogTarget implements LogAttribute
     public String toString() { return path.toString(); }
   }
   
+  public static class Handle extends LogTarget
+  {
+    private final com.pixbits.lib.io.archive.handles.Handle handle;
+    
+    Handle(com.pixbits.lib.io.archive.handles.Handle handle)
+    {
+      super(Type.HANDLE);
+      this.handle = handle;
+    }
+    
+    @Override public String toString() { return handle.toString(); }
+  }
+  
   public static class Plugin extends LogTarget
   {
     private final com.pixbits.lib.plugin.Plugin plugin;
@@ -89,6 +103,7 @@ public abstract class LogTarget implements LogAttribute
   
   public static LogTarget none() { return new None(); }
   public static LogTarget file(java.nio.file.Path file) { return new File(file); }
+  public static LogTarget handle(com.pixbits.lib.io.archive.handles.Handle handle) { return new Handle(handle); }
   public static LogTarget rom(jack.rm.data.rom.Rom rom) { return new Rom(rom); }
   public static LogTarget romset(jack.rm.data.romset.RomSet set) { return new RomSet(set); }
   public static LogTarget plugin(com.pixbits.lib.plugin.Plugin plugin) { return new Plugin(plugin); }

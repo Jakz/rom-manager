@@ -33,7 +33,7 @@ public class MoveUnknownFilesPlugin extends CleanupPlugin implements PluginWithI
   
       Set<Path> existing = list.stream()
         .filter( r -> r.status != RomStatus.MISSING )
-        .map( r -> r.getPath().path())
+        .map( r -> r.getHandle().path())
         .collect(Collectors.toSet());
   
       Settings settings = list.set.getSettings();

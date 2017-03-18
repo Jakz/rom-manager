@@ -19,12 +19,12 @@ public class RomExportConsolidator extends Dumper<RomWorkflowEntry>
   
   public void accept(RomWorkflowEntry handle)
   {
-    Path finalPath = destination.resolve(handle.getRom().getPath().path().getFileName());
+    Path finalPath = destination.resolve(handle.getRom().getHandle().path().getFileName());
     
     try
     {
       if (overwrite || !Files.exists(finalPath))
-        Files.copy(handle.getRom().getPath().path(), finalPath);
+        Files.copy(handle.getRom().getHandle().path(), finalPath);
     }
     catch (IOException e)
     {

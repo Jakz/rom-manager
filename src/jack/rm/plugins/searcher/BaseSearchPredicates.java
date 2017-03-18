@@ -176,9 +176,9 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
         if (tokens[0].equals("format") && !tokens[1].isEmpty())
         {
           if (tokens[1].equals("bin") || tokens[1].equals("binary"))
-            return r -> r.status != RomStatus.MISSING && !r.getPath().isArchive();
+            return r -> r.status != RomStatus.MISSING && !r.getHandle().isArchive();
           else 
-            return r -> r.status != RomStatus.MISSING && r.getPath().isArchive() && r.getPath().getExtension().equals(tokens[1]);
+            return r -> r.status != RomStatus.MISSING && r.getHandle().isArchive() && r.getHandle().getExtension().equals(tokens[1]);
         }
       }
      

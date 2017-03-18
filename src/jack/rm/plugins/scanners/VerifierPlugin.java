@@ -2,6 +2,7 @@ package jack.rm.plugins.scanners;
 
 import java.util.List;
 
+import com.pixbits.lib.io.archive.VerifierEntry;
 import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.lib.io.archive.handles.NestedArchiveBatch;
 import com.pixbits.lib.lang.Pair;
@@ -19,6 +20,5 @@ public abstract class VerifierPlugin extends ActualPlugin
   @Override public final PluginType<?> getPluginType() { return PluginRealType.VERIFIER; }
   
   public abstract void setup(RomSet set);
-  public abstract ScanResult verifyHandle(Handle handle) throws VerifierException;
-  public abstract List<ScanResult> verifyHandle(NestedArchiveBatch handle) throws VerifierException;
+  public abstract List<ScanResult> verifyHandle(VerifierEntry handle) throws VerifierException;
 }

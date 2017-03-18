@@ -38,6 +38,9 @@ import com.pixbits.lib.io.archive.handles.ArchiveHandle;
 import com.pixbits.lib.io.archive.handles.BinaryHandle;
 import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.lib.io.archive.handles.NestedArchiveHandle;
+import com.pixbits.lib.ui.color.ColorGenerator;
+import com.pixbits.lib.ui.color.PastelColorGenerator;
+import com.pixbits.lib.ui.color.PleasantColorGenerator;
 
 import jack.rm.Main;
 import jack.rm.data.rom.Rom;
@@ -47,12 +50,14 @@ import jack.rm.files.ScanResult;
 public class ClonesDialog extends JDialog
 {
   private RomSet set;
-  final JTable table;
-  final CloneTableModel model;
   
-  List<ScanResult> clones = new ArrayList<>(); 
-  Map<ScanResult, Boolean> keep = new HashMap<>();
-  Map<Rom, Color> colors = new HashMap<>();
+  private final ColorGenerator colorGenerator;
+  private final JTable table;
+  private final CloneTableModel model;
+  
+  private List<ScanResult> clones = new ArrayList<>(); 
+  private Map<ScanResult, Boolean> keep = new HashMap<>();
+  private Map<Rom, Color> colors = new HashMap<>();
   
   private class CloneTableModel extends AbstractTableModel
   {
@@ -70,14 +75,7 @@ public class ClonesDialog extends JDialog
       {
         case 0: return keep.get(clones.get(r));
         case 1: return clones.get(r).rom;
-        case 2: 
-        {
-          Path romPath = RomSet.current.getSettings().romsPath;
-          if (!Files.isDirectory(romPath))
-            romPath = romPath.getFileName();
-          return romPath;
-        }
-            
+        case 2: return clones.get(r).path.relativePath();  
         default: return null;
       }
     }
@@ -186,6 +184,8 @@ public class ClonesDialog extends JDialog
   {
     super(frame, title);
     
+    colorGenerator = new PastelColorGenerator();
+    
     model = new CloneTableModel();
     table = new JTable(model);
     JScrollPane pane = new JScrollPane(table);
@@ -274,12 +274,12 @@ public class ClonesDialog extends JDialog
     this.clones = new ArrayList<>(clones);
     this.clones.addAll(set.list.stream()
         .filter( r -> romClones.contains(r))
-        .map( r -> new ScanResult(r, r.getPath()) )
+        .map( r -> new ScanResult(r, r.getHandle()) )
         .collect(Collectors.toList()));
     
     Collections.sort(this.clones);
     this.keep = this.clones.stream().collect(Collectors.toMap( c -> c, c -> false));
-    this.colors = romClones.stream().collect(Collectors.toMap( c -> c, c -> GUI.randomColor()));
+    this.colors = romClones.stream().collect(Collectors.toMap( c -> c, c -> colorGenerator.getColor()));
     
     updateStatus();
     

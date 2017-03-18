@@ -64,14 +64,14 @@ public class Organizer
 	{
 	  if (!rom.hasCorrectInternalName())
 	  {
-	    Handle path = rom.getPath();
+	    Handle path = rom.getHandle();
 	    String name = rom.getCorrectInternalName() + "." + path.getInternalExtension();
 	    
 	    if (true)
 	      throw new UnsupportedOperationException("relocate internal name is not compatible with new handles");
 	    
 	    if (((ArchiveHandle)path).renameInternalFile(name))
-	      rom.setPath(path.relocateInternal(name));
+	      rom.setHandle(path.relocateInternal(name));
 	    else
 	      logger.e(LogTarget.rom(rom), "Can't rename internal name of archive: "+path.path());
 	  }
@@ -79,7 +79,7 @@ public class Organizer
 	
 	public static void renameRom(Rom rom)
 	{
-    Handle romPath = rom.getPath();
+    Handle romPath = rom.getHandle();
 	  Path renameTo = romPath.path().getParent();
 	  
 	  //TODO: should fix extensions if wrong and crc is verified but now just keeps them
@@ -114,7 +114,7 @@ public class Organizer
           logger.i(LogTarget.none(), "Creating folder "+finalPath);
         }
         
-        Handle romPath = rom.getPath();
+        Handle romPath = rom.getHandle();
         Path newFile = finalPath.resolve(romPath.path().getFileName());
                 
         if (!newFile.equals(romPath.path()) && Files.exists(newFile))

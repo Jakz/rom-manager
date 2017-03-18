@@ -30,7 +30,7 @@ public class RomWorkflowEntry implements WorkflowData
   
   public void prepareBuffer() throws IOException
   {
-    Handle source = rom.getPath();
+    Handle source = rom.getHandle();
     this.path = Files.createTempFile(null, null);
     Files.copy(source.getInputStream(), path, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
   }

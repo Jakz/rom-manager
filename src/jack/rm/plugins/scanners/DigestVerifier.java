@@ -4,9 +4,13 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import com.pixbits.lib.io.archive.Verifier;
+import com.pixbits.lib.io.archive.VerifierEntry;
 import com.pixbits.lib.io.archive.VerifierOptions;
+import com.pixbits.lib.io.archive.VerifierResult;
 import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.lib.io.archive.handles.NestedArchiveBatch;
 import com.pixbits.lib.io.digest.DigestOptions;
@@ -40,33 +44,19 @@ public class DigestVerifier extends VerifierPlugin
   }
   
   @Override
-  public ScanResult verifyHandle(Handle handle) throws VerifierException
+  public List<ScanResult> verifyHandle(VerifierEntry handle) throws VerifierException
   {
     try
     {
-      return new ScanResult(verifier.verify(handle), handle);
+      List<VerifierResult<Rom>> result = verifier.verify(handle);
+      
+      return result.stream()
+        .map(vr -> new ScanResult(vr.element, vr.handle))
+        .collect(Collectors.toList());
     } 
     catch (NoSuchAlgorithmException | IOException e)
     {
       throw new VerifierException(e);
     }
   }
-
-  @Override
-  public List<ScanResult> verifyHandle(NestedArchiveBatch batch) throws VerifierException
-  {
-    List<ScanResult> pairs = new ArrayList<>();
-    
-    try
-    {
-      verifier.verifyNestedArchive(batch, (r, h) -> { pairs.add(new ScanResult(r,h)); });
-    } 
-    catch (NoSuchAlgorithmException | IOException e)
-    {
-      throw new VerifierException(e);
-    }
-    
-    return pairs;
-  }
-
 }

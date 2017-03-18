@@ -28,6 +28,6 @@ public class ScanResult implements Comparable<ScanResult>
   
   public void assign()
   {
-    rom.setPath(path);
+    rom.setHandle(path);
   }
 }

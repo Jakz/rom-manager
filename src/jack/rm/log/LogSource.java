@@ -11,4 +11,7 @@ public enum LogSource implements LogScope
   IMPORTER,
   PLUGINS,
   DAT_DOWNLOADER
+  ;
+  
+  public String toString() { return this.name().toLowerCase(); }
 }

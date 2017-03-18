@@ -61,7 +61,7 @@ public class ExportRomsPlugin extends ActualPlugin implements OperationalPlugin,
     {
       try
       {
-        Files.copy(r.getPath().path(), path.resolve(r.getPath().path().getFileName()));  
+        Files.copy(r.getHandle().path(), path.resolve(r.getHandle().path().getFileName()));  
       }
       catch (Exception e)
       {

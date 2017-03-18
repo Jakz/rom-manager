@@ -27,7 +27,9 @@ import javax.swing.SwingWorker;
 
 import com.pixbits.lib.io.FolderScanner;
 import com.pixbits.lib.io.archive.HandleSet;
+import com.pixbits.lib.io.archive.VerifierEntry;
 import com.pixbits.lib.io.archive.handles.Handle;
+import com.pixbits.lib.io.archive.handles.NestedArchiveBatch;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
 import com.pixbits.lib.plugin.PluginManager;
@@ -51,7 +53,7 @@ public class Scanner
   
   RomSet set;
 	
-	private Set<Path> existing = new HashSet<>();
+	private Set<Handle> existing = new HashSet<>();
 	private Set<Path> foundFiles = new HashSet<>();
 	private Set<ScanResult> clones = new TreeSet<>();
 	
@@ -72,10 +74,10 @@ public class Scanner
 	  	  
 	  Rom rom = result.rom;
 	  
-	  if (rom.status != RomStatus.MISSING)
+	  if (rom.status != RomStatus.MISSING && !rom.getHandle().equals(result.path))
 	  {	    
 	    clones.add(result);
-	    logger.w(LogTarget.file(set.getSettings().romsPath.relativize(result.path.path())), "File contains a rom already present in romset: "+rom.getPath());
+	    logger.w(LogTarget.file(result.path.path().getFileName()), "File contains a rom already present in romset: "+rom.getHandle());
 	    return;
 	  }
 	  
@@ -109,7 +111,7 @@ public class Scanner
 
 	    set.list.stream()
 	    .filter(r -> r.status != RomStatus.MISSING)
-	    .map(r -> r.getPath().path())
+	    .map(r -> r.getHandle())
 	    .forEach(existing::add);
 		}
 
@@ -143,12 +145,14 @@ public class Scanner
 		HandleSet handleSet = scanner.scanFiles(folder, set.getSettings().getIgnoredPaths());
 		verifier.setup(set);
 		
-		logger.i(LogTarget.romset(set), "Found %d potential entries", handleSet.total());
-			
+		logger.i(LogTarget.romset(set), "Found %d potential entries (%d binaries, %d archived, %d nested in %d batches)", handleSet.total(), handleSet.binaryCount(), handleSet.archivedCount(), handleSet.nestedCount(), handleSet.nestedArchives.size());
+		handleSet.stream().forEach(h -> logger.d(LogTarget.romset(set), "> %s", h.toString()));
+
+		logger.i(LogTarget.romset(set), "Verifying %s handles for romset", total ? "all" : "new");
 		ScannerWorker worker = new ScannerWorker(handleSet);
 		worker.execute();
 	}
-
+	
 	public class ScannerWorker extends SwingWorker<Void, Integer>
 	{
 	  private final long total;
@@ -161,7 +165,7 @@ public class Scanner
 	    this.handles = handles;
 	    //TODO maybe manage an unified iteration
 	    simpleTotal = handles.binaryCount()+handles.archivedCount();
-	    total = simpleTotal + handles.nestedCount();
+	    total = simpleTotal + handles.nestedArchives.size();
 	    
 	  }
 
@@ -170,35 +174,24 @@ public class Scanner
 	  {
 	    Main.progress.show(Main.mainFrame, "Rom Scan", () -> cancel(true) );
 	    
-	    for (int i = 0; i < total; ++i)
+	    int i = 0;
+	    for (VerifierEntry entry : handles)
 	    {
-	      if (isCancelled())
-	        return null;
+	       if (isCancelled())
+	          return null;
 
-	      int progress = (int)((((float)i)/total)*100);
-	      setProgress(progress);
-
-	      if (i < handles.binaryCount())
-	      {
-	        ScanResult result = verifier.verifyHandle(handles.binaries.get(i));
-	        if (result.rom != null)
-	          foundRom(result);         
-	      }
-	      else if (i < simpleTotal)
-	      {
-	        ScanResult result = verifier.verifyHandle(handles.archives.get(i - (int)handles.binaryCount()));
-	        if (result.rom != null)
-	          foundRom(result);         
-	      }
-	      else
-	      {
-	        List<ScanResult> results = verifier.verifyHandle(handles.nestedArchives.get(i - (int)simpleTotal));
-	        results.stream().filter(result -> result.rom != null).forEach(result -> foundRom(result));
-	      }
-
-	      set.list.updateStatus();
-	      
-	      publish(i);
+	       int progress = (int)((((float)i)/total)*100);
+	       setProgress(progress);
+	       
+         logger.d(LogTarget.romset(set), "> Verifying %s", entry.toString());
+         List<ScanResult> result = verifier.verifyHandle(entry);
+         result.stream().filter(r -> r.rom != null).forEach(r -> foundRom(r));   
+         
+         set.list.updateStatus();
+         
+         System.out.println("Publishing "+i);
+         publish(i);
+         ++i;
 	    }
 	    
 	    return null;
@@ -216,14 +209,16 @@ public class Scanner
 	  
 	  @Override
 	  public void done()
-	  {
+	  {	    
 	    try
       {
         get();
-      } catch (InterruptedException e)
+      } 
+	    catch (InterruptedException e)
       {
         e.printStackTrace();
-      } catch (ExecutionException e)
+      } 
+	    catch (ExecutionException e)
       {
         e.printStackTrace();
       }
