@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
+import com.pixbits.lib.io.FileUtils;
+
 import jack.rm.data.rom.Rom;
 import jack.rm.files.Scanner;
 import net.lingala.zip4j.core.ZipFile;
@@ -42,7 +44,15 @@ public class AssetData
   public boolean isPresentAsFile()
   {
     Path finalPath = getFinalPath();
-    return Files.exists(finalPath) && (!asset.hasCRC() || Scanner.computeCRC(finalPath) == crc); 
+    try
+    {
+      return Files.exists(finalPath) && (!asset.hasCRC() || FileUtils.calculateCRCFast(finalPath) == crc);
+    } 
+    catch (IOException e)
+    {
+      e.printStackTrace();
+      return false;
+    } 
   }
   
   public ImageIcon asImage()

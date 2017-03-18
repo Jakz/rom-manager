@@ -21,18 +21,16 @@ class MenuListener implements ActionListener
 		JMenuItem item = (JMenuItem)source;
 		MenuElement tag = MenuElement.elementForItem(item);
 		
-		RomList list = RomSet.current.list;
-
 		try
 		{
   		if (tag == MenuElement.ROMS_SCAN_FOR_ROMS)
   		{
-  			Main.scanner.scanForRoms(true);
+  		  RomSet.current.getScanner().scanForRoms(true);
   			Main.mainFrame.updateTable();
   		}
   		else if (tag == MenuElement.ROMS_SCAN_FOR_NEW_ROMS)
   		{
-  			Main.scanner.scanForRoms(false);
+  		  RomSet.current.getScanner().scanForRoms(false);
   			Main.mainFrame.updateTable();
   		}
   		else if (tag == MenuElement.VIEW_SHOW_CORRECT)

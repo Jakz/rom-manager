@@ -39,7 +39,7 @@ public class FileDropperListener implements FileTransferHandler.Listener
           System.out.println("Processing "+file.getFileName());
   
           
-          ScanResult result = Main.scanner.scanFile(file);
+          ScanResult result = RomSet.current.getScanner().scanFile(file);
         
           if (result != null)
           {

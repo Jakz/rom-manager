@@ -186,7 +186,7 @@ public class InfoPanel extends JPanel implements ActionListener
 
       
       if (attrib == RomAttribute.PATH)
-        value.setText(rom.getPath() != null ? rom.getPath().file().getParent().toString() : "");
+        value.setText(rom.getPath() != null ? rom.getPath().toString() : "");
       else if (attrib == RomAttribute.FILENAME)
         value.setText(rom.getPath() != null ? rom.getPath().file().getFileName().toString() : "");
       else

@@ -13,8 +13,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -23,8 +25,9 @@ import java.util.zip.CheckedInputStream;
 
 import javax.swing.SwingWorker;
 
-import com.pixbits.lib.ui.elements.ProgressDialog;
 import com.pixbits.lib.io.FolderScanner;
+import com.pixbits.lib.io.archive.HandleSet;
+import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
 import com.pixbits.lib.plugin.PluginManager;
@@ -40,6 +43,7 @@ import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.scanners.ScannerPlugin;
+import jack.rm.plugins.scanners.VerifierPlugin;
 
 public class Scanner
 {
@@ -51,53 +55,16 @@ public class Scanner
 	private Set<Path> foundFiles = new HashSet<>();
 	private Set<ScanResult> clones = new TreeSet<>();
 	
-	List<ScannerPlugin> scanners = new ArrayList<>();
-	List<PathMatcher> matchers = new ArrayList<>();
+	ScannerPlugin scanner;
+	VerifierPlugin verifier;
 		
-	@SuppressWarnings("unchecked")
-  public Scanner(PluginManager<ActualPlugin, ActualPluginBuilder> manager, RomSet set)
+  public Scanner(RomSet set)
 	{
-	  Set<ActualPluginBuilder> parsers = manager.getBuildersByType(PluginRealType.SCANNER);
-	  scanners = parsers.stream().map(b -> (ScannerPlugin)manager.build((Class<ScannerPlugin>)b.getID().getType())).collect(Collectors.toList());
-	  Collections.sort(scanners);
-	  
-	  scanners.stream().map(ScannerPlugin::getHandledExtensions).forEachOrdered(s -> {
-	    if (s != null)
-	    {
-	      String smatcher = Arrays.stream(s).collect(Collectors.joining(",", "glob:*.{", "}"));
-	      matchers.add(FileSystems.getDefault().getPathMatcher(smatcher));
-	    }
-	    else
-	      matchers.add(null);
-	  });
-	  
+	  scanner = set.getSettings().plugins.getEnabledPlugin(PluginRealType.SCANNER);
+	  verifier = set.getSettings().plugins.getEnabledPlugin(PluginRealType.VERIFIER);
 	  this.set = set;
 	}
-	
-	public static long computeCRC(Path file)
-	{
-		try (CheckedInputStream cis = new CheckedInputStream(new BufferedInputStream(Files.newInputStream(file)), new CRC32()))
-		{
-			byte[] buf = new byte[1024];
-			
-			while (cis.read(buf) >= 0);
-			
-			long crc = cis.getChecksum().getValue();
-			
-			return crc;
-		}
-		catch (ClosedByInterruptException e)
-		{
-		  // thrown when cancelling a BackgroundOperation with the stream opened
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		
-		return -1;
-	}
-	
+
 	public void foundRom(ScanResult result)
 	{
 	  if (result == null)
@@ -122,81 +89,9 @@ public class Scanner
 	
 	public ScanResult scanFile(Path file)
 	{
-	  ScanResult result = null;
-	  
-	  if (!existing.contains(file))
-	  {
-	    Iterator<ScannerPlugin> it = scanners.iterator();
-	    Iterator<PathMatcher> pit = matchers.iterator();
-	    while (result == null && it.hasNext())
-	    {
-	      ScannerPlugin scanner = it.next();
-	      PathMatcher matcher = pit.next();
-	      
-	      if (matcher != null && matcher.matches(file.getFileName()))
-	        result = scanner.scanRom(set.list, file);
-	    }
-	  }
-	  
-	  return result;
-	  /*
-	  if (archiveMatcher.matches(file.getFileName()))
-    {	          	    
-	    if (!existing.contains(file))
-      {    
-  	    try (ZipFile zip = new ZipFile(file.toFile()))
-        {          
-          Enumeration<? extends ZipEntry> enu = zip.entries();
-          
-          while (enu.hasMoreElements())
-          {
-            ZipEntry entry = enu.nextElement();
-            long curCrc = entry.getCrc();
-            
-            Rom rom = set.list.getByCRC32(curCrc);
-            
-            if (rom != null)
-              result = new ScanResult(rom, RomPath.build(RomPath.Type.ZIP, file, entry.getName()));
-          }
-        }
-        catch (Exception e)
-        {
-          Log.log(LogType.ERROR, LogSource.SCANNER, LogTarget.file(file), "Zipped file is corrupt, skipping");
-        }
-      }
-    }
-    else
-    {
-      if (!existing.contains(file))
-      {    
-        long crc = computeCRC(file);
-        
-        Rom rom = set.list.getByCRC32(crc);
-        
-        if (rom != null)
-          return new ScanResult(rom, new BinaryHandle(file));
-        else return null;
-      }
-    }
-	  
-	  return result;*/
+	  return null;
 	}
-	
-	protected PathMatcher buildPathMatcher()
-	{
-    Stream<String> stream = Arrays.stream(set.system.exts);
-    
-    final AtomicReference<Stream<String>> astream = new AtomicReference<Stream<String>>(stream); 
-        
-    scanners.stream().map(ScannerPlugin::getHandledExtensions).filter(i -> i != null).forEach(e -> {
-      astream.set(Stream.concat(astream.get(), Arrays.stream(e)));
-    });
-
-    String pattern = astream.get().collect(Collectors.joining(",", "glob:*.{", "}"));
-        
-    return FileSystems.getDefault().getPathMatcher(pattern);
-	}
-	
+		
 	public void scanForRoms(boolean total) throws IOException
 	{
 		existing.clear();
@@ -220,30 +115,54 @@ public class Scanner
 
 		Path folder = set.getSettings().romsPath;
 			
-		if (folder == null || !Files.exists(folder) || !Files.isDirectory(folder))
+		if (scanner == null)
+		{
+		  logger.e(LogTarget.romset(set), "Scanner plugin not enabled for romset");
+		  Dialogs.showError("Scanner Plugin", "No scanner plugin is enabled for the current romset.", Main.mainFrame);
+		  set.list.resetStatus();
+		  Main.mainFrame.updateTable();
+		  return;
+		}
+		else if (verifier == null)
+		{
+      logger.e(LogTarget.romset(set), "Verifier plugin not enabled for romset");
+      Dialogs.showError("Verifier Plugin", "No verifier plugin is enabled for the current romset.", Main.mainFrame);
+      set.list.resetStatus();
+      Main.mainFrame.updateTable();
+      return;
+		}
+		else if (folder == null || !Files.exists(folder))
 		{
 		  logger.e(LogTarget.romset(set), "Roms path doesn't exist! Scanning interrupted");
-		  Dialogs.showError("Romset Path", "Romset path is not set, or it doesn't exists as a folder.\nPlease set one in Options.", Main.mainFrame);
+		  Dialogs.showError("Romset Path", "Romset path is not set, or it doesn't exists.\nPlease set one in Options.", Main.mainFrame);
 		  set.list.resetStatus();
 		  Main.mainFrame.updateTable();
 		  return;
 		}
 			
-		foundFiles = new FolderScanner(buildPathMatcher(), set.getSettings().getIgnoredPaths(), true).scan(folder);
-
-		ScannerWorker worker = new ScannerWorker(foundFiles);
+		HandleSet handleSet = scanner.scanFiles(folder, set.getSettings().getIgnoredPaths());
+		verifier.setup(set);
+		
+		logger.i(LogTarget.romset(set), "Found %d potential entries", handleSet.total());
+			
+		ScannerWorker worker = new ScannerWorker(handleSet);
 		worker.execute();
 	}
 
 	public class ScannerWorker extends SwingWorker<Void, Integer>
 	{
-	  private int total = 0;
-	  private final List<Path> files;
+	  private final long total;
+	  private final long simpleTotal;
 	  
-	  ScannerWorker(Set<Path> files)
+	  private final HandleSet handles;
+
+	  ScannerWorker(HandleSet handles)
 	  {
-	    this.files = new ArrayList<>(files);
-	    total = files.size();
+	    this.handles = handles;
+	    //TODO maybe manage an unified iteration
+	    simpleTotal = handles.binaryCount()+handles.archivedCount();
+	    total = simpleTotal + handles.nestedCount();
+	    
 	  }
 
 	  @Override
@@ -259,10 +178,24 @@ public class Scanner
 	      int progress = (int)((((float)i)/total)*100);
 	      setProgress(progress);
 
-	      Path f = files.get(i);
-	      ScanResult result = scanFile(f);
-	      	      
-	      foundRom(result);
+	      if (i < handles.binaryCount())
+	      {
+	        ScanResult result = verifier.verifyHandle(handles.binaries.get(i));
+	        if (result.rom != null)
+	          foundRom(result);         
+	      }
+	      else if (i < simpleTotal)
+	      {
+	        ScanResult result = verifier.verifyHandle(handles.archives.get(i - (int)handles.binaryCount()));
+	        if (result.rom != null)
+	          foundRom(result);         
+	      }
+	      else
+	      {
+	        List<ScanResult> results = verifier.verifyHandle(handles.nestedArchives.get(i - (int)simpleTotal));
+	        results.stream().filter(result -> result.rom != null).forEach(result -> foundRom(result));
+	      }
+
 	      set.list.updateStatus();
 	      
 	      publish(i);
@@ -277,13 +210,24 @@ public class Scanner
 	    if (isCancelled())
         return;
       	    
-	    Main.progress.update(this, "Scanning "+v.get(v.size()-1)+" of "+foundFiles.size()+"..");
+	    Main.progress.update(this, "Scanning "+v.get(v.size()-1)+" of "+total+"..");
 	    Main.mainFrame.updateTable();
 	  }
 	  
 	  @Override
 	  public void done()
 	  {
+	    try
+      {
+        get();
+      } catch (InterruptedException e)
+      {
+        e.printStackTrace();
+      } catch (ExecutionException e)
+      {
+        e.printStackTrace();
+      }
+	    
 	    if (isCancelled())
 	      return;
 

@@ -47,7 +47,6 @@ public class Main
 	public static ClonesDialog clonesDialog;
 	
 	
-	public static Scanner scanner;
 	public static Downloader downloader;
 		
 	static class IntHolder implements WorkflowData
@@ -131,6 +130,9 @@ public class Main
     manager.register(jack.rm.plugins.misc.ExportRomsPlugin.class);
 
     manager.register(jack.rm.plugins.scanners.EmbeddedScanner.class);
+    
+    manager.register(jack.rm.plugins.scanners.DigestVerifier.class);
+
 	}
 	
 	public static void loadRomSet(RomSet romSet) throws FileNotFoundException, IOException
@@ -147,9 +149,7 @@ public class Main
 
     mainFrame.romSetLoaded(set);
     
-    scanner = new Scanner(manager, set);
-    scanner.scanForRoms(!wasInit && GlobalSettings.settings.shouldScanWhenLoadingRomset());
-
+    RomSet.current.getScanner().scanForRoms(!wasInit && GlobalSettings.settings.shouldScanWhenLoadingRomset());
 
     downloader = new Downloader(set);
     

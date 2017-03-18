@@ -10,6 +10,8 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import com.pixbits.lib.io.digest.HashCache;
+
 import jack.rm.Main;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
@@ -22,12 +24,12 @@ import jack.rm.files.RenamerWorker;
 import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.RenamerPlugin;
 
-public class RomList implements Iterable<Rom>, RomHashFinder
+public class RomList implements Iterable<Rom>
 {
 	public final RomSet set;
   List<Rom> list;
   Map<RomGroupID, RomGroup> groups;
-	Map<Long, Rom> crcs;
+  HashCache<Rom> cache;
 	
 	private int countCorrect, countBadlyNamed, countNotFound;
 	
@@ -36,13 +38,11 @@ public class RomList implements Iterable<Rom>, RomHashFinder
 		this.set = set;
 	  list = new ArrayList<>();
 	  groups = new HashMap<>();
-		crcs = new HashMap<>();
 	}
 	
 	public void add(Rom rom)
 	{
 		list.add(rom);
-		crcs.put(rom.getCRC(),rom);
 	}
 	
 	public Rom get(int i)
@@ -67,24 +67,27 @@ public class RomList implements Iterable<Rom>, RomHashFinder
 		return list.size();
 	}
 	
-	public void sort()
+	public void precomputeCache()
 	{
 		Collections.sort(list);
+		cache = new HashCache<>(list);
 	}
 	
 	public void clear()
 	{
 		list.clear();
 	}
+	
+	public HashCache<Rom> getCache() { return cache; }
 		
 	public Rom getByID(RomID<?> id)
 	{
 	  return getByCRC32(((RomID.CRC)id).value);
 	}
 	
-	@Override public Rom getByCRC32(long crc)
+	public Rom getByCRC32(long crc)
 	{
-		return crcs.get(crc);
+		return cache.elementForCrc(crc);
 	}
 	
 	public void resetStatus()

@@ -31,6 +31,7 @@ import jack.rm.data.console.System;
 import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
+import jack.rm.files.Scanner;
 import jack.rm.files.parser.DatLoader;
 import jack.rm.json.Json;
 import jack.rm.json.RomListAdapter;
@@ -57,6 +58,7 @@ public class RomSet
 	private final DatLoader loader;
 	
 	private Searcher<Rom> searcher;
+	private Scanner scanner;
 	
 	
 	private final Attribute[] attributes;
@@ -89,6 +91,8 @@ public class RomSet
 	  }
 	  else
 	    searcher = new DummySearcher<>();
+	  
+	  scanner = new Scanner(this);
 	}
 	
 	public Settings getSettings() { return settings; }
@@ -97,6 +101,8 @@ public class RomSet
 	
 	public boolean doesSupportAttribute(Attribute attribute) { return Arrays.stream(attributes).anyMatch( a -> a == RomAttribute.NUMBER); }
 	public final Attribute[] getSupportedAttributes() { return attributes; }
+	
+	public Scanner getScanner() { return scanner; }
 			
 	public boolean canBeLoaded()
 	{

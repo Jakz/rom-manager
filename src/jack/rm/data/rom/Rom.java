@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Stream;
 
+import com.pixbits.lib.io.archive.Verifiable;
 import com.pixbits.lib.io.archive.handles.Handle;
 
 import jack.rm.Settings;
@@ -22,7 +23,7 @@ import jack.rm.data.romset.RomSet;
 import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.RenamerPlugin;
 
-public class Rom implements Comparable<Rom>
+public class Rom implements Comparable<Rom>, Verifiable
 {
 	private final RomSet set;
   
@@ -231,4 +232,10 @@ public class Rom implements Comparable<Rom>
 		
 	public boolean isFavourite() { return favourite; }
 	public void setFavourite(boolean value) { favourite = value; }
+  
+	
+	@Override public long crc() { return getAttribute(RomAttribute.CRC); }
+  @Override public long size() { return ((RomSize)getAttribute(RomAttribute.SIZE)).bytes() ; }
+  @Override public byte[] md5() { return getAttribute(RomAttribute.MD5); }
+  @Override public byte[] sha1() { return getAttribute(RomAttribute.SHA1); }
 }

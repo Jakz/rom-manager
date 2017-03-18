@@ -209,7 +209,7 @@ public class OfflineListParserPlugin extends DatParserPlugin
         case "game": set.list.add(rom); break;
         case "games":
         {
-          set.list.sort(); 
+          set.list.precomputeCache(); 
           saves.forEach((k,v) -> System.out.println(k+" -> "+v));
           
           System.out.println("Groups: "+set.list.groupsCount());

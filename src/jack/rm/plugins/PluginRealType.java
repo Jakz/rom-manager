@@ -13,7 +13,8 @@ public enum PluginRealType implements PluginType<PluginRealType>
   PROVIDER("DAT Provider", false, false),
   SEARCH("Search", true, false),
   SEARCH_PREDICATES("Search Predicates", false, false),
-  SCANNER("Scanner", false, false),
+  SCANNER("Scanner", true, true),
+  VERIFIER("Verifier", false, true),
   MISC("Misc", false, false)
   ;
   
