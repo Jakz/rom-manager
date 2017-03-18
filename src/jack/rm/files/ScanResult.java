@@ -23,7 +23,7 @@ public class ScanResult implements Comparable<ScanResult>
   @Override public int compareTo(ScanResult other)
   {
     int i = rom.compareTo(other.rom);
-    return i == 0 ? path.file().compareTo(other.path.file()) : i;
+    return i == 0 ? path.path().compareTo(other.path.path()) : i;
   }
   
   public void assign()

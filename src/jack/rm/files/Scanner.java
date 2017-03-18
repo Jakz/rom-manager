@@ -75,7 +75,7 @@ public class Scanner
 	  if (rom.status != RomStatus.MISSING)
 	  {	    
 	    clones.add(result);
-	    logger.w(LogTarget.file(set.getSettings().romsPath.relativize(result.path.file())), "File contains a rom already present in romset: "+rom.getPath());
+	    logger.w(LogTarget.file(set.getSettings().romsPath.relativize(result.path.path())), "File contains a rom already present in romset: "+rom.getPath());
 	    return;
 	  }
 	  
@@ -109,7 +109,7 @@ public class Scanner
 
 	    set.list.stream()
 	    .filter(r -> r.status != RomStatus.MISSING)
-	    .map(r -> r.getPath().file())
+	    .map(r -> r.getPath().path())
 	    .forEach(existing::add);
 		}
 

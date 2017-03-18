@@ -190,7 +190,7 @@ public class Rom implements Comparable<Rom>, Verifiable
   {
     try {
       return RomSet.current.getSettings().getFolderOrganizer() == null || 
-        Files.isSameFile(path.file().getParent(), set.getSettings().romsPath.resolve(getCorrectFolder()));
+        Files.isSameFile(path.path().getParent(), set.getSettings().romsPath.resolve(getCorrectFolder()));
     }
     catch (IOException e)
     {

@@ -65,11 +65,11 @@ public class ArchiveMergerPlugin extends CleanupPlugin implements BackgroundOper
       {
         if (!r.getPath().isArchive())
         {
-          zfile.addFile(r.getPath().file().toFile(), zparams);
+          zfile.addFile(r.getPath().path().toFile(), zparams);
         }
         else
         {
-          String fileName = r.getPath().file().getFileName().toString();
+          String fileName = r.getPath().path().getFileName().toString();
           fileName = fileName.substring(0, fileName.lastIndexOf('.'));
           fileName = fileName + "." + romSet.system.exts[0];
           

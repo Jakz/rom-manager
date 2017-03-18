@@ -43,7 +43,7 @@ public class RomConsolidator extends Dumper<RomWorkflowEntry>
         Handle path = rom.getPath();
         
         if (!path.isArchive())
-          Files.copy(path.file(), finalPath, StandardCopyOption.REPLACE_EXISTING);
+          Files.copy(path.path(), finalPath, StandardCopyOption.REPLACE_EXISTING);
         else
           Files.copy(path.getInputStream(), finalPath, StandardCopyOption.REPLACE_EXISTING);
       }

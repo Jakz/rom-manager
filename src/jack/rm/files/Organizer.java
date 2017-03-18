@@ -73,14 +73,14 @@ public class Organizer
 	    if (((ArchiveHandle)path).renameInternalFile(name))
 	      rom.setPath(path.relocateInternal(name));
 	    else
-	      logger.e(LogTarget.rom(rom), "Can't rename internal name of archive: "+path.file());
+	      logger.e(LogTarget.rom(rom), "Can't rename internal name of archive: "+path.path());
 	  }
 	}
 	
 	public static void renameRom(Rom rom)
 	{
     Handle romPath = rom.getPath();
-	  Path renameTo = romPath.file().getParent();
+	  Path renameTo = romPath.path().getParent();
 	  
 	  //TODO: should fix extensions if wrong and crc is verified but now just keeps them
     renameTo = renameTo.resolve(rom.getCorrectName()+"."+romPath.getExtension());
@@ -115,13 +115,13 @@ public class Organizer
         }
         
         Handle romPath = rom.getPath();
-        Path newFile = finalPath.resolve(romPath.file().getFileName());
+        Path newFile = finalPath.resolve(romPath.path().getFileName());
                 
-        if (!newFile.equals(romPath.file()) && Files.exists(newFile))
+        if (!newFile.equals(romPath.path()) && Files.exists(newFile))
         {
           logger.e(LogTarget.rom(rom), "Cannot rename to "+newFile.toString()+", file exists");
         }
-        else if (!newFile.equals(romPath.file()))
+        else if (!newFile.equals(romPath.path()))
         {  
           rom.move(newFile);
           logger.e(LogTarget.rom(rom), "Moved rom to "+finalPath);

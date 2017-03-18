@@ -188,7 +188,7 @@ public class InfoPanel extends JPanel implements ActionListener
       if (attrib == RomAttribute.PATH)
         value.setText(rom.getPath() != null ? rom.getPath().toString() : "");
       else if (attrib == RomAttribute.FILENAME)
-        value.setText(rom.getPath() != null ? rom.getPath().file().getFileName().toString() : "");
+        value.setText(rom.getPath() != null ? rom.getPath().path().getFileName().toString() : "");
       else
         value.setText(attrib.prettyValue(rom.getAttribute(attrib)));
 
@@ -734,11 +734,11 @@ public class InfoPanel extends JPanel implements ActionListener
 		}
 	  else if (src == openFolderButton)
 	  {
-	    Main.openFolder(rom.getPath().file().getParent().toFile());
+	    Main.openFolder(rom.getPath().path().getParent().toFile());
 	  }
 	  else if (src == openArchiveButton)
 	  {
-	    Main.openFolder(rom.getPath().file().toFile());
+	    Main.openFolder(rom.getPath().path().toFile());
 	  }
 		else if (src == assetsButton)
 		{

@@ -36,7 +36,7 @@ public class MoverWorker extends RomSetWorker<FolderPlugin>
         logger.i(LogTarget.none(), "Creating folder "+finalPath);
       }
       
-      Path currentFile = rom.getPath().file();
+      Path currentFile = rom.getPath().path();
       Path newFile = finalPath.resolve(currentFile.getFileName());
               
       if (!newFile.equals(currentFile) && Files.exists(newFile))

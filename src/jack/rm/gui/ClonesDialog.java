@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Frame;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -68,7 +70,14 @@ public class ClonesDialog extends JDialog
       {
         case 0: return keep.get(clones.get(r));
         case 1: return clones.get(r).rom;
-        case 2: return RomSet.current.getSettings().romsPath.relativize(clones.get(r).path.file());
+        case 2: 
+        {
+          Path romPath = RomSet.current.getSettings().romsPath;
+          if (!Files.isDirectory(romPath))
+            romPath = romPath.getFileName();
+          return romPath;
+        }
+            
         default: return null;
       }
     }
@@ -331,8 +340,8 @@ public class ClonesDialog extends JDialog
     boolean hasMover = set.getSettings().getFolderOrganizer() != null;
     
     Predicate<ScanResult> predicateAny = e -> true;
-    Predicate<ScanResult> predicateCorrectFolder = e -> !hasMover || set.getSettings().romsPath.resolve(e.rom.getCorrectFolder()).equals(e.path.file().getParent());
-    Predicate<ScanResult> predicateCorrectName = e -> !hasRenamer || e.rom.getCorrectName().equals(e.path.file().getFileName());
+    Predicate<ScanResult> predicateCorrectFolder = e -> !hasMover || set.getSettings().romsPath.resolve(e.rom.getCorrectFolder()).equals(e.path.path().getParent());
+    Predicate<ScanResult> predicateCorrectName = e -> !hasRenamer || e.rom.getCorrectName().equals(e.path.path().getFileName());
     Predicate<ScanResult> predicateCorrectNameAndFolder = predicateCorrectName.and(predicateCorrectFolder);
     
     List<Predicate<ScanResult>> predicates = Arrays.asList(
