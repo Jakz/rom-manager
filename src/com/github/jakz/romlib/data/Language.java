@@ -1,14 +1,13 @@
-package jack.rm.data.rom;
+package com.github.jakz.romlib.data;
 
 import java.util.HashMap;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import jack.rm.gui.Icon;
+import com.github.jakz.romlib.ui.Icon;
 
 public enum Language
 {
-	
 	FRENCH("French", "FR", Icon.FLAG_FRANCE),
 	ENGLISH("English", "EN", Icon.FLAG_USA),
 	CHINESE("Chinese", "ZH", Icon.FLAG_CHINA),
@@ -55,8 +54,7 @@ public enum Language
 		this(name, iso639_1, null);
 	}
 	
-	@Override
-  public String toString()
+	@Override public String toString()
 	{
 		return fullName;
 	}

@@ -16,9 +16,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
+import com.github.jakz.romlib.data.Language;
 import com.pixbits.lib.ui.elements.JPlaceHolderTextField;
 
-import jack.rm.data.rom.Language;
 import jack.rm.data.rom.Location;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;

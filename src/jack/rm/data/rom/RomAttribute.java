@@ -2,6 +2,8 @@ package jack.rm.data.rom;
 
 import java.util.Set;
 
+import com.github.jakz.romlib.data.Language;
+
 import jack.rm.i18n.Text;
 
 public enum RomAttribute implements Attribute

@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
+import com.github.jakz.romlib.ui.Icon;
+
 import jack.rm.GlobalSettings;
 import jack.rm.data.romset.RomSet;
 import jack.rm.data.romset.RomSetManager;

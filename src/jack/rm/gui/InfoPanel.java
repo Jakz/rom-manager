@@ -42,6 +42,8 @@ import javax.swing.border.Border;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
+import com.github.jakz.romlib.ui.Icon;
+
 import jack.rm.Main;
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;

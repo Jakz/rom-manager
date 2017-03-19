@@ -1,4 +1,4 @@
-package jack.rm.gui;
+package com.github.jakz.romlib.ui;
 
 import javax.swing.ImageIcon;
 
@@ -38,6 +38,8 @@ public enum Icon
   ARROW_UP("arrow-up"),
   ARROW_DOWN("arrow-down"),
   ARROW_UP_DOWN("arrow-up-down"),
+  
+  ROM("rom"),
 
   SYSTEM_GAME_GEAR("systems/game-gear"),
   SYSTEM_GAMEBOY("systems/gameboy"),
@@ -69,7 +71,7 @@ public enum Icon
   public ImageIcon getIcon()
   {
     if (icon == null)
-      icon = new ImageIcon(this.getClass().getClassLoader().getResource("jack/rm/gui/resources/"+name+".png"));
+      icon = new ImageIcon(this.getClass().getClassLoader().getResource("com/github/jakz/romlib/resources/"+name+".png"));
     
     return icon;
   }

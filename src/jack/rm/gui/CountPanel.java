@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.github.jakz.romlib.ui.Icon;
+
 import jack.rm.data.rom.RomStatus;
 
 public class CountPanel extends JPanel

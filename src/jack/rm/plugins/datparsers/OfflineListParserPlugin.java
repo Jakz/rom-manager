@@ -11,9 +11,10 @@ import java.util.UnknownFormatConversionException;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import com.github.jakz.romlib.data.Language;
+
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
-import jack.rm.data.rom.Language;
 import jack.rm.data.rom.Location;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;

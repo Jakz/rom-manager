@@ -12,10 +12,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
+import com.github.jakz.romlib.data.Language;
 import com.pixbits.lib.parser.SimpleParser;
 import com.pixbits.lib.parser.SimpleTreeBuilder;
 
-import jack.rm.data.rom.Language;
 import jack.rm.data.rom.Location;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
