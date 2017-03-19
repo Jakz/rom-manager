@@ -188,8 +188,7 @@ public class Scanner
          result.stream().filter(r -> r.rom != null).forEach(r -> foundRom(r));   
          
          set.list.updateStatus();
-         
-         System.out.println("Publishing "+i);
+
          publish(i);
          ++i;
 	    }
