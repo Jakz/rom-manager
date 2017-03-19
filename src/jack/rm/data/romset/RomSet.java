@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.github.jakz.romlib.data.set.DatFormat;
+import com.github.jakz.romlib.data.set.Provider;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.pixbits.lib.searcher.DummySearcher;

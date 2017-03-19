@@ -1,4 +1,4 @@
-package jack.rm.data.romset;
+package com.github.jakz.romlib.data.set;
 
 import java.net.MalformedURLException;
 import java.net.URL;

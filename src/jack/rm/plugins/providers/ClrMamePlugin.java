@@ -2,11 +2,12 @@ package jack.rm.plugins.providers;
 
 import java.util.List;
 
+import com.github.jakz.romlib.data.set.Provider;
+
 import jack.rm.assets.EmptyAssetManager;
 import jack.rm.data.console.System;
 import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.RomAttribute;
-import jack.rm.data.romset.Provider;
 import jack.rm.data.romset.RomSet;
 import jack.rm.plugins.datparsers.DatParserPlugin;
 

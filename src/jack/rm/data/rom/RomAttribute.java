@@ -2,7 +2,8 @@ package jack.rm.data.rom;
 
 import java.util.Set;
 
-import com.github.jakz.romlib.data.Language;
+import com.github.jakz.romlib.data.game.Genre;
+import com.github.jakz.romlib.data.game.Language;
 
 import jack.rm.i18n.Text;
 

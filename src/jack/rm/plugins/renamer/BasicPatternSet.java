@@ -3,11 +3,11 @@ package jack.rm.plugins.renamer;
 import java.util.Arrays;
 import java.util.List;
 
+import com.github.jakz.romlib.data.game.Location;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
 
 import jack.rm.data.rom.Attribute;
-import jack.rm.data.rom.Location;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.RomSize;

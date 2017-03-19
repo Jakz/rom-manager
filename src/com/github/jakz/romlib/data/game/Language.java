@@ -1,4 +1,4 @@
-package com.github.jakz.romlib.data;
+package com.github.jakz.romlib.data.game;
 
 import java.util.HashMap;
 import java.util.Set;

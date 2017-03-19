@@ -1,6 +1,7 @@
 package jack.rm.files.parser;
 
-import jack.rm.data.romset.DatFormat;
+import com.github.jakz.romlib.data.set.DatFormat;
+
 import jack.rm.data.romset.RomSet;
 
 public interface DatLoader

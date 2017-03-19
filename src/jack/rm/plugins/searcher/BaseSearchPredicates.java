@@ -8,11 +8,11 @@ import java.util.function.Predicate;
 
 import com.pixbits.lib.searcher.BasicPredicate;
 import com.pixbits.lib.searcher.SearchPredicate;
+import com.github.jakz.romlib.data.game.Genre;
+import com.github.jakz.romlib.data.game.Location;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
 
-import jack.rm.data.rom.Genre;
-import jack.rm.data.rom.Location;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.RomSave;

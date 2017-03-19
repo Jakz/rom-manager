@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UnknownFormatConversionException;
 
+import com.github.jakz.romlib.data.set.DatFormat;
+import com.github.jakz.romlib.data.set.Provider;
+
 import jack.rm.assets.Asset;
 import jack.rm.data.console.GBA;
 import jack.rm.data.console.NDS;
@@ -22,8 +25,6 @@ import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.RomSave;
 import jack.rm.data.rom.RomSize;
 import jack.rm.data.rom.Version;
-import jack.rm.data.romset.DatFormat;
-import jack.rm.data.romset.Provider;
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.parser.DatLoader;
 import jack.rm.files.parser.SaveParser;

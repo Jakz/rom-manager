@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Stream;
 
-import com.github.jakz.romlib.data.Language;
+import com.github.jakz.romlib.data.game.Language;
 import com.pixbits.lib.io.archive.Verifiable;
 import com.pixbits.lib.io.archive.handles.Handle;
 

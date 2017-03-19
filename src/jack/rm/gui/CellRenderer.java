@@ -9,7 +9,8 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-import jack.rm.data.rom.Location;
+import com.github.jakz.romlib.data.game.Location;
+
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
 

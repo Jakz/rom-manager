@@ -11,18 +11,18 @@ import java.util.UnknownFormatConversionException;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.github.jakz.romlib.data.Language;
+import com.github.jakz.romlib.data.game.Language;
+import com.github.jakz.romlib.data.game.Location;
+import com.github.jakz.romlib.data.set.DatFormat;
 
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
-import jack.rm.data.rom.Location;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.RomGroup;
 import jack.rm.data.rom.RomGroupID;
 import jack.rm.data.rom.RomSave;
 import jack.rm.data.rom.RomSize;
-import jack.rm.data.romset.DatFormat;
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.parser.DatLoader;
 import jack.rm.files.parser.SaveParser;
@@ -32,6 +32,7 @@ import jack.rm.files.parser.XMLHandler;
 public class OfflineListParserPlugin extends DatParserPlugin
 {
   static final private Map<Integer, Language> languageMap = new HashMap<>();
+  static final private Map<Integer, Location> locationMap = new HashMap<>();
   
   static
   {
@@ -52,6 +53,20 @@ public class OfflineListParserPlugin extends DatParserPlugin
     languageMap.put(16384, Language.ENGLISH_UK);
     languageMap.put(32768, Language.PORTUGUESE_BR);
     languageMap.put(65536, Language.KOREAN);
+    
+    locationMap.put(0,Location.EUROPE);
+    locationMap.put(1,Location.USA);
+    locationMap.put(2,Location.GERMANY);
+    locationMap.put(3,Location.CHINA);
+    locationMap.put(4,Location.SPAIN);
+    locationMap.put(5,Location.FRANCE);
+    locationMap.put(6,Location.ITALY);
+    locationMap.put(7,Location.JAPAN);
+    locationMap.put(8,Location.NETHERLANDS);
+    locationMap.put(19,Location.AUSTRALIA);
+    locationMap.put(22,Location.KOREA);
+    locationMap.put(16,Location.JAPAN);
+    locationMap.put(18,Location.JAPAN);
   }
   
   class OfflineListXMLDatLoader extends XMLDatLoader
@@ -174,7 +189,7 @@ public class OfflineListParserPlugin extends DatParserPlugin
         case "publisher": rom.setAttribute(RomAttribute.PUBLISHER, asString()); break;
         case "location":
         {
-          rom.setAttribute(RomAttribute.LOCATION, Location.get(asInt())); break;
+          rom.setAttribute(RomAttribute.LOCATION, locationMap.getOrDefault(asInt(), Location.NONE)); break;
         }
         case "language":
         {

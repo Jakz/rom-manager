@@ -12,15 +12,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
-import com.github.jakz.romlib.data.Language;
+import com.github.jakz.romlib.data.game.Language;
+import com.github.jakz.romlib.data.game.Location;
+import com.github.jakz.romlib.data.set.DatFormat;
 import com.pixbits.lib.parser.SimpleParser;
 import com.pixbits.lib.parser.SimpleTreeBuilder;
 
-import jack.rm.data.rom.Location;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.RomSize;
-import jack.rm.data.romset.DatFormat;
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.parser.DatLoader;
 

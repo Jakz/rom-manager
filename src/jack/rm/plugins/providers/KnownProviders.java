@@ -1,6 +1,6 @@
 package jack.rm.plugins.providers;
 
-import jack.rm.data.romset.Provider;
+import com.github.jakz.romlib.data.set.Provider;
 
 public class KnownProviders
 {

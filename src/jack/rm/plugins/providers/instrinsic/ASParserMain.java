@@ -24,7 +24,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-import com.github.jakz.romlib.data.Language;
+import com.github.jakz.romlib.data.game.Language;
+import com.github.jakz.romlib.data.game.Location;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -32,7 +33,6 @@ import com.google.gson.reflect.TypeToken;
 import jack.rm.data.console.GB;
 import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.CustomRomAttribute;
-import jack.rm.data.rom.Location;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.Version;
 
