@@ -25,8 +25,9 @@ import javax.swing.border.Border;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 
+import com.github.jakz.romlib.data.platforms.Platform;
+
 import jack.rm.Settings;
-import jack.rm.data.console.System;
 import jack.rm.data.rom.RomSize;
 import jack.rm.data.rom.RomSize.PrintStyle;
 import jack.rm.data.rom.RomSize.PrintUnit;
@@ -71,7 +72,7 @@ public class ManagerPanel extends JPanel implements ActionListener
 	  {
 	    rows = new InfoRow<?>[] {
 	      new InfoRow<String>("Provider", () -> RomSet.current.provider.getName()),
-	      new InfoRow<System>("System", () -> RomSet.current.system),
+	      new InfoRow<Platform>("System", () -> RomSet.current.platform),
 	      new InfoRow<String>("Count", () -> RomSet.current.list.count() + " roms"),
 	      new InfoRow<String>("Owned", () -> RomSet.current.list.getCountCorrect()+RomSet.current.list.getCountBadName() + " roms"),
         new InfoRow<String>("% Complete", () -> { 

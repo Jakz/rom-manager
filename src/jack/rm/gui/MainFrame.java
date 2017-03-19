@@ -38,12 +38,12 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.github.jakz.romlib.data.platforms.Platform;
 import com.pixbits.lib.ui.FileTransferHandler;
 
 import jack.rm.GlobalSettings;
 import jack.rm.Main;
 import jack.rm.assets.AssetPacker;
-import jack.rm.data.console.System;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomSize;
 import jack.rm.data.rom.RomStatus;
@@ -222,11 +222,11 @@ public class MainFrame extends JFrame implements WindowListener
 	  
 	  cbRomSets.removeAllItems();
 	  
-	  List<System> systems = System.sortedValues();
+	  List<Platform> systems = Platform.sortedValues();
 	  List<RomSet> sets = GlobalSettings.settings.getEnabledProviders().stream().map(RomSetManager::byIdent).collect(Collectors.toList());
 	  
 	  systems.forEach(s -> {
-	    sets.stream().filter(rs -> rs.system.equals(s)).forEach(cbRomSets::addItem);
+	    sets.stream().filter(rs -> rs.platform.equals(s)).forEach(cbRomSets::addItem);
 	  });
 	  
 	  if (current != null && sets.contains(current))

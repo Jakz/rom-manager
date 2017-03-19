@@ -3,9 +3,9 @@ package jack.rm.workflow;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.github.jakz.romlib.data.platforms.Platform;
 import com.pixbits.workflow.Mutuator;
 
-import jack.rm.data.console.System;
 import jack.rm.data.rom.Rom;
 
 public abstract class RomOperation implements Mutuator<RomWorkflowEntry>
@@ -51,7 +51,7 @@ public abstract class RomOperation implements Mutuator<RomWorkflowEntry>
   
   abstract String getName();
   abstract String getDescription();
-  boolean isSystemSupported(System system) { return true; }
+  boolean isPlatformSupported(Platform platform) { return true; }
   
   public final RomWorkflowEntry apply(RomWorkflowEntry handle)
   {

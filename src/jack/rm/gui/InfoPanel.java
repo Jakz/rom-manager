@@ -698,7 +698,7 @@ public class InfoPanel extends JPanel implements ActionListener
   		  openFolderButton.setEnabled(false);
   		  openArchiveButton.setEnabled(false);
   			
-  		  downloadButton.setEnabled(RomSet.current.getSettings().hasDownloader(RomSet.current.system));
+  		  downloadButton.setEnabled(RomSet.current.getSettings().hasDownloader(RomSet.current.platform));
   		}
   		else
   		{
@@ -725,7 +725,7 @@ public class InfoPanel extends JPanel implements ActionListener
 			{
 				Set<RomDownloaderPlugin> downloaders = RomSet.current.getSettings().plugins.getEnabledPlugins(PluginRealType.ROM_DOWNLOADER);
 				
-				URL url = downloaders.stream().filter( p -> p.isSystemSupported(RomSet.current.system)).findFirst().get().getDownloadURL(RomSet.current.system, rom);
+				URL url = downloaders.stream().filter( p -> p.isPlatformSupported(RomSet.current.platform)).findFirst().get().getDownloadURL(RomSet.current.platform, rom);
 			  
 			  Desktop.getDesktop().browse(url.toURI());
 			}

@@ -26,16 +26,15 @@ import org.jsoup.select.Elements;
 
 import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.Location;
+import com.github.jakz.romlib.data.game.Version;
+import com.github.jakz.romlib.data.platforms.GB;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import jack.rm.data.console.GB;
 import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.CustomRomAttribute;
 import jack.rm.data.rom.RomAttribute;
-import jack.rm.data.rom.Version;
-
 
 public class ASParserMain
 {
@@ -231,7 +230,7 @@ public class ASParserMain
     final private int major, minor;
 
     VersionFactory(int major, int minor) { this.major = major; this.minor = minor; }
-    Version build() { return major != 0 || minor != 0 ? new Version.Standard(major, minor) : new Version.Unspecified(); }
+    Version build() { return major != 0 || minor != 0 ? new Version.Numbered(major, minor) : Version.UNSPECIFIED; }
   }
   
   static
@@ -505,7 +504,7 @@ public class ASParserMain
       this.put(RomAttribute.LANGUAGE, languages);
       this.put(RomAttribute.PUBLISHER, publisher);
       this.put(RomAttribute.GROUP, group);
-      if (!(version instanceof Version.Unspecified))
+      if (!(version == Version.UNSPECIFIED))
         this.put(RomAttribute.VERSION, version);
       this.put(RomAttribute.CRC, crc);
       this.put(RomAttribute.SIZE, size);

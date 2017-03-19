@@ -30,11 +30,11 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
+import com.github.jakz.romlib.data.platforms.Platform;
 import com.pixbits.lib.ui.table.renderers.AlternateColorTableCellRenderer;
 
 import jack.rm.GlobalSettings;
 import jack.rm.Main;
-import jack.rm.data.console.System;
 import jack.rm.data.romset.RomSet;
 import jack.rm.data.romset.RomSetManager;
 import jack.rm.files.parser.DatUpdater;
@@ -42,13 +42,13 @@ import net.miginfocom.swing.MigLayout;
 
 public class RomSetManagerView extends JPanel
 {
-  private final JList<System> systemList;
-  private final DefaultListModel<System> systemModel;
+  private final JList<Platform> systemList;
+  private final DefaultListModel<Platform> systemModel;
     
   private final SystemRomSetInfo systemSetInfo;
   
   @SuppressWarnings("rawtypes")
-  private class SystemListCellRenderer implements ListCellRenderer<System>
+  private class SystemListCellRenderer implements ListCellRenderer<Platform>
   {
     ListCellRenderer renderer;
 
@@ -59,7 +59,7 @@ public class RomSetManagerView extends JPanel
     
     @SuppressWarnings("unchecked")
     @Override
-    public Component getListCellRendererComponent(JList<? extends System> list, System value, int index, boolean isSelected, boolean cellHasFocus) {
+    public Component getListCellRendererComponent(JList<? extends Platform> list, Platform value, int index, boolean isSelected, boolean cellHasFocus) {
       JLabel label = (JLabel)renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
       
       int count = RomSetManager.bySystem(value).size();
@@ -132,7 +132,7 @@ public class RomSetManagerView extends JPanel
     systemSetInfo = new SystemRomSetInfo();
 
     systemModel = new DefaultListModel<>();
-    Arrays.stream(System.values()).sorted((o1, o2) -> o1.name.compareTo(o2.name)).forEach(s -> systemModel.addElement(s));
+    Arrays.stream(Platform.values()).sorted((o1, o2) -> o1.name.compareTo(o2.name)).forEach(s -> systemModel.addElement(s));
     
     systemList = new JList<>();
     systemList.setModel(systemModel);
@@ -203,17 +203,17 @@ public class RomSetManagerView extends JPanel
       add(info, BorderLayout.SOUTH);
     }
     
-    public void updateFields(System system)
+    public void updateFields(Platform platform)
     {      
-      List<RomSet> sets = RomSetManager.bySystem(system);
+      List<RomSet> sets = RomSetManager.bySystem(platform);
       int count = sets.size();
 
-      countLabel.setIcon(system.getIcon());
+      countLabel.setIcon(platform.getIcon());
       
       if (count > 0)
-        countLabel.setText(count+" available DATs for "+system.name);
+        countLabel.setText(count+" available DATs for "+platform.name);
       else
-        countLabel.setText("No available DATs for "+system.name);
+        countLabel.setText("No available DATs for "+platform.name);
             
       datTable.clearSelection();
       datModel.setData(sets);

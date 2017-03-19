@@ -13,6 +13,7 @@ import org.xml.sax.SAXException;
 
 import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.Location;
+import com.github.jakz.romlib.data.game.RomSave;
 import com.github.jakz.romlib.data.set.DatFormat;
 
 import jack.rm.assets.Asset;
@@ -21,7 +22,6 @@ import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.RomGroup;
 import jack.rm.data.rom.RomGroupID;
-import jack.rm.data.rom.RomSave;
 import jack.rm.data.rom.RomSize;
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.parser.DatLoader;

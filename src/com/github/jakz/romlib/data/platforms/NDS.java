@@ -1,6 +1,7 @@
-package jack.rm.data.console;
+package com.github.jakz.romlib.data.platforms;
 
-import jack.rm.data.rom.RomSave;
+import com.github.jakz.romlib.data.game.RomSave;
+
 import jack.rm.data.rom.RomSize;
 
 public class NDS

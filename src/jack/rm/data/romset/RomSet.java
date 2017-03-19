@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.set.DatFormat;
 import com.github.jakz.romlib.data.set.Provider;
 import com.google.gson.Gson;
@@ -29,7 +30,6 @@ import jack.rm.Main;
 import jack.rm.Settings;
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetManager;
-import jack.rm.data.console.System;
 import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
@@ -51,7 +51,7 @@ public class RomSet
   private boolean loaded;
 
 	public final RomList list;
-	public final System system;
+	public final Platform platform;
 	public final Provider provider;
 	public final DatFormat datFormat;
 	
@@ -61,15 +61,14 @@ public class RomSet
 	
 	private Searcher<Rom> searcher;
 	private Scanner scanner;
-	
-	
+
 	private final Attribute[] attributes;
 
-	public RomSet(System type, Provider provider, Attribute[] attributes, AssetManager assetManager, DatLoader loader)
+	public RomSet(Platform type, Provider provider, Attribute[] attributes, AssetManager assetManager, DatLoader loader)
 	{
 		this.searcher = new DummySearcher<>();
 	  this.list = new RomList(this);
-	  this.system = type;
+	  this.platform = type;
 		this.provider = provider;
 		this.datFormat = loader.getFormat();
 		this.attributes = attributes;
@@ -121,12 +120,12 @@ public class RomSet
 	@Override
   public String toString()
 	{
-		return system.name+" ("+provider.getName()+")";
+		return platform.name+" ("+provider.getName()+")";
 	}
 	
 	public String ident()
 	{
-		return datFormat.getIdent()+"-"+system.tag+"-"+provider.getTag()+provider.builtSuffix();
+		return datFormat.getIdent()+"-"+platform.tag+"-"+provider.getTag()+provider.builtSuffix();
 	}
 	
 	public Path datPath()

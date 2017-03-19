@@ -7,9 +7,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 
+import com.github.jakz.romlib.data.platforms.GBA;
 import com.pixbits.workflow.Dumper;
 
-import jack.rm.data.console.GBA;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
 

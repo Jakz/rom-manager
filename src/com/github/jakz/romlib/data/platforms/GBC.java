@@ -1,15 +1,14 @@
-package jack.rm.data.console;
+package com.github.jakz.romlib.data.platforms;
 
-import jack.rm.data.rom.RomSave;
+import com.github.jakz.romlib.data.game.RomSave;
 
-public class GB
+public class GBC
 {
   public static class Save implements RomSave<Save.Type>
   {
     public static enum Type implements RomSave.Type
     {
       NONE,
-      SRAM
     };
     
     private final Type type;

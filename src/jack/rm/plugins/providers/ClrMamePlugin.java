@@ -2,10 +2,10 @@ package jack.rm.plugins.providers;
 
 import java.util.List;
 
+import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.set.Provider;
 
 import jack.rm.assets.EmptyAssetManager;
-import jack.rm.data.console.System;
 import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.romset.RomSet;
@@ -44,7 +44,7 @@ public class ClrMamePlugin extends ProviderPlugin
     );
 
     sets[0] = new RomSet(
-        System.GG, 
+        Platform.GG, 
         KnownProviders.NO_INTRO.derive(null, null, "", "", null), 
         GG_ATTRIBUTES, 
         new EmptyAssetManager(), 
@@ -52,7 +52,7 @@ public class ClrMamePlugin extends ProviderPlugin
     );
     
     sets[1] = new RomSet(
-        System.LYNX, 
+        Platform.LYNX, 
         KnownProviders.NO_INTRO.derive(null, null, "", "", null), 
         GG_ATTRIBUTES, 
         new EmptyAssetManager(), 

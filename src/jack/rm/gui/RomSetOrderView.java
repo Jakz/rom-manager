@@ -20,7 +20,7 @@ public class RomSetOrderView extends JPanel
   private enum SortMode
   {
     NAME("by name"),
-    SYSTEM("by system"),
+    PLATFORM("by platform"),
     PROVIDER("by provider")
     ;
     

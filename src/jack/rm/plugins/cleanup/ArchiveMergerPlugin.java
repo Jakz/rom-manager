@@ -71,7 +71,7 @@ public class ArchiveMergerPlugin extends CleanupPlugin implements BackgroundOper
         {
           String fileName = r.getHandle().path().getFileName().toString();
           fileName = fileName.substring(0, fileName.lastIndexOf('.'));
-          fileName = fileName + "." + romSet.system.exts[0];
+          fileName = fileName + "." + romSet.platform.exts[0];
           
           aparams.setSourceExternalStream(true);
           aparams.setFileNameInZip(fileName);

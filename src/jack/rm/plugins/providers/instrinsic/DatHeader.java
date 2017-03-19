@@ -2,9 +2,8 @@ package jack.rm.plugins.providers.instrinsic;
 
 import java.util.List;
 
+import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.set.Provider;
-
-import jack.rm.data.console.System;
 
 public class DatHeader
 {
@@ -16,6 +15,6 @@ public class DatHeader
   
   String name;
   Provider provider;
-  System system;
+  Platform system;
   List<DatAttribute> attributes;
 }

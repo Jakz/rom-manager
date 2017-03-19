@@ -1,6 +1,7 @@
 package jack.rm.workflow;
 
-import jack.rm.data.console.System;
+import com.github.jakz.romlib.data.platforms.Platform;
+
 import jack.rm.files.GBASleepHack;
 
 public class GBASleepHackOperation extends RomOperation
@@ -28,9 +29,9 @@ public class GBASleepHackOperation extends RomOperation
     return handle;
   }
   
-  public boolean isSystemSupported(System system)
+  public boolean isPlatformSupported(Platform platform)
   {
-    return system == System.GBA;
+    return platform == Platform.GBA;
   }
   
 }

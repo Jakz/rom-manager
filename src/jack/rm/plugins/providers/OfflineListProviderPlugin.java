@@ -12,19 +12,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.UnknownFormatConversionException;
 
+import com.github.jakz.romlib.data.game.RomSave;
+import com.github.jakz.romlib.data.game.Version;
+import com.github.jakz.romlib.data.platforms.GBA;
+import com.github.jakz.romlib.data.platforms.NDS;
+import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.set.DatFormat;
 import com.github.jakz.romlib.data.set.Provider;
 
 import jack.rm.assets.Asset;
-import jack.rm.data.console.GBA;
-import jack.rm.data.console.NDS;
-import jack.rm.data.console.System;
 import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomAttribute;
-import jack.rm.data.rom.RomSave;
 import jack.rm.data.rom.RomSize;
-import jack.rm.data.rom.Version;
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.parser.DatLoader;
 import jack.rm.files.parser.SaveParser;
@@ -272,7 +272,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         DatLoader datParser = parser.buildDatLoader("offline-list", args);
         
         sets.add(new RomSet(
-            System.GBA, 
+            Platform.GBA, 
             KnownProviders.OFFLINE_LIST.derive("", null, null, "Replouf66", new Provider.Source("http://offlinelistgba.free.fr/tool/ReleaseList/gba_OL_0.7.1.zip")),
             GBA_ATTRIBUTES, 
             new AssetManager(GBA_ASSETS, new URL("http://offlinelistgba.free.fr/imgs/")), 
@@ -286,7 +286,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         DatLoader datParser = parser.buildDatLoader("offline-list", args);
   
         sets.add(new RomSet(
-            System.GBA, 
+            Platform.GBA, 
             KnownProviders.ADVAN_SCENE.derive("pure", null, null, "AdvanScene", new Provider.Source("http://www.advanscene.com/offline/datas/ADVANsCEne_GBA.zip")), 
             GBA_ATTRIBUTES, 
             new AssetManager(GBA_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_GBA/")), 
@@ -300,7 +300,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         DatLoader datParser = parser.buildDatLoader("offline-list", args);
         
         sets.add(new RomSet(
-            System.NDS, 
+            Platform.NDS, 
             KnownProviders.ADVAN_SCENE.derive("collection", null, null, "AdvanceScene", new Provider.Source("http://www.advanscene.com/offline/datas/ADVANsCEne_NDS.zip")),
             GBA_ATTRIBUTES, 
             new AssetManager(NDS_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_NDS/")), 
@@ -314,7 +314,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         DatLoader datParser = parser.buildDatLoader("offline-list", args);
         
         sets.add(new RomSet(
-          System.GBC,
+          Platform.GBC,
           KnownProviders.NO_INTRO.derive("", "", "", "Replouf66", new Provider.Source("http://nointro.free.fr/datas/Official%20No-Intro%20Nintendo%20Gameboy%20Color.zip")),
           GB_ATTRIBUTES,
           new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20Gameboy%20Color/")),
@@ -328,7 +328,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         DatLoader datParser = parser.buildDatLoader("offline-list", args);
         
         sets.add(new RomSet(
-            System.GB,
+            Platform.GB,
             KnownProviders.NO_INTRO.derive("", "", "", "MadBob", new Provider.Source("http://nointro.free.fr/datas/Official%20No-Intro%20Nintendo%20Gameboy.zip")),
             GB_ATTRIBUTES,
             new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20Gameboy/")),
@@ -342,7 +342,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         DatLoader datParser = parser.buildDatLoader("offline-list", args);
         
         sets.add(new RomSet(
-          System.NES,
+          Platform.NES,
           KnownProviders.NO_INTRO.derive("", "", "", "Zepman", new Provider.Source("http://nointro.free.fr/datas/Official%20No-Intro%20Nintendo%20NES%20-%20Famicom.zip")),
           NES_ATTRIBUTES,
           new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20NES%20-%20Famicom/")),
@@ -350,7 +350,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         ));
         
         sets.add(new RomSet(
-          System.NES,
+          Platform.NES,
           KnownProviders.OFFLINE_LIST.derive("", "", "", "Zepman", new Provider.Source("http://nesofflinelist.free.fr/dat/nes_OL.zip")),
           NES_ATTRIBUTES,
           new AssetManager(NES_ASSETS, new URL("http://nesofflinelist.free.fr/imgs/")),
@@ -364,7 +364,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         DatLoader datParser = parser.buildDatLoader("offline-list", args);
         
         sets.add(new RomSet(
-            System.LYNX,
+            Platform.LYNX,
             KnownProviders.NO_INTRO.derive("", "", "", "Atari Lynx", new Provider.Source("http://nointro.free.fr/datas/Official%20No-Intro%20Atari%20Lynx.zip")),
             NES_ATTRIBUTES,
             new AssetManager(LYNX_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Atari%20Lynx/")),

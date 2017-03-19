@@ -11,11 +11,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.github.jakz.romlib.data.platforms.Platform;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.plugin.PluginManager;
 
 import jack.rm.Main;
-import jack.rm.data.console.System;
 import jack.rm.data.rom.RomSize;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
@@ -47,20 +47,20 @@ public class RomSetManager
 	    
 	    for (RomSet set : rsets)
 	    {
-	      List<RomSet> setsForSystem = sets.computeIfAbsent(set.system, s -> new ArrayList<>());
+	      List<RomSet> setsForSystem = sets.computeIfAbsent(set.platform, s -> new ArrayList<>());
 	      setsForSystem.add(set);
 	    }
 	  }
 	  
-	  for (System system : System.values())
-	    sets.computeIfAbsent(system, s -> new ArrayList<>());
+	  for (Platform platform : Platform.values())
+	    sets.computeIfAbsent(platform, s -> new ArrayList<>());
 	}
   
-  private static Map<System, List<RomSet>> sets = new HashMap<>();
+  private static Map<Platform, List<RomSet>> sets = new HashMap<>();
 
-	public static List<RomSet> bySystem(System system)
+	public static List<RomSet> bySystem(Platform platform)
 	{
-	  return sets.get(system); 
+	  return sets.get(platform); 
 	}
 	
 	public static RomSet byIdent(String ident)

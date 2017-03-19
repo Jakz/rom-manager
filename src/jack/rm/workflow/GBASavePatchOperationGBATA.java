@@ -1,6 +1,7 @@
 package jack.rm.workflow;
 
-import jack.rm.data.console.System;
+import com.github.jakz.romlib.data.platforms.Platform;
+
 import jack.rm.data.rom.RomAttribute;
 import jack.rm.files.GBASavePatcherGBATA;
 
@@ -20,9 +21,9 @@ public class GBASavePatchOperationGBATA extends RomOperation
     return handle;
   }
   
-  public boolean isSystemSupported(System system)
+  public boolean isPlatformSupported(Platform platform)
   {
-    return system == System.GBA;
+    return platform == Platform.GBA;
   }
   
 }

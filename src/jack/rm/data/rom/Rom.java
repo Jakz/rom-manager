@@ -12,6 +12,7 @@ import java.util.TreeSet;
 import java.util.stream.Stream;
 
 import com.github.jakz.romlib.data.game.Language;
+import com.github.jakz.romlib.data.platforms.Platform;
 import com.pixbits.lib.io.archive.Verifiable;
 import com.pixbits.lib.io.archive.handles.Handle;
 
@@ -19,7 +20,6 @@ import jack.rm.Settings;
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
 import jack.rm.data.attachment.Attachment;
-import jack.rm.data.console.System;
 import jack.rm.data.romset.RomSet;
 import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.RenamerPlugin;
@@ -98,7 +98,7 @@ public class Rom implements Comparable<Rom>, Verifiable
 	public void setCRC(long crc) { setAttribute(RomAttribute.CRC, crc); }
 	public long getCRC() { return getAttribute(RomAttribute.CRC); }
 	
-	public System getSystem() { return set.system; }
+	public Platform getSystem() { return set.platform; }
 	
 	@SuppressWarnings("unchecked")
 	public Set<Language> getLanguages()
