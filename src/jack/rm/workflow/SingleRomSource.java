@@ -2,16 +2,15 @@ package jack.rm.workflow;
 
 import java.util.function.Consumer;
 
+import com.github.jakz.romlib.data.game.Game;
 import com.pixbits.workflow.Fetcher;
-
-import jack.rm.data.rom.Rom;
 
 public class SingleRomSource extends Fetcher<RomWorkflowEntry>
 {
-  private final Rom rom;
+  private final Game rom;
   private boolean done;
   
-  public SingleRomSource(Rom rom)
+  public SingleRomSource(Game rom)
   {
     super(1);
     this.rom = rom;

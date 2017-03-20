@@ -4,6 +4,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.github.jakz.romlib.data.game.Game;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -11,23 +12,22 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
 
-import jack.rm.data.rom.Rom;
-import jack.rm.data.romset.RomList;;
+import jack.rm.data.romset.GameList;;
 
-public class RomListAdapter implements JsonSerializer<RomList>, JsonDeserializer<RomList>
+public class RomListAdapter implements JsonSerializer<GameList>, JsonDeserializer<GameList>
 {
-  RomList list;
+  GameList list;
   
-  public RomListAdapter(RomList list)
+  public RomListAdapter(GameList list)
   {
     this.list = list;
   }
     
   @Override
-  public JsonElement serialize(RomList src, Type type, JsonSerializationContext context)
+  public JsonElement serialize(GameList src, Type type, JsonSerializationContext context)
   {
     List<RomSavedState> roms = list.stream()
-      .filter(Rom::shouldSerializeState)
+      .filter(Game::shouldSerializeState)
       .map(r -> new RomSavedState(r))
       .collect(Collectors.toList());
     
@@ -35,13 +35,13 @@ public class RomListAdapter implements JsonSerializer<RomList>, JsonDeserializer
   }
   
   @Override
-  public RomList deserialize(JsonElement json, Type type, JsonDeserializationContext context)
+  public GameList deserialize(JsonElement json, Type type, JsonDeserializationContext context)
   {
     List<RomSavedState> roms = context.deserialize(json, new TypeToken<List<RomSavedState>>(){}.getType());
 
     for (RomSavedState prom : roms)
     {
-      Rom rom = list.getByID(prom.id);
+      Game rom = list.getByID(prom.id);
       
       if (rom != null)
       {

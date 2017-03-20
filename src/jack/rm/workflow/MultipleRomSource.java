@@ -5,16 +5,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
+import com.github.jakz.romlib.data.game.Game;
 import com.pixbits.workflow.Fetcher;
-
-import jack.rm.data.rom.Rom;
 
 public class MultipleRomSource extends Fetcher<RomWorkflowEntry>
 {
-  private final List<Rom> roms;
+  private final List<Game> roms;
   private int current;
   
-  public MultipleRomSource(Rom... roms)
+  public MultipleRomSource(Game... roms)
   {
     super(roms.length);
     this.roms = new ArrayList<>();
@@ -22,7 +21,7 @@ public class MultipleRomSource extends Fetcher<RomWorkflowEntry>
     this.current = 0;
   }
   
-  public MultipleRomSource(List<Rom> roms)
+  public MultipleRomSource(List<Game> roms)
   {
     super(roms.size());
     this.roms = new ArrayList<>(roms);

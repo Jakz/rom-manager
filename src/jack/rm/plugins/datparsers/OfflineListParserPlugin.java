@@ -4,26 +4,26 @@ import java.io.CharArrayWriter;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.UnknownFormatConversionException;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import com.github.jakz.romlib.data.game.GameSize;
 import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.Location;
-import com.github.jakz.romlib.data.game.RomSave;
+import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameSave;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.set.DatFormat;
 
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
-import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomGroup;
-import jack.rm.data.rom.RomGroupID;
-import jack.rm.data.rom.RomSize;
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 import jack.rm.files.parser.DatLoader;
 import jack.rm.files.parser.SaveParser;
 import jack.rm.files.parser.XMLDatLoader;
@@ -84,14 +84,14 @@ public class OfflineListParserPlugin extends DatParserPlugin
     private Asset[] assets;
    
     
-    Rom rom;
+    Game rom;
     int curString;
     
     private SaveParser saveParser;
     
     boolean started = false;
     
-    public void setRomSet(RomSet set)
+    public void setRomSet(GameSet set)
     {
       super.setRomSet(set);
       this.assets = set.getAssetManager().getSupportedAssets();
@@ -109,7 +109,7 @@ public class OfflineListParserPlugin extends DatParserPlugin
     {     
       if (localName.equals("game"))
       {
-        rom = new Rom(set);
+        rom = new Game(set);
       }
       else if (localName.equals("games"))
       {
@@ -142,12 +142,8 @@ public class OfflineListParserPlugin extends DatParserPlugin
       return !value.isEmpty() ? Long.parseLong(asString(), 16) : 0;
     }
 
-    Map<String, RomSave<?>> saves = new TreeMap<>();
-    
-    RomGroup getGroup(int id)
-    {
-      return set.list.getGroup(new RomGroupID(id));
-    }
+    Map<String, GameSave<?>> saves = new TreeMap<>();
+    Map<Integer, Set<Game>> clones = new HashMap<>();
     
     @Override
     public void endElement(String namespaceURI, String localName, String qName) throws SAXException
@@ -174,7 +170,7 @@ public class OfflineListParserPlugin extends DatParserPlugin
         {       
           try
           {
-            RomSave<?> save = saveParser.parse(asString());
+            GameSave<?> save = saveParser.parse(asString());
             //saves.put(asString(), save);
             rom.setAttribute(GameAttribute.SAVE_TYPE, save);
           }
@@ -185,7 +181,7 @@ public class OfflineListParserPlugin extends DatParserPlugin
           }
           break;
         }
-        case "romSize": rom.setSize(RomSize.forBytes(asLong())); break;
+        case "romSize": rom.setSize(set.sizeSet.forBytes(asLong())); break;
         case "publisher": rom.setAttribute(GameAttribute.PUBLISHER, asString()); break;
         case "location":
         {
@@ -213,12 +209,9 @@ public class OfflineListParserPlugin extends DatParserPlugin
         {
           int ident = asInt();
           
-          if (ident != 0)
-          {
-            RomGroup group = getGroup(ident);
-            rom.addToGroup(group);
-          }
-          
+          Set<Game> currentClones = clones.putIfAbsent(ident, new HashSet<Game>());
+          currentClones.add(rom);
+
           break;
         }
         case "comment": rom.setAttribute(GameAttribute.COMMENT, asString()); break;
@@ -227,6 +220,8 @@ public class OfflineListParserPlugin extends DatParserPlugin
         {
           set.list.precomputeCache(); 
           saves.forEach((k,v) -> System.out.println(k+" -> "+v));
+          
+          // TODO: check clones for elements with .size() > 1 and add to CloneSet
           
           System.out.println("Groups: "+set.list.groupsCount());
           

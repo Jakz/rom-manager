@@ -25,6 +25,8 @@ import java.util.zip.CheckedInputStream;
 
 import javax.swing.SwingWorker;
 
+import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameStatus;
 import com.pixbits.lib.io.FolderScanner;
 import com.pixbits.lib.io.archive.HandleSet;
 import com.pixbits.lib.io.archive.VerifierEntry;
@@ -35,9 +37,7 @@ import com.pixbits.lib.log.Logger;
 import com.pixbits.lib.plugin.PluginManager;
 
 import jack.rm.Main;
-import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.GameStatus;
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 import jack.rm.gui.Dialogs;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
@@ -51,7 +51,7 @@ public class Scanner
 {
 	private static final Logger logger = Log.getLogger(LogSource.SCANNER);
   
-  RomSet set;
+  GameSet set;
 	
 	private Set<Handle> existing = new HashSet<>();
 	private Set<Path> foundFiles = new HashSet<>();
@@ -60,7 +60,7 @@ public class Scanner
 	ScannerPlugin scanner;
 	VerifierPlugin verifier;
 		
-  public Scanner(RomSet set)
+  public Scanner(GameSet set)
 	{
 	  scanner = set.getSettings().plugins.getEnabledPlugin(PluginRealType.SCANNER);
 	  verifier = set.getSettings().plugins.getEnabledPlugin(PluginRealType.VERIFIER);
@@ -72,7 +72,7 @@ public class Scanner
 	  if (result == null)
 	    return;
 	  	  
-	  Rom rom = result.rom;
+	  Game rom = result.rom;
 	  
 	  if (rom.status != GameStatus.MISSING && !rom.getHandle().equals(result.path))
 	  {	    

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import jack.rm.data.rom.Rom;
+import com.github.jakz.romlib.data.game.Game;
 
 public class Attachment
 {
@@ -16,7 +16,7 @@ public class Attachment
   
   public Attachment() { }
   
-  public Attachment(Rom rom, Path file) throws IOException
+  public Attachment(Game rom, Path file) throws IOException
   {
     // move to attachments folder
     // TODO: manage embedding in rom archive

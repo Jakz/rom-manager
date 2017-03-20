@@ -7,8 +7,8 @@ import java.io.IOException;
 import javax.swing.JMenuItem;
 
 import jack.rm.Main;
-import jack.rm.data.romset.RomList;
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameList;
+import jack.rm.data.romset.GameSet;
 
 class MenuListener implements ActionListener
 {
@@ -25,12 +25,12 @@ class MenuListener implements ActionListener
 		{
   		if (tag == MenuElement.ROMS_SCAN_FOR_ROMS)
   		{
-  		  RomSet.current.getScanner().scanForRoms(true);
+  		  GameSet.current.getScanner().scanForRoms(true);
   			Main.mainFrame.updateTable();
   		}
   		else if (tag == MenuElement.ROMS_SCAN_FOR_NEW_ROMS)
   		{
-  		  RomSet.current.getScanner().scanForRoms(false);
+  		  GameSet.current.getScanner().scanForRoms(false);
   			Main.mainFrame.updateTable();
   		}
   		else if (tag == MenuElement.VIEW_SHOW_CORRECT)

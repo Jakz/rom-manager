@@ -1,9 +1,9 @@
 package jack.rm.files.parser;
 
-import com.github.jakz.romlib.data.game.RomSave;
+import com.github.jakz.romlib.data.game.GameSave;
 
 @FunctionalInterface
 public interface SaveParser
 {
-  public RomSave<?> parse(String string);
+  public GameSave<?> parse(String string);
 }

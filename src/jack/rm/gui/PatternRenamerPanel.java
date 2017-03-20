@@ -20,7 +20,7 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.table.AbstractTableModel;
 
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 import jack.rm.files.Organizer;
 import jack.rm.files.Pattern;
 import jack.rm.i18n.Text;
@@ -129,7 +129,7 @@ public class PatternRenamerPanel extends PluginOptionsPanel implements CaretList
   public void caretUpdate(CaretEvent e)
 	{
 	  getRomset().getSettings().renamingPattern = patternField.getText();
-		exampleField.setText(RomSet.current.list.get(0).getCorrectName());
+		exampleField.setText(GameSet.current.list.get(0).getCorrectName());
 	}
 	
 	@Override

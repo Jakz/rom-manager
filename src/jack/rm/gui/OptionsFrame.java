@@ -18,7 +18,7 @@ import javax.swing.JTabbedPane;
 import com.pixbits.lib.plugin.PluginManager;
 
 import jack.rm.Main;
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 import jack.rm.i18n.Text;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
@@ -27,7 +27,7 @@ public class OptionsFrame extends JFrame implements ActionListener, ComponentLis
 {
 	private static final long serialVersionUID = 1L;
 	
-	private RomSet set;
+	private GameSet set;
 
 	JTabbedPane tabs = new JTabbedPane();
 	
@@ -74,7 +74,7 @@ public class OptionsFrame extends JFrame implements ActionListener, ComponentLis
 		pack();
 	}
 	
-	public void romSetLoaded(RomSet set)
+	public void romSetLoaded(GameSet set)
 	{
 	  this.set = set;
 	  rebuildGUIComponents();

@@ -11,13 +11,12 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 
+import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.Location;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.ui.Icon;
 
-import jack.rm.data.rom.Rom;
-
-class RomCellRenderer extends JPanel implements ListCellRenderer<Rom>
+class RomCellRenderer extends JPanel implements ListCellRenderer<Game>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -40,7 +39,7 @@ class RomCellRenderer extends JPanel implements ListCellRenderer<Rom>
 	}
 	
 	@Override
-  public Component getListCellRendererComponent(JList<? extends Rom> list, Rom rom, int index, boolean iss, boolean chf)
+  public Component getListCellRendererComponent(JList<? extends Game> list, Game rom, int index, boolean iss, boolean chf)
 	{
 	  mainLabel.setText(rom.toString());
 	  Location location = rom.getAttribute(GameAttribute.LOCATION);

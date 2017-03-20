@@ -4,10 +4,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
+import com.github.jakz.romlib.data.game.Game;
 import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.workflow.Dumper;
-
-import jack.rm.data.rom.Rom;
 
 public class RomConsolidator extends Dumper<RomWorkflowEntry>
 {
@@ -25,7 +24,7 @@ public class RomConsolidator extends Dumper<RomWorkflowEntry>
   {
     try
     {
-      Rom rom = handle.getRom();
+      Game rom = handle.getRom();
       Path basePath = destination.resolve(handle.getDestPath());
       Path finalPath = basePath.resolve(rom.getTitle()+"."+rom.getSystem().exts[0]);
       

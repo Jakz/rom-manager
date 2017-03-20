@@ -2,11 +2,11 @@ package jack.rm.files.parser;
 
 import org.xml.sax.helpers.DefaultHandler;
 
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 
 public class XMLHandler extends DefaultHandler
 {
-  protected RomSet set;
+  protected GameSet set;
   
-  public void setRomSet(RomSet set) { this.set = set; }
+  public void setRomSet(GameSet set) { this.set = set; }
 }

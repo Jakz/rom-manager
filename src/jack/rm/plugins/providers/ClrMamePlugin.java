@@ -8,7 +8,7 @@ import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.set.Provider;
 
 import jack.rm.assets.EmptyAssetManager;
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 import jack.rm.plugins.datparsers.DatParserPlugin;
 
 
@@ -28,11 +28,11 @@ public class ClrMamePlugin extends ProviderPlugin
   };
   
   @Override
-  public RomSet[] buildRomSets(List<DatParserPlugin> datParsers)
+  public GameSet[] buildRomSets(List<DatParserPlugin> datParsers)
   {
     DatParserPlugin datParser = this.findDatParser(datParsers, "clr-mame-nointro");
     
-    RomSet[] sets = new RomSet[2];
+    GameSet[] sets = new GameSet[2];
     
     Provider.Source gameGearSource = new Provider.Source("http://datomatic.no-intro.org/?page=download&fun=dat",
       "inc_unl", "1",
@@ -43,7 +43,7 @@ public class ClrMamePlugin extends ProviderPlugin
       "Download27", ""
     );
 
-    sets[0] = new RomSet(
+    sets[0] = new GameSet(
         Platform.GG, 
         KnownProviders.NO_INTRO.derive(null, null, "", "", null), 
         GG_ATTRIBUTES, 
@@ -51,7 +51,7 @@ public class ClrMamePlugin extends ProviderPlugin
         datParser.buildDatLoader("clr-mame-nointro")
     );
     
-    sets[1] = new RomSet(
+    sets[1] = new GameSet(
         Platform.LYNX, 
         KnownProviders.NO_INTRO.derive(null, null, "", "", null), 
         GG_ATTRIBUTES, 

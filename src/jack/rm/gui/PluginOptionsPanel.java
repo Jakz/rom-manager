@@ -2,13 +2,13 @@ package jack.rm.gui;
 
 import javax.swing.JPanel;
 
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 
 public abstract class PluginOptionsPanel extends JPanel
 {
-  public RomSet getRomset()
+  public GameSet getRomset()
   {
-    return RomSet.current;
+    return GameSet.current;
   }
   
   public abstract String getTitle();

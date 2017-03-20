@@ -3,14 +3,14 @@ package jack.rm.gui;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameStatus;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
 import com.pixbits.lib.ui.FileTransferHandler;
 
 import jack.rm.Main;
-import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.GameStatus;
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 import jack.rm.files.Organizer;
 import jack.rm.files.ScanResult;
 import jack.rm.log.LogSource;
@@ -29,7 +29,7 @@ public class FileDropperListener implements FileTransferHandler.Listener
     @Override
     public void run()
     {
-      Path romsPath = RomSet.current.getSettings().romsPath;
+      Path romsPath = GameSet.current.getSettings().romsPath;
       
       for (Path file : files)
       {
@@ -39,7 +39,7 @@ public class FileDropperListener implements FileTransferHandler.Listener
           System.out.println("Processing "+file.getFileName());
   
           
-          ScanResult result = RomSet.current.getScanner().scanFile(file);
+          ScanResult result = GameSet.current.getScanner().scanFile(file);
         
           if (result != null)
           {
@@ -50,7 +50,7 @@ public class FileDropperListener implements FileTransferHandler.Listener
             if (result.rom.status == GameStatus.MISSING)
             {
               result.assign();
-              Rom rom = result.rom;
+              Game rom = result.rom;
               
               // first let's copy the file in the rompath
               Path romFile = rom.getHandle().path();
@@ -65,7 +65,7 @@ public class FileDropperListener implements FileTransferHandler.Listener
               
               Organizer.organizeRomIfNeeded(rom);
               
-              RomSet.current.list.updateStatus();
+              GameSet.current.list.updateStatus();
               Main.mainFrame.updateTable();
               
               logger.i(LogTarget.rom(result.rom), "Successfully imported new rom");

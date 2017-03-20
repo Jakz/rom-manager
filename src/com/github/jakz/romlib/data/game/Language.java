@@ -65,7 +65,7 @@ public enum Language
 		return mapping.get(language);
 	}
 	
-	public static String asString(Set<Language> languages)
+	public static String asString(LanguageSet languages)
 	{
 	   return languages.stream().map( l -> l.fullName).collect(Collectors.joining(", "));
 

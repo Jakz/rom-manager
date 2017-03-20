@@ -3,14 +3,14 @@ package jack.rm.plugins.renamer;
 import java.util.Arrays;
 import java.util.List;
 
+import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameSize;
 import com.github.jakz.romlib.data.game.Location;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
 
-import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomSize;
 import jack.rm.files.Pattern;
 
 public class BasicPatternSet extends PatternSetPlugin
@@ -43,7 +43,7 @@ public class BasicPatternSet extends PatternSetPlugin
       this(code, desc, attrib, true);
     }
        
-    @Override public String apply(Pattern.RenamingOptions options, String name, Rom rom)
+    @Override public String apply(Pattern.RenamingOptions options, String name, Game rom)
     { 
       return applyQuotes ? apply(options, name, code, rom.getAttribute(attribute)) : name.replace(code, rom.getAttribute(attribute));
     }
@@ -52,37 +52,37 @@ public class BasicPatternSet extends PatternSetPlugin
   private static class MegabyteSizePattern extends Pattern {
     MegabyteSizePattern() { super("%s", "Size of the game dump in bytes (long)"); }
     @Override
-    public String apply(Pattern.RenamingOptions options, String name, Rom rom) { return apply(options, name, code, rom.getSize().toString(RomSize.PrintStyle.LONG, RomSize.PrintUnit.BYTES)); }
+    public String apply(Pattern.RenamingOptions options, String name, Game rom) { return apply(options, name, code, rom.getSize().toString(GameSize.PrintStyle.LONG, GameSize.PrintUnit.BYTES)); }
   }
   
   private static class MegabitSizePattern extends Pattern {
     MegabitSizePattern() { super("%S", "Size of the game dump in bits (short)"); }
     @Override
-    public String apply(Pattern.RenamingOptions options, String name, Rom rom) { return apply(options, name, code, rom.getSize().toString(RomSize.PrintStyle.SHORT, RomSize.PrintUnit.BITS)); }
+    public String apply(Pattern.RenamingOptions options, String name, Game rom) { return apply(options, name, code, rom.getSize().toString(GameSize.PrintStyle.SHORT, GameSize.PrintUnit.BITS)); }
   }
   
   private static class FullLocationPattern extends Pattern {
     FullLocationPattern() { super("%L", "Full location name"); }
     @Override
-    public String apply(Pattern.RenamingOptions options, String name, Rom rom) { return apply(options, name, code, ((Location)rom.getAttribute(GameAttribute.LOCATION)).fullName); }
+    public String apply(Pattern.RenamingOptions options, String name, Game rom) { return apply(options, name, code, ((Location)rom.getAttribute(GameAttribute.LOCATION)).fullName); }
   }
   
   private static class ShortLocationPattern extends Pattern {
     ShortLocationPattern() { super("%a", "Short location name"); }
     @Override
-    public String apply(Pattern.RenamingOptions options, String name, Rom rom) { return apply(options, name, code, ((Location)rom.getAttribute(GameAttribute.LOCATION)).shortName); }
+    public String apply(Pattern.RenamingOptions options, String name, Game rom) { return apply(options, name, code, ((Location)rom.getAttribute(GameAttribute.LOCATION)).shortName); }
   }
   
   private static class TinyLocationPattern extends Pattern {
     TinyLocationPattern() { super("%l", "Tiny location name"); }
     @Override
-    public String apply(Pattern.RenamingOptions options, String name, Rom rom) { return apply(options, name, code, ((Location)rom.getAttribute(GameAttribute.LOCATION)).tinyName); }
+    public String apply(Pattern.RenamingOptions options, String name, Game rom) { return apply(options, name, code, ((Location)rom.getAttribute(GameAttribute.LOCATION)).tinyName); }
   }
   
   private static class ShortLanguagePattern extends Pattern {
     ShortLanguagePattern() { super("%i", "Short language"); }
     @Override
-    public String apply(Pattern.RenamingOptions options, String name, Rom rom) {
+    public String apply(Pattern.RenamingOptions options, String name, Game rom) {
       long langCount = rom.getLanguages().size();
 
       if (langCount == 1)

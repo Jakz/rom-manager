@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameSize;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.platforms.Platform;
@@ -32,7 +34,6 @@ import jack.rm.Main;
 import jack.rm.Settings;
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetManager;
-import jack.rm.data.rom.Rom;
 import jack.rm.files.Scanner;
 import jack.rm.files.parser.DatLoader;
 import jack.rm.json.Json;
@@ -44,30 +45,32 @@ import jack.rm.plugins.cleanup.CleanupPlugin;
 import jack.rm.plugins.searcher.SearchPlugin;
 import jack.rm.plugins.searcher.SearchPredicatesPlugin;
 
-public class RomSet
+public class GameSet
 {
-  public static RomSet current = null;
+  public static GameSet current = null;
 	
   private boolean loaded;
 
-	public final RomList list;
+	public final GameList list;
 	public final Platform platform;
 	public final Provider provider;
 	public final DatFormat datFormat;
+	public final GameSize.Set sizeSet;
 	
 	private Settings settings;
 	private final AssetManager assetManager;
 	private final DatLoader loader;
 	
-	private Searcher<Rom> searcher;
+	private Searcher<Game> searcher;
 	private Scanner scanner;
 
 	private final Attribute[] attributes;
 
-	public RomSet(Platform type, Provider provider, Attribute[] attributes, AssetManager assetManager, DatLoader loader)
+	public GameSet(Platform type, Provider provider, Attribute[] attributes, AssetManager assetManager, DatLoader loader)
 	{
 		this.searcher = new DummySearcher<>();
-	  this.list = new RomList(this);
+	  this.list = new GameList(this);
+	  this.sizeSet = new GameSize.Set();
 	  this.platform = type;
 		this.provider = provider;
 		this.datFormat = loader.getFormat();
@@ -81,10 +84,10 @@ public class RomSet
 	{
 	  if (getSettings().getSearchPlugin() != null)
 	  {
-	    List<SearchPredicate<Rom>> predicates = new ArrayList<>();
+	    List<SearchPredicate<Game>> predicates = new ArrayList<>();
 	    
 	    SearchPlugin plugin = getSettings().plugins.getEnabledPlugin(PluginRealType.SEARCH);
-	    SearchParser<Rom> parser = plugin.getSearcher();
+	    SearchParser<Game> parser = plugin.getSearcher();
 	    
 	    Set<SearchPredicatesPlugin> predicatePlugins = getSettings().plugins.getEnabledPlugins(PluginRealType.SEARCH_PREDICATES);
 	    predicatePlugins.stream().flatMap(p -> p.getPredicates().stream()).forEach(predicates::add);    
@@ -138,7 +141,7 @@ public class RomSet
 	  return settings.romsPath.resolve(Paths.get("attachments"));
 	}
 	
-	public Searcher<Rom> getSearcher()
+	public Searcher<Game> getSearcher()
 	{
 	  return searcher;
 	}
@@ -159,8 +162,8 @@ public class RomSet
 	  plugins.stream().forEach( p -> p.execute(this.list) );
 	}
 	
-	public Rom find(String query) { return list.find(query); }
-	public List<Rom> filter(String query) { return list.stream().filter(searcher.search(query)).collect(Collectors.toList()); }
+	public Game find(String query) { return list.find(query); }
+	public List<Game> filter(String query) { return list.stream().filter(searcher.search(query)).collect(Collectors.toList()); }
 	
 	public void saveStatus()
 	{
@@ -179,7 +182,7 @@ public class RomSet
   	  
   	  Path statusPath = basePath.resolve("status.json");
   	  
-      Gson gson = Json.prebuild().registerTypeAdapter(RomList.class, new RomListAdapter(list)).create();
+      Gson gson = Json.prebuild().registerTypeAdapter(GameList.class, new RomListAdapter(list)).create();
       
       try (BufferedWriter wrt = Files.newBufferedWriter(statusPath))
       {
@@ -234,11 +237,11 @@ public class RomSet
   	    
   	    Path statusPath = basePath.resolve("status.json");
   	    
-  	    Gson gson = Json.prebuild().registerTypeAdapter(RomList.class, new RomListAdapter(list)).create();
+  	    Gson gson = Json.prebuild().registerTypeAdapter(GameList.class, new RomListAdapter(list)).create();
   	    
   	    try (BufferedReader rdr = Files.newBufferedReader(statusPath))
   	    {
-  	      gson.fromJson(rdr, RomList.class);
+  	      gson.fromJson(rdr, GameList.class);
   	      return true;
   	    }
   	    catch (NoSuchFileException e)

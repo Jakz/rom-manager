@@ -12,15 +12,15 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 import com.pixbits.lib.ui.FileTransferHandler;
+import com.github.jakz.romlib.data.game.Game;
 import com.pixbits.lib.functional.StreamException;
 
 import jack.rm.data.attachment.Attachment;
 import jack.rm.data.attachment.AttachmentType;
-import jack.rm.data.rom.Rom;
 
 public class AttachmentTable extends JPanel implements FileTransferHandler.Listener
 {
-  Rom rom;
+  Game rom;
   
   private class AttachmentTableModel extends AbstractTableModel
   {
@@ -113,7 +113,7 @@ public class AttachmentTable extends JPanel implements FileTransferHandler.Liste
     pane.setTransferHandler(new FileTransferHandler(this));
   }
   
-  void setRom(Rom rom)
+  void setRom(Game rom)
   {
     this.rom = rom;
     model.fireChanges();

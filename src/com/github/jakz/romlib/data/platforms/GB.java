@@ -1,12 +1,12 @@
 package com.github.jakz.romlib.data.platforms;
 
-import com.github.jakz.romlib.data.game.RomSave;
+import com.github.jakz.romlib.data.game.GameSave;
 
 public class GB
 {
-  public static class Save implements RomSave<Save.Type>
+  public static class Save implements GameSave<Save.Type>
   {
-    public static enum Type implements RomSave.Type
+    public static enum Type implements GameSave.Type
     {
       NONE,
       SRAM

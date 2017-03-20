@@ -34,6 +34,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
+import com.github.jakz.romlib.data.game.Game;
 import com.pixbits.lib.io.archive.handles.ArchiveHandle;
 import com.pixbits.lib.io.archive.handles.BinaryHandle;
 import com.pixbits.lib.io.archive.handles.Handle;
@@ -43,13 +44,12 @@ import com.pixbits.lib.ui.color.PastelColorGenerator;
 import com.pixbits.lib.ui.color.PleasantColorGenerator;
 
 import jack.rm.Main;
-import jack.rm.data.rom.Rom;
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 import jack.rm.files.ScanResult;
 
 public class ClonesDialog extends JDialog
 {
-  private RomSet set;
+  private GameSet set;
   
   private final ColorGenerator colorGenerator;
   private final JTable table;
@@ -57,7 +57,7 @@ public class ClonesDialog extends JDialog
   
   private List<ScanResult> clones = new ArrayList<>(); 
   private Map<ScanResult, Boolean> keep = new HashMap<>();
-  private Map<Rom, Color> colors = new HashMap<>();
+  private Map<Game, Color> colors = new HashMap<>();
   
   private class CloneTableModel extends AbstractTableModel
   {
@@ -263,13 +263,13 @@ public class ClonesDialog extends JDialog
     Main.mainFrame.updateTable();
   }
   
-  public void activate(RomSet set, Set<ScanResult> clones)
+  public void activate(GameSet set, Set<ScanResult> clones)
   {
     this.set = set;
     this.keep.clear();
     this.clones.clear();
     
-    Set<Rom> romClones = clones.stream().map( c -> c.rom ).collect(Collectors.toSet());
+    Set<Game> romClones = clones.stream().map( c -> c.rom ).collect(Collectors.toSet());
    
     this.clones = new ArrayList<>(clones);
     this.clones.addAll(set.list.stream()

@@ -26,7 +26,7 @@ import com.pixbits.lib.plugin.PluginManager;
 import com.pixbits.lib.plugin.ui.PluginConfigTable;
 
 import jack.rm.Main;
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
 import jack.rm.plugins.PluginRealType;
@@ -37,7 +37,7 @@ public class PluginsPanel extends JPanel
   private final JTable table;
   private final PluginTableModel model;
   private final PluginManager<ActualPlugin, ActualPluginBuilder> manager;
-  private RomSet romset;
+  private GameSet romset;
   
   private class PluginCellRenderer implements TableCellRenderer
   {
@@ -105,7 +105,7 @@ public class PluginsPanel extends JPanel
         romset.getSettings().plugins.disable(plugins.get(r).getID());
       
       Main.mainFrame.pluginStateChanged();
-      RomSet.current.pluginStateChanged();
+      GameSet.current.pluginStateChanged();
 
       //TODO: enabling or disabling a plugin should have an effect in multiple parts of the UI
       
@@ -141,12 +141,12 @@ public class PluginsPanel extends JPanel
     COMPATIBLE
     {
       public String toString() { return "Show Compatible"; }
-      public boolean test(ActualPluginBuilder builder, RomSet romset) { return builder.isCompatible(romset); }
+      public boolean test(ActualPluginBuilder builder, GameSet romset) { return builder.isCompatible(romset); }
     },
     ENABLED
     {
       public String toString() { return "Show Enabled"; }
-      public boolean test(ActualPluginBuilder builder, RomSet romset) { 
+      public boolean test(ActualPluginBuilder builder, GameSet romset) { 
         Optional<ActualPlugin> plugin = romset.getSettings().plugins.getPlugin(builder.getID());
         return plugin.isPresent() && plugin.get().isEnabled();
       }
@@ -154,11 +154,11 @@ public class PluginsPanel extends JPanel
     ALL
     { 
       public String toString() { return "Show All"; } 
-      public boolean test(ActualPluginBuilder builder, RomSet romset) { return true; }
+      public boolean test(ActualPluginBuilder builder, GameSet romset) { return true; }
     }
     ;
     
-    public abstract boolean test(ActualPluginBuilder builder, RomSet romset);
+    public abstract boolean test(ActualPluginBuilder builder, GameSet romset);
     
   }
   
@@ -250,7 +250,7 @@ public class PluginsPanel extends JPanel
 
   }
   
-  public void populate(RomSet romset)
+  public void populate(GameSet romset)
   {
     this.romset = romset;
     model.populate();

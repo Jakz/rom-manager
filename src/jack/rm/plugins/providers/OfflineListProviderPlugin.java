@@ -12,7 +12,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UnknownFormatConversionException;
 
-import com.github.jakz.romlib.data.game.RomSave;
+import com.github.jakz.romlib.data.game.GameSize;
+import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameSave;
 import com.github.jakz.romlib.data.game.Version;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
@@ -23,9 +25,7 @@ import com.github.jakz.romlib.data.set.DatFormat;
 import com.github.jakz.romlib.data.set.Provider;
 
 import jack.rm.assets.Asset;
-import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomSize;
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 import jack.rm.files.parser.DatLoader;
 import jack.rm.files.parser.SaveParser;
 import jack.rm.files.parser.XMLDatLoader;
@@ -118,7 +118,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
       format.applyPattern("0000");
     }
     
-    @Override public URL assetURL(Asset asset, Rom rom)
+    @Override public URL assetURL(Asset asset, Game rom)
     {
       try
       {
@@ -141,7 +141,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
   
   private static class GBASaveParserOL implements SaveParser
   {
-    public RomSave<?> parse(String string)
+    public GameSave<?> parse(String string)
     {
       String[] tokens = string.split("_");
       
@@ -176,7 +176,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
   
   private static class GBASaveParserAS implements SaveParser
   {
-    public RomSave<?> parse(String string)
+    public GameSave<?> parse(String string)
     {
       if (string.toLowerCase().equals("none"))
         return new GBA.Save(GBA.Save.Type.NONE);
@@ -197,7 +197,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         for (Version version :  GBA.Save.valuesForType(GBA.Save.Type.FLASH))
           if (string.contains(version.toString()))
           {
-            int size = (string.contains("512") ? 512 : 1024 ) * (int)RomSize.KBYTE / 8;
+            int size = (string.contains("512") ? 512 : 1024 ) * (int)GameSize.KBYTE / 8;
             return new GBA.Save(GBA.Save.Type.FLASH, version, size);
           }
       }
@@ -216,7 +216,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
   
   private static class NDSSaveParser implements SaveParser
   {
-    public RomSave<?> parse(String string)
+    public GameSave<?> parse(String string)
     {
       if (string.equals("TBC"))
         return new NDS.Save(NDS.Save.Type.TBC);
@@ -237,9 +237,9 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         throw new UnknownFormatConversionException("Unable to parse NDS save: "+string);
       
       if (tokens[1].endsWith("kbit"))
-        multiplier = RomSize.KBIT;
+        multiplier = GameSize.KBIT;
       else if (tokens[1].endsWith("mbit"))
-        multiplier = RomSize.MEGABIT;
+        multiplier = GameSize.MEGABIT;
       else
         throw new UnknownFormatConversionException("Unable to parse NDS save: "+string);
 
@@ -258,11 +258,11 @@ public class OfflineListProviderPlugin extends ProviderPlugin
   }
   
   @Override
-  public RomSet[] buildRomSets(List<DatParserPlugin> datParsers)
+  public GameSet[] buildRomSets(List<DatParserPlugin> datParsers)
   {
     DatParserPlugin parser = this.findDatParser(datParsers, "offline-list");
     
-    List<RomSet> sets = new ArrayList<>();
+    List<GameSet> sets = new ArrayList<>();
         
     try
     {
@@ -271,7 +271,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         args.put("save-parser", new GBASaveParserOL());
         DatLoader datParser = parser.buildDatLoader("offline-list", args);
         
-        sets.add(new RomSet(
+        sets.add(new GameSet(
             Platform.GBA, 
             KnownProviders.OFFLINE_LIST.derive("", null, null, "Replouf66", new Provider.Source("http://offlinelistgba.free.fr/tool/ReleaseList/gba_OL_0.7.1.zip")),
             GBA_ATTRIBUTES, 
@@ -285,7 +285,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         args.put("save-parser", new GBASaveParserAS());
         DatLoader datParser = parser.buildDatLoader("offline-list", args);
   
-        sets.add(new RomSet(
+        sets.add(new GameSet(
             Platform.GBA, 
             KnownProviders.ADVAN_SCENE.derive("pure", null, null, "AdvanScene", new Provider.Source("http://www.advanscene.com/offline/datas/ADVANsCEne_GBA.zip")), 
             GBA_ATTRIBUTES, 
@@ -299,7 +299,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         args.put("save-parser", new NDSSaveParser());
         DatLoader datParser = parser.buildDatLoader("offline-list", args);
         
-        sets.add(new RomSet(
+        sets.add(new GameSet(
             Platform.NDS, 
             KnownProviders.ADVAN_SCENE.derive("collection", null, null, "AdvanceScene", new Provider.Source("http://www.advanscene.com/offline/datas/ADVANsCEne_NDS.zip")),
             GBA_ATTRIBUTES, 
@@ -313,7 +313,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         args.put("save-parser", (SaveParser)(r -> null));
         DatLoader datParser = parser.buildDatLoader("offline-list", args);
         
-        sets.add(new RomSet(
+        sets.add(new GameSet(
           Platform.GBC,
           KnownProviders.NO_INTRO.derive("", "", "", "Replouf66", new Provider.Source("http://nointro.free.fr/datas/Official%20No-Intro%20Nintendo%20Gameboy%20Color.zip")),
           GB_ATTRIBUTES,
@@ -327,7 +327,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         args.put("save-parser", (SaveParser)(r -> null));
         DatLoader datParser = parser.buildDatLoader("offline-list", args);
         
-        sets.add(new RomSet(
+        sets.add(new GameSet(
             Platform.GB,
             KnownProviders.NO_INTRO.derive("", "", "", "MadBob", new Provider.Source("http://nointro.free.fr/datas/Official%20No-Intro%20Nintendo%20Gameboy.zip")),
             GB_ATTRIBUTES,
@@ -341,7 +341,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         args.put("save-parser", (SaveParser)(r -> null));
         DatLoader datParser = parser.buildDatLoader("offline-list", args);
         
-        sets.add(new RomSet(
+        sets.add(new GameSet(
           Platform.NES,
           KnownProviders.NO_INTRO.derive("", "", "", "Zepman", new Provider.Source("http://nointro.free.fr/datas/Official%20No-Intro%20Nintendo%20NES%20-%20Famicom.zip")),
           NES_ATTRIBUTES,
@@ -349,7 +349,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
           datParser
         ));
         
-        sets.add(new RomSet(
+        sets.add(new GameSet(
           Platform.NES,
           KnownProviders.OFFLINE_LIST.derive("", "", "", "Zepman", new Provider.Source("http://nesofflinelist.free.fr/dat/nes_OL.zip")),
           NES_ATTRIBUTES,
@@ -363,7 +363,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         args.put("save-parser", (SaveParser)(r -> null));
         DatLoader datParser = parser.buildDatLoader("offline-list", args);
         
-        sets.add(new RomSet(
+        sets.add(new GameSet(
             Platform.LYNX,
             KnownProviders.NO_INTRO.derive("", "", "", "Atari Lynx", new Provider.Source("http://nointro.free.fr/datas/Official%20No-Intro%20Atari%20Lynx.zip")),
             NES_ATTRIBUTES,
@@ -374,7 +374,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         
       }
       
-      return sets.toArray(new RomSet[sets.size()]);
+      return sets.toArray(new GameSet[sets.size()]);
       
     }
     catch (MalformedURLException e)

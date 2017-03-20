@@ -12,6 +12,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
+import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameSize;
 import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.Location;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
@@ -19,9 +21,7 @@ import com.github.jakz.romlib.data.set.DatFormat;
 import com.pixbits.lib.parser.SimpleParser;
 import com.pixbits.lib.parser.SimpleTreeBuilder;
 
-import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomSize;
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 import jack.rm.files.parser.DatLoader;
 
 public class ClrMameParserPlugin extends DatParserPlugin
@@ -117,14 +117,14 @@ public class ClrMameParserPlugin extends DatParserPlugin
   
   private class ClrMameParser implements DatLoader
   {
-    RomSet set;
-    Rom rom;
+    GameSet set;
+    Game rom;
 
     private final HexBinaryAdapter hexConverter = new HexBinaryAdapter();
     
     @Override public DatFormat getFormat() { return new DatFormat("cm", "dat"); }
 
-    @Override public void load(RomSet set)
+    @Override public void load(GameSet set)
     {
       this.set = set;
       load(set.datPath());
@@ -164,7 +164,7 @@ public class ClrMameParserPlugin extends DatParserPlugin
       if (k.equals("name") && !insideRom)
         parseRomTitle(v);
       else if (k.equals("size"))
-        rom.setSize(RomSize.forBytes(Long.parseLong(v)));
+        rom.setSize(set.sizeSet.forBytes(Long.parseLong(v)));
       else if (k.equals("crc"))
         rom.setAttribute(GameAttribute.CRC, Long.parseLong(v, 16));
       else if (k.equals("sha1"))
@@ -186,7 +186,7 @@ public class ClrMameParserPlugin extends DatParserPlugin
         insideRom = !isEnd;
       
       if (!isEnd && k.equals("game"))
-        rom = new Rom(set);
+        rom = new Game(set);
       else if (isEnd && k.equals("game"))
         set.list.add(rom);
       else if (isEnd && k.equals("clrmamepro"))

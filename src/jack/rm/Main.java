@@ -19,8 +19,8 @@ import com.pixbits.workflow.Fetcher;
 import com.pixbits.workflow.WorkflowData;
 
 import jack.rm.assets.Downloader;
-import jack.rm.data.romset.RomSet;
-import jack.rm.data.romset.RomSetManager;
+import jack.rm.data.romset.GameSet;
+import jack.rm.data.romset.GameSetManager;
 import jack.rm.files.Scanner;
 import jack.rm.gui.ClonesDialog;
 import jack.rm.gui.Dialogs;
@@ -135,21 +135,21 @@ public class Main
 
 	}
 	
-	public static void loadRomSet(RomSet romSet) throws FileNotFoundException, IOException
+	public static void loadRomSet(GameSet romSet) throws FileNotFoundException, IOException
 	{
-	  if (RomSet.current != null)
-	    RomSet.current.saveStatus();
+	  if (GameSet.current != null)
+	    GameSet.current.saveStatus();
 	  
-	  RomSet set = RomSetManager.loadSet(romSet);
-    RomSet.current = set;
+	  GameSet set = GameSetManager.loadSet(romSet);
+    GameSet.current = set;
     boolean wasInit = set.loadStatus();
     
-    RomSet.current.pluginStateChanged();
+    GameSet.current.pluginStateChanged();
 
 
     mainFrame.romSetLoaded(set);
     
-    RomSet.current.getScanner().scanForRoms(!wasInit && GlobalSettings.settings.shouldScanWhenLoadingRomset());
+    GameSet.current.getScanner().scanForRoms(!wasInit && GlobalSettings.settings.shouldScanWhenLoadingRomset());
 
     downloader = new Downloader(set);
     
@@ -313,7 +313,7 @@ public class Main
 	  GlobalSettings.load();
 	  loadPlugins();
 	  
-	  RomSetManager.buildRomsetList();
+	  GameSetManager.buildRomsetList();
 	  
 	  romsetPanel = new ManagerPanel();
 	  pluginsPanel = new PluginsPanel(manager);
@@ -328,7 +328,7 @@ public class Main
     {
       try
       {
-        loadRomSet(RomSetManager.byIdent(lastProvider));
+        loadRomSet(GameSetManager.byIdent(lastProvider));
         mainFrame.pluginStateChanged();
       }
       catch (FileNotFoundException e)

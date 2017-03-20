@@ -5,7 +5,7 @@ import java.util.function.Predicate;
 
 import com.pixbits.lib.plugin.PluginType;
 
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 import jack.rm.files.parser.DatLoader;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.PluginRealType;
@@ -43,5 +43,5 @@ public abstract class DatParserPlugin extends ActualPlugin
   public abstract DatLoader buildDatLoader(String format, Map<String,Object> arguments);
   public DatLoader buildDatLoader(String format) { return buildDatLoader(format, null); }
   
-  protected final Predicate<RomSet> compatibility() { return rs -> false; }
+  protected final Predicate<GameSet> compatibility() { return rs -> false; }
 }

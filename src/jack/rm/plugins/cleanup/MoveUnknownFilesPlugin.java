@@ -9,12 +9,12 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.github.jakz.romlib.data.game.GameStatus;
 import com.pixbits.lib.io.FolderScanner;
 import com.pixbits.lib.plugin.ExposedParameter;
 
 import jack.rm.Settings;
-import jack.rm.data.rom.GameStatus;
-import jack.rm.data.romset.RomList;
+import jack.rm.data.romset.GameList;
 import jack.rm.plugins.PluginWithIgnorePaths;
 
 public class MoveUnknownFilesPlugin extends CleanupPlugin implements PluginWithIgnorePaths
@@ -23,7 +23,7 @@ public class MoveUnknownFilesPlugin extends CleanupPlugin implements PluginWithI
   
   int counter;
  
-  @Override public void execute(RomList list)
+  @Override public void execute(GameList list)
   {
     try
     {  

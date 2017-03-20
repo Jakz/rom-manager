@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import com.github.jakz.romlib.data.game.Game;
 import com.pixbits.lib.io.archive.Verifier;
 import com.pixbits.lib.io.archive.VerifierEntry;
 import com.pixbits.lib.io.archive.VerifierOptions;
@@ -18,18 +19,17 @@ import com.pixbits.lib.io.digest.Digester;
 import com.pixbits.lib.io.digest.HashCache;
 import com.pixbits.lib.lang.Pair;
 
-import jack.rm.data.rom.Rom;
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 import jack.rm.files.ScanResult;
 
 public class DigestVerifier extends VerifierPlugin
 {
-  Verifier<Rom> verifier;
+  Verifier<Game> verifier;
   
   @Override
-  public void setup(RomSet romset)
+  public void setup(GameSet romset)
   {
-    HashCache<Rom> cache = romset.list.getCache();
+    HashCache<Game> cache = romset.list.getCache();
     
     VerifierOptions options = new VerifierOptions();
     options.checkNestedArchives = true;
@@ -48,7 +48,7 @@ public class DigestVerifier extends VerifierPlugin
   {
     try
     {
-      List<VerifierResult<Rom>> result = verifier.verify(handle);
+      List<VerifierResult<Game>> result = verifier.verify(handle);
       
       return result.stream()
         .map(vr -> new ScanResult(vr.element, vr.handle))

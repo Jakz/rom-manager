@@ -6,27 +6,26 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import com.github.jakz.romlib.data.game.Game;
 import com.pixbits.lib.io.BinaryBuffer;
 import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.workflow.WorkflowData;
 
-import jack.rm.data.rom.Rom;
-
 public class RomWorkflowEntry implements WorkflowData
 {
-  private final Rom rom;
+  private final Game rom;
   private BinaryBuffer buffer;
   private Path path;
   private Path destPath;
 
 
-  public RomWorkflowEntry(Rom rom)
+  public RomWorkflowEntry(Game rom)
   {
     this.rom = rom;
     destPath = Paths.get(".");
   }
 
-  public Rom getRom() { return rom; }
+  public Game getRom() { return rom; }
   
   public void prepareBuffer() throws IOException
   {

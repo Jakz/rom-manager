@@ -42,6 +42,8 @@ import javax.swing.border.Border;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
+import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.ui.Icon;
@@ -50,9 +52,7 @@ import jack.rm.Main;
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
 import jack.rm.assets.AssetManager;
-import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.GameStatus;
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.downloader.RomDownloaderPlugin;
 import net.miginfocom.swing.MigLayout;
@@ -61,7 +61,7 @@ public class InfoPanel extends JPanel implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
 	
-	private RomSet set = null;
+	private GameSet set = null;
 	
 	private final JPanel imagesPanel;
 	
@@ -182,7 +182,7 @@ public class InfoPanel extends JPanel implements ActionListener
         setValue(rom);
     }
     
-    void setValue(Rom rom)
+    void setValue(Game rom)
     {
       deleteButton.setVisible(mode == Mode.EDIT && rom.hasCustomAttribute(attrib));
 
@@ -284,7 +284,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	    deleteButton.setVisible(false);
 	  }
 	  
-	  public void setValue(Rom rom)
+	  public void setValue(Game rom)
 	  {
 	    
 	    Object ovalue = rom.getAttribute(attrib);
@@ -367,7 +367,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	  
 
 	  
-	  abstract void setValue(Rom rom);
+	  abstract void setValue(Game rom);
 	  abstract void clear();
 	}
 	
@@ -392,7 +392,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	
 	final private JPanel buttons = new JPanel();
 	
-	private Rom rom;
+	private Game rom;
 	
 	private class AssetImage
 	{
@@ -590,7 +590,7 @@ public class InfoPanel extends JPanel implements ActionListener
     pFields.add(resetCustomFieldsButton);
 	}
 		
-	public void romSetLoaded(final RomSet set)
+	public void romSetLoaded(final GameSet set)
 	{
 		mode = Mode.VIEW;
 	  
@@ -634,7 +634,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		buildFields();
 	}
 	
-	void setImage(Rom rom, Asset asset, JLabel dest)
+	void setImage(Game rom, Asset asset, JLabel dest)
 	{
 		AssetData data = rom.getAssetData(asset);
 		
@@ -671,7 +671,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		}
 	}
 	
-	public void updateFields(Rom rom)
+	public void updateFields(Game rom)
 	{
 		this.rom = rom;
 		attachments.setRom(rom);
@@ -698,7 +698,7 @@ public class InfoPanel extends JPanel implements ActionListener
   		  openFolderButton.setEnabled(false);
   		  openArchiveButton.setEnabled(false);
   			
-  		  downloadButton.setEnabled(RomSet.current.getSettings().hasDownloader(RomSet.current.platform));
+  		  downloadButton.setEnabled(GameSet.current.getSettings().hasDownloader(GameSet.current.platform));
   		}
   		else
   		{
@@ -723,9 +723,9 @@ public class InfoPanel extends JPanel implements ActionListener
 		{
 			try
 			{
-				Set<RomDownloaderPlugin> downloaders = RomSet.current.getSettings().plugins.getEnabledPlugins(PluginRealType.ROM_DOWNLOADER);
+				Set<RomDownloaderPlugin> downloaders = GameSet.current.getSettings().plugins.getEnabledPlugins(PluginRealType.ROM_DOWNLOADER);
 				
-				URL url = downloaders.stream().filter( p -> p.isPlatformSupported(RomSet.current.platform)).findFirst().get().getDownloadURL(RomSet.current.platform, rom);
+				URL url = downloaders.stream().filter( p -> p.isPlatformSupported(GameSet.current.platform)).findFirst().get().getDownloadURL(GameSet.current.platform, rom);
 			  
 			  Desktop.getDesktop().browse(url.toURI());
 			}

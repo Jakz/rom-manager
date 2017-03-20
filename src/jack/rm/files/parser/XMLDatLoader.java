@@ -3,7 +3,7 @@ package jack.rm.files.parser;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 
 public abstract class XMLDatLoader implements DatLoader
 {
@@ -16,7 +16,7 @@ public abstract class XMLDatLoader implements DatLoader
     //this.path = path;
   }
   
-  public void load(RomSet set)
+  public void load(GameSet set)
   {
     try
     {

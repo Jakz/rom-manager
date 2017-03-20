@@ -7,14 +7,14 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameStatus;
 import com.pixbits.lib.plugin.ExposedParameter;
 import com.pixbits.lib.plugin.PluginType;
 
 import jack.rm.Main;
-import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.GameStatus;
-import jack.rm.data.romset.RomList;
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameList;
+import jack.rm.data.romset.GameSet;
 import jack.rm.files.BackgroundOperation;
 import jack.rm.files.RomSetWorker;
 import jack.rm.plugins.ActualPlugin;
@@ -29,19 +29,19 @@ public class ExportRomsPlugin extends ActualPlugin implements OperationalPlugin,
   @ExposedParameter(name="Export Path", description="This is the path in which to export roms", params="directories")
   Path path; 
   
-  @Override public void execute(RomList list)
+  @Override public void execute(GameList list)
   {
     new CopyWorker(list.set, this, b -> {}).execute();
   }
   
-  static Predicate<Rom> buildFilterPredicate()
+  static Predicate<Game> buildFilterPredicate()
   {
-    Set<Rom> visibleRoms = new HashSet<>();
+    Set<Game> visibleRoms = new HashSet<>();
     
     int count = Main.mainFrame.list.getModel().getSize();
     for (int i = 0; i < count; ++i)
     {
-      Rom rom = Main.mainFrame.list.getModel().getElementAt(i);
+      Game rom = Main.mainFrame.list.getModel().getElementAt(i);
       if (rom.status != GameStatus.MISSING)
         visibleRoms.add(rom);
     }
@@ -51,13 +51,13 @@ public class ExportRomsPlugin extends ActualPlugin implements OperationalPlugin,
   
   public class CopyWorker extends RomSetWorker<ExportRomsPlugin>
   {
-    public CopyWorker(RomSet romSet, ExportRomsPlugin plugin, Consumer<Boolean> callback)
+    public CopyWorker(GameSet romSet, ExportRomsPlugin plugin, Consumer<Boolean> callback)
     {
       super(romSet, plugin, buildFilterPredicate(), callback);
     }
 
     @Override
-    public void execute(Rom r)
+    public void execute(Game r)
     {
       try
       {

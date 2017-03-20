@@ -35,8 +35,8 @@ import com.pixbits.lib.ui.table.renderers.AlternateColorTableCellRenderer;
 
 import jack.rm.GlobalSettings;
 import jack.rm.Main;
-import jack.rm.data.romset.RomSet;
-import jack.rm.data.romset.RomSetManager;
+import jack.rm.data.romset.GameSet;
+import jack.rm.data.romset.GameSetManager;
 import jack.rm.files.parser.DatUpdater;
 import net.miginfocom.swing.MigLayout;
 
@@ -62,7 +62,7 @@ public class RomSetManagerView extends JPanel
     public Component getListCellRendererComponent(JList<? extends Platform> list, Platform value, int index, boolean isSelected, boolean cellHasFocus) {
       JLabel label = (JLabel)renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
       
-      int count = RomSetManager.bySystem(value).size();
+      int count = GameSetManager.bySystem(value).size();
       
       label.setIcon(value.getIcon());
       label.setText(value.name+" ("+count+")");
@@ -74,14 +74,14 @@ public class RomSetManagerView extends JPanel
   
   private class DatTableModel extends AbstractTableModel
   {
-    private final List<RomSet> data;
+    private final List<GameSet> data;
     
     private final String[] names = new String[] { "Enable", "Provider", "Flavour", "Identifier" };
     private final Class<?>[] classes = new Class<?>[] { Boolean.class, String.class, String.class, String.class };
     
     DatTableModel()
     {
-      data = new ArrayList<RomSet>();
+      data = new ArrayList<GameSet>();
     }
 
     @Override public int getRowCount() { return data.size(); }
@@ -92,7 +92,7 @@ public class RomSetManagerView extends JPanel
     @Override
     public Object getValueAt(int r, int c)
     {
-      RomSet rs = data.get(r);
+      GameSet rs = data.get(r);
       
       switch (c)
       {
@@ -119,7 +119,7 @@ public class RomSetManagerView extends JPanel
       this.fireTableDataChanged();
     }
     
-    public void setData(List<RomSet> data)
+    public void setData(List<GameSet> data)
     {
       this.data.clear();
       this.data.addAll(data);
@@ -205,7 +205,7 @@ public class RomSetManagerView extends JPanel
     
     public void updateFields(Platform platform)
     {      
-      List<RomSet> sets = RomSetManager.bySystem(platform);
+      List<GameSet> sets = GameSetManager.bySystem(platform);
       int count = sets.size();
 
       countLabel.setIcon(platform.getIcon());
@@ -233,7 +233,7 @@ public class RomSetManagerView extends JPanel
     
     private final DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
     
-    private RomSet set;
+    private GameSet set;
     
     SingleProviderInfo()
     {
@@ -271,7 +271,7 @@ public class RomSetManagerView extends JPanel
       this.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.DARK_GRAY));
     }
     
-    public void updateFields(RomSet set)
+    public void updateFields(GameSet set)
     {
       this.set = set;
       

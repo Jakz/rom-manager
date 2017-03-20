@@ -10,17 +10,17 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import jack.rm.data.romset.RomSet;
-import jack.rm.data.romset.RomSetManager;
+import jack.rm.data.romset.GameSet;
+import jack.rm.data.romset.GameSetManager;
 
-class RomSetAdapter implements JsonSerializer<RomSet>, JsonDeserializer<RomSet> {
+class RomSetAdapter implements JsonSerializer<GameSet>, JsonDeserializer<GameSet> {
   @Override
-  public JsonElement serialize(RomSet src, Type typeOfSrc, JsonSerializationContext context) {
+  public JsonElement serialize(GameSet src, Type typeOfSrc, JsonSerializationContext context) {
     return new JsonPrimitive(src.ident());
   }
   
   @Override
-  public RomSet deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-	  	return RomSetManager.byIdent(json.getAsJsonPrimitive().getAsString());
+  public GameSet deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+	  	return GameSetManager.byIdent(json.getAsJsonPrimitive().getAsString());
 	  }
 }

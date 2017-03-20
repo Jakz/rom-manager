@@ -7,8 +7,9 @@ import java.util.Arrays;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-import jack.rm.data.rom.Rom;
-import jack.rm.data.romset.RomSet;
+import com.github.jakz.romlib.data.game.Game;
+
+import jack.rm.data.romset.GameSet;
 import jack.rm.files.BackgroundOperation;
 import jack.rm.files.RomSetWorker;
 import net.lingala.zip4j.core.ZipFile;
@@ -18,7 +19,7 @@ import net.lingala.zip4j.util.Zip4jConstants;
 
 public class AssetPacker
 {
-  public static void packAssets(RomSet romSet)
+  public static void packAssets(GameSet romSet)
   {
     final Asset[] assets = romSet.getAssetManager().getSupportedAssets();
     
@@ -41,7 +42,7 @@ public class AssetPacker
     private ZipParameters params;
     private final Asset asset;
     
-    AssetPackerWorker(RomSet romSet, Asset asset, Consumer<Boolean> callback)
+    AssetPackerWorker(GameSet romSet, Asset asset, Consumer<Boolean> callback)
     {
       super(romSet,
         new BackgroundOperation()
@@ -70,7 +71,7 @@ public class AssetPacker
 
     }
     
-    public void execute(Rom rom)
+    public void execute(Game rom)
     {
       try
       {

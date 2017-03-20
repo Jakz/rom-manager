@@ -7,14 +7,14 @@ import java.text.DecimalFormat;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameStatus;
 import com.pixbits.lib.io.archive.handles.ArchiveHandle;
 import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
 
-import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.GameStatus;
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.plugins.PluginRealType;
@@ -36,7 +36,7 @@ public class Organizer
 		return format.format(index);
 	}
 	
-	public static Set<Pattern> getPatterns(RomSet set)
+	public static Set<Pattern> getPatterns(GameSet set)
 	{
 	  Set<Pattern> patterns = new TreeSet<Pattern>();
 	  
@@ -46,7 +46,7 @@ public class Organizer
 	  return patterns;
 	}
 
-	public static void organizeRomIfNeeded(Rom rom)
+	public static void organizeRomIfNeeded(Game rom)
 	{	  
 	  if (!rom.hasCorrectName())
 	  {
@@ -60,7 +60,7 @@ public class Organizer
 	    moveRom(rom);
 	}
 	
-	public static void internalRenameRom(Rom rom)
+	public static void internalRenameRom(Game rom)
 	{
 	  if (!rom.hasCorrectInternalName())
 	  {
@@ -77,7 +77,7 @@ public class Organizer
 	  }
 	}
 	
-	public static void renameRom(Rom rom)
+	public static void renameRom(Game rom)
 	{
     Handle romPath = rom.getHandle();
 	  Path renameTo = romPath.path().getParent();
@@ -100,13 +100,13 @@ public class Organizer
     }
 	}
 	
-	public static void moveRom(Rom rom)
+	public static void moveRom(Game rom)
 	{
 	  if (rom.status != GameStatus.MISSING)
     {     
       try
       {      
-        Path finalPath = RomSet.current.getSettings().romsPath.resolve(rom.getCorrectFolder());
+        Path finalPath = GameSet.current.getSettings().romsPath.resolve(rom.getCorrectFolder());
   
         if (!Files.exists(finalPath) || !Files.isDirectory(finalPath))
         {

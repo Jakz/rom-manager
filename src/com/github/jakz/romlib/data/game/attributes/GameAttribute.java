@@ -1,13 +1,10 @@
 package com.github.jakz.romlib.data.game.attributes;
 
-import java.util.Set;
-
+import com.github.jakz.romlib.data.game.GameSize;
 import com.github.jakz.romlib.data.game.Genre;
 import com.github.jakz.romlib.data.game.Language;
+import com.github.jakz.romlib.data.game.LanguageSet;
 
-import jack.rm.data.rom.RomSize;
-import jack.rm.data.rom.RomSize.PrintStyle;
-import jack.rm.data.rom.RomSize.PrintUnit;
 import jack.rm.i18n.Text;
 
 public enum GameAttribute implements Attribute
@@ -15,21 +12,22 @@ public enum GameAttribute implements Attribute
   NUMBER(Integer.class, Text.ROM_INFO_NUMBER),
   IMAGE_NUMBER(Integer.class, Text.ROM_INFO_IMAGE_NUMBER),
   TITLE(String.class, Text.ROM_INFO_TITLE),
+  DESCRIPTION(String.class, Text.ROM_INFO_DESCRIPTION),
   PUBLISHER(Text.ROM_INFO_PUBLISHER),
   GROUP(Text.ROM_INFO_GROUP),
   DATE(Text.ROM_INFO_DUMP_DATE),
   COMMENT(String.class, Text.ROM_INFO_COMMENT),
   LOCATION(Text.ROM_INFO_LOCATION),
   LANGUAGE(Text.ROM_INFO_LANGUAGES) { 
-    @SuppressWarnings("unchecked") public String prettyValue(Object value) { 
-      return Language.asString((Set<Language>)value); 
+    public String prettyValue(Object value) { 
+      return Language.asString((LanguageSet)value); 
       }
   },
   SIZE(Text.ROM_INFO_SIZE) {
     public String prettyValue(Object value)
     {
-      RomSize size = (RomSize)value;
-      return String.format("%s (%s)", size.toString(RomSize.PrintStyle.LONG, RomSize.PrintUnit.BITS), size.toString(RomSize.PrintStyle.LONG, RomSize.PrintUnit.BYTES));
+      GameSize size = (GameSize)value;
+      return String.format("%s (%s)", size.toString(GameSize.PrintStyle.LONG, GameSize.PrintUnit.BITS), size.toString(GameSize.PrintStyle.LONG, GameSize.PrintUnit.BYTES));
     }
   },
   SERIAL(Text.ROM_INFO_SERIAL),

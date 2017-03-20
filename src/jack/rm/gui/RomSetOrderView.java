@@ -11,8 +11,8 @@ import javax.swing.ListSelectionModel;
 import com.github.jakz.romlib.ui.Icon;
 
 import jack.rm.GlobalSettings;
-import jack.rm.data.romset.RomSet;
-import jack.rm.data.romset.RomSetManager;
+import jack.rm.data.romset.GameSet;
+import jack.rm.data.romset.GameSetManager;
 import net.miginfocom.swing.MigLayout;
 
 public class RomSetOrderView extends JPanel
@@ -29,8 +29,8 @@ public class RomSetOrderView extends JPanel
     SortMode(String caption) { this.caption = caption; }
   };
   
-  private final JList<RomSet> list;
-  private final DefaultListModel<RomSet> model = new DefaultListModel<>(); 
+  private final JList<GameSet> list;
+  private final DefaultListModel<GameSet> model = new DefaultListModel<>(); 
   
   private final JButton moveUp;
   private final JButton moveDown;
@@ -62,6 +62,6 @@ public class RomSetOrderView extends JPanel
   {
     model.clear();
     
-    GlobalSettings.settings.getEnabledProviders().stream().map(RomSetManager::byIdent).forEach(model::addElement); 
+    GlobalSettings.settings.getEnabledProviders().stream().map(GameSetManager::byIdent).forEach(model::addElement); 
   }
 }

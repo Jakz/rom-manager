@@ -6,6 +6,7 @@ import java.util.function.Predicate;
 
 import com.pixbits.lib.searcher.SearchParser;
 import com.pixbits.lib.searcher.SearchPredicate;
+import com.github.jakz.romlib.data.game.Game;
 import com.pixbits.lib.parser.shuntingyard.ASTBinary;
 import com.pixbits.lib.parser.shuntingyard.ASTNode;
 import com.pixbits.lib.parser.shuntingyard.ASTUnary;
@@ -16,8 +17,6 @@ import com.pixbits.lib.parser.shuntingyard.StackVisitor;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
 
-import jack.rm.data.rom.Rom;
-
 public class BooleanSearcherPlugin extends SearchPlugin
 {
   @Override
@@ -27,7 +26,7 @@ public class BooleanSearcherPlugin extends SearchPlugin
         "This plugins provides boolean expression search parsing.");
   }
     
-  private class SimpleSearcher extends SearchParser<Rom>
+  private class SimpleSearcher extends SearchParser<Game>
   {
     final private ShuntingYardParser parser;
     final private EvaluateVisitor visitor;
@@ -44,9 +43,9 @@ public class BooleanSearcherPlugin extends SearchPlugin
     }
     
     @Override
-    public Function<List<SearchPredicate<Rom>>, Predicate<Rom>> parse(String text)
+    public Function<List<SearchPredicate<Game>>, Predicate<Game>> parse(String text)
     {
-      Function<List<SearchPredicate<Rom>>, Predicate<Rom>> lambda = predicates -> {
+      Function<List<SearchPredicate<Game>>, Predicate<Game>> lambda = predicates -> {
               
         ASTNode node = null;
         
@@ -70,22 +69,22 @@ public class BooleanSearcherPlugin extends SearchPlugin
       return lambda;
     }
     
-    private class EvaluateVisitor extends StackVisitor<Predicate<Rom>>
+    private class EvaluateVisitor extends StackVisitor<Predicate<Game>>
     {
-      private List<SearchPredicate<Rom>> predicates;
+      private List<SearchPredicate<Game>> predicates;
 
-      void setPredicates(List<SearchPredicate<Rom>> predicates)
+      void setPredicates(List<SearchPredicate<Game>> predicates)
       {
         reset();
         this.predicates = predicates;
       }
 
       @Override
-      public Predicate<Rom> visitNode(ASTNode node)
+      public Predicate<Game> visitNode(ASTNode node)
       {
         if (node instanceof ASTValue)
         {
-          Predicate<Rom> pred = buildSinglePredicate(predicates, ((ASTValue)node).value);
+          Predicate<Game> pred = buildSinglePredicate(predicates, ((ASTValue)node).value);
           
           return pred != null ? pred : r -> r.getTitle().toLowerCase().contains(((ASTValue)node).value);
         }
@@ -93,7 +92,7 @@ public class BooleanSearcherPlugin extends SearchPlugin
           return pop().negate();
         else if (node instanceof ASTBinary)
         {
-          Predicate<Rom> o2 = pop(), o1 = pop();
+          Predicate<Game> o2 = pop(), o1 = pop();
           Operator op = ((ASTBinary)node).operator;
           
           if (op.getMnemonic().equals("&&"))
@@ -110,7 +109,7 @@ public class BooleanSearcherPlugin extends SearchPlugin
   final private SimpleSearcher searcher = new SimpleSearcher();
   
   @Override
-  public SearchParser<Rom> getSearcher()
+  public SearchParser<Game> getSearcher()
   {
     return searcher;
   }

@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameID;
+import com.github.jakz.romlib.data.game.GameStatus;
 import com.pixbits.lib.io.archive.handles.Handle;
 
 import jack.rm.data.attachment.Attachment;
-import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomID;
-import jack.rm.data.rom.GameStatus;
 
 public class RomSavedState
 {
-	RomID<?> id;
+	GameID<?> id;
 	Handle file;
 	GameStatus status;
 	boolean favourite;
@@ -22,7 +22,7 @@ public class RomSavedState
 	
 	public RomSavedState() { }
 	
-	public RomSavedState(Rom rom)
+	public RomSavedState(Game rom)
 	{
 	  this.id = rom.getID();
 	  this.status = rom.status;

@@ -4,21 +4,21 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.GameStatus;
+import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameStatus;
 
 public class FindStatement implements Statement
 {
-  private final Predicate<Rom> query;
-  FindStatement(Predicate<Rom> query) { this.query = query; }
+  private final Predicate<Game> query;
+  FindStatement(Predicate<Game> query) { this.query = query; }
   
   public void execute(ScriptEnvironment env)
   {
-    List<Rom> roms = env.set.list.stream().filter(query).collect(Collectors.toList());
+    List<Game> roms = env.set.list.stream().filter(query).collect(Collectors.toList());
   
     env.out.append("Find found "+roms.size()+" elements:");
     
-    for (Rom r : roms)
+    for (Game r : roms)
     {
       if (r.status == GameStatus.MISSING)
     

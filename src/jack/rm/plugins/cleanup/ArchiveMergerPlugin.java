@@ -3,12 +3,12 @@ package jack.rm.plugins.cleanup;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 
+import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameStatus;
 import com.pixbits.lib.plugin.ExposedParameter;
 
-import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.GameStatus;
-import jack.rm.data.romset.RomList;
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameList;
+import jack.rm.data.romset.GameSet;
 import jack.rm.files.BackgroundOperation;
 import jack.rm.files.RomSetWorker;
 import net.lingala.zip4j.core.ZipFile;
@@ -20,7 +20,7 @@ public class ArchiveMergerPlugin extends CleanupPlugin implements BackgroundOper
   @ExposedParameter(name="Archive Path", description="This is the archive that will contain the whole romset", params="files")
   Path path; 
   
-  @Override public void execute(RomList list)
+  @Override public void execute(GameList list)
   {
     new ArchiverWorker(list.set, this, b -> {}).execute();
   }
@@ -35,7 +35,7 @@ public class ArchiveMergerPlugin extends CleanupPlugin implements BackgroundOper
     ZipFile zfile = null;
     ZipParameters zparams = null, aparams = null;
 
-    public ArchiverWorker(RomSet romSet, ArchiveMergerPlugin plugin, Consumer<Boolean> callback)
+    public ArchiverWorker(GameSet romSet, ArchiveMergerPlugin plugin, Consumer<Boolean> callback)
     {
       super(romSet, plugin, r -> r.status != GameStatus.MISSING, callback);
       
@@ -59,7 +59,7 @@ public class ArchiveMergerPlugin extends CleanupPlugin implements BackgroundOper
     }
 
     @Override
-    public void execute(Rom r)
+    public void execute(Game r)
     {
       try
       {

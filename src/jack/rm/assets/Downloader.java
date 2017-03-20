@@ -14,13 +14,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import com.github.jakz.romlib.data.game.Game;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
 import com.pixbits.lib.ui.elements.ProgressDialog;
 
 import jack.rm.Main;
-import jack.rm.data.rom.Rom;
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 import jack.rm.gui.Dialogs;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
@@ -34,9 +34,9 @@ public class Downloader
   int missingTasks;
   boolean started;
   
-  private final RomSet set;
+  private final GameSet set;
 
-  public Downloader(RomSet set)
+  public Downloader(GameSet set)
   {
     this.set = set;
   }
@@ -53,7 +53,7 @@ public class Downloader
     
     for (int i = 0; i < set.list.count(); ++i)
     {
-      Rom r = set.list.get(i);
+      Game r = set.list.get(i);
       
       for (Asset asset : assets)
         if (!r.hasAsset(asset))
@@ -84,7 +84,7 @@ public class Downloader
       Dialogs.showMessage("Asset Downloader", "All the assets have already been downloaded.", Main.mainFrame);
   }
   
-  public void downloadArt(final Rom r)
+  public void downloadArt(final Game r)
   {    
     new Thread()
     {
@@ -108,9 +108,9 @@ public class Downloader
     URL url;
     Path path;
     Asset asset;
-    Rom rom;
+    Game rom;
     
-    public ArtDownloaderTask(Rom rom, Asset asset)
+    public ArtDownloaderTask(Game rom, Asset asset)
     {  
       path = rom.getAssetData(asset).getFinalPath();
       url = set.getAssetManager().assetURL(asset, rom);

@@ -38,17 +38,17 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameSize;
+import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.pixbits.lib.ui.FileTransferHandler;
 
 import jack.rm.GlobalSettings;
 import jack.rm.Main;
 import jack.rm.assets.AssetPacker;
-import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomSize;
-import jack.rm.data.rom.GameStatus;
-import jack.rm.data.romset.RomSet;
-import jack.rm.data.romset.RomSetManager;
+import jack.rm.data.romset.GameSet;
+import jack.rm.data.romset.GameSetManager;
 import jack.rm.i18n.Text;
 import jack.rm.plugins.OperationalPlugin;
 import jack.rm.plugins.PluginRealType;
@@ -57,7 +57,7 @@ public class MainFrame extends JFrame implements WindowListener
 {	
 	private static final long serialVersionUID = 1L;
 	
-	private RomSet set = null;
+	private GameSet set = null;
 	
 	 //menu
   final private JMenuBar menu = new JMenuBar();
@@ -81,11 +81,11 @@ public class MainFrame extends JFrame implements WindowListener
 	final JMenuItem miTools[] = new JMenuItem[3];
 	
 	final RomListModel romListModel = new RomListModel();
-	final public JList<Rom> list = new JList<>();
+	final public JList<Game> list = new JList<>();
 	final private ListListener listListener = new ListListener();
 	final private JScrollPane listPane = new JScrollPane(list);
 	
-	private final JComboBox<RomSet> cbRomSets = new JComboBox<>();
+	private final JComboBox<GameSet> cbRomSets = new JComboBox<>();
 	
 	final MenuListener menuListener = new MenuListener();
 		
@@ -101,15 +101,15 @@ public class MainFrame extends JFrame implements WindowListener
 		
 	final private TextOutputFrame textFrame = new TextOutputFrame();
 	
-	private RomSet lastSet = null;
+	private GameSet lastSet = null;
 	final private ItemListener romSetListener = e -> {
     if (e.getStateChange() == ItemEvent.DESELECTED)
     {
-      lastSet = (RomSet)e.getItem();
+      lastSet = (GameSet)e.getItem();
     }
     else if (e.getStateChange() == ItemEvent.SELECTED)
     {
-      RomSet set = cbRomSets.getItemAt(cbRomSets.getSelectedIndex());    
+      GameSet set = cbRomSets.getItemAt(cbRomSets.getSelectedIndex());    
       try
       {
         Main.loadRomSet(set);
@@ -156,7 +156,7 @@ public class MainFrame extends JFrame implements WindowListener
               
               if (r != -1)
               {
-                Rom rom = list.getModel().getElementAt(r);
+                Game rom = list.getModel().getElementAt(r);
                 
                 rom.setFavourite(!rom.isFavourite());
                 romListModel.fireChanges(r);   
@@ -217,13 +217,13 @@ public class MainFrame extends JFrame implements WindowListener
 	
 	public void rebuildEnabledDats()
 	{
-	  RomSet current = cbRomSets.getSelectedIndex() != -1 ? cbRomSets.getItemAt(cbRomSets.getSelectedIndex()) : null;
+	  GameSet current = cbRomSets.getSelectedIndex() != -1 ? cbRomSets.getItemAt(cbRomSets.getSelectedIndex()) : null;
 	  cbRomSets.setSelectedIndex(-1);
 	  
 	  cbRomSets.removeAllItems();
 	  
 	  List<Platform> systems = Platform.sortedValues();
-	  List<RomSet> sets = GlobalSettings.settings.getEnabledProviders().stream().map(RomSetManager::byIdent).collect(Collectors.toList());
+	  List<GameSet> sets = GlobalSettings.settings.getEnabledProviders().stream().map(GameSetManager::byIdent).collect(Collectors.toList());
 	  
 	  systems.forEach(s -> {
 	    sets.stream().filter(rs -> rs.platform.equals(s)).forEach(cbRomSets::addItem);
@@ -238,14 +238,14 @@ public class MainFrame extends JFrame implements WindowListener
 	  }
 	}
 	
-	private void exportList(Predicate<Rom> predicate)
+	private void exportList(Predicate<Game> predicate)
 	{
     StringBuilder builder = new StringBuilder();
     set.list.stream().filter(predicate).map(r -> r.getTitle()).sorted().forEach(r -> builder.append(r).append('\n'));
     textFrame.showWithText(this, builder.toString());
 	}
 
-	private void buildMenu(RomSet set)
+	private void buildMenu(GameSet set)
 	{	
 		MenuElement.clearListeners();
 	  	  
@@ -382,7 +382,7 @@ public class MainFrame extends JFrame implements WindowListener
         return;
       }
 
-      Rom rom = Main.mainFrame.romListModel.getElementAt(lsm.getMinSelectionIndex());
+      Game rom = Main.mainFrame.romListModel.getElementAt(lsm.getMinSelectionIndex());
 
       infoPanel.updateFields(rom);
     }
@@ -410,7 +410,7 @@ public class MainFrame extends JFrame implements WindowListener
 	      layout.show(getContentPane(), "main");
 	}
 	
-	public void romSetLoaded(RomSet set)
+	public void romSetLoaded(GameSet set)
 	{
 	  this.set = set;
 	  
@@ -420,7 +420,7 @@ public class MainFrame extends JFrame implements WindowListener
 	  buildMenu(set);
 	  
 	  searchPanel.activate(false);
-	  searchPanel.resetFields(RomSize.mapping.values().toArray(new RomSize[RomSize.mapping.size()]));
+	  searchPanel.resetFields(set.sizeSet.values().toArray(new GameSize[set.sizeSet.values().size()]));
 	  searchPanel.activate(true);
 	  
     cbRomSets.removeItemListener(romSetListener);
@@ -434,14 +434,14 @@ public class MainFrame extends JFrame implements WindowListener
 	  updateTable();
 	}
 	
-	public void updateInfoPanel(Rom rom)
+	public void updateInfoPanel(Game rom)
 	{
 	  infoPanel.updateFields(rom);
 	}
 	
 	public void updateTable()
 	{
-		Rom current = list.getSelectedValue();
+		Game current = list.getSelectedValue();
 		int index = list.getSelectedIndex();
 	  
 	  /*StackTraceElement[] stack = Thread.currentThread().getStackTrace();
@@ -450,7 +450,7 @@ public class MainFrame extends JFrame implements WindowListener
 	  //System.out.println("updated table");
 	  romListModel.clear();
 	  
-	  Predicate<Rom> predicate = searchPanel.buildSearchPredicate().and( r ->
+	  Predicate<Game> predicate = searchPanel.buildSearchPredicate().and( r ->
 	    r.status == GameStatus.FOUND && MenuElement.VIEW_SHOW_CORRECT.item.isSelected() ||
 	    r.status == GameStatus.MISSING && MenuElement.VIEW_SHOW_NOT_FOUND.item.isSelected() ||
 	    r.status == GameStatus.UNORGANIZED && MenuElement.VIEW_SHOW_UNORGANIZED.item.isSelected()

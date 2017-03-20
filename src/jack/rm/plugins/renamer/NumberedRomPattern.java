@@ -5,12 +5,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
+import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
 
-import jack.rm.data.rom.Rom;
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 import jack.rm.files.Pattern;
 
 public class NumberedRomPattern extends PatternSetPlugin
@@ -38,7 +38,7 @@ public class NumberedRomPattern extends PatternSetPlugin
     }
     
     @Override
-    public String apply(Pattern.RenamingOptions options, String name, Rom rom)
+    public String apply(Pattern.RenamingOptions options, String name, Game rom)
     { 
       return name.replaceAll(code, format.format((int)rom.getAttribute(GameAttribute.NUMBER)));
     }
@@ -53,5 +53,5 @@ public class NumberedRomPattern extends PatternSetPlugin
   }
   
   @Override
-  public Predicate<RomSet> compatibility() { return rs -> rs.doesSupportAttribute(GameAttribute.NUMBER); }
+  public Predicate<GameSet> compatibility() { return rs -> rs.doesSupportAttribute(GameAttribute.NUMBER); }
 }

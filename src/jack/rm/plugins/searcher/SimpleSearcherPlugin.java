@@ -4,10 +4,9 @@ import com.pixbits.lib.searcher.BasicSearchParser;
 import com.pixbits.lib.searcher.LambdaPredicate;
 import com.pixbits.lib.searcher.SearchParser;
 import com.pixbits.lib.searcher.SearchPredicate;
+import com.github.jakz.romlib.data.game.Game;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
-
-import jack.rm.data.rom.Rom;
 
 public class SimpleSearcherPlugin extends SearchPlugin
 {
@@ -18,12 +17,12 @@ public class SimpleSearcherPlugin extends SearchPlugin
         "This plugins provides basic white space separate free search.");
   }
 
-  final private SearchPredicate<Rom> freeSearch = new LambdaPredicate<Rom>(token -> r -> r.getTitle().toLowerCase().contains(token));
+  final private SearchPredicate<Game> freeSearch = new LambdaPredicate<Game>(token -> r -> r.getTitle().toLowerCase().contains(token));
   
-  final private BasicSearchParser<Rom> searcher = new BasicSearchParser<>(freeSearch);
+  final private BasicSearchParser<Game> searcher = new BasicSearchParser<>(freeSearch);
   
   @Override
-  public SearchParser<Rom> getSearcher()
+  public SearchParser<Game> getSearcher()
   {
     return searcher;
   }

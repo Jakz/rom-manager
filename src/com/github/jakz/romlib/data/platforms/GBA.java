@@ -1,15 +1,14 @@
 package com.github.jakz.romlib.data.platforms;
 
-import com.github.jakz.romlib.data.game.RomSave;
+import com.github.jakz.romlib.data.game.GameSize;
+import com.github.jakz.romlib.data.game.GameSave;
 import com.github.jakz.romlib.data.game.Version;
-
-import jack.rm.data.rom.RomSize;
 
 public class GBA
 {
-  public static class Save implements RomSave<Save.Type>
+  public static class Save implements GameSave<Save.Type>
   {    
-    public static enum Type implements RomSave.Type
+    public static enum Type implements GameSave.Type
     {
       EEPROM,
       FLASH,
@@ -47,7 +46,7 @@ public class GBA
         value += " "+version;
       
       if (size != 0)
-        value += " ("+RomSize.forBytes(size, false)+")";
+        value += " ("+GameSize.toString(size)+")";
       
       return value;
     }

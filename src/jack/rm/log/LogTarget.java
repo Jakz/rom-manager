@@ -34,9 +34,9 @@ public abstract class LogTarget implements LogAttribute
   
   public static class Rom extends LogTarget
   {
-    private final jack.rm.data.rom.Rom rom;
+    private final com.github.jakz.romlib.data.game.Game rom;
     
-    Rom(jack.rm.data.rom.Rom rom)
+    Rom(com.github.jakz.romlib.data.game.Game rom)
     {
       super(Type.ROM);
       this.rom = rom;
@@ -48,9 +48,9 @@ public abstract class LogTarget implements LogAttribute
   
   public static class RomSet extends LogTarget
   {
-    private final jack.rm.data.romset.RomSet set;
+    private final jack.rm.data.romset.GameSet set;
     
-    RomSet(jack.rm.data.romset.RomSet set)
+    RomSet(jack.rm.data.romset.GameSet set)
     {
       super(Type.ROM_SET);
       this.set = set;
@@ -104,8 +104,8 @@ public abstract class LogTarget implements LogAttribute
   public static LogTarget none() { return new None(); }
   public static LogTarget file(java.nio.file.Path file) { return new File(file); }
   public static LogTarget handle(com.pixbits.lib.io.archive.handles.Handle handle) { return new Handle(handle); }
-  public static LogTarget rom(jack.rm.data.rom.Rom rom) { return new Rom(rom); }
-  public static LogTarget romset(jack.rm.data.romset.RomSet set) { return new RomSet(set); }
+  public static LogTarget rom(com.github.jakz.romlib.data.game.Game rom) { return new Rom(rom); }
+  public static LogTarget romset(jack.rm.data.romset.GameSet set) { return new RomSet(set); }
   public static LogTarget plugin(com.pixbits.lib.plugin.Plugin plugin) { return new Plugin(plugin); }
 
 }

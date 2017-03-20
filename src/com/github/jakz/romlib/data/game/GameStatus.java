@@ -1,4 +1,4 @@
-package jack.rm.data.rom;
+package com.github.jakz.romlib.data.game;
 
 import java.awt.Color;
 

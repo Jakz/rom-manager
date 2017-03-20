@@ -25,13 +25,13 @@ import javax.swing.border.Border;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 
+import com.github.jakz.romlib.data.game.GameSize;
+import com.github.jakz.romlib.data.game.GameSize.PrintStyle;
+import com.github.jakz.romlib.data.game.GameSize.PrintUnit;
 import com.github.jakz.romlib.data.platforms.Platform;
 
 import jack.rm.Settings;
-import jack.rm.data.rom.RomSize;
-import jack.rm.data.rom.RomSize.PrintStyle;
-import jack.rm.data.rom.RomSize.PrintUnit;
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 import jack.rm.i18n.Text;
 
 public class ManagerPanel extends JPanel implements ActionListener
@@ -71,21 +71,21 @@ public class ManagerPanel extends JPanel implements ActionListener
 	  InfoTableModel()
 	  {
 	    rows = new InfoRow<?>[] {
-	      new InfoRow<String>("Provider", () -> RomSet.current.provider.getName()),
-	      new InfoRow<Platform>("System", () -> RomSet.current.platform),
-	      new InfoRow<String>("Count", () -> RomSet.current.list.count() + " roms"),
-	      new InfoRow<String>("Owned", () -> RomSet.current.list.getCountCorrect()+RomSet.current.list.getCountBadName() + " roms"),
+	      new InfoRow<String>("Provider", () -> GameSet.current.provider.getName()),
+	      new InfoRow<Platform>("System", () -> GameSet.current.platform),
+	      new InfoRow<String>("Count", () -> GameSet.current.list.count() + " roms"),
+	      new InfoRow<String>("Owned", () -> GameSet.current.list.getCountCorrect()+GameSet.current.list.getCountBadName() + " roms"),
         new InfoRow<String>("% Complete", () -> { 
-          int total = RomSet.current.list.count();
-          int owned = RomSet.current.list.getCountCorrect() + RomSet.current.list.getCountBadName();
+          int total = GameSet.current.list.count();
+          int owned = GameSet.current.list.getCountCorrect() + GameSet.current.list.getCountBadName();
           float percent = Math.round((owned / (float)total) * 100);     
           return String.format("%2.0f", percent) + "%";
         }),
         new InfoRow<String>("Total Size", () -> {
-          return RomSize.toString(totalSize, PrintStyle.LONG, PrintUnit.BYTES);
+          return GameSize.toString(totalSize, PrintStyle.LONG, PrintUnit.BYTES);
         }),
         new InfoRow<String>("Uncompressed Size", () -> {
-          return RomSize.toString(totalUncompressedSize, PrintStyle.LONG, PrintUnit.BYTES);
+          return GameSize.toString(totalUncompressedSize, PrintStyle.LONG, PrintUnit.BYTES);
         })
 
 	    };
@@ -178,7 +178,7 @@ public class ManagerPanel extends JPanel implements ActionListener
 	
 	public void updateFields()
 	{
-		Settings s = RomSet.current.getSettings();
+		Settings s = GameSet.current.getSettings();
 		
     /*if (RomSet.current != null)
     {
@@ -209,7 +209,7 @@ public class ManagerPanel extends JPanel implements ActionListener
 				
 				
 				romsPath.setText(f.getPath());
-				RomSet.current.getSettings().romsPath = f.toPath();
+				GameSet.current.getSettings().romsPath = f.toPath();
 			}
 		}
 	}

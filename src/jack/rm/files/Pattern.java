@@ -1,6 +1,6 @@
 package jack.rm.files;
 
-import jack.rm.data.rom.Rom;
+import com.github.jakz.romlib.data.game.Game;
 
 public abstract class Pattern implements Comparable<Pattern>
 {
@@ -19,7 +19,7 @@ public abstract class Pattern implements Comparable<Pattern>
       return name.replace(pattern, "");
   }
 	
-	public abstract String apply(RenamingOptions options, String name, Rom rom);
+	public abstract String apply(RenamingOptions options, String name, Game rom);
 	
 	public boolean equals(Object other)
 	{

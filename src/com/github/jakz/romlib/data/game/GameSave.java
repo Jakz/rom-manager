@@ -1,6 +1,6 @@
 package com.github.jakz.romlib.data.game;
 
-public interface RomSave<T extends RomSave.Type>
+public interface GameSave<T extends GameSave.Type>
 {
 	public static interface Type { }
   

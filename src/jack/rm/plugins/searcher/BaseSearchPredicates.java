@@ -10,13 +10,12 @@ import com.pixbits.lib.searcher.BasicPredicate;
 import com.pixbits.lib.searcher.SearchPredicate;
 import com.github.jakz.romlib.data.game.Genre;
 import com.github.jakz.romlib.data.game.Location;
-import com.github.jakz.romlib.data.game.RomSave;
+import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameSave;
+import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
-
-import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.GameStatus;
 
 public class BaseSearchPredicates extends SearchPredicatesPlugin
 {
@@ -27,9 +26,9 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
         "This plugins provides basic search predicates.");
   }
   
-  private final static SearchPredicate<Rom> HAS_ATTACHMENT = new BasicPredicate<Rom>("has-attachment", "has:attach", "filters roms with attachments included")
+  private final static SearchPredicate<Game> HAS_ATTACHMENT = new BasicPredicate<Game>("has-attachment", "has:attach", "filters roms with attachments included")
   {
-    @Override public Predicate<Rom> buildPredicate(String token)
+    @Override public Predicate<Game> buildPredicate(String token)
     {
       if (token.startsWith("has:attach"))
         return r -> r.getAttachments().size() != 0;
@@ -38,9 +37,9 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
   
-  private final static SearchPredicate<Rom> HAS_ASSETS = new BasicPredicate<Rom>("has-assets", "has:assets", "filters roms with assets downloaded")
+  private final static SearchPredicate<Game> HAS_ASSETS = new BasicPredicate<Game>("has-assets", "has:assets", "filters roms with assets downloaded")
   {
-    @Override public Predicate<Rom> buildPredicate(String token)
+    @Override public Predicate<Game> buildPredicate(String token)
     {
       if (token.equals("has:assets"))
         return r -> r.hasAllAssets();
@@ -49,9 +48,9 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
   
-  private final static SearchPredicate<Rom> IS_FAVORITE = new BasicPredicate<Rom>("is-favorite", "is:favorite, is:fav", "filters roms set as favorite")
+  private final static SearchPredicate<Game> IS_FAVORITE = new BasicPredicate<Game>("is-favorite", "is:favorite, is:fav", "filters roms set as favorite")
   {
-    @Override public Predicate<Rom> buildPredicate(String token)
+    @Override public Predicate<Game> buildPredicate(String token)
     {
       if (isSearchArg(splitWithDelimiter(token, ":"), "is", "favorite", "favourite", "fav"))
         return r -> r.isFavourite();
@@ -60,9 +59,9 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
   
-  private final static SearchPredicate<Rom> IS_MISSING = new BasicPredicate<Rom>("is-missing", "is:missing, is:mis", "filters roms which are missing")
+  private final static SearchPredicate<Game> IS_MISSING = new BasicPredicate<Game>("is-missing", "is:missing, is:mis", "filters roms which are missing")
   {
-    @Override public Predicate<Rom> buildPredicate(String token)
+    @Override public Predicate<Game> buildPredicate(String token)
     {
       if (isSearchArg(splitWithDelimiter(token, ":"), "is", "mis", "missing"))
         return r -> r.status == GameStatus.MISSING;
@@ -71,9 +70,9 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
   
-  private final static SearchPredicate<Rom> IS_FOUND = new BasicPredicate<Rom>("is-found", "is:found", "filters roms which are present")
+  private final static SearchPredicate<Game> IS_FOUND = new BasicPredicate<Game>("is-found", "is:found", "filters roms which are present")
   {
-    @Override public Predicate<Rom> buildPredicate(String token)
+    @Override public Predicate<Game> buildPredicate(String token)
     {
       if (isSearchArg(splitWithDelimiter(token, ":"), "is", "found"))
         return r -> r.status != GameStatus.MISSING;
@@ -82,9 +81,9 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
   
-  private final static SearchPredicate<Rom> OF_GENRE = new BasicPredicate<Rom>("genre", "genre:action", "filters games of a specified genre")
+  private final static SearchPredicate<Game> OF_GENRE = new BasicPredicate<Game>("genre", "genre:action", "filters games of a specified genre")
   {
-    @Override public Predicate<Rom> buildPredicate(String token)
+    @Override public Predicate<Game> buildPredicate(String token)
     {
       String[] tokens = splitWithDelimiter(token, ":");
       
@@ -102,9 +101,9 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
   
-  private final static SearchPredicate<Rom> OF_SAVE_TYPE = new BasicPredicate<Rom>("save", "save:\"sram 112\"", "filters games with specified save type")
+  private final static SearchPredicate<Game> OF_SAVE_TYPE = new BasicPredicate<Game>("save", "save:\"sram 112\"", "filters games with specified save type")
   {
-    @Override public Predicate<Rom> buildPredicate(String token)
+    @Override public Predicate<Game> buildPredicate(String token)
     {
       String[] tokens = splitWithDelimiter(token, ":");
       
@@ -112,7 +111,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
       {
         String[] itokens = tokens[1].split(" ");
         return r -> {
-          RomSave<?> save = r.getAttribute(GameAttribute.SAVE_TYPE);            
+          GameSave<?> save = r.getAttribute(GameAttribute.SAVE_TYPE);            
           return save != null && Arrays.stream(itokens).allMatch(s -> save.toString().toLowerCase().contains(s.toLowerCase()));   
         };
       }
@@ -121,9 +120,9 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
   
-  private final static SearchPredicate<Rom> IS_LOCATION = new BasicPredicate<Rom>("location", "loc:usa, location:usa", "filters games with specified location")
+  private final static SearchPredicate<Game> IS_LOCATION = new BasicPredicate<Game>("location", "loc:usa, location:usa", "filters games with specified location")
   {
-    @Override public Predicate<Rom> buildPredicate(String token)
+    @Override public Predicate<Game> buildPredicate(String token)
     {
       String[] tokens = splitWithDelimiter(token, ":");
       
@@ -142,9 +141,9 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
   
-  private final static SearchPredicate<Rom> HAS_ATTRIBUTE = new BasicPredicate<Rom>("has-attribute", "has:tag", "filters games with specified attribute present")
+  private final static SearchPredicate<Game> HAS_ATTRIBUTE = new BasicPredicate<Game>("has-attribute", "has:tag", "filters games with specified attribute present")
   {
-    @Override public Predicate<Rom> buildPredicate(String token)
+    @Override public Predicate<Game> buildPredicate(String token)
     {
       String[] tokens = splitWithDelimiter(token, ":");
       
@@ -165,9 +164,9 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
   
-  private final static SearchPredicate<Rom> IS_FORMAT = new BasicPredicate<Rom>("is-format", "format:zip", "filters games by format on disk")
+  private final static SearchPredicate<Game> IS_FORMAT = new BasicPredicate<Game>("is-format", "format:zip", "filters games by format on disk")
   {
-    @Override public Predicate<Rom> buildPredicate(String token)
+    @Override public Predicate<Game> buildPredicate(String token)
     {
       String[] tokens = splitWithDelimiter(token, ":");
       
@@ -186,7 +185,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
    
-  private final List<SearchPredicate<Rom>> predicates;
+  private final List<SearchPredicate<Game>> predicates;
   
   public BaseSearchPredicates()
   {
@@ -205,7 +204,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
   }
 
   @Override
-  public List<SearchPredicate<Rom>> getPredicates()
+  public List<SearchPredicate<Game>> getPredicates()
   {
     return predicates;
   }

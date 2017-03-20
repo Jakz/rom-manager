@@ -1,14 +1,13 @@
 package com.github.jakz.romlib.data.platforms;
 
-import com.github.jakz.romlib.data.game.RomSave;
-
-import jack.rm.data.rom.RomSize;
+import com.github.jakz.romlib.data.game.GameSize;
+import com.github.jakz.romlib.data.game.GameSave;
 
 public class NDS
 {
-  public static class Save implements RomSave<Save.Type>
+  public static class Save implements GameSave<Save.Type>
   {
-    public static enum Type implements RomSave.Type
+    public static enum Type implements GameSave.Type
     {
       EEPROM,
       FLASH,
@@ -34,8 +33,7 @@ public class NDS
     {
       if (size != 0)
       {
-        RomSize size = RomSize.forBytes(this.size, false);
-        return String.format("%s (%s)", type.toString(), size.toString(RomSize.PrintStyle.LONG, RomSize.PrintUnit.BITS));
+        return String.format("%s (%s)", type.toString(), GameSize.toString(this.size));
       }
       else
         return type.toString();

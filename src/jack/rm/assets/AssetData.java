@@ -7,9 +7,9 @@ import java.nio.file.Path;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
+import com.github.jakz.romlib.data.game.Game;
 import com.pixbits.lib.io.FileUtils;
 
-import jack.rm.data.rom.Rom;
 import jack.rm.files.Scanner;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
@@ -18,12 +18,12 @@ import net.lingala.zip4j.model.FileHeader;
 public class AssetData
 {  
   private final Asset asset;
-  private final Rom rom;
+  private final Game rom;
   private Path path;
   private String urlData;
   private long crc;
   
-  public AssetData(Asset asset, Rom rom) { this.asset = asset; this.rom = rom; }
+  public AssetData(Asset asset, Game rom) { this.asset = asset; this.rom = rom; }
 
   public void setCRC(long crc) { this.crc = crc; }
   public void setPath(Path path) { this.path = path; }

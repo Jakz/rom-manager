@@ -10,49 +10,45 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameID;
+import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.pixbits.lib.io.digest.HashCache;
 
 import jack.rm.Main;
-import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomGroup;
-import jack.rm.data.rom.RomGroupID;
-import jack.rm.data.rom.RomID;
-import jack.rm.data.rom.GameStatus;
 import jack.rm.files.MoverWorker;
 import jack.rm.files.RenamerWorker;
 import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.RenamerPlugin;
 
-public class RomList implements Iterable<Rom>
+public class GameList implements Iterable<Game>
 {
-	public final RomSet set;
-  List<Rom> list;
-  Map<RomGroupID, RomGroup> groups;
-  HashCache<Rom> cache;
+	public final GameSet set;
+  List<Game> list;
+  HashCache<Game> cache;
 	
 	private int countCorrect, countBadlyNamed, countNotFound;
 	
-	public RomList(RomSet set)
+	public GameList(GameSet set)
 	{
 		this.set = set;
 	  list = new ArrayList<>();
-	  groups = new HashMap<>();
 	}
 	
-	public void add(Rom rom)
+	public void add(Game rom)
 	{
 		list.add(rom);
 	}
 	
-	public Rom get(int i)
+	public Game get(int i)
 	{
 		return list.get(i);
 	}
 	
-	public Rom getByNumber(int number)
+	public Game getByNumber(int number)
 	{
-	  for (Rom r : list)
+	  for (Game r : list)
 	  {
 	    int rnumber = r.getAttribute(GameAttribute.NUMBER);
 	    if (rnumber == number)
@@ -78,21 +74,21 @@ public class RomList implements Iterable<Rom>
 		list.clear();
 	}
 	
-	public HashCache<Rom> getCache() { return cache; }
+	public HashCache<Game> getCache() { return cache; }
 		
-	public Rom getByID(RomID<?> id)
+	public Game getByID(GameID<?> id)
 	{
-	  return getByCRC32(((RomID.CRC)id).value);
+	  return getByCRC32(((GameID.CRC)id).value);
 	}
 	
-	public Rom getByCRC32(long crc)
+	public Game getByCRC32(long crc)
 	{
 		return cache.elementForCrc(crc);
 	}
 	
 	public void resetStatus()
 	{
-		for (Rom r : list)
+		for (Game r : list)
 			r.status = GameStatus.MISSING;
 		
 		updateStatus();
@@ -108,7 +104,7 @@ public class RomList implements Iterable<Rom>
 	  countBadlyNamed = 0;
 	  countCorrect = 0;
 	  
-	  for (Rom r : list)
+	  for (Game r : list)
 	  {
 	    switch (r.status)
 	    {
@@ -121,7 +117,7 @@ public class RomList implements Iterable<Rom>
 
 	public void checkNames()
 	{
-    for (Rom rom : list)
+    for (Game rom : list)
     {
       if (rom.status != GameStatus.MISSING)
       {  
@@ -139,20 +135,11 @@ public class RomList implements Iterable<Rom>
 		Main.mainFrame.updateTable();
 	}
   
-  public Stream<Rom> stream() { return list.stream(); }
-  public Iterator<Rom> iterator() { return list.iterator(); }
+  public Stream<Game> stream() { return list.stream(); }
+  public Iterator<Game> iterator() { return list.iterator(); }
   
-  public int groupsCount() { return groups.size(); }
-  public Stream<RomGroup> groupsStream() { return groups.values().stream(); }
-  public Iterator<RomGroup> groupsIterator() { return groups.values().iterator(); }
-  
-  public RomGroup getGroup(RomGroupID ident)
-  {
-    return groups.computeIfAbsent(ident, i -> new RomGroup(i));
-  }
-  
-  public Rom find(String search) { 
-    Optional<Rom> rom = list.stream().filter(set.getSearcher().search(search)).findFirst();
+  public Game find(String search) { 
+    Optional<Game> rom = list.stream().filter(set.getSearcher().search(search)).findFirst();
     if (!rom.isPresent()) throw new RuntimeException("RomList::find failed to find any rom");
     return rom.orElse(null);
   }

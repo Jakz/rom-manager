@@ -11,12 +11,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.github.jakz.romlib.data.game.GameSize;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.plugin.PluginManager;
 
 import jack.rm.Main;
-import jack.rm.data.rom.RomSize;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.plugins.ActualPlugin;
@@ -26,7 +26,7 @@ import jack.rm.plugins.datparsers.DatParserPlugin;
 import jack.rm.plugins.providers.ProviderPlugin;
 
 
-public class RomSetManager
+public class GameSetManager
 {
 	@SuppressWarnings("unchecked")
   public static void buildRomsetList()
@@ -43,11 +43,11 @@ public class RomSetManager
 	  {
 	    ProviderPlugin plugin = (ProviderPlugin)manager.build((Class<ProviderPlugin>)builder.getID().getType());
 	    
-	    RomSet[] rsets = plugin.buildRomSets(datParsers);
+	    GameSet[] rsets = plugin.buildRomSets(datParsers);
 	    
-	    for (RomSet set : rsets)
+	    for (GameSet set : rsets)
 	    {
-	      List<RomSet> setsForSystem = sets.computeIfAbsent(set.platform, s -> new ArrayList<>());
+	      List<GameSet> setsForSystem = sets.computeIfAbsent(set.platform, s -> new ArrayList<>());
 	      setsForSystem.add(set);
 	    }
 	  }
@@ -56,18 +56,18 @@ public class RomSetManager
 	    sets.computeIfAbsent(platform, s -> new ArrayList<>());
 	}
   
-  private static Map<Platform, List<RomSet>> sets = new HashMap<>();
+  private static Map<Platform, List<GameSet>> sets = new HashMap<>();
 
-	public static List<RomSet> bySystem(Platform platform)
+	public static List<GameSet> bySystem(Platform platform)
 	{
 	  return sets.get(platform); 
 	}
 	
-	public static RomSet byIdent(String ident)
+	public static GameSet byIdent(String ident)
 	{
-		for (List<RomSet> sets : RomSetManager.sets.values())
+		for (List<GameSet> sets : GameSetManager.sets.values())
 		{
-		  Optional<RomSet> rs = sets.stream().filter(set -> set.ident().equals(ident)).findFirst();
+		  Optional<GameSet> rs = sets.stream().filter(set -> set.ident().equals(ident)).findFirst();
 		  
 		  if (rs.isPresent())
 		    return rs.get();
@@ -76,28 +76,27 @@ public class RomSetManager
 		return null;
 	}
 	
-	public static Collection<RomSet> allSets()
+	public static Collection<GameSet> allSets()
 	{
-		List<RomSet> allSets = new ArrayList<>();
+		List<GameSet> allSets = new ArrayList<>();
 		
 		sets.values().forEach(allSets::addAll);
 	  
 	  return allSets;
 	}
 	
-	public static RomSet loadSet(String ident) throws FileNotFoundException
+	public static GameSet loadSet(String ident) throws FileNotFoundException
 	{
 		return loadSet(byIdent(ident));
 	}
 	
-	public static RomSet loadSet(RomSet set) throws FileNotFoundException
+	public static GameSet loadSet(GameSet set) throws FileNotFoundException
 	{
 		if (!Files.exists(set.datPath()))
 		  throw new FileNotFoundException("missing DAT files");
 	  
 		Log.getLogger(LogSource.STATUS).i(LogTarget.romset(set), "Loading romset");
-	  			
-		RomSize.mapping.clear();
+
 		set.load();
 						
 		return set;

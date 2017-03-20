@@ -7,11 +7,10 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 
+import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.platforms.GBA;
 import com.pixbits.workflow.Dumper;
-
-import jack.rm.data.rom.Rom;
 
 public class EZFlashIVRomConsolidator extends Dumper<RomWorkflowEntry>
 {
@@ -26,7 +25,7 @@ public class EZFlashIVRomConsolidator extends Dumper<RomWorkflowEntry>
   {
     try
     {
-      Rom rom = handle.getRom();
+      Game rom = handle.getRom();
       Path finalBasePath = destination.resolve(handle.getDestPath());
       Path finalPath = finalBasePath.resolve(rom.getTitle()+"."+rom.getSystem().exts[0]);
       Files.createDirectories(finalBasePath);

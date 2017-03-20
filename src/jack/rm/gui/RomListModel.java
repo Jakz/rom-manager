@@ -7,14 +7,14 @@ import java.util.stream.Stream;
 
 import javax.swing.AbstractListModel;
 
-import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.GameStatus;
+import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameStatus;
 
-public class RomListModel extends AbstractListModel<Rom>
+public class RomListModel extends AbstractListModel<Game>
 {
 	private static final long serialVersionUID = 1L;
 
-	List<Rom> list;
+	List<Game> list;
 	
 	boolean isCorrect = true;
 	boolean isMissing = true;
@@ -22,12 +22,12 @@ public class RomListModel extends AbstractListModel<Rom>
 	
 	public RomListModel()
 	{
-		list = new ArrayList<Rom>();
+		list = new ArrayList<Game>();
 	}
 	
 	public void addElement(Object o)
 	{
-		Rom rom = (Rom)o;
+		Game rom = (Game)o;
 		if (isCorrect && rom.status == GameStatus.FOUND)
 			list.add(rom);
 		else if (isMissing && rom.status == GameStatus.MISSING)
@@ -44,7 +44,7 @@ public class RomListModel extends AbstractListModel<Rom>
 	}
 	
 	@Override
-  public Rom getElementAt(int index)
+  public Game getElementAt(int index)
 	{
 		return(list.get(index));
 	}
@@ -60,8 +60,8 @@ public class RomListModel extends AbstractListModel<Rom>
 		list.clear();
 	}
 	
-	public Consumer<Rom> collector() { return list::add; }
-	public Stream<Rom> stream() { return list.stream(); }
+	public Consumer<Game> collector() { return list::add; }
+	public Stream<Game> stream() { return list.stream(); }
 	
 	public void fireChanges(int row)
 	{

@@ -3,15 +3,14 @@ package jack.rm.plugins.folder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import com.github.jakz.romlib.data.game.Game;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
-
-import jack.rm.data.rom.Rom;
 
 public class RootOrganizer extends FolderPlugin
 {
   @Override
-  public Path getFolderForRom(Rom rom)
+  public Path getFolderForRom(Game rom)
   {
     return Paths.get(".");
   }

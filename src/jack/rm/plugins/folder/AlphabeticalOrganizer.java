@@ -5,15 +5,14 @@ import java.nio.file.Paths;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 
+import com.github.jakz.romlib.data.game.Game;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
-
-import jack.rm.data.rom.Rom;
 
 public class AlphabeticalOrganizer extends FolderPlugin
 {
   @Override
-  public Path getFolderForRom(Rom rom)
+  public Path getFolderForRom(Game rom)
   {
     String normalizedName = Normalizer.normalize(rom.getTitle(), Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     return Paths.get(normalizedName.toUpperCase().charAt(0)+java.io.File.separator);

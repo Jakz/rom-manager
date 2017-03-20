@@ -9,12 +9,11 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
+import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.Location;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 
-import jack.rm.data.rom.Rom;
-
-class CellRenderer extends JLabel implements ListCellRenderer<Rom>
+class CellRenderer extends JLabel implements ListCellRenderer<Game>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -24,7 +23,7 @@ class CellRenderer extends JLabel implements ListCellRenderer<Rom>
 	}
 	
 	@Override
-  public Component getListCellRendererComponent(JList<? extends Rom> list, Rom rom, int index, boolean iss, boolean chf)
+  public Component getListCellRendererComponent(JList<? extends Game> list, Game rom, int index, boolean iss, boolean chf)
 	{
 		setFont(new Font("Default",Font.PLAIN,12));
 		setText(rom.toString());

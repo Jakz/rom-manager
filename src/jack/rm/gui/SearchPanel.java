@@ -16,14 +16,14 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
+import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameSize;
 import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.Location;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.pixbits.lib.ui.elements.JPlaceHolderTextField;
 
-import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomSize;
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 import jack.rm.i18n.Text;
 
 public class SearchPanel extends JPanel
@@ -34,7 +34,7 @@ public class SearchPanel extends JPanel
 	final JPlaceHolderTextField freeSearchField = new JPlaceHolderTextField(10, Text.TEXT_SEARCH_IN_TITLE.text());
 	final MainFrame mainFrame;
 	
-	final JComboBox<RomSize> sizes = new JComboBox<>();
+	final JComboBox<GameSize> sizes = new JComboBox<>();
 	//final JComboBox genres = new JComboBox();
 	final JComboBox<Location> locations = new JComboBox<>();
 	final JComboBox<Language> languages = new JComboBox<>();
@@ -99,10 +99,10 @@ public class SearchPanel extends JPanel
 	  }
 	}
 	
-  class RomSizeCellRenderer extends CustomCellRenderer<RomSize>
+  class RomSizeCellRenderer extends CustomCellRenderer<GameSize>
   {
     @Override
-    void customRendering(JLabel label, RomSize size)
+    void customRendering(JLabel label, GameSize size)
     {
       if (size == null)
         label.setText(Text.SIZE_TITLE.text());
@@ -181,13 +181,13 @@ public class SearchPanel extends JPanel
 		active = true;
 	}
 	
-	public Predicate<Rom> buildSearchPredicate()
+	public Predicate<Game> buildSearchPredicate()
 	{
-	  Predicate<Rom> predicate = RomSet.current.getSearcher().search(freeSearchField.getText());
+	  Predicate<Game> predicate = GameSet.current.getSearcher().search(freeSearchField.getText());
 
 	  Location location = locations.getItemAt(locations.getSelectedIndex());
     Language language = languages.getItemAt(languages.getSelectedIndex());
-    RomSize size = sizes.getItemAt(sizes.getSelectedIndex());
+    GameSize size = sizes.getItemAt(sizes.getSelectedIndex());
     
     if (location != null)
       predicate = predicate.and(r -> r.getAttribute(GameAttribute.LOCATION).equals(location));
@@ -201,14 +201,14 @@ public class SearchPanel extends JPanel
 	  return predicate;
 	}
 	
-	public void resetFields(final RomSize[] nsizes)
+	public void resetFields(final GameSize[] nsizes)
 	{
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
       public void run() {
 				sizes.removeAllItems();
 				sizes.addItem(null);
-				for (RomSize s : nsizes)
+				for (GameSize s : nsizes)
 					sizes.addItem(s);
 			}
 		});

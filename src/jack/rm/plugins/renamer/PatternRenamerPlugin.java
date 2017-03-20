@@ -22,13 +22,13 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.table.AbstractTableModel;
 
+import com.github.jakz.romlib.data.game.Game;
 import com.pixbits.lib.plugin.ExposedParameter;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
 
 import jack.rm.Settings;
-import jack.rm.data.rom.Rom;
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 import jack.rm.files.Organizer;
 import jack.rm.files.Pattern;
 import jack.rm.gui.PluginOptionsPanel;
@@ -46,13 +46,13 @@ public class PatternRenamerPlugin extends RenamerPlugin
         "This plugins enables support for renaming through pattern sets.");
   }
   
-  @Override public String getCorrectName(Rom rom)
+  @Override public String getCorrectName(Game rom)
   {
     Pattern.RenamingOptions options = new Pattern.RenamingOptions(openBlock, closeBlock);
     
-    String temp = new String(RomSet.current.getSettings().renamingPattern);
+    String temp = new String(GameSet.current.getSettings().renamingPattern);
     
-    Set<Pattern> patterns = Organizer.getPatterns(RomSet.current);
+    Set<Pattern> patterns = Organizer.getPatterns(GameSet.current);
     
     for (Pattern p : patterns)
       temp = p.apply(options, temp, rom);
@@ -60,14 +60,14 @@ public class PatternRenamerPlugin extends RenamerPlugin
     return temp;
   }
   
-  @Override public String getCorrectInternalName(Rom rom)
+  @Override public String getCorrectInternalName(Game rom)
   {
     Pattern.RenamingOptions options = new Pattern.RenamingOptions(openBlock, closeBlock);
 
     
-    String temp = new String(RomSet.current.getSettings().internalRenamingPattern != null ? RomSet.current.getSettings().internalRenamingPattern : RomSet.current.getSettings().renamingPattern);
+    String temp = new String(GameSet.current.getSettings().internalRenamingPattern != null ? GameSet.current.getSettings().internalRenamingPattern : GameSet.current.getSettings().renamingPattern);
     
-    Set<Pattern> patterns = Organizer.getPatterns(RomSet.current);
+    Set<Pattern> patterns = Organizer.getPatterns(GameSet.current);
     
     for (Pattern p : patterns)
       temp = p.apply(options, temp, rom);
@@ -253,7 +253,7 @@ public class PatternRenamerPlugin extends RenamerPlugin
       if (e.getSource() == patternField)
       {
         getRomset().getSettings().renamingPattern = patternField.getText();
-        exampleField.setText(RomSet.current.list.get(0).getCorrectName());
+        exampleField.setText(GameSet.current.list.get(0).getCorrectName());
         
         if (internalRenameMode.getSelectedItem() == ArchiveRenameMode.Same)
           internalPatternField.setText(patternField.getText());

@@ -5,9 +5,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.platforms.Platform;
-
-import jack.rm.data.rom.Rom;
 
 public class EmuParadiseDownloader extends RomDownloaderPlugin
 {
@@ -29,7 +28,7 @@ public class EmuParadiseDownloader extends RomDownloaderPlugin
     return idents.containsKey(platform);
   }
 
-  @Override public URL getDownloadURL(Platform platform, Rom rom)
+  @Override public URL getDownloadURL(Platform platform, Game rom)
   {
     String name = rom.getTitle().replaceAll("\\W", " ").toLowerCase();
     name = name.replace(" ","%20");

@@ -3,10 +3,9 @@ package jack.rm.workflow;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.pixbits.workflow.Mutuator;
-
-import jack.rm.data.rom.Rom;
 
 public abstract class RomOperation implements Mutuator<RomWorkflowEntry>
 {  
@@ -16,16 +15,16 @@ public abstract class RomOperation implements Mutuator<RomWorkflowEntry>
     INCLUDE
   };
   
-  private final Set<Rom> specifics;
+  private final Set<Game> specifics;
   private Mode mode;
   
   RomOperation()
   {
-    specifics = new HashSet<Rom>();
+    specifics = new HashSet<Game>();
     mode = Mode.EXCLUDE;
   }
   
-  public void exclude(Rom rom)
+  public void exclude(Game rom)
   {
     if (mode == Mode.EXCLUDE)
       specifics.add(rom);
@@ -33,7 +32,7 @@ public abstract class RomOperation implements Mutuator<RomWorkflowEntry>
       throw new UnsupportedOperationException("Can't exclude a ROM from an operation which is in INCLUDE mode");
   }
   
-  public void include(Rom rom)
+  public void include(Game rom)
   {
     if (mode == Mode.INCLUDE || specifics.isEmpty())
     {
@@ -44,7 +43,7 @@ public abstract class RomOperation implements Mutuator<RomWorkflowEntry>
       throw new UnsupportedOperationException("Can't include a ROM from an operation which is in EXCLUDE mode");
   }
   
-  public boolean shouldBeProcessed(Rom rom)
+  public boolean shouldBeProcessed(Game rom)
   {
     return !(mode == Mode.INCLUDE ^ specifics.contains(rom));
   }

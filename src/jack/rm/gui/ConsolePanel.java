@@ -13,7 +13,7 @@ import javax.swing.JTextArea;
 import org.codehaus.jparsec.Parser;
 import org.codehaus.jparsec.error.ParserException;
 
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 import jack.rm.script.Script;
 import jack.rm.script.ScriptEnvironment;
 import jack.rm.script.ScriptParser;
@@ -77,7 +77,7 @@ public class ConsolePanel extends JPanel implements KeyListener, ScriptStdout
         System.out.println("Executing \'"+command+"\'");
         
         Script script = parser.parse(command);
-        script.execute(new ScriptEnvironment(RomSet.current, this));
+        script.execute(new ScriptEnvironment(GameSet.current, this));
       }
       catch (ParserException e)
       {

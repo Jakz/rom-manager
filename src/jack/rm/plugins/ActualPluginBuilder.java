@@ -4,11 +4,11 @@ import java.util.function.Predicate;
 
 import com.pixbits.lib.plugin.PluginBuilder;
 
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 
 public class ActualPluginBuilder extends PluginBuilder<ActualPlugin>
 {
-  Predicate<RomSet> compatibility;
+  Predicate<GameSet> compatibility;
   
   public ActualPluginBuilder(ActualPlugin plugin)
   {
@@ -16,5 +16,5 @@ public class ActualPluginBuilder extends PluginBuilder<ActualPlugin>
     this.compatibility = plugin.compatibility();
   }
   
-  public boolean isCompatible(RomSet romset) { return compatibility.test(romset); }
+  public boolean isCompatible(GameSet romset) { return compatibility.test(romset); }
 }

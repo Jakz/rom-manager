@@ -5,14 +5,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import com.github.jakz.romlib.data.game.Game;
+
 import jack.rm.data.attachment.Attachment;
 import jack.rm.data.attachment.AttachmentType;
-import jack.rm.data.rom.Rom;
 import jack.rm.files.IPSPatch;
 
 public class IPSPatchOperation extends RomOperation
 {
-  Map<Rom, IPSPatch> patches;
+  Map<Game, IPSPatch> patches;
   boolean automaticPatching;
   
   public IPSPatchOperation()
@@ -20,7 +21,7 @@ public class IPSPatchOperation extends RomOperation
     patches = new HashMap<>();
   }
   
-  public void addPatch(Rom rom, Path patchFile)
+  public void addPatch(Game rom, Path patchFile)
   {
     try
     {

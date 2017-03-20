@@ -1,13 +1,13 @@
 package jack.rm.script;
 
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 
 public class ScriptEnvironment
 {
   final ScriptStdout out;
-  final RomSet set;
+  final GameSet set;
   
-  public ScriptEnvironment(RomSet set, ScriptStdout out)
+  public ScriptEnvironment(GameSet set, ScriptStdout out)
   {
     this.out = out;
     this.set = set;

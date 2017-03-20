@@ -14,7 +14,7 @@ import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
 
 import jack.rm.Main;
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 import jack.rm.files.BackgroundOperation;
 import jack.rm.files.DownloadWorker;
 import jack.rm.files.ZipExtractWorker;
@@ -26,7 +26,7 @@ public class DatUpdater
 {
   private static final Logger logger = Log.getLogger(LogSource.DAT_DOWNLOADER);
   
-  public static void updateDat(RomSet set, Consumer<Boolean> callback) throws IOException
+  public static void updateDat(GameSet set, Consumer<Boolean> callback) throws IOException
   {
     Path destDat = set.datPath();
     AtomicReference<Path> tmpDownloadPath = new AtomicReference<Path>(Files.createTempFile(null, null));

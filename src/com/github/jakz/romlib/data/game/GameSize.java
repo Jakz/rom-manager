@@ -1,9 +1,10 @@
-package jack.rm.data.rom;
+package com.github.jakz.romlib.data.game;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class RomSize implements Comparable<RomSize>
+public class GameSize implements Comparable<GameSize>
 {
 	public final static long GIGABYTE = 1 << 30;
 	public final static long GIGABIT = GIGABYTE / 8;
@@ -13,8 +14,6 @@ public class RomSize implements Comparable<RomSize>
 	
 	public final static long KBYTE = 1 << 10;
 	public final static long KBIT = KBYTE / 8;
-
-	public final static Map<Long, RomSize> mapping = new TreeMap<>();
 	
 	public static enum PrintStyle
 	{
@@ -58,39 +57,9 @@ public class RomSize implements Comparable<RomSize>
 	  
 	}
 	
-	public static RomSize forBytes(long size)
-	{
-	  return forBytes(size, true);
-	}
-	
-	public static RomSize forBytes(long size, boolean addToList)
-	{
-		long reminder = size % KBYTE;
-		
-		if (reminder != 0)
-		{
-		  if (reminder < KBYTE/2)
-		    size -= reminder;
-		  else
-		    size += KBYTE - reminder;
-		}
-
-		RomSize m = mapping.get(size);
-		
-		if (m == null)
-		{
-			m = new RomSize(size);
-			
-			if (addToList)
-			  mapping.put(size, m);
-		}
-		
-		return m;
-	}
-
 	private final long bytes;
 	
-	RomSize(long bytes)
+	GameSize(long bytes)
 	{
 		this.bytes = bytes;
 	}
@@ -103,6 +72,11 @@ public class RomSize implements Comparable<RomSize>
 	public String toString(PrintStyle style, PrintUnit unit)
 	{
 	  return toString(bytes, style, unit);
+	}
+	
+	public static String toString(long bytes)
+	{
+	  return toString(bytes, PrintStyle.LONG, PrintUnit.BITS);
 	}
 
 	public static String toString(long bytes, PrintStyle style, PrintUnit unit)
@@ -134,8 +108,45 @@ public class RomSize implements Comparable<RomSize>
 	}
 	
 	@Override
-  public int compareTo(RomSize s)
+  public int compareTo(GameSize s)
 	{
 		return Long.compare(this.bytes, s.bytes);
+	}
+	
+	public static class Set
+	{
+	  private final Map<Long, GameSize> mapping = new TreeMap<>();
+	  
+	  public GameSize forBytes(long size)
+	  {
+	    return forBytes(size, true);
+	  }
+	  
+	  public GameSize forBytes(long size, boolean addToList)
+	  {
+	    long reminder = size % KBYTE;
+	    
+	    if (reminder != 0)
+	    {
+	      if (reminder < KBYTE/2)
+	        size -= reminder;
+	      else
+	        size += KBYTE - reminder;
+	    }
+
+	    GameSize m = mapping.get(size);
+	    
+	    if (m == null)
+	    {
+	      m = new GameSize(size);
+	      
+	      if (addToList)
+	        mapping.put(size, m);
+	    }
+	    
+	    return m;
+	  }
+	  
+	  public Collection<GameSize> values() { return mapping.values(); }
 	}
 }

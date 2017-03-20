@@ -7,8 +7,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import jack.rm.data.rom.Rom;
-import jack.rm.data.romset.RomSet;
+import com.github.jakz.romlib.data.game.Game;
+
+import jack.rm.data.romset.GameSet;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.FileHeader;
@@ -17,16 +18,16 @@ public class AssetCache
 {
   public static AssetCache cache = new AssetCache();
 
-  private Map<Asset, Set<Rom>> assetCache;
+  private Map<Asset, Set<Game>> assetCache;
     
   AssetCache()
   {
     assetCache = new HashMap<>();
   }
     
-  boolean isPresent(Rom rom, Asset asset)
+  boolean isPresent(Game rom, Asset asset)
   {
-    Set<Rom> roms = assetCache.get(asset);
+    Set<Game> roms = assetCache.get(asset);
     
     if (roms == null)
     {
@@ -37,13 +38,13 @@ public class AssetCache
     return roms != null ? roms.contains(rom) : false;
   }
   
-  void rebuild(RomSet set, Asset asset)
+  void rebuild(GameSet set, Asset asset)
   {
     assetCache.clear();
     fillCache(set, asset);
   }
   
-  void fillCache(RomSet set, Asset asset)
+  void fillCache(GameSet set, Asset asset)
   {
     try
     {
@@ -53,7 +54,7 @@ public class AssetCache
        {
          ZipFile file = new ZipFile(archiveFile.toFile());
          
-         for (Rom rom : set.list)
+         for (Game rom : set.list)
          {
            AssetData data = rom.getAssetData(asset);
            Path path = data.getPath();
@@ -62,7 +63,7 @@ public class AssetCache
            
            if (header != null && (!asset.hasCRC() || header.getCrc32() == data.getCRC()))
            {
-             assetCache.computeIfAbsent(asset, k -> new HashSet<Rom>()).add(rom);
+             assetCache.computeIfAbsent(asset, k -> new HashSet<Game>()).add(rom);
            }
          }
        }

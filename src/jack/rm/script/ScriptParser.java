@@ -5,7 +5,7 @@ import org.codehaus.jparsec.Parsers;
 import org.codehaus.jparsec.Scanners;
 import org.codehaus.jparsec.pattern.Patterns;
 
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 
 /*
 
@@ -40,7 +40,7 @@ public class ScriptParser
     return Scanners.stringCaseInsensitive("select")
         .next(WHITESPACE)
         .next(queryExpression())
-        .map(query -> new SelectStatement(RomSet.current.getSearcher().search(query.substring(1, query.length()-1))));
+        .map(query -> new SelectStatement(GameSet.current.getSearcher().search(query.substring(1, query.length()-1))));
   }
   
   private Parser<FindStatement> findStatement()
@@ -48,7 +48,7 @@ public class ScriptParser
     return Scanners.stringCaseInsensitive("find")
         .next(WHITESPACE)
         .next(queryExpression())
-        .map(query -> new FindStatement(RomSet.current.getSearcher().search(query.substring(1, query.length()-1))));
+        .map(query -> new FindStatement(GameSet.current.getSearcher().search(query.substring(1, query.length()-1))));
   }
   
   private Parser<Statement> statement()

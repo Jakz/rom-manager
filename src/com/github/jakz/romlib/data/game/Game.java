@@ -1,4 +1,4 @@
-package jack.rm.data.rom;
+package com.github.jakz.romlib.data.game;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -7,11 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Stream;
 
-import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttributeInterface;
@@ -24,16 +21,16 @@ import jack.rm.Settings;
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
 import jack.rm.data.attachment.Attachment;
-import jack.rm.data.romset.RomSet;
+import jack.rm.data.romset.GameSet;
 import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.RenamerPlugin;
 
-public class Rom implements Comparable<Rom>, Verifiable, GameAttributeInterface
+public class Game implements Comparable<Game>, Verifiable, GameAttributeInterface
 {
-	private final RomSet set;
-	
-	
+	private final GameSet set;
+
 	private final GameInfo info;
+	private GameClone<Game> clone;
   private boolean favourite;
   private Handle handle;
   
@@ -42,7 +39,6 @@ public class Rom implements Comparable<Rom>, Verifiable, GameAttributeInterface
 	
 	private Map<Asset, AssetData> assetData = new HashMap<>();
 	private List<Attachment> attachments = new ArrayList<>();
-	private List<RomGroup> groups = new ArrayList<>();
 	
 	public void setAttribute(Attribute key, Object value) { info.setAttribute(key, value); }
 	public void setCustomAttribute(Attribute key, Object value) { info.setCustomAttribute(key, value); }
@@ -57,41 +53,27 @@ public class Rom implements Comparable<Rom>, Verifiable, GameAttributeInterface
   public List<Attachment> getAttachments() { return attachments; }
 
 
-	public Rom(RomSet set)
+	public Game(GameSet set)
 	{
     this.set = set;
     this.info = new GameInfo();
 	  status = GameStatus.MISSING;
 	}
 	
-	public RomSet getRomSet() { return set; }
+	public GameSet getRomSet() { return set; }
+	
+	public GameClone<Game> getClone() { return clone; }
+	public void setClone(GameClone<Game> clone) { this.clone = clone; }
 	
 	public boolean shouldSerializeState()
 	{
 	  return isFavourite() || status != GameStatus.MISSING || info.hasAnyCustomAttribute();
 	}
 	
-	public void addToGroup(RomGroup group)
-	{
-	  group.addRom(this);
-	  groups.add(group);
-	}
-	
-	public boolean removeFromGroup(RomGroup group)
-	{
-	  boolean willBeEmpty = group.removeRom(this);
-	  groups.remove(group);
-	  return willBeEmpty;
-	}
-	
-	public RomID<?> getID() { return new RomID.CRC(crc()); }
+	public GameID<?> getID() { return new GameID.CRC(crc()); }
 	
 	public Handle getHandle() { return handle; }
 	public void setHandle(Handle path) { this.handle = path; }
-	
-	
-	public void setSize(RomSize size) { setAttribute(GameAttribute.SIZE, size); }
-	public RomSize getSize() { return getAttribute(GameAttribute.SIZE); }
 	
 	public void setCRC(long crc) { setAttribute(GameAttribute.CRC, crc); }
 	
@@ -122,7 +104,7 @@ public class Rom implements Comparable<Rom>, Verifiable, GameAttributeInterface
 	
 	public boolean hasAllAssets()
 	{
-	  for (Asset asset : RomSet.current.getAssetManager().getSupportedAssets())
+	  for (Asset asset : set.getAssetManager().getSupportedAssets())
 	    if (!hasAsset(asset))
 	      return false;
 	  
@@ -181,7 +163,7 @@ public class Rom implements Comparable<Rom>, Verifiable, GameAttributeInterface
   public boolean hasCorrectFolder()
   {
     try {
-      return RomSet.current.getSettings().getFolderOrganizer() == null || 
+      return set.getSettings().getFolderOrganizer() == null || 
         Files.isSameFile(handle.path().getParent(), set.getSettings().romsPath.resolve(getCorrectFolder()));
     }
     catch (IOException e)
@@ -194,29 +176,29 @@ public class Rom implements Comparable<Rom>, Verifiable, GameAttributeInterface
 	@Override
 	public boolean equals(Object other)
 	{ 
-	  if (set.doesSupportAttribute(GameAttribute.NUMBER) && other instanceof Rom)
+	  if (set.doesSupportAttribute(GameAttribute.NUMBER) && other instanceof Game)
 	  {
 	    int n1 = getAttribute(GameAttribute.NUMBER);
-	    int n2 = ((Rom)other).getAttribute(GameAttribute.NUMBER);
+	    int n2 = ((Game)other).getAttribute(GameAttribute.NUMBER);
 	    return n1 == n2;
 	  }
-	  else if (other instanceof Rom)
+	  else if (other instanceof Game)
 	  {
-	    return getTitle().equals(((Rom)other).getTitle());
+	    return getTitle().equals(((Game)other).getTitle());
 	  }
 	  
 	  return false;
 	}
 	
 	@Override
-  public int compareTo(Rom rom)
+  public int compareTo(Game rom)
 	{
 		if (set.doesSupportAttribute(GameAttribute.NUMBER))
 		{
       int n1 = getAttribute(GameAttribute.NUMBER);
       int n2 = rom.getAttribute(GameAttribute.NUMBER);
       
-      return n1 - n2;
+      return Integer.compare(n1, n2);
 		}
 	  
 	  return getTitle().compareTo(rom.getTitle());
@@ -227,7 +209,7 @@ public class Rom implements Comparable<Rom>, Verifiable, GameAttributeInterface
   
 	
 	@Override public long crc() { return getAttribute(GameAttribute.CRC); }
-  @Override public long size() { return ((RomSize)getAttribute(GameAttribute.SIZE)).bytes() ; }
+  @Override public long size() { return ((GameSize)getAttribute(GameAttribute.SIZE)).bytes() ; }
   @Override public byte[] md5() { return getAttribute(GameAttribute.MD5); }
   @Override public byte[] sha1() { return getAttribute(GameAttribute.SHA1); }
 }

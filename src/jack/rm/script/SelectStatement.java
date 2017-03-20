@@ -2,12 +2,12 @@ package jack.rm.script;
 
 import java.util.function.Predicate;
 
-import jack.rm.data.rom.Rom;
+import com.github.jakz.romlib.data.game.Game;
 
 public class SelectStatement implements Statement
 {
-  private final Predicate<Rom> query;
-  SelectStatement(Predicate<Rom> query) { this.query = query; }
+  private final Predicate<Game> query;
+  SelectStatement(Predicate<Game> query) { this.query = query; }
   
   public void execute(ScriptEnvironment env)
   {
