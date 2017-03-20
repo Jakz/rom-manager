@@ -14,12 +14,12 @@ import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
 import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.Location;
+import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.set.DatFormat;
 import com.pixbits.lib.parser.SimpleParser;
 import com.pixbits.lib.parser.SimpleTreeBuilder;
 
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.RomSize;
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.parser.DatLoader;
@@ -56,8 +56,8 @@ public class ClrMameParserPlugin extends DatParserPlugin
           if (t.equals("USA")) usa.set(true);
           else if (t.equals("Japan")) japan.set(true);
           else if (t.equals("Europe")) europe.set(true);
-          else if (t.equals("Korea")) rom.setAttribute(RomAttribute.LOCATION, Location.KOREA);
-          else if (t.equals("World")) rom.setAttribute(RomAttribute.LOCATION, Location.WORLD);
+          else if (t.equals("Korea")) rom.setAttribute(GameAttribute.LOCATION, Location.KOREA);
+          else if (t.equals("World")) rom.setAttribute(GameAttribute.LOCATION, Location.WORLD);
           else if (t.equals("Ja")) rom.getLanguages().add(Language.JAPANESE);
           else if (t.equals("Nl")) rom.getLanguages().add(Language.DUTCH);
           else if (t.equals("De")) rom.getLanguages().add(Language.GERMAN);
@@ -70,10 +70,10 @@ public class ClrMameParserPlugin extends DatParserPlugin
           else if (t.equals("Fr")) rom.getLanguages().add(Language.FRENCH);
           else if (t.equals("Proto") || t.equals("Proto 1") || t.equals("Development Edition") || 
                   t.equals("Rev 1") || t.equals("Proto 2") || t.equals("v2.0") || t.equals("Auto Demo") || t.equals("Sample") || t.equals("Beta"))
-            rom.setAttribute(RomAttribute.VERSION, t);
+            rom.setAttribute(GameAttribute.VERSION, t);
           else 
           {
-            rom.setAttribute(RomAttribute.COMMENT, t);
+            rom.setAttribute(GameAttribute.COMMENT, t);
             addendums.add(t);
           }
           
@@ -86,24 +86,24 @@ public class ClrMameParserPlugin extends DatParserPlugin
           rom.setAttribute(RomAttribute.COMMENT, previous + ", " + s);*/
       });
       
-      rom.setAttribute(RomAttribute.TITLE, title.substring(0, firstParen-1));
+      rom.setAttribute(GameAttribute.TITLE, title.substring(0, firstParen-1));
       
       if (usa.get() && japan.get() && !europe.get())
-        rom.setAttribute(RomAttribute.LOCATION, Location.USA_JAPAN);
+        rom.setAttribute(GameAttribute.LOCATION, Location.USA_JAPAN);
       else if (usa.get() && !japan.get() && europe.get())
-        rom.setAttribute(RomAttribute.LOCATION, Location.USA_EUROPE);
+        rom.setAttribute(GameAttribute.LOCATION, Location.USA_EUROPE);
       else if (!usa.get() && japan.get() && europe.get())
-        rom.setAttribute(RomAttribute.LOCATION, Location.JAPAN_EUROPE);
+        rom.setAttribute(GameAttribute.LOCATION, Location.JAPAN_EUROPE);
       else if (usa.get() && !japan.get() && !europe.get())
-        rom.setAttribute(RomAttribute.LOCATION, Location.USA);
+        rom.setAttribute(GameAttribute.LOCATION, Location.USA);
       else if (!usa.get() && japan.get() && !europe.get())
-        rom.setAttribute(RomAttribute.LOCATION, Location.JAPAN);
+        rom.setAttribute(GameAttribute.LOCATION, Location.JAPAN);
       else if (!usa.get() && !japan.get() && europe.get())
-        rom.setAttribute(RomAttribute.LOCATION, Location.EUROPE);
+        rom.setAttribute(GameAttribute.LOCATION, Location.EUROPE);
 
       
-      if (rom.getAttribute(RomAttribute.LOCATION) == null)
-        rom.setAttribute(RomAttribute.LOCATION, Location.NONE);
+      if (rom.getAttribute(GameAttribute.LOCATION) == null)
+        rom.setAttribute(GameAttribute.LOCATION, Location.NONE);
     }
     
     @Override protected void parsingFinished()
@@ -166,16 +166,16 @@ public class ClrMameParserPlugin extends DatParserPlugin
       else if (k.equals("size"))
         rom.setSize(RomSize.forBytes(Long.parseLong(v)));
       else if (k.equals("crc"))
-        rom.setAttribute(RomAttribute.CRC, Long.parseLong(v, 16));
+        rom.setAttribute(GameAttribute.CRC, Long.parseLong(v, 16));
       else if (k.equals("sha1"))
-        rom.setAttribute(RomAttribute.MD5, hexConverter.unmarshal(v));
+        rom.setAttribute(GameAttribute.MD5, hexConverter.unmarshal(v));
       else if (k.equals("md5"))
-        rom.setAttribute(RomAttribute.SHA1, hexConverter.unmarshal(v));
+        rom.setAttribute(GameAttribute.SHA1, hexConverter.unmarshal(v));
     }
     
     protected void parseRomTitle(String title)
     {
-      rom.setAttribute(RomAttribute.TITLE, title);
+      rom.setTitle(title);
     }
     
     protected void parsingFinished() { }

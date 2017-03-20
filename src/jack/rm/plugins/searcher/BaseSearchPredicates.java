@@ -11,12 +11,12 @@ import com.pixbits.lib.searcher.SearchPredicate;
 import com.github.jakz.romlib.data.game.Genre;
 import com.github.jakz.romlib.data.game.Location;
 import com.github.jakz.romlib.data.game.RomSave;
+import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
 
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomAttribute;
-import jack.rm.data.rom.RomStatus;
+import jack.rm.data.rom.GameStatus;
 
 public class BaseSearchPredicates extends SearchPredicatesPlugin
 {
@@ -65,7 +65,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     @Override public Predicate<Rom> buildPredicate(String token)
     {
       if (isSearchArg(splitWithDelimiter(token, ":"), "is", "mis", "missing"))
-        return r -> r.status == RomStatus.MISSING;
+        return r -> r.status == GameStatus.MISSING;
       else
         return null;
     }
@@ -76,7 +76,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     @Override public Predicate<Rom> buildPredicate(String token)
     {
       if (isSearchArg(splitWithDelimiter(token, ":"), "is", "found"))
-        return r -> r.status != RomStatus.MISSING;
+        return r -> r.status != GameStatus.MISSING;
       else
         return null;
     }
@@ -91,7 +91,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
       if (tokens != null && tokens[0].equals("genre"))
       {
         return r -> {
-          Genre genre = r.getAttribute(RomAttribute.GENRE);
+          Genre genre = r.getAttribute(GameAttribute.GENRE);
           Genre sgenre = Genre.forName(tokens[1]);
           
           return genre != null && sgenre != null && genre == sgenre;
@@ -112,7 +112,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
       {
         String[] itokens = tokens[1].split(" ");
         return r -> {
-          RomSave<?> save = r.getAttribute(RomAttribute.SAVE_TYPE);            
+          RomSave<?> save = r.getAttribute(GameAttribute.SAVE_TYPE);            
           return save != null && Arrays.stream(itokens).allMatch(s -> save.toString().toLowerCase().contains(s.toLowerCase()));   
         };
       }
@@ -132,7 +132,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
         if (tokens[0].equals("loc") || tokens[0].equals("location"))
         {
           return r -> {
-            Location location = r.getAttribute(RomAttribute.LOCATION);
+            Location location = r.getAttribute(GameAttribute.LOCATION);
             return location.fullName.toLowerCase().equals(tokens[1]);
           };
         }
@@ -152,7 +152,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
       {
         if (tokens[0].equals("has"))
         {
-          Optional<RomAttribute> attrib = Arrays.stream(RomAttribute.values()).filter(a -> a.getCaption().toLowerCase().equals(tokens[1])).findFirst();
+          Optional<GameAttribute> attrib = Arrays.stream(GameAttribute.values()).filter(a -> a.getCaption().toLowerCase().equals(tokens[1])).findFirst();
           
           if (attrib.isPresent())
             return r -> r.getAttribute(attrib.get()) != null;
@@ -176,9 +176,9 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
         if (tokens[0].equals("format") && !tokens[1].isEmpty())
         {
           if (tokens[1].equals("bin") || tokens[1].equals("binary"))
-            return r -> r.status != RomStatus.MISSING && !r.getHandle().isArchive();
+            return r -> r.status != GameStatus.MISSING && !r.getHandle().isArchive();
           else 
-            return r -> r.status != RomStatus.MISSING && r.getHandle().isArchive() && r.getHandle().getExtension().equals(tokens[1]);
+            return r -> r.status != GameStatus.MISSING && r.getHandle().isArchive() && r.getHandle().getExtension().equals(tokens[1]);
         }
       }
      

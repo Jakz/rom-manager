@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.pixbits.lib.plugin.PluginManager;
 import com.pixbits.lib.plugin.PluginSet;
 
-import jack.rm.data.rom.Attribute;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
 import jack.rm.plugins.PluginRealType;

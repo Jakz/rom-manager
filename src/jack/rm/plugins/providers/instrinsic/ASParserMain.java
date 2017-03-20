@@ -27,14 +27,13 @@ import org.jsoup.select.Elements;
 import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.Location;
 import com.github.jakz.romlib.data.game.Version;
+import com.github.jakz.romlib.data.game.attributes.Attribute;
+import com.github.jakz.romlib.data.game.attributes.CustomGameAttribute;
+import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.platforms.GB;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-
-import jack.rm.data.rom.Attribute;
-import jack.rm.data.rom.CustomRomAttribute;
-import jack.rm.data.rom.RomAttribute;
 
 public class ASParserMain
 {
@@ -479,7 +478,7 @@ public class ASParserMain
     return j;
   }
   
-  private final static CustomRomAttribute POCKET_HEAVEN_REF = new CustomRomAttribute("Pocket Heaven #", "pocket-heaven-reference", null);
+  private final static CustomGameAttribute POCKET_HEAVEN_REF = new CustomGameAttribute("Pocket Heaven #", "pocket-heaven-reference", null);
   
   static class JsonRomField extends HashMap<Attribute, Object>
   {
@@ -498,18 +497,18 @@ public class ASParserMain
     
     void populate()
     {
-      this.put(RomAttribute.NUMBER, number);
-      this.put(RomAttribute.TITLE, title);
-      this.put(RomAttribute.LOCATION, location);
-      this.put(RomAttribute.LANGUAGE, languages);
-      this.put(RomAttribute.PUBLISHER, publisher);
-      this.put(RomAttribute.GROUP, group);
+      this.put(GameAttribute.NUMBER, number);
+      this.put(GameAttribute.TITLE, title);
+      this.put(GameAttribute.LOCATION, location);
+      this.put(GameAttribute.LANGUAGE, languages);
+      this.put(GameAttribute.PUBLISHER, publisher);
+      this.put(GameAttribute.GROUP, group);
       if (!(version == Version.UNSPECIFIED))
-        this.put(RomAttribute.VERSION, version);
-      this.put(RomAttribute.CRC, crc);
-      this.put(RomAttribute.SIZE, size);
-      this.put(RomAttribute.SAVE_TYPE, saveType);
-      this.put(RomAttribute.COMMENT, comment);
+        this.put(GameAttribute.VERSION, version);
+      this.put(GameAttribute.CRC, crc);
+      this.put(GameAttribute.SIZE, size);
+      this.put(GameAttribute.SAVE_TYPE, saveType);
+      this.put(GameAttribute.COMMENT, comment);
       this.put(POCKET_HEAVEN_REF, pocketHeavenRef);
     }
   }

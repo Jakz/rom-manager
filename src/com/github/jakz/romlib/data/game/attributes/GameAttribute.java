@@ -1,13 +1,16 @@
-package jack.rm.data.rom;
+package com.github.jakz.romlib.data.game.attributes;
 
 import java.util.Set;
 
 import com.github.jakz.romlib.data.game.Genre;
 import com.github.jakz.romlib.data.game.Language;
 
+import jack.rm.data.rom.RomSize;
+import jack.rm.data.rom.RomSize.PrintStyle;
+import jack.rm.data.rom.RomSize.PrintUnit;
 import jack.rm.i18n.Text;
 
-public enum RomAttribute implements Attribute
+public enum GameAttribute implements Attribute
 {
   NUMBER(Integer.class, Text.ROM_INFO_NUMBER),
   IMAGE_NUMBER(Integer.class, Text.ROM_INFO_IMAGE_NUMBER),
@@ -61,17 +64,19 @@ public enum RomAttribute implements Attribute
   
   VERSION(Text.ROM_INFO_VERSION),
   
+  LICENSED(Text.ROM_INFO_LICENSED),
+  
   FILENAME(Text.ROM_INFO_FILENAME),
   PATH(Text.ROM_INFO_PATH)
   ;
   
-  RomAttribute(Class<?> clazz, Text caption)
+  GameAttribute(Class<?> clazz, Text caption)
   {
     this.clazz = clazz;
     this.caption = caption;
   }
   
-  RomAttribute(Text caption)
+  GameAttribute(Text caption)
   {
     this(null, caption);
   }

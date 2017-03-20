@@ -4,12 +4,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Predicate;
 
+import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.pixbits.lib.plugin.ExposedParameter;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
 
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.Organizer;
 
@@ -26,7 +26,7 @@ public class NumericalOrganizer extends FolderPlugin
   @Override 
   public Path getFolderForRom(Rom rom)
   {
-    int number = rom.getAttribute(RomAttribute.NUMBER);
+    int number = rom.getAttribute(GameAttribute.NUMBER);
     int which = (number - 1) / folderSize;
     String first = Organizer.formatNumber(folderSize*which+1);
     String last = Organizer.formatNumber(folderSize*(which+1));
@@ -41,6 +41,6 @@ public class NumericalOrganizer extends FolderPlugin
   }
   
   @Override
-  public Predicate<RomSet> compatibility() { return rs -> rs.doesSupportAttribute(RomAttribute.NUMBER); }
+  public Predicate<RomSet> compatibility() { return rs -> rs.doesSupportAttribute(GameAttribute.NUMBER); }
 
 }

@@ -46,7 +46,7 @@ import jack.rm.Main;
 import jack.rm.assets.AssetPacker;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomSize;
-import jack.rm.data.rom.RomStatus;
+import jack.rm.data.rom.GameStatus;
 import jack.rm.data.romset.RomSet;
 import jack.rm.data.romset.RomSetManager;
 import jack.rm.i18n.Text;
@@ -277,11 +277,11 @@ public class MainFrame extends JFrame implements WindowListener
       romsExportSubmenu.add(exportFavorites);
       
       JMenuItem exportFound = new JMenuItem(Text.MENU_ROMS_EXPORT_FOUND.text());
-      exportFound.addActionListener( e -> { exportList(r -> r.status != RomStatus.MISSING); });
+      exportFound.addActionListener( e -> { exportList(r -> r.status != GameStatus.MISSING); });
       romsExportSubmenu.add(exportFound);
       
       JMenuItem exportMissing = new JMenuItem(Text.MENU_ROMS_EXPORT_MISSING.text());
-      exportMissing.addActionListener( e -> { exportList(r -> r.status == RomStatus.MISSING); });
+      exportMissing.addActionListener( e -> { exportList(r -> r.status == GameStatus.MISSING); });
       romsExportSubmenu.add(exportMissing);
   
       romsMenu.addSeparator();
@@ -451,9 +451,9 @@ public class MainFrame extends JFrame implements WindowListener
 	  romListModel.clear();
 	  
 	  Predicate<Rom> predicate = searchPanel.buildSearchPredicate().and( r ->
-	    r.status == RomStatus.FOUND && MenuElement.VIEW_SHOW_CORRECT.item.isSelected() ||
-	    r.status == RomStatus.MISSING && MenuElement.VIEW_SHOW_NOT_FOUND.item.isSelected() ||
-	    r.status == RomStatus.UNORGANIZED && MenuElement.VIEW_SHOW_UNORGANIZED.item.isSelected()
+	    r.status == GameStatus.FOUND && MenuElement.VIEW_SHOW_CORRECT.item.isSelected() ||
+	    r.status == GameStatus.MISSING && MenuElement.VIEW_SHOW_NOT_FOUND.item.isSelected() ||
+	    r.status == GameStatus.UNORGANIZED && MenuElement.VIEW_SHOW_UNORGANIZED.item.isSelected()
 	  );
 	  
 		set.list.stream().filter(predicate).forEach(romListModel.collector());

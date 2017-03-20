@@ -9,7 +9,7 @@ import com.pixbits.lib.ui.FileTransferHandler;
 
 import jack.rm.Main;
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomStatus;
+import jack.rm.data.rom.GameStatus;
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.Organizer;
 import jack.rm.files.ScanResult;
@@ -47,7 +47,7 @@ public class FileDropperListener implements FileTransferHandler.Listener
             {
             
             // a missing rom has been dropped on list
-            if (result.rom.status == RomStatus.MISSING)
+            if (result.rom.status == GameStatus.MISSING)
             {
               result.assign();
               Rom rom = result.rom;
@@ -61,7 +61,7 @@ public class FileDropperListener implements FileTransferHandler.Listener
                 
               }
               
-              rom.status = RomStatus.FOUND;
+              rom.status = GameStatus.FOUND;
               
               Organizer.organizeRomIfNeeded(rom);
               

@@ -9,13 +9,13 @@ import com.pixbits.lib.io.archive.handles.Handle;
 import jack.rm.data.attachment.Attachment;
 import jack.rm.data.rom.Rom;
 import jack.rm.data.rom.RomID;
-import jack.rm.data.rom.RomStatus;
+import jack.rm.data.rom.GameStatus;
 
 public class RomSavedState
 {
 	RomID<?> id;
 	Handle file;
-	RomStatus status;
+	GameStatus status;
 	boolean favourite;
 	List<RomSavedAttribute> attributes;
 	List<Attachment> attachments;

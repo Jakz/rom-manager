@@ -18,10 +18,10 @@ import javax.swing.event.CaretListener;
 
 import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.Location;
+import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.pixbits.lib.ui.elements.JPlaceHolderTextField;
 
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.RomSize;
 import jack.rm.data.romset.RomSet;
 import jack.rm.i18n.Text;
@@ -190,10 +190,10 @@ public class SearchPanel extends JPanel
     RomSize size = sizes.getItemAt(sizes.getSelectedIndex());
     
     if (location != null)
-      predicate = predicate.and(r -> r.getAttribute(RomAttribute.LOCATION).equals(location));
+      predicate = predicate.and(r -> r.getAttribute(GameAttribute.LOCATION).equals(location));
     
     if (language != null)
-      predicate = predicate.and(r -> r.getLanguages().contains(language));
+      predicate = predicate.and(r -> r.getLanguages().includes(language));
     
     if (size != null)
       predicate = predicate.and(r -> r.getSize().equals(size));

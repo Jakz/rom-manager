@@ -4,12 +4,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.github.jakz.romlib.data.game.Location;
+import com.github.jakz.romlib.data.game.attributes.Attribute;
+import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
 
-import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.RomSize;
 import jack.rm.files.Pattern;
 
@@ -64,19 +64,19 @@ public class BasicPatternSet extends PatternSetPlugin
   private static class FullLocationPattern extends Pattern {
     FullLocationPattern() { super("%L", "Full location name"); }
     @Override
-    public String apply(Pattern.RenamingOptions options, String name, Rom rom) { return apply(options, name, code, ((Location)rom.getAttribute(RomAttribute.LOCATION)).fullName); }
+    public String apply(Pattern.RenamingOptions options, String name, Rom rom) { return apply(options, name, code, ((Location)rom.getAttribute(GameAttribute.LOCATION)).fullName); }
   }
   
   private static class ShortLocationPattern extends Pattern {
     ShortLocationPattern() { super("%a", "Short location name"); }
     @Override
-    public String apply(Pattern.RenamingOptions options, String name, Rom rom) { return apply(options, name, code, ((Location)rom.getAttribute(RomAttribute.LOCATION)).shortName); }
+    public String apply(Pattern.RenamingOptions options, String name, Rom rom) { return apply(options, name, code, ((Location)rom.getAttribute(GameAttribute.LOCATION)).shortName); }
   }
   
   private static class TinyLocationPattern extends Pattern {
     TinyLocationPattern() { super("%l", "Tiny location name"); }
     @Override
-    public String apply(Pattern.RenamingOptions options, String name, Rom rom) { return apply(options, name, code, ((Location)rom.getAttribute(RomAttribute.LOCATION)).tinyName); }
+    public String apply(Pattern.RenamingOptions options, String name, Rom rom) { return apply(options, name, code, ((Location)rom.getAttribute(GameAttribute.LOCATION)).tinyName); }
   }
   
   private static class ShortLanguagePattern extends Pattern {
@@ -94,15 +94,15 @@ public class BasicPatternSet extends PatternSetPlugin
   
   private final Pattern[] patterns = {
     new FullLocationPattern(),
-    new AttributePattern("%g", "Releaser group", RomAttribute.GROUP),
+    new AttributePattern("%g", "Releaser group", GameAttribute.GROUP),
     new MegabitSizePattern(),
     new MegabyteSizePattern(),
-    new AttributePattern("%c", "Publisher", RomAttribute.PUBLISHER),
+    new AttributePattern("%c", "Publisher", GameAttribute.PUBLISHER),
     new ShortLanguagePattern(),
     new ShortLocationPattern(),
     new TinyLocationPattern(),
-    new AttributePattern("%t", "Game title", RomAttribute.TITLE, false),
-    new AttributePattern("%C", "Comment", RomAttribute.COMMENT, true)
+    new AttributePattern("%t", "Game title", GameAttribute.TITLE, false),
+    new AttributePattern("%C", "Comment", GameAttribute.COMMENT, true)
   };
   
   @Override

@@ -14,12 +14,12 @@ import org.xml.sax.SAXException;
 import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.Location;
 import com.github.jakz.romlib.data.game.RomSave;
+import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.set.DatFormat;
 
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.RomGroup;
 import jack.rm.data.rom.RomGroupID;
 import jack.rm.data.rom.RomSize;
@@ -165,10 +165,10 @@ public class OfflineListParserPlugin extends DatParserPlugin
             data.setPath(Paths.get(format.format(asInt())+".png"));
             data.setURLData(asInt()+(asset==assets[0]?"a":"b")+".png");
           }
-          rom.setAttribute(RomAttribute.IMAGE_NUMBER, asInt());
+          rom.setAttribute(GameAttribute.IMAGE_NUMBER, asInt());
           break;
         }
-        case "releaseNumber": rom.setAttribute(RomAttribute.NUMBER, asInt()); break;
+        case "releaseNumber": rom.setAttribute(GameAttribute.NUMBER, asInt()); break;
         case "title": rom.setTitle(asString()); break;
         case "saveType":
         {       
@@ -176,7 +176,7 @@ public class OfflineListParserPlugin extends DatParserPlugin
           {
             RomSave<?> save = saveParser.parse(asString());
             //saves.put(asString(), save);
-            rom.setAttribute(RomAttribute.SAVE_TYPE, save);
+            rom.setAttribute(GameAttribute.SAVE_TYPE, save);
           }
           catch (UnknownFormatConversionException e)
           {
@@ -186,10 +186,10 @@ public class OfflineListParserPlugin extends DatParserPlugin
           break;
         }
         case "romSize": rom.setSize(RomSize.forBytes(asLong())); break;
-        case "publisher": rom.setAttribute(RomAttribute.PUBLISHER, asString()); break;
+        case "publisher": rom.setAttribute(GameAttribute.PUBLISHER, asString()); break;
         case "location":
         {
-          rom.setAttribute(RomAttribute.LOCATION, locationMap.getOrDefault(asInt(), Location.NONE)); break;
+          rom.setAttribute(GameAttribute.LOCATION, locationMap.getOrDefault(asInt(), Location.NONE)); break;
         }
         case "language":
         {
@@ -197,7 +197,7 @@ public class OfflineListParserPlugin extends DatParserPlugin
           languageMap.forEach( (k, v) -> { if ((values & k) != 0) rom.getLanguages().add(v); });
           break;
         }
-        case "sourceRom": rom.setAttribute(RomAttribute.GROUP, asString()); break;
+        case "sourceRom": rom.setAttribute(GameAttribute.GROUP, asString()); break;
         case "romCRC": rom.setCRC(asHexLong()); break;
         case "im1CRC": 
         {
@@ -221,7 +221,7 @@ public class OfflineListParserPlugin extends DatParserPlugin
           
           break;
         }
-        case "comment": rom.setAttribute(RomAttribute.COMMENT, asString()); break;
+        case "comment": rom.setAttribute(GameAttribute.COMMENT, asString()); break;
         case "game": set.list.add(rom); break;
         case "games":
         {

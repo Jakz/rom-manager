@@ -42,16 +42,16 @@ import javax.swing.border.Border;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
+import com.github.jakz.romlib.data.game.attributes.Attribute;
+import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.ui.Icon;
 
 import jack.rm.Main;
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
 import jack.rm.assets.AssetManager;
-import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomAttribute;
-import jack.rm.data.rom.RomStatus;
+import jack.rm.data.rom.GameStatus;
 import jack.rm.data.romset.RomSet;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.downloader.RomDownloaderPlugin;
@@ -187,9 +187,9 @@ public class InfoPanel extends JPanel implements ActionListener
       deleteButton.setVisible(mode == Mode.EDIT && rom.hasCustomAttribute(attrib));
 
       
-      if (attrib == RomAttribute.PATH)
+      if (attrib == GameAttribute.PATH)
         value.setText(rom.getHandle() != null ? rom.getHandle().toString() : "");
-      else if (attrib == RomAttribute.FILENAME)
+      else if (attrib == GameAttribute.FILENAME)
         value.setText(rom.getHandle() != null ? rom.getHandle().path().getFileName().toString() : "");
       else
         value.setText(attrib.prettyValue(rom.getAttribute(attrib)));
@@ -492,8 +492,8 @@ public class InfoPanel extends JPanel implements ActionListener
 	  customPopup.add(custom);
 	  
 	  Attribute[] cattributes = new Attribute[] {
-	    RomAttribute.GENRE,
-	    RomAttribute.TAG
+	    GameAttribute.GENRE,
+	    GameAttribute.TAG
 	  };
 	  
 	  List<Attribute> enabledAttribs = set.getSettings().getRomAttributes();
@@ -565,8 +565,8 @@ public class InfoPanel extends JPanel implements ActionListener
     List<Attribute> attributes = set.getSettings().getRomAttributes();
     
     fields = attributes.stream().map( a -> buildField(a, true) ).collect(Collectors.toList());
-    fields.add(buildField(RomAttribute.FILENAME, false));
-    fields.add(buildField(RomAttribute.PATH, false));
+    fields.add(buildField(GameAttribute.FILENAME, false));
+    fields.add(buildField(GameAttribute.PATH, false));
         
     pFields.removeAll();
     
@@ -693,7 +693,7 @@ public class InfoPanel extends JPanel implements ActionListener
       for (AssetImage image : images)
         setImage(rom, image.asset, image.image);
 		
-  		if (rom.status == RomStatus.MISSING)
+  		if (rom.status == GameStatus.MISSING)
   		{
   		  openFolderButton.setEnabled(false);
   		  openArchiveButton.setEnabled(false);

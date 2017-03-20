@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.github.jakz.romlib.data.game.attributes.Attribute;
+import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.set.DatFormat;
 import com.github.jakz.romlib.data.set.Provider;
@@ -30,9 +32,7 @@ import jack.rm.Main;
 import jack.rm.Settings;
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetManager;
-import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomAttribute;
 import jack.rm.files.Scanner;
 import jack.rm.files.parser.DatLoader;
 import jack.rm.json.Json;
@@ -100,7 +100,7 @@ public class RomSet
 	
 	public final AssetManager getAssetManager() { return assetManager; }
 	
-	public boolean doesSupportAttribute(Attribute attribute) { return Arrays.stream(attributes).anyMatch( a -> a == RomAttribute.NUMBER); }
+	public boolean doesSupportAttribute(Attribute attribute) { return Arrays.stream(attributes).anyMatch( a -> a == GameAttribute.NUMBER); }
 	public final Attribute[] getSupportedAttributes() { return attributes; }
 	
 	public Scanner getScanner() { return scanner; }

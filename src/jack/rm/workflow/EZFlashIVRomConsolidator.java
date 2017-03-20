@@ -7,11 +7,11 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 
+import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.platforms.GBA;
 import com.pixbits.workflow.Dumper;
 
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomAttribute;
 
 public class EZFlashIVRomConsolidator extends Dumper<RomWorkflowEntry>
 {
@@ -39,7 +39,7 @@ public class EZFlashIVRomConsolidator extends Dumper<RomWorkflowEntry>
       
       Path saverPath = destination.resolve(Paths.get("SAVER")).resolve(rom.getTitle()+".sav");
       
-      GBA.Save save = rom.getAttribute(RomAttribute.SAVE_TYPE);
+      GBA.Save save = rom.getAttribute(GameAttribute.SAVE_TYPE);
       
       if (!Files.exists(saverPath) && save.getSize() != 0)
       {

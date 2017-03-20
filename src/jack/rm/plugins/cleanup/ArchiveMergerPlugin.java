@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 import com.pixbits.lib.plugin.ExposedParameter;
 
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomStatus;
+import jack.rm.data.rom.GameStatus;
 import jack.rm.data.romset.RomList;
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.BackgroundOperation;
@@ -37,7 +37,7 @@ public class ArchiveMergerPlugin extends CleanupPlugin implements BackgroundOper
 
     public ArchiverWorker(RomSet romSet, ArchiveMergerPlugin plugin, Consumer<Boolean> callback)
     {
-      super(romSet, plugin, r -> r.status != RomStatus.MISSING, callback);
+      super(romSet, plugin, r -> r.status != GameStatus.MISSING, callback);
       
       try
       {

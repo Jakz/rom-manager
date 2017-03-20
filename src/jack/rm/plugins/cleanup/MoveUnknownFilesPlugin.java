@@ -13,7 +13,7 @@ import com.pixbits.lib.io.FolderScanner;
 import com.pixbits.lib.plugin.ExposedParameter;
 
 import jack.rm.Settings;
-import jack.rm.data.rom.RomStatus;
+import jack.rm.data.rom.GameStatus;
 import jack.rm.data.romset.RomList;
 import jack.rm.plugins.PluginWithIgnorePaths;
 
@@ -32,7 +32,7 @@ public class MoveUnknownFilesPlugin extends CleanupPlugin implements PluginWithI
         Files.createDirectory(path);
   
       Set<Path> existing = list.stream()
-        .filter( r -> r.status != RomStatus.MISSING )
+        .filter( r -> r.status != GameStatus.MISSING )
         .map( r -> r.getHandle().path())
         .collect(Collectors.toSet());
   

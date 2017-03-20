@@ -10,15 +10,15 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.pixbits.lib.io.digest.HashCache;
 
 import jack.rm.Main;
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.RomGroup;
 import jack.rm.data.rom.RomGroupID;
 import jack.rm.data.rom.RomID;
-import jack.rm.data.rom.RomStatus;
+import jack.rm.data.rom.GameStatus;
 import jack.rm.files.MoverWorker;
 import jack.rm.files.RenamerWorker;
 import jack.rm.plugins.folder.FolderPlugin;
@@ -54,7 +54,7 @@ public class RomList implements Iterable<Rom>
 	{
 	  for (Rom r : list)
 	  {
-	    int rnumber = r.getAttribute(RomAttribute.NUMBER);
+	    int rnumber = r.getAttribute(GameAttribute.NUMBER);
 	    if (rnumber == number)
 	      return r;
 	  }
@@ -93,7 +93,7 @@ public class RomList implements Iterable<Rom>
 	public void resetStatus()
 	{
 		for (Rom r : list)
-			r.status = RomStatus.MISSING;
+			r.status = GameStatus.MISSING;
 		
 		updateStatus();
 	}
@@ -123,16 +123,16 @@ public class RomList implements Iterable<Rom>
 	{
     for (Rom rom : list)
     {
-      if (rom.status != RomStatus.MISSING)
+      if (rom.status != GameStatus.MISSING)
       {  
-        if (rom.status == RomStatus.FOUND)
+        if (rom.status == GameStatus.FOUND)
         {
           if (!rom.isOrganized())
-            rom.status = RomStatus.UNORGANIZED;
+            rom.status = GameStatus.UNORGANIZED;
         }
-        else if (rom.status == RomStatus.UNORGANIZED)
+        else if (rom.status == GameStatus.UNORGANIZED)
           if (rom.isOrganized())
-            rom.status = RomStatus.FOUND;
+            rom.status = GameStatus.FOUND;
       }
     }
 		

@@ -5,7 +5,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomStatus;
+import jack.rm.data.rom.GameStatus;
 
 public class FindStatement implements Statement
 {
@@ -20,7 +20,7 @@ public class FindStatement implements Statement
     
     for (Rom r : roms)
     {
-      if (r.status == RomStatus.MISSING)
+      if (r.status == GameStatus.MISSING)
     
         env.out.append("  "+r.getTitle());
       else

@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pixbits.lib.io.archive.handles.Handle;
@@ -14,7 +15,6 @@ import com.pixbits.lib.plugin.Plugin;
 import com.pixbits.lib.plugin.PluginSet;
 
 import jack.rm.data.attachment.Attachment;
-import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.RomID;
 import jack.rm.data.romset.RomSet;
 import jack.rm.plugins.ActualPlugin;

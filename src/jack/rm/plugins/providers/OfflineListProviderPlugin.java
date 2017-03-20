@@ -14,6 +14,8 @@ import java.util.UnknownFormatConversionException;
 
 import com.github.jakz.romlib.data.game.RomSave;
 import com.github.jakz.romlib.data.game.Version;
+import com.github.jakz.romlib.data.game.attributes.Attribute;
+import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.platforms.GBA;
 import com.github.jakz.romlib.data.platforms.NDS;
 import com.github.jakz.romlib.data.platforms.Platform;
@@ -21,9 +23,7 @@ import com.github.jakz.romlib.data.set.DatFormat;
 import com.github.jakz.romlib.data.set.Provider;
 
 import jack.rm.assets.Asset;
-import jack.rm.data.rom.Attribute;
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.rom.RomSize;
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.parser.DatLoader;
@@ -67,40 +67,40 @@ public class OfflineListProviderPlugin extends ProviderPlugin
   
   private final static Attribute[] GBA_ATTRIBUTES = 
   {
-    RomAttribute.TITLE,
-    RomAttribute.NUMBER,
-    RomAttribute.PUBLISHER,
-    RomAttribute.GROUP,
-    RomAttribute.SIZE,
-    RomAttribute.SAVE_TYPE,
-    RomAttribute.LOCATION,
-    RomAttribute.LANGUAGE,
-    RomAttribute.CRC,
-    RomAttribute.COMMENT
+    GameAttribute.TITLE,
+    GameAttribute.NUMBER,
+    GameAttribute.PUBLISHER,
+    GameAttribute.GROUP,
+    GameAttribute.SIZE,
+    GameAttribute.SAVE_TYPE,
+    GameAttribute.LOCATION,
+    GameAttribute.LANGUAGE,
+    GameAttribute.CRC,
+    GameAttribute.COMMENT
   };
   
   private final static Attribute[] GB_ATTRIBUTES = 
   {
-    RomAttribute.TITLE,
-    RomAttribute.NUMBER,
-    RomAttribute.PUBLISHER,
-    RomAttribute.GROUP,
-    RomAttribute.SIZE,
-    RomAttribute.LOCATION,
-    RomAttribute.LANGUAGE,
-    RomAttribute.CRC,
-    RomAttribute.COMMENT
+    GameAttribute.TITLE,
+    GameAttribute.NUMBER,
+    GameAttribute.PUBLISHER,
+    GameAttribute.GROUP,
+    GameAttribute.SIZE,
+    GameAttribute.LOCATION,
+    GameAttribute.LANGUAGE,
+    GameAttribute.CRC,
+    GameAttribute.COMMENT
   };
   
   private final static Attribute[] NES_ATTRIBUTES = 
   {
-    RomAttribute.TITLE,
-    RomAttribute.LOCATION,
-    RomAttribute.LANGUAGE,
-    RomAttribute.SIZE,
-    RomAttribute.PUBLISHER,
-    RomAttribute.CRC,
-    RomAttribute.COMMENT,
+    GameAttribute.TITLE,
+    GameAttribute.LOCATION,
+    GameAttribute.LANGUAGE,
+    GameAttribute.SIZE,
+    GameAttribute.PUBLISHER,
+    GameAttribute.CRC,
+    GameAttribute.COMMENT,
   };
   
   
@@ -122,7 +122,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
     {
       try
       {
-        int number = rom.getAttribute(RomAttribute.IMAGE_NUMBER);
+        int number = rom.getAttribute(GameAttribute.IMAGE_NUMBER);
         
         int first = (((number-1)/500)*500) + 1;
         int last = (((number-1)/500+1)*500);

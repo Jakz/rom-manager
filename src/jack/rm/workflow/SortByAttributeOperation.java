@@ -1,6 +1,6 @@
 package jack.rm.workflow;
 
-import jack.rm.data.rom.Attribute;
+import com.github.jakz.romlib.data.game.attributes.Attribute;
 
 public class SortByAttributeOperation extends RomOperation
 {

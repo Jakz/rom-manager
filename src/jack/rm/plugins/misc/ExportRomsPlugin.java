@@ -12,7 +12,7 @@ import com.pixbits.lib.plugin.PluginType;
 
 import jack.rm.Main;
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomStatus;
+import jack.rm.data.rom.GameStatus;
 import jack.rm.data.romset.RomList;
 import jack.rm.data.romset.RomSet;
 import jack.rm.files.BackgroundOperation;
@@ -42,7 +42,7 @@ public class ExportRomsPlugin extends ActualPlugin implements OperationalPlugin,
     for (int i = 0; i < count; ++i)
     {
       Rom rom = Main.mainFrame.list.getModel().getElementAt(i);
-      if (rom.status != RomStatus.MISSING)
+      if (rom.status != GameStatus.MISSING)
         visibleRoms.add(rom);
     }
     

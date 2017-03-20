@@ -2,12 +2,12 @@ package jack.rm.plugins.providers;
 
 import java.util.List;
 
+import com.github.jakz.romlib.data.game.attributes.Attribute;
+import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.set.Provider;
 
 import jack.rm.assets.EmptyAssetManager;
-import jack.rm.data.rom.Attribute;
-import jack.rm.data.rom.RomAttribute;
 import jack.rm.data.romset.RomSet;
 import jack.rm.plugins.datparsers.DatParserPlugin;
 
@@ -16,15 +16,15 @@ public class ClrMamePlugin extends ProviderPlugin
 {
   private final static Attribute[] GG_ATTRIBUTES = 
   {
-    RomAttribute.TITLE,
-    RomAttribute.LOCATION,
-    RomAttribute.LANGUAGE,
-    RomAttribute.CRC,
-    RomAttribute.MD5,
-    RomAttribute.SHA1,
-    RomAttribute.VERSION,
-    RomAttribute.COMMENT,
-    RomAttribute.SIZE,
+    GameAttribute.TITLE,
+    GameAttribute.LOCATION,
+    GameAttribute.LANGUAGE,
+    GameAttribute.CRC,
+    GameAttribute.MD5,
+    GameAttribute.SHA1,
+    GameAttribute.VERSION,
+    GameAttribute.COMMENT,
+    GameAttribute.SIZE,
   };
   
   @Override

@@ -2,7 +2,7 @@ package jack.rm.data.rom;
 
 import java.awt.Color;
 
-public enum RomStatus
+public enum GameStatus
 {
 	MISSING("Missing",new Color(195,0,0)),
 	UNORGANIZED("Unorganized",new Color(255,179,0)),
@@ -11,7 +11,7 @@ public enum RomStatus
 	public final String name;
 	public final Color color;
 	
-	RomStatus(String name, Color color)
+	GameStatus(String name, Color color)
 	{
 		this.name = name;
 		this.color = color;

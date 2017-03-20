@@ -13,7 +13,7 @@ import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
 
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomStatus;
+import jack.rm.data.rom.GameStatus;
 import jack.rm.data.romset.RomSet;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
@@ -102,7 +102,7 @@ public class Organizer
 	
 	public static void moveRom(Rom rom)
 	{
-	  if (rom.status != RomStatus.MISSING)
+	  if (rom.status != GameStatus.MISSING)
     {     
       try
       {      

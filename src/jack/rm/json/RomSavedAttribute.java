@@ -1,6 +1,6 @@
 package jack.rm.json;
 
-import jack.rm.data.rom.Attribute;
+import com.github.jakz.romlib.data.game.attributes.Attribute;
 
 public class RomSavedAttribute
 {

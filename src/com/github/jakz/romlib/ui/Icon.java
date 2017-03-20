@@ -71,7 +71,7 @@ public enum Icon
   public ImageIcon getIcon()
   {
     if (icon == null)
-      icon = new ImageIcon(this.getClass().getClassLoader().getResource("com/github/jakz/romlib/resources/"+name+".png"));
+      icon = new ImageIcon(this.getClass().getClassLoader().getResource("com/github/jakz/romlib/ui/resources/"+name+".png"));
     
     return icon;
   }

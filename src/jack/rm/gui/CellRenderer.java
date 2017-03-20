@@ -10,9 +10,9 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
 import com.github.jakz.romlib.data.game.Location;
+import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomAttribute;
 
 class CellRenderer extends JLabel implements ListCellRenderer<Rom>
 {
@@ -29,7 +29,7 @@ class CellRenderer extends JLabel implements ListCellRenderer<Rom>
 		setFont(new Font("Default",Font.PLAIN,12));
 		setText(rom.toString());
 		
-		Location location = rom.getAttribute(RomAttribute.LOCATION);
+		Location location = rom.getAttribute(GameAttribute.LOCATION);
 		setIcon(location.icon.getIcon());
 		
 		setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));

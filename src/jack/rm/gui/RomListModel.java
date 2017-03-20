@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 import javax.swing.AbstractListModel;
 
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomStatus;
+import jack.rm.data.rom.GameStatus;
 
 public class RomListModel extends AbstractListModel<Rom>
 {
@@ -28,11 +28,11 @@ public class RomListModel extends AbstractListModel<Rom>
 	public void addElement(Object o)
 	{
 		Rom rom = (Rom)o;
-		if (isCorrect && rom.status == RomStatus.FOUND)
+		if (isCorrect && rom.status == GameStatus.FOUND)
 			list.add(rom);
-		else if (isMissing && rom.status == RomStatus.MISSING)
+		else if (isMissing && rom.status == GameStatus.MISSING)
 			list.add(rom);
-		else if (isBadlyNamed && rom.status == RomStatus.UNORGANIZED)
+		else if (isBadlyNamed && rom.status == GameStatus.UNORGANIZED)
 			list.add(rom);
 
 		return;

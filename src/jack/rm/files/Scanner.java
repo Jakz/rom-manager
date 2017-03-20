@@ -36,7 +36,7 @@ import com.pixbits.lib.plugin.PluginManager;
 
 import jack.rm.Main;
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomStatus;
+import jack.rm.data.rom.GameStatus;
 import jack.rm.data.romset.RomSet;
 import jack.rm.gui.Dialogs;
 import jack.rm.log.LogSource;
@@ -74,7 +74,7 @@ public class Scanner
 	  	  
 	  Rom rom = result.rom;
 	  
-	  if (rom.status != RomStatus.MISSING && !rom.getHandle().equals(result.path))
+	  if (rom.status != GameStatus.MISSING && !rom.getHandle().equals(result.path))
 	  {	    
 	    clones.add(result);
 	    logger.w(LogTarget.file(result.path.path().getFileName()), "File contains a rom already present in romset: "+rom.getHandle());
@@ -84,9 +84,9 @@ public class Scanner
 	  result.assign();
 
 	  if (rom.isOrganized())
-	    rom.status = RomStatus.FOUND;
+	    rom.status = GameStatus.FOUND;
 	  else
-	    rom.status = RomStatus.UNORGANIZED;
+	    rom.status = GameStatus.UNORGANIZED;
 	}
 	
 	public ScanResult scanFile(Path file)
@@ -110,7 +110,7 @@ public class Scanner
 		  logger.i(LogTarget.romset(set), "Scanning for new roms");
 
 	    set.list.stream()
-	    .filter(r -> r.status != RomStatus.MISSING)
+	    .filter(r -> r.status != GameStatus.MISSING)
 	    .map(r -> r.getHandle())
 	    .forEach(existing::add);
 		}

@@ -12,6 +12,10 @@ import java.util.TreeSet;
 import java.util.stream.Stream;
 
 import com.github.jakz.romlib.data.game.Language;
+import com.github.jakz.romlib.data.game.attributes.Attribute;
+import com.github.jakz.romlib.data.game.attributes.GameAttribute;
+import com.github.jakz.romlib.data.game.attributes.GameAttributeInterface;
+import com.github.jakz.romlib.data.game.attributes.GameInfo;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.pixbits.lib.io.archive.Verifiable;
 import com.pixbits.lib.io.archive.handles.Handle;
@@ -24,51 +28,47 @@ import jack.rm.data.romset.RomSet;
 import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.RenamerPlugin;
 
-public class Rom implements Comparable<Rom>, Verifiable
+public class Rom implements Comparable<Rom>, Verifiable, GameAttributeInterface
 {
 	private final RomSet set;
-  
-  public RomStatus status;
 	
-	private Map<Attribute, Object> attributes = new HashMap<>();
+	
+	private final GameInfo info;
+  private boolean favourite;
+  private Handle handle;
+  
+  public GameStatus status;
+
+	
 	private Map<Asset, AssetData> assetData = new HashMap<>();
-	private Map<Attribute, Object> customAttributes = new HashMap<>();
 	private List<Attachment> attachments = new ArrayList<>();
 	private List<RomGroup> groups = new ArrayList<>();
 	
-	public void setAttribute(Attribute key, Object value) { attributes.put(key, value); }
-	public void setCustomAttribute(Attribute key, Object value) { customAttributes.put(key, value); }
+	public void setAttribute(Attribute key, Object value) { info.setAttribute(key, value); }
+	public void setCustomAttribute(Attribute key, Object value) { info.setCustomAttribute(key, value); }
 	
-	@SuppressWarnings("unchecked") public <T> T getAttribute(Attribute key) { 
-	  return (T)customAttributes.getOrDefault(key, attributes.get(key));
-	}
+	public <T> T getAttribute(Attribute key) { return info.getAttribute(key); }
+	public boolean hasAttribute(Attribute key) { return info.hasAttribute(key); }
 	
-	public boolean hasAttribute(Attribute key) {
-	  return customAttributes.containsKey(key) || attributes.containsKey(key);
-	}
-	
-  public Stream<Map.Entry<Attribute, Object>> getCustomAttributes() { return customAttributes.entrySet().stream(); }
-  public boolean hasCustomAttribute(Attribute attrib) { return customAttributes.containsKey(attrib); }
-  public void clearCustomAttribute(Attribute attrib) { customAttributes.remove(attrib); }
+  public Stream<Map.Entry<Attribute, Object>> getCustomAttributes() { return info.getCustomAttributes(); }
+  public boolean hasCustomAttribute(Attribute attrib) { return info.hasCustomAttribute(attrib); }
+  public void clearCustomAttribute(Attribute attrib) { info.clearCustomAttribute(attrib); }
   
   public List<Attachment> getAttachments() { return attachments; }
 
-	
-  private boolean favourite;
-		
-	private Handle path;
-	
+
 	public Rom(RomSet set)
 	{
     this.set = set;
-	  status = RomStatus.MISSING;
+    this.info = new GameInfo();
+	  status = GameStatus.MISSING;
 	}
 	
 	public RomSet getRomSet() { return set; }
 	
 	public boolean shouldSerializeState()
 	{
-	  return isFavourite() || status != RomStatus.MISSING || !customAttributes.isEmpty();
+	  return isFavourite() || status != GameStatus.MISSING || info.hasAnyCustomAttribute();
 	}
 	
 	public void addToGroup(RomGroup group)
@@ -84,28 +84,19 @@ public class Rom implements Comparable<Rom>, Verifiable
 	  return willBeEmpty;
 	}
 	
-	public RomID<?> getID() { return new RomID.CRC(getCRC()); }
+	public RomID<?> getID() { return new RomID.CRC(crc()); }
 	
-	public Handle getHandle() { return path; }
-	public void setHandle(Handle path) { this.path = path; }
+	public Handle getHandle() { return handle; }
+	public void setHandle(Handle path) { this.handle = path; }
 	
-	public void setTitle(String title) { setAttribute(RomAttribute.TITLE, title); }
-	public String getTitle() { return getAttribute(RomAttribute.TITLE); }
 	
-	public void setSize(RomSize size) { setAttribute(RomAttribute.SIZE, size); }
-	public RomSize getSize() { return getAttribute(RomAttribute.SIZE); }
+	public void setSize(RomSize size) { setAttribute(GameAttribute.SIZE, size); }
+	public RomSize getSize() { return getAttribute(GameAttribute.SIZE); }
 	
-	public void setCRC(long crc) { setAttribute(RomAttribute.CRC, crc); }
-	public long getCRC() { return getAttribute(RomAttribute.CRC); }
+	public void setCRC(long crc) { setAttribute(GameAttribute.CRC, crc); }
 	
 	public Platform getSystem() { return set.platform; }
-	
-	@SuppressWarnings("unchecked")
-	public Set<Language> getLanguages()
-	{
-	  return (Set<Language>)attributes.computeIfAbsent(RomAttribute.LANGUAGE, k -> new TreeSet<Language>());
-	}
-	
+		
 	public AssetData getAssetData(Asset asset)
 	{
 	  return assetData.computeIfAbsent(asset, k -> new AssetData(k, this));
@@ -140,9 +131,9 @@ public class Rom implements Comparable<Rom>, Verifiable
 	
 	public void updateStatus()
 	{
-	  if (status != RomStatus.MISSING)
+	  if (status != GameStatus.MISSING)
 	  {
-	    status = isOrganized() ? RomStatus.FOUND : RomStatus.UNORGANIZED;
+	    status = isOrganized() ? GameStatus.FOUND : GameStatus.UNORGANIZED;
 	  }
 	}
 
@@ -172,14 +163,14 @@ public class Rom implements Comparable<Rom>, Verifiable
   
   public boolean hasCorrectInternalName()
   {
-    return !path.isArchive() || getCorrectInternalName().equals(path.plainInternalName());
+    return !handle.isArchive() || getCorrectInternalName().equals(handle.plainInternalName());
   }
   
   public boolean hasCorrectName()
   {
     Settings settings = set.getSettings();
     
-    boolean hasCorrectName = getCorrectName().equals(path.plainName());
+    boolean hasCorrectName = getCorrectName().equals(handle.plainName());
     
     if (!settings.shouldRenameInternalName)
       return hasCorrectName;
@@ -191,7 +182,7 @@ public class Rom implements Comparable<Rom>, Verifiable
   {
     try {
       return RomSet.current.getSettings().getFolderOrganizer() == null || 
-        Files.isSameFile(path.path().getParent(), set.getSettings().romsPath.resolve(getCorrectFolder()));
+        Files.isSameFile(handle.path().getParent(), set.getSettings().romsPath.resolve(getCorrectFolder()));
     }
     catch (IOException e)
     {
@@ -203,15 +194,15 @@ public class Rom implements Comparable<Rom>, Verifiable
 	@Override
 	public boolean equals(Object other)
 	{ 
-	  if (set.doesSupportAttribute(RomAttribute.NUMBER) && other instanceof Rom)
+	  if (set.doesSupportAttribute(GameAttribute.NUMBER) && other instanceof Rom)
 	  {
-	    int n1 = getAttribute(RomAttribute.NUMBER);
-	    int n2 = ((Rom)other).getAttribute(RomAttribute.NUMBER);
+	    int n1 = getAttribute(GameAttribute.NUMBER);
+	    int n2 = ((Rom)other).getAttribute(GameAttribute.NUMBER);
 	    return n1 == n2;
 	  }
 	  else if (other instanceof Rom)
 	  {
-	    return getTitle().equals(((Rom)other).getAttribute(RomAttribute.TITLE));
+	    return getTitle().equals(((Rom)other).getTitle());
 	  }
 	  
 	  return false;
@@ -220,10 +211,10 @@ public class Rom implements Comparable<Rom>, Verifiable
 	@Override
   public int compareTo(Rom rom)
 	{
-		if (set.doesSupportAttribute(RomAttribute.NUMBER))
+		if (set.doesSupportAttribute(GameAttribute.NUMBER))
 		{
-      int n1 = getAttribute(RomAttribute.NUMBER);
-      int n2 = rom.getAttribute(RomAttribute.NUMBER);
+      int n1 = getAttribute(GameAttribute.NUMBER);
+      int n2 = rom.getAttribute(GameAttribute.NUMBER);
       
       return n1 - n2;
 		}
@@ -235,8 +226,8 @@ public class Rom implements Comparable<Rom>, Verifiable
 	public void setFavourite(boolean value) { favourite = value; }
   
 	
-	@Override public long crc() { return getAttribute(RomAttribute.CRC); }
-  @Override public long size() { return ((RomSize)getAttribute(RomAttribute.SIZE)).bytes() ; }
-  @Override public byte[] md5() { return getAttribute(RomAttribute.MD5); }
-  @Override public byte[] sha1() { return getAttribute(RomAttribute.SHA1); }
+	@Override public long crc() { return getAttribute(GameAttribute.CRC); }
+  @Override public long size() { return ((RomSize)getAttribute(GameAttribute.SIZE)).bytes() ; }
+  @Override public byte[] md5() { return getAttribute(GameAttribute.MD5); }
+  @Override public byte[] sha1() { return getAttribute(GameAttribute.SHA1); }
 }

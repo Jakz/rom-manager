@@ -12,10 +12,10 @@ import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 
 import com.github.jakz.romlib.data.game.Location;
+import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.ui.Icon;
 
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomAttribute;
 
 class RomCellRenderer extends JPanel implements ListCellRenderer<Rom>
 {
@@ -43,7 +43,7 @@ class RomCellRenderer extends JPanel implements ListCellRenderer<Rom>
   public Component getListCellRendererComponent(JList<? extends Rom> list, Rom rom, int index, boolean iss, boolean chf)
 	{
 	  mainLabel.setText(rom.toString());
-	  Location location = rom.getAttribute(RomAttribute.LOCATION);
+	  Location location = rom.getAttribute(GameAttribute.LOCATION);
 	  
 	  if (location != null)
 	    mainLabel.setIcon(location.icon.getIcon());

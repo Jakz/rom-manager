@@ -1,8 +1,8 @@
 package jack.rm.workflow;
 
+import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.platforms.Platform;
 
-import jack.rm.data.rom.RomAttribute;
 import jack.rm.files.GBASavePatcherGBATA;
 
 public class GBASavePatchOperationGBATA extends RomOperation
@@ -17,7 +17,7 @@ public class GBASavePatchOperationGBATA extends RomOperation
   
   protected RomWorkflowEntry doApply(RomWorkflowEntry handle) throws Exception
   {
-    GBASavePatcherGBATA.patch(handle.getRom().getAttribute(RomAttribute.SAVE_TYPE), handle.getBuffer());
+    GBASavePatcherGBATA.patch(handle.getRom().getAttribute(GameAttribute.SAVE_TYPE), handle.getBuffer());
     return handle;
   }
   

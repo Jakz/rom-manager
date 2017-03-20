@@ -1,13 +1,13 @@
-package jack.rm.data.rom;
+package com.github.jakz.romlib.data.game.attributes;
 
-public class CustomRomAttribute implements Attribute
+public class CustomGameAttribute implements Attribute
 {
   private Class<?> clazz;
   private String caption;
   private String name;
   
-  public CustomRomAttribute() { }
-  public CustomRomAttribute(String name, String caption, Class<?> clazz)
+  public CustomGameAttribute() { }
+  public CustomGameAttribute(String name, String caption, Class<?> clazz)
   {
     this.clazz = clazz;
     this.name = name;

@@ -8,7 +8,7 @@ import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
 
 import jack.rm.data.rom.Rom;
-import jack.rm.data.rom.RomStatus;
+import jack.rm.data.rom.GameStatus;
 import jack.rm.data.romset.RomSet;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
@@ -20,7 +20,7 @@ public class MoverWorker extends RomSetWorker<FolderPlugin>
   
   public MoverWorker(RomSet romSet, FolderPlugin plugin, Consumer<Boolean> callback)
   {
-    super(romSet, plugin, r -> r.status != RomStatus.MISSING, callback);
+    super(romSet, plugin, r -> r.status != GameStatus.MISSING, callback);
   }
 
   @Override

@@ -24,7 +24,8 @@ public enum Language
 	SWEDISH("Swedish", "SV", Icon.FLAG_SWEDEN),
 	ENGLISH_UK("English (UK)", "EN", Icon.FLAG_UNITED_KINGDOM),
 	PORTUGUESE_BR("Portuguese (BR)", "PT", Icon.FLAG_BRAZIL),
-	KOREAN("Korean", "KO", Icon.FLAG_KOREA)
+	KOREAN("Korean", "KO", Icon.FLAG_KOREA),
+	RUSSIAN("Russian", "RU", Icon.FLAG_JAPAN) //TODO flag
 	;
 	
 	public final String fullName;

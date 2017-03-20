@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 
 import com.github.jakz.romlib.ui.Icon;
 
-import jack.rm.data.rom.RomStatus;
+import jack.rm.data.rom.GameStatus;
 
 public class CountPanel extends JPanel
 {
@@ -40,11 +40,11 @@ public class CountPanel extends JPanel
 	
 	public void update()
 	{	  
-	  Map<RomStatus, Long> status = model.stream().collect(Collectors.groupingBy( r -> r.status, HashMap::new, Collectors.counting()));
+	  Map<GameStatus, Long> status = model.stream().collect(Collectors.groupingBy( r -> r.status, HashMap::new, Collectors.counting()));
 	    
-    counters[0].setText(""+status.getOrDefault(RomStatus.FOUND, 0L));
-    counters[1].setText(""+status.getOrDefault(RomStatus.UNORGANIZED, 0L));
-    counters[2].setText(""+status.getOrDefault(RomStatus.MISSING, 0L));
+    counters[0].setText(""+status.getOrDefault(GameStatus.FOUND, 0L));
+    counters[1].setText(""+status.getOrDefault(GameStatus.UNORGANIZED, 0L));
+    counters[2].setText(""+status.getOrDefault(GameStatus.MISSING, 0L));
     counters[3].setText(""+model.getSize());
 	}
 }
