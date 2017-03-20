@@ -4,7 +4,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.github.jakz.romlib.data.game.GameID;
+import com.github.jakz.romlib.data.game.RomID;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -38,7 +38,7 @@ public class Json
   static
   {
     registerTypeAdapter(GameSet.class, new RomSetAdapter());
-    registerTypeAdapter(GameID.class, new RomIdAdapter());
+    registerTypeAdapter(RomID.class, new RomIdAdapter());
     registerHiearchyAdapter(Handle.class, new JsonHandleAdapter());
     registerTypeAdapter(RomSavedAttribute.class, new RomSavedAttributeAdapter());
     registerHiearchyAdapter(Path.class, new PathAdapter());

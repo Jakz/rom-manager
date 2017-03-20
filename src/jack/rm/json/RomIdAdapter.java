@@ -2,23 +2,23 @@ package jack.rm.json;
 
 import java.lang.reflect.Type;
 
-import com.github.jakz.romlib.data.game.GameID;
+import com.github.jakz.romlib.data.game.RomID;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;;
 
-class RomIdAdapter implements JsonSerializer<GameID<?>>, JsonDeserializer<GameID<?>> {
+class RomIdAdapter implements JsonSerializer<RomID<?>>, JsonDeserializer<RomID<?>> {
   @Override
-  public JsonElement serialize(GameID<?> src, Type type, JsonSerializationContext context)
+  public JsonElement serialize(RomID<?> src, Type type, JsonSerializationContext context)
   {
-    return context.serialize(((GameID.CRC)src).value);
+    return context.serialize(((RomID.CRC)src).value);
   }
   
   @Override
-  public GameID<?> deserialize(JsonElement json, Type type, JsonDeserializationContext context)
+  public RomID<?> deserialize(JsonElement json, Type type, JsonDeserializationContext context)
   {
-    return new GameID.CRC(context.deserialize(json, Long.class));
+    return new RomID.CRC(context.deserialize(json, Long.class));
   }
 }

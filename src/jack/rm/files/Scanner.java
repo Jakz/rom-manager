@@ -27,6 +27,7 @@ import javax.swing.SwingWorker;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameStatus;
+import com.github.jakz.romlib.data.game.Rom;
 import com.pixbits.lib.io.FolderScanner;
 import com.pixbits.lib.io.archive.HandleSet;
 import com.pixbits.lib.io.archive.VerifierEntry;
@@ -72,9 +73,9 @@ public class Scanner
 	  if (result == null)
 	    return;
 	  	  
-	  Game rom = result.rom;
+	  Rom rom = result.rom;
 	  
-	  if (rom.status != GameStatus.MISSING && !rom.getHandle().equals(result.path))
+	  if (!rom.isMissing() && !rom.handle().equals(result.path))
 	  {	    
 	    clones.add(result);
 	    logger.w(LogTarget.file(result.path.path().getFileName()), "File contains a rom already present in romset: "+rom.getHandle());
@@ -83,10 +84,10 @@ public class Scanner
 	  
 	  result.assign();
 
-	  if (rom.isOrganized())
-	    rom.status = GameStatus.FOUND;
+	  if (rom.game().isOrganized())
+	    rom.game().status = GameStatus.FOUND;
 	  else
-	    rom.status = GameStatus.UNORGANIZED;
+	    rom.game().status = GameStatus.UNORGANIZED;
 	}
 	
 	public ScanResult scanFile(Path file)
@@ -109,9 +110,9 @@ public class Scanner
 		{
 		  logger.i(LogTarget.romset(set), "Scanning for new roms");
 
-	    set.list.stream()
-	    .filter(r -> r.status != GameStatus.MISSING)
-	    .map(r -> r.getHandle())
+	    set.list.romStream()
+	    .filter(r -> !r.isMissing())
+	    .map(r -> r.handle())
 	    .forEach(existing::add);
 		}
 

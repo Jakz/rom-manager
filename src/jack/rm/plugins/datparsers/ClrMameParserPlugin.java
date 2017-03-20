@@ -16,6 +16,7 @@ import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameSize;
 import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.Location;
+import com.github.jakz.romlib.data.game.Rom;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.set.DatFormat;
 import com.pixbits.lib.parser.SimpleParser;
@@ -118,7 +119,8 @@ public class ClrMameParserPlugin extends DatParserPlugin
   private class ClrMameParser implements DatLoader
   {
     GameSet set;
-    Game rom;
+    Game game;
+    Rom rom;
 
     private final HexBinaryAdapter hexConverter = new HexBinaryAdapter();
     

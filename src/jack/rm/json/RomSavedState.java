@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.github.jakz.romlib.data.game.Game;
-import com.github.jakz.romlib.data.game.GameID;
+import com.github.jakz.romlib.data.game.RomID;
 import com.github.jakz.romlib.data.game.GameStatus;
 import com.pixbits.lib.io.archive.handles.Handle;
 
@@ -13,7 +13,7 @@ import jack.rm.data.attachment.Attachment;
 
 public class RomSavedState
 {
-	GameID<?> id;
+	RomID<?> id;
 	Handle file;
 	GameStatus status;
 	boolean favourite;
@@ -22,18 +22,18 @@ public class RomSavedState
 	
 	public RomSavedState() { }
 	
-	public RomSavedState(Game rom)
+	public RomSavedState(Game game)
 	{
-	  this.id = rom.getID();
-	  this.status = rom.status;
-	  this.file = rom.getHandle();
-	  this.favourite = rom.isFavourite();
+	  this.id = game.getID();
+	  this.status = game.status;
+	  this.file = game.getHandle();
+	  this.favourite = game.isFavourite();
 	 
-	  this.attributes = rom.getCustomAttributes()
+	  this.attributes = game.getCustomAttributes()
 	      .map( e -> new RomSavedAttribute(e.getKey(), e.getValue()))
 	      .collect(Collectors.toList());
 	  
-	  if (rom.getAttachments().size() != 0)
-	    this.attachments = new ArrayList<Attachment>(rom.getAttachments());
+	  if (game.getAttachments().size() != 0)
+	    this.attachments = game.getAttachments().data();
 	}
 }

@@ -47,7 +47,7 @@ public class FileDropperListener implements FileTransferHandler.Listener
             {
             
             // a missing rom has been dropped on list
-            if (result.rom.status == GameStatus.MISSING)
+            if (result.rom.isMissing())
             {
               result.assign();
               Game rom = result.rom;

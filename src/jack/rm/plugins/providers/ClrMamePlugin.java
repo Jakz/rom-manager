@@ -7,7 +7,7 @@ import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.set.Provider;
 
-import jack.rm.assets.EmptyAssetManager;
+import jack.rm.assets.DummyAssetManager;
 import jack.rm.data.romset.GameSet;
 import jack.rm.plugins.datparsers.DatParserPlugin;
 
@@ -47,7 +47,7 @@ public class ClrMamePlugin extends ProviderPlugin
         Platform.GG, 
         KnownProviders.NO_INTRO.derive(null, null, "", "", null), 
         GG_ATTRIBUTES, 
-        new EmptyAssetManager(), 
+        new DummyAssetManager(), 
         datParser.buildDatLoader("clr-mame-nointro")
     );
     
@@ -55,7 +55,7 @@ public class ClrMamePlugin extends ProviderPlugin
         Platform.LYNX, 
         KnownProviders.NO_INTRO.derive(null, null, "", "", null), 
         GG_ATTRIBUTES, 
-        new EmptyAssetManager(), 
+        new DummyAssetManager(), 
         datParser.buildDatLoader("clr-mame-nointro")
     );
 

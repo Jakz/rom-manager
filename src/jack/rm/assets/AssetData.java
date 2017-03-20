@@ -18,12 +18,12 @@ import net.lingala.zip4j.model.FileHeader;
 public class AssetData
 {  
   private final Asset asset;
-  private final Game rom;
+  private final Game game;
   private Path path;
   private String urlData;
   private long crc;
   
-  public AssetData(Asset asset, Game rom) { this.asset = asset; this.rom = rom; }
+  public AssetData(Asset asset, Game rom) { this.asset = asset; this.game = rom; }
 
   public void setCRC(long crc) { this.crc = crc; }
   public void setPath(Path path) { this.path = path; }
@@ -31,14 +31,14 @@ public class AssetData
     
   public long getCRC() { return crc; }
   public Path getPath() { return path; }
-  public Path getFinalPath() { return rom.getRomSet().getAssetPath(asset, false).resolve(path); }
+  public Path getFinalPath() { return game.getRomSet().getAssetPath(asset, false).resolve(path); }
   public String getURLData() { return urlData; }
   
   public boolean isPresent() { return isPresentAsFile() || isPresentAsArchive(); }
   
   public boolean isPresentAsArchive()
   {
-    return AssetCache.cache.isPresent(rom, asset);
+    return AssetCache.cache.isPresent(game, asset);
   }
   
   public boolean isPresentAsFile()
@@ -65,7 +65,7 @@ public class AssetData
     {
       try
       {
-        Path archivePath = rom.getRomSet().getAssetPath(asset,true);
+        Path archivePath = game.getRomSet().getAssetPath(asset,true);
         ZipFile zip = new ZipFile(archivePath.toFile());
         FileHeader header = zip.getFileHeader(path.toString());
         return new ImageIcon(ImageIO.read(zip.getInputStream(header)));

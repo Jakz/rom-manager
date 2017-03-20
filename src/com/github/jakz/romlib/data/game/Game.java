@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -20,25 +22,26 @@ import com.pixbits.lib.io.archive.handles.Handle;
 import jack.rm.Settings;
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
-import jack.rm.data.attachment.Attachment;
+import jack.rm.data.attachment.Attachments;
 import jack.rm.data.romset.GameSet;
 import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.RenamerPlugin;
 
-public class Game implements Comparable<Game>, Verifiable, GameAttributeInterface
+public class Game implements Comparable<Game>, GameAttributeInterface
 {
 	private final GameSet set;
 
 	private final GameInfo info;
 	private GameClone<Game> clone;
   private boolean favourite;
-  private Handle handle;
+  
+  private Rom[] roms;
   
   public GameStatus status;
 
 	
 	private Map<Asset, AssetData> assetData = new HashMap<>();
-	private List<Attachment> attachments = new ArrayList<>();
+	private final Attachments attachments = new Attachments();
 	
 	public void setAttribute(Attribute key, Object value) { info.setAttribute(key, value); }
 	public void setCustomAttribute(Attribute key, Object value) { info.setCustomAttribute(key, value); }
@@ -50,13 +53,15 @@ public class Game implements Comparable<Game>, Verifiable, GameAttributeInterfac
   public boolean hasCustomAttribute(Attribute attrib) { return info.hasCustomAttribute(attrib); }
   public void clearCustomAttribute(Attribute attrib) { info.clearCustomAttribute(attrib); }
   
-  public List<Attachment> getAttachments() { return attachments; }
+  public Attachments getAttachments() { return attachments; }
 
 
-	public Game(GameSet set)
+	public Game(GameSet set, Rom[] roms)
 	{
     this.set = set;
     this.info = new GameInfo();
+    this.roms = roms;
+    Arrays.stream(this.roms).forEach(r -> r.setGame(this));
 	  status = GameStatus.MISSING;
 	}
 	
@@ -69,11 +74,6 @@ public class Game implements Comparable<Game>, Verifiable, GameAttributeInterfac
 	{
 	  return isFavourite() || status != GameStatus.MISSING || info.hasAnyCustomAttribute();
 	}
-	
-	public GameID<?> getID() { return new GameID.CRC(crc()); }
-	
-	public Handle getHandle() { return handle; }
-	public void setHandle(Handle path) { this.handle = path; }
 	
 	public void setCRC(long crc) { setAttribute(GameAttribute.CRC, crc); }
 	
@@ -207,9 +207,10 @@ public class Game implements Comparable<Game>, Verifiable, GameAttributeInterfac
 	public boolean isFavourite() { return favourite; }
 	public void setFavourite(boolean value) { favourite = value; }
   
-	
-	@Override public long crc() { return getAttribute(GameAttribute.CRC); }
-  @Override public long size() { return ((GameSize)getAttribute(GameAttribute.SIZE)).bytes() ; }
-  @Override public byte[] md5() { return getAttribute(GameAttribute.MD5); }
-  @Override public byte[] sha1() { return getAttribute(GameAttribute.SHA1); }
+  public boolean isComplete() { return Arrays.stream(roms).allMatch(r -> r.handle() != null); }
+  public Rom get(int index) { return roms[index]; }
+  public int size() { return roms.length; }
+  
+  public Iterator<Rom> iterator() { return Arrays.asList(roms).iterator(); }
+  public Stream<Rom> stream() { return Arrays.stream(roms); }
 }

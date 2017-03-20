@@ -11,8 +11,9 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import com.github.jakz.romlib.data.game.Game;
-import com.github.jakz.romlib.data.game.GameID;
+import com.github.jakz.romlib.data.game.RomID;
 import com.github.jakz.romlib.data.game.GameStatus;
+import com.github.jakz.romlib.data.game.Rom;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.pixbits.lib.io.digest.HashCache;
 
@@ -26,7 +27,7 @@ public class GameList implements Iterable<Game>
 {
 	public final GameSet set;
   List<Game> list;
-  HashCache<Game> cache;
+  HashCache<Rom> cache;
 	
 	private int countCorrect, countBadlyNamed, countNotFound;
 	
@@ -66,7 +67,7 @@ public class GameList implements Iterable<Game>
 	public void precomputeCache()
 	{
 		Collections.sort(list);
-		cache = new HashCache<>(list);
+		cache = new HashCache<>(list.stream().flatMap(g -> g.stream()));
 	}
 	
 	public void clear()
@@ -74,14 +75,14 @@ public class GameList implements Iterable<Game>
 		list.clear();
 	}
 	
-	public HashCache<Game> getCache() { return cache; }
+	public HashCache<Rom> getCache() { return cache; }
 		
-	public Game getByID(GameID<?> id)
+	public Rom getByID(RomID<?> id)
 	{
-	  return getByCRC32(((GameID.CRC)id).value);
+	  return getByCRC32(((RomID.CRC)id).value);
 	}
 	
-	public Game getByCRC32(long crc)
+	public Rom getByCRC32(long crc)
 	{
 		return cache.elementForCrc(crc);
 	}
@@ -137,6 +138,8 @@ public class GameList implements Iterable<Game>
   
   public Stream<Game> stream() { return list.stream(); }
   public Iterator<Game> iterator() { return list.iterator(); }
+  
+  public Stream<Rom> romStream() { return list.stream().flatMap(g -> g.stream()); }
   
   public Game find(String search) { 
     Optional<Game> rom = list.stream().filter(set.getSearcher().search(search)).findFirst();

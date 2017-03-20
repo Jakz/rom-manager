@@ -17,6 +17,7 @@ import com.pixbits.lib.functional.StreamException;
 
 import jack.rm.data.attachment.Attachment;
 import jack.rm.data.attachment.AttachmentType;
+import jack.rm.data.attachment.Attachments;
 
 public class AttachmentTable extends JPanel implements FileTransferHandler.Listener
 {
@@ -79,7 +80,7 @@ public class AttachmentTable extends JPanel implements FileTransferHandler.Liste
     if (rom == null)
       return;
     
-    List<Attachment> attachments = rom.getAttachments();
+    Attachments attachments = rom.getAttachments();
    
     try
     {
