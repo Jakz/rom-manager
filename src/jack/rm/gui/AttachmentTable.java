@@ -12,11 +12,11 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 import com.pixbits.lib.ui.FileTransferHandler;
+import com.github.jakz.romlib.data.attachments.Attachment;
+import com.github.jakz.romlib.data.attachments.AttachmentType;
+import com.github.jakz.romlib.data.attachments.Attachments;
 import com.github.jakz.romlib.data.game.Game;
 import com.pixbits.lib.functional.StreamException;
-
-import jack.rm.data.attachment.Attachment;
-import jack.rm.data.attachment.AttachmentType;
 
 public class AttachmentTable extends JPanel implements FileTransferHandler.Listener
 {
@@ -79,7 +79,7 @@ public class AttachmentTable extends JPanel implements FileTransferHandler.Liste
     if (rom == null)
       return;
     
-    List<Attachment> attachments = rom.getAttachments();
+    Attachments attachments = rom.getAttachments();
    
     try
     {

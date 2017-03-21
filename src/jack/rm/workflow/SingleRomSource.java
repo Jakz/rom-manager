@@ -3,7 +3,7 @@ package jack.rm.workflow;
 import java.util.function.Consumer;
 
 import com.github.jakz.romlib.data.game.Game;
-import com.pixbits.workflow.Fetcher;
+import com.pixbits.lib.workflow.Fetcher;
 
 public class SingleRomSource extends Fetcher<RomWorkflowEntry>
 {

@@ -5,7 +5,7 @@ import java.util.Set;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.platforms.Platform;
-import com.pixbits.workflow.Mutuator;
+import com.pixbits.lib.workflow.Mutuator;
 
 public abstract class RomOperation implements Mutuator<RomWorkflowEntry>
 {  

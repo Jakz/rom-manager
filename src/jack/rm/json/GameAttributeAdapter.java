@@ -11,7 +11,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-public class RomAttributeAdapter implements JsonDeserializer<Attribute>, JsonSerializer<Attribute>
+public class GameAttributeAdapter implements JsonDeserializer<Attribute>, JsonSerializer<Attribute>
 {
   @Override
   public Attribute deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException

@@ -10,7 +10,7 @@ import java.nio.file.StandardOpenOption;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.platforms.GBA;
-import com.pixbits.workflow.Dumper;
+import com.pixbits.lib.workflow.Dumper;
 
 public class EZFlashIVRomConsolidator extends Dumper<RomWorkflowEntry>
 {

@@ -3,12 +3,15 @@ package jack.rm.plugins.datparsers;
 import java.io.CharArrayWriter;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.UnknownFormatConversionException;
+import java.util.stream.Collectors;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -17,8 +20,10 @@ import com.github.jakz.romlib.data.game.GameSize;
 import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.Location;
 import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameClone;
 import com.github.jakz.romlib.data.game.GameSave;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
+import com.github.jakz.romlib.data.set.CloneSet;
 import com.github.jakz.romlib.data.set.DatFormat;
 
 import jack.rm.assets.Asset;
@@ -209,7 +214,7 @@ public class OfflineListParserPlugin extends DatParserPlugin
         {
           int ident = asInt();
           
-          Set<Game> currentClones = clones.putIfAbsent(ident, new HashSet<Game>());
+          Set<Game> currentClones = clones.computeIfAbsent(ident, i -> new HashSet<>());
           currentClones.add(rom);
 
           break;
@@ -221,9 +226,18 @@ public class OfflineListParserPlugin extends DatParserPlugin
           set.list.precomputeCache(); 
           saves.forEach((k,v) -> System.out.println(k+" -> "+v));
           
-          // TODO: check clones for elements with .size() > 1 and add to CloneSet
+          List<GameClone> clones = this.clones.values().stream()
+            .filter(s -> s.size() > 1)
+            .map(s -> s.toArray(new Game[s.size()]))
+            .map(g -> new GameClone(g))
+            .collect(Collectors.toList());
           
-          System.out.println("Groups: "+set.list.groupsCount());
+          if (!clones.isEmpty())
+          {
+            CloneSet cloneSet = new CloneSet(set, clones.toArray(new GameClone[clones.size()]));
+            set.setClones(cloneSet);
+            System.out.println("Clones: "+cloneSet.size());
+          }
           
           break;
         }

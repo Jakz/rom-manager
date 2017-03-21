@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import com.github.jakz.romlib.data.attachments.Attachments;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttributeInterface;
@@ -20,7 +21,6 @@ import com.pixbits.lib.io.archive.handles.Handle;
 import jack.rm.Settings;
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
-import jack.rm.data.attachment.Attachment;
 import jack.rm.data.romset.GameSet;
 import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.RenamerPlugin;
@@ -30,7 +30,7 @@ public class Game implements Comparable<Game>, Verifiable, GameAttributeInterfac
 	private final GameSet set;
 
 	private final GameInfo info;
-	private GameClone<Game> clone;
+	private GameClone clone;
   private boolean favourite;
   private Handle handle;
   
@@ -38,7 +38,7 @@ public class Game implements Comparable<Game>, Verifiable, GameAttributeInterfac
 
 	
 	private Map<Asset, AssetData> assetData = new HashMap<>();
-	private List<Attachment> attachments = new ArrayList<>();
+	private final Attachments attachments = new Attachments();
 	
 	public void setAttribute(Attribute key, Object value) { info.setAttribute(key, value); }
 	public void setCustomAttribute(Attribute key, Object value) { info.setCustomAttribute(key, value); }
@@ -50,7 +50,7 @@ public class Game implements Comparable<Game>, Verifiable, GameAttributeInterfac
   public boolean hasCustomAttribute(Attribute attrib) { return info.hasCustomAttribute(attrib); }
   public void clearCustomAttribute(Attribute attrib) { info.clearCustomAttribute(attrib); }
   
-  public List<Attachment> getAttachments() { return attachments; }
+  public Attachments getAttachments() { return attachments; }
 
 
 	public Game(GameSet set)
@@ -62,8 +62,8 @@ public class Game implements Comparable<Game>, Verifiable, GameAttributeInterfac
 	
 	public GameSet getRomSet() { return set; }
 	
-	public GameClone<Game> getClone() { return clone; }
-	public void setClone(GameClone<Game> clone) { this.clone = clone; }
+	public GameClone getClone() { return clone; }
+	public void setClone(GameClone clone) { this.clone = clone; }
 	
 	public boolean shouldSerializeState()
 	{

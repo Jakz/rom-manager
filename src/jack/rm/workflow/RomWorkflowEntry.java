@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 import com.github.jakz.romlib.data.game.Game;
 import com.pixbits.lib.io.BinaryBuffer;
 import com.pixbits.lib.io.archive.handles.Handle;
-import com.pixbits.workflow.WorkflowData;
+import com.pixbits.lib.workflow.WorkflowData;
 
 public class RomWorkflowEntry implements WorkflowData
 {

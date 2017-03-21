@@ -13,7 +13,7 @@ import com.google.gson.JsonSerializer;
 import jack.rm.data.romset.GameSet;
 import jack.rm.data.romset.GameSetManager;
 
-class RomSetAdapter implements JsonSerializer<GameSet>, JsonDeserializer<GameSet> {
+class GameSetAdapter implements JsonSerializer<GameSet>, JsonDeserializer<GameSet> {
   @Override
   public JsonElement serialize(GameSet src, Type typeOfSrc, JsonSerializationContext context) {
     return new JsonPrimitive(src.ident());

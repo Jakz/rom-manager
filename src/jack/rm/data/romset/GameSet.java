@@ -19,6 +19,7 @@ import com.github.jakz.romlib.data.game.GameSize;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.platforms.Platform;
+import com.github.jakz.romlib.data.set.CloneSet;
 import com.github.jakz.romlib.data.set.DatFormat;
 import com.github.jakz.romlib.data.set.Provider;
 import com.google.gson.Gson;
@@ -37,7 +38,7 @@ import jack.rm.assets.AssetManager;
 import jack.rm.files.Scanner;
 import jack.rm.files.parser.DatLoader;
 import jack.rm.json.Json;
-import jack.rm.json.RomListAdapter;
+import jack.rm.json.GameListAdapter;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.plugins.PluginRealType;
@@ -55,6 +56,7 @@ public class GameSet
 	public final Platform platform;
 	public final Provider provider;
 	public final DatFormat datFormat;
+	private CloneSet clones;
 	public final GameSize.Set sizeSet;
 	
 	private Settings settings;
@@ -98,6 +100,11 @@ public class GameSet
 	  
 	  scanner = new Scanner(this);
 	}
+	
+	public void setClones(CloneSet clones) { this.clones = clones; }
+	public CloneSet getClones() { return clones; }
+	
+	public int size() { return list.list.size(); }
 	
 	public Settings getSettings() { return settings; }
 	
@@ -182,7 +189,7 @@ public class GameSet
   	  
   	  Path statusPath = basePath.resolve("status.json");
   	  
-      Gson gson = Json.prebuild().registerTypeAdapter(GameList.class, new RomListAdapter(list)).create();
+      Gson gson = Json.prebuild().registerTypeAdapter(GameList.class, new GameListAdapter(list)).create();
       
       try (BufferedWriter wrt = Files.newBufferedWriter(statusPath))
       {
@@ -237,7 +244,7 @@ public class GameSet
   	    
   	    Path statusPath = basePath.resolve("status.json");
   	    
-  	    Gson gson = Json.prebuild().registerTypeAdapter(GameList.class, new RomListAdapter(list)).create();
+  	    Gson gson = Json.prebuild().registerTypeAdapter(GameList.class, new GameListAdapter(list)).create();
   	    
   	    try (BufferedReader rdr = Files.newBufferedReader(statusPath))
   	    {

@@ -2,14 +2,14 @@ package jack.rm.json;
 
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 
-public class RomSavedAttribute
+public class GameSavedAttribute
 {
   Attribute key;
   Object value;
   
-  RomSavedAttribute() { }
+  GameSavedAttribute() { }
   
-  RomSavedAttribute(Attribute key, Object value)
+  GameSavedAttribute(Attribute key, Object value)
   {
     this.key = key;
     this.value = value;

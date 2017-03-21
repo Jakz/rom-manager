@@ -5,25 +5,24 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
-public class GameClone<T> implements Iterable<T>
+public class GameClone implements Iterable<Game>
 {
-  private final T[] games;
-  private final T[] zones;
+  private final Game[] games;
+  private final Game[] zones;
   
-  public GameClone(T[] games, T[] zones)
+  public GameClone(Game[] games, Game[] zones)
   {
     this.games = games;
     this.zones = zones;
   }
 
-  @SuppressWarnings("unchecked")
-  public GameClone(T[] games)
+  public GameClone(Game[] games)
   {
     this.games = games;
-    this.zones = (T[])Array.newInstance(games.getClass().getComponentType(), Location.values().length);
+    this.zones = new Game[Location.values().length];
   }
   
-  public T getBestMatchForBias(BiasSet bias, boolean acceptFallback)
+  public Game getBestMatchForBias(BiasSet bias, boolean acceptFallback)
   {
     for (Location location : bias.getLocations())
     {
@@ -37,10 +36,10 @@ public class GameClone<T> implements Iterable<T>
       return null;
   }
  
-  public T get(Location zone) { return zones[zone.ordinal()]; }
-  public T get(int index) { return games[index]; }
+  public Game get(Location zone) { return zones[zone.ordinal()]; }
+  public Game get(int index) { return games[index]; }
   public int size() { return games.length; }
   
-  public Iterator<T> iterator() { return Arrays.asList(games).iterator(); }
-  public Stream<T> stream() { return Arrays.stream(games); }
+  public Iterator<Game> iterator() { return Arrays.asList(games).iterator(); }
+  public Stream<Game> stream() { return Arrays.stream(games); }
 }

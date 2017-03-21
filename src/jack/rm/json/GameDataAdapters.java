@@ -11,7 +11,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-public class RomDataAdapters
+public class GameDataAdapters
 {
   class VersionAdapter implements JsonSerializer<Version>, JsonDeserializer<Version>
   {

@@ -1,4 +1,4 @@
-package jack.rm.data.attachment;
+package com.github.jakz.romlib.data.attachments;
 
 import java.io.IOException;
 import java.nio.file.Files;

@@ -1,4 +1,4 @@
-package jack.rm.data.attachment;
+package com.github.jakz.romlib.data.attachments;
 
 public enum AttachmentType
 {

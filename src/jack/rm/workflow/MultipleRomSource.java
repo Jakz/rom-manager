@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import com.github.jakz.romlib.data.game.Game;
-import com.pixbits.workflow.Fetcher;
+import com.pixbits.lib.workflow.Fetcher;
 
 public class MultipleRomSource extends Fetcher<RomWorkflowEntry>
 {

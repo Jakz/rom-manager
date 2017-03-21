@@ -6,7 +6,7 @@ import java.nio.file.StandardCopyOption;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.pixbits.lib.io.archive.handles.Handle;
-import com.pixbits.workflow.Dumper;
+import com.pixbits.lib.workflow.Dumper;
 
 public class RomConsolidator extends Dumper<RomWorkflowEntry>
 {

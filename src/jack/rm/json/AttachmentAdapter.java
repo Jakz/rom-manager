@@ -3,6 +3,8 @@ package jack.rm.json;
 import java.lang.reflect.Type;
 import java.nio.file.Path;
 
+import com.github.jakz.romlib.data.attachments.Attachment;
+import com.github.jakz.romlib.data.attachments.AttachmentType;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -10,9 +12,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-
-import jack.rm.data.attachment.Attachment;
-import jack.rm.data.attachment.AttachmentType;
 
 public class AttachmentAdapter implements JsonDeserializer<Attachment>, JsonSerializer<Attachment>
 {

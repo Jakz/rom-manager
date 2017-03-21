@@ -14,11 +14,11 @@ import com.google.gson.reflect.TypeToken;
 
 import jack.rm.data.romset.GameList;;
 
-public class RomListAdapter implements JsonSerializer<GameList>, JsonDeserializer<GameList>
+public class GameListAdapter implements JsonSerializer<GameList>, JsonDeserializer<GameList>
 {
   GameList list;
   
-  public RomListAdapter(GameList list)
+  public GameListAdapter(GameList list)
   {
     this.list = list;
   }
@@ -26,20 +26,20 @@ public class RomListAdapter implements JsonSerializer<GameList>, JsonDeserialize
   @Override
   public JsonElement serialize(GameList src, Type type, JsonSerializationContext context)
   {
-    List<RomSavedState> roms = list.stream()
+    List<GameSavedState> roms = list.stream()
       .filter(Game::shouldSerializeState)
-      .map(r -> new RomSavedState(r))
+      .map(r -> new GameSavedState(r))
       .collect(Collectors.toList());
     
-    return context.serialize(roms, new TypeToken<List<RomSavedState>>(){}.getType());
+    return context.serialize(roms, new TypeToken<List<GameSavedState>>(){}.getType());
   }
   
   @Override
   public GameList deserialize(JsonElement json, Type type, JsonDeserializationContext context)
   {
-    List<RomSavedState> roms = context.deserialize(json, new TypeToken<List<RomSavedState>>(){}.getType());
+    List<GameSavedState> roms = context.deserialize(json, new TypeToken<List<GameSavedState>>(){}.getType());
 
-    for (RomSavedState prom : roms)
+    for (GameSavedState prom : roms)
     {
       Game rom = list.getByID(prom.id);
       
@@ -50,11 +50,11 @@ public class RomListAdapter implements JsonSerializer<GameList>, JsonDeserialize
         rom.setFavourite(prom.favourite);
         
         if (prom.attributes != null)
-          for (RomSavedAttribute attrib : prom.attributes)
+          for (GameSavedAttribute attrib : prom.attributes)
             rom.setCustomAttribute(attrib.key, attrib.value);
         
         if (prom.attachments != null)
-          rom.getAttachments().addAll(prom.attachments);
+          rom.getAttachments().set(prom.attachments);
         
       }
     }

@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import com.github.jakz.romlib.data.attachments.Attachment;
+import com.github.jakz.romlib.data.attachments.AttachmentType;
 import com.github.jakz.romlib.data.game.Game;
 
-import jack.rm.data.attachment.Attachment;
-import jack.rm.data.attachment.AttachmentType;
 import jack.rm.files.IPSPatch;
 
 public class IPSPatchOperation extends RomOperation

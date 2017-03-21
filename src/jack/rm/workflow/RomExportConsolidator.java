@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import com.pixbits.workflow.Dumper;
+import com.pixbits.lib.workflow.Dumper;
 
 public class RomExportConsolidator extends Dumper<RomWorkflowEntry>
 {

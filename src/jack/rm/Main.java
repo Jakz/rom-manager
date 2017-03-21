@@ -14,9 +14,9 @@ import com.pixbits.lib.log.LoggerFactory;
 import com.pixbits.lib.plugin.PluginManager;
 import com.pixbits.lib.ui.UIUtils;
 import com.pixbits.lib.ui.elements.ProgressDialog;
-import com.pixbits.workflow.Dumper;
-import com.pixbits.workflow.Fetcher;
-import com.pixbits.workflow.WorkflowData;
+import com.pixbits.lib.workflow.Dumper;
+import com.pixbits.lib.workflow.Fetcher;
+import com.pixbits.lib.workflow.WorkflowData;
 
 import jack.rm.assets.Downloader;
 import jack.rm.data.romset.GameSet;

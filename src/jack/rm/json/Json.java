@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.github.jakz.romlib.data.attachments.Attachment;
 import com.github.jakz.romlib.data.game.GameID;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.google.gson.Gson;
@@ -15,7 +16,6 @@ import com.pixbits.lib.plugin.JsonPluginSetAdapter;
 import com.pixbits.lib.plugin.Plugin;
 import com.pixbits.lib.plugin.PluginSet;
 
-import jack.rm.data.attachment.Attachment;
 import jack.rm.data.romset.GameSet;
 import jack.rm.plugins.ActualPlugin;
 
@@ -37,14 +37,14 @@ public class Json
   
   static
   {
-    registerTypeAdapter(GameSet.class, new RomSetAdapter());
+    registerTypeAdapter(GameSet.class, new GameSetAdapter());
     registerTypeAdapter(GameID.class, new RomIdAdapter());
     registerHiearchyAdapter(Handle.class, new JsonHandleAdapter());
-    registerTypeAdapter(RomSavedAttribute.class, new RomSavedAttributeAdapter());
+    registerTypeAdapter(GameSavedAttribute.class, new GameSavedAttributeAdapter());
     registerHiearchyAdapter(Path.class, new PathAdapter());
     registerTypeAdapter(Plugin.class, new JsonPluginAdapter<Plugin>());
     registerTypeAdapter(PluginSet.class, new JsonPluginSetAdapter<ActualPlugin>());
-    registerTypeAdapter(Attribute.class, new RomAttributeAdapter());
+    registerTypeAdapter(Attribute.class, new GameAttributeAdapter());
     registerTypeAdapter(Attachment.class, new AttachmentAdapter());
 
   }
