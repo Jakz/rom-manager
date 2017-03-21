@@ -5,6 +5,7 @@ import java.nio.file.Path;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameStatus;
+import com.github.jakz.romlib.data.game.Rom;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
 import com.pixbits.lib.ui.FileTransferHandler;
@@ -50,10 +51,11 @@ public class FileDropperListener implements FileTransferHandler.Listener
             if (result.rom.isMissing())
             {
               result.assign();
-              Game rom = result.rom;
+              Rom rom = result.rom;
+              Game game = rom.game();
               
               // first let's copy the file in the rompath
-              Path romFile = rom.getHandle().path();
+              Path romFile = rom.handle().path();
               if (!romFile.getParent().equals(romsPath))
               {
                 Path destFile = romsPath.resolve(romFile.getFileName());
@@ -61,7 +63,8 @@ public class FileDropperListener implements FileTransferHandler.Listener
                 
               }
               
-              rom.status = GameStatus.FOUND;
+              //TODO: doesn't work for multiple ROMS per game
+              game.status = GameStatus.FOUND;
               
               Organizer.organizeRomIfNeeded(rom);
               

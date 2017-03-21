@@ -40,6 +40,7 @@ public class Rom implements Verifiable
   public RomID<?> getID() { return new RomID.CRC(crc()); }
   
   public boolean isMissing() { return handle == null; }
+  public boolean isPresent() { return handle != null; }
   
   void setGame(Game game) { this.game = game; }
   public Game game() { return game; }

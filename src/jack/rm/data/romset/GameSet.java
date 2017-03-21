@@ -37,7 +37,7 @@ import jack.rm.assets.AssetManager;
 import jack.rm.files.Scanner;
 import jack.rm.files.parser.DatLoader;
 import jack.rm.json.Json;
-import jack.rm.json.RomListAdapter;
+import jack.rm.json.GameListAdapter;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.plugins.PluginRealType;
@@ -182,7 +182,7 @@ public class GameSet
   	  
   	  Path statusPath = basePath.resolve("status.json");
   	  
-      Gson gson = Json.prebuild().registerTypeAdapter(GameList.class, new RomListAdapter(list)).create();
+      Gson gson = Json.prebuild().registerTypeAdapter(GameList.class, new GameListAdapter(list)).create();
       
       try (BufferedWriter wrt = Files.newBufferedWriter(statusPath))
       {
@@ -237,7 +237,7 @@ public class GameSet
   	    
   	    Path statusPath = basePath.resolve("status.json");
   	    
-  	    Gson gson = Json.prebuild().registerTypeAdapter(GameList.class, new RomListAdapter(list)).create();
+  	    Gson gson = Json.prebuild().registerTypeAdapter(GameList.class, new GameListAdapter(list)).create();
   	    
   	    try (BufferedReader rdr = Files.newBufferedReader(statusPath))
   	    {
