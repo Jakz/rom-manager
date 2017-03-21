@@ -36,7 +36,6 @@ public class Game implements Comparable<Game>, Verifiable, GameAttributeInterfac
   
   public GameStatus status;
 
-	
 	private Map<Asset, AssetData> assetData = new HashMap<>();
 	private final Attachments attachments = new Attachments();
 	
@@ -52,7 +51,6 @@ public class Game implements Comparable<Game>, Verifiable, GameAttributeInterfac
   
   public Attachments getAttachments() { return attachments; }
 
-
 	public Game(GameSet set)
 	{
     this.set = set;
@@ -64,6 +62,8 @@ public class Game implements Comparable<Game>, Verifiable, GameAttributeInterfac
 	
 	public GameClone getClone() { return clone; }
 	public void setClone(GameClone clone) { this.clone = clone; }
+
+	public Stream<Game> stream() { return Stream.of(this); }
 	
 	public boolean shouldSerializeState()
 	{

@@ -20,9 +20,9 @@ public class ArchiveMergerPlugin extends CleanupPlugin implements BackgroundOper
   @ExposedParameter(name="Archive Path", description="This is the archive that will contain the whole romset", params="files")
   Path path; 
   
-  @Override public void execute(GameList list)
+  @Override public void execute(GameSet set)
   {
-    new ArchiverWorker(list.set, this, b -> {}).execute();
+    new ArchiverWorker(set, this, b -> {}).execute();
   }
   
   @Override public String getTitle() { return "Archiving romset"; }
@@ -41,7 +41,7 @@ public class ArchiveMergerPlugin extends CleanupPlugin implements BackgroundOper
       
       try
       {
-        zfile = new ZipFile(romSet.list.set.getSettings().romsPath.resolve("romset.zip").toFile());
+        zfile = new ZipFile(romSet.getSettings().romsPath.resolve("romset.zip").toFile());
         zparams = new ZipParameters();
         aparams = new ZipParameters();
       

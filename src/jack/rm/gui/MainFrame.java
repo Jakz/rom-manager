@@ -241,7 +241,7 @@ public class MainFrame extends JFrame implements WindowListener
 	private void exportList(Predicate<Game> predicate)
 	{
     StringBuilder builder = new StringBuilder();
-    set.list.stream().filter(predicate).map(r -> r.getTitle()).sorted().forEach(r -> builder.append(r).append('\n'));
+    set.stream().filter(predicate).map(r -> r.getTitle()).sorted().forEach(r -> builder.append(r).append('\n'));
     textFrame.showWithText(this, builder.toString());
 	}
 
@@ -259,7 +259,7 @@ public class MainFrame extends JFrame implements WindowListener
 	    
 	    JMenuItem renameRoms = new JMenuItem(Text.MENU_ROMS_RENAME.text());
 	    renameRoms.addActionListener(e -> {
-	      set.list.organize();
+	      set.organize();
 	      Main.mainFrame.updateTable();
 	    });
 	    romsMenu.add(renameRoms);
@@ -351,7 +351,7 @@ public class MainFrame extends JFrame implements WindowListener
         JMenu menu = new JMenu(e.getKey());
         e.getValue().forEach(p -> {
           JMenuItem item = new JMenuItem(p.getMenuCaption());
-          item.addActionListener(ee -> p.execute(set.list));
+          item.addActionListener(ee -> p.execute(set));
           menu.add(item);
         });
         pluginsMenu.add(menu);
@@ -456,7 +456,7 @@ public class MainFrame extends JFrame implements WindowListener
 	    r.status == GameStatus.UNORGANIZED && MenuElement.VIEW_SHOW_UNORGANIZED.item.isSelected()
 	  );
 	  
-		set.list.stream().filter(predicate).forEach(romListModel.collector());
+		set.stream().filter(predicate).forEach(romListModel.collector());
 
     if (current != null)     
     {      

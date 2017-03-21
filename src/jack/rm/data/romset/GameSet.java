@@ -10,17 +10,23 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameClone;
 import com.github.jakz.romlib.data.game.GameSize;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.set.CloneSet;
 import com.github.jakz.romlib.data.set.DatFormat;
+import com.github.jakz.romlib.data.set.DatLoader;
 import com.github.jakz.romlib.data.set.Provider;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
@@ -28,6 +34,7 @@ import com.pixbits.lib.searcher.DummySearcher;
 import com.pixbits.lib.searcher.SearchParser;
 import com.pixbits.lib.searcher.SearchPredicate;
 import com.pixbits.lib.searcher.Searcher;
+import com.pixbits.lib.io.digest.HashCache;
 import com.pixbits.lib.log.Log;
 
 import jack.rm.GlobalSettings;
@@ -35,52 +42,66 @@ import jack.rm.Main;
 import jack.rm.Settings;
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetManager;
+import jack.rm.files.MoverWorker;
+import jack.rm.files.RenamerWorker;
 import jack.rm.files.Scanner;
-import jack.rm.files.parser.DatLoader;
 import jack.rm.json.Json;
 import jack.rm.json.GameListAdapter;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.cleanup.CleanupPlugin;
+import jack.rm.plugins.folder.FolderPlugin;
+import jack.rm.plugins.renamer.RenamerPlugin;
 import jack.rm.plugins.searcher.SearchPlugin;
 import jack.rm.plugins.searcher.SearchPredicatesPlugin;
 
-public class GameSet
+public class GameSet implements Iterable<Game>
 {
   public static GameSet current = null;
 	
   private boolean loaded;
 
-	public final GameList list;
-	public final Platform platform;
-	public final Provider provider;
-	public final DatFormat datFormat;
+  public final Platform platform;
+  private final GameSetInfo info;
+  public final GameSize.Set sizeSet;
+  private final AssetManager assetManager;
+
+	private GameList list;
 	private CloneSet clones;
-	public final GameSize.Set sizeSet;
 	
 	private Settings settings;
-	private final AssetManager assetManager;
-	private final DatLoader loader;
 	
 	private Searcher<Game> searcher;
 	private Scanner scanner;
 
 	private final Attribute[] attributes;
 
-	public GameSet(Platform type, Provider provider, Attribute[] attributes, AssetManager assetManager, DatLoader loader)
+	public GameSet(Platform platform, Provider provider, DatLoader loader, Attribute[] attributes, AssetManager assetManager)
 	{
-		this.searcher = new DummySearcher<>();
-	  this.list = new GameList(this);
+		this.info = new GameSetInfo(provider, loader);
+	  this.searcher = new DummySearcher<>();
+	  this.list = null;
+	  this.clones = null;
 	  this.sizeSet = new GameSize.Set();
-	  this.platform = type;
-		this.provider = provider;
-		this.datFormat = loader.getFormat();
+	  this.platform = platform;
 		this.attributes = attributes;
 		this.assetManager = assetManager;
-		this.loader = loader;
 		this.loaded = false;
 	}
+	
+	public GameSet(Platform platform, Provider provider, DatLoader loader)
+  {
+	  this.info = new GameSetInfo(provider, loader);
+	  this.searcher = new DummySearcher<>();
+	  this.list = null;
+	  this.clones = null;
+	  this.sizeSet = new GameSize.Set();
+	  this.platform = platform;
+	  this.attributes = new Attribute[0];
+	  this.assetManager = AssetManager.DUMMY;
+	  this.loaded = false;
+  }
 	
 	public void pluginStateChanged()
 	{
@@ -101,16 +122,36 @@ public class GameSet
 	  scanner = new Scanner(this);
 	}
 	
-	public void setClones(CloneSet clones) { this.clones = clones; }
-	public CloneSet getClones() { return clones; }
+	public void setClones(CloneSet clones)
+	{ 
+    this.clones = clones;
+    
+    for (GameClone clone : clones)
+      for (Game game : clone)
+        game.setClone(clone);
+	}
 	
-	public int size() { return list.list.size(); }
+	public CloneSet clones() { return clones; }
+	public GameSetInfo info() { return info; }
+	public GameSetStatus status() { return list.status(); }
+	public HashCache<Game> hashCache() { return list.cache(); }
+	
+	public void checkNames() { list.checkNames(); }
+	public void resetStatus() { list.resetStatus(); }
+	public void refreshStatus() { list.refreshStatus(); }
+	
+	public Game getAny() { return get(0); }
+	public Game get(int index) { return list.get(index); }
+	public Game get(String title) { return list.get(title); }
+	public int gameCount() { return list.gameCount(); }
+	public Stream<Game> stream() { return list.stream(); }
+	public Iterator<Game> iterator() { return list.iterator(); }
 	
 	public Settings getSettings() { return settings; }
 	
 	public final AssetManager getAssetManager() { return assetManager; }
 	
-	public boolean doesSupportAttribute(Attribute attribute) { return Arrays.stream(attributes).anyMatch( a -> a == GameAttribute.NUMBER); }
+	public boolean doesSupportAttribute(Attribute attribute) { return Arrays.stream(attributes).anyMatch( a -> a == attribute); }
 	public final Attribute[] getSupportedAttributes() { return attributes; }
 	
 	public Scanner getScanner() { return scanner; }
@@ -123,24 +164,30 @@ public class GameSet
 	public final void load()
 	{ 
 	  if (!loaded)
-	    loader.load(this); 
-	  loaded = true;
+	  {
+	    DatLoader.Data data = info.getLoader().load(this);
+	    
+	    list = data.games;
+	    clones = data.clones;
+	    
+	    loaded = true;
+	  }
 	}
 	
 	@Override
   public String toString()
 	{
-		return platform.name+" ("+provider.getName()+")";
+		return platform.name+" ("+info.getName()+")";
 	}
 	
 	public String ident()
 	{
-		return datFormat.getIdent()+"-"+platform.tag+"-"+provider.getTag()+provider.builtSuffix();
+		return info.getFormat().getIdent()+"-"+platform.tag+"-"+info.getProvider().getTag()+info.getProvider().builtSuffix();
 	}
 	
 	public Path datPath()
 	{
-		return Paths.get("dat/"+ident()+"."+datFormat.getExtension());
+		return Paths.get("dat/"+ident()+"."+info.getFormat().getExtension());
 	}
 	
 	public Path getAttachmentPath()
@@ -166,12 +213,9 @@ public class GameSet
 	public final void cleanup()
 	{
 	  Set<CleanupPlugin> plugins = settings.plugins.getEnabledPlugins(PluginRealType.ROMSET_CLEANUP);
-	  plugins.stream().forEach( p -> p.execute(this.list) );
+	  plugins.stream().forEach( p -> p.execute(this) );
 	}
-	
-	public Game find(String query) { return list.find(query); }
-	public List<Game> filter(String query) { return list.stream().filter(searcher.search(query)).collect(Collectors.toList()); }
-	
+		
 	public void saveStatus()
 	{
 	  try
@@ -267,4 +311,31 @@ public class GameSet
 	    return false;
 	  }
 	}
+	
+  public void organize()
+  {
+    RenamerPlugin renamer = settings.getRenamer();
+    FolderPlugin organizer = settings.getFolderOrganizer();
+    boolean hasCleanupPhase = settings.hasCleanupPlugins();
+    
+    Consumer<Boolean> cleanupPhase = b -> { cleanup(); saveStatus(); };
+    Consumer<Boolean> moverPhase = organizer == null ? cleanupPhase : b -> new MoverWorker(this, organizer, cleanupPhase).execute();
+    Consumer<Boolean> renamerPhase = renamer == null ? moverPhase : b -> new RenamerWorker(this, renamer, moverPhase).execute();
+
+    renamerPhase.accept(true);
+  }  
+  
+  public List<Game> filter(String query)
+  { 
+    return stream()
+      .filter(searcher.search(query))
+      .collect(Collectors.toList());
+  }
+  
+  public Game find(String search) 
+  { 
+    Optional<Game> rom = list.stream().filter(getSearcher().search(search)).findFirst();
+    if (!rom.isPresent()) throw new RuntimeException("GameSet::find failed to find any rom");
+    return rom.orElse(null);
+  }
 }

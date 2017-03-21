@@ -31,4 +31,7 @@ public interface GameAttributeInterface
   
   default void setSize(GameSize size) { setAttribute(GameAttribute.SIZE, size); }
   default GameSize getSize() { return getAttribute(GameAttribute.SIZE); }
+  
+  default void setComment(String comment) { setAttribute(GameAttribute.COMMENT, comment); }
+  default String getComment() { return getAttribute(GameAttribute.COMMENT); }
 }

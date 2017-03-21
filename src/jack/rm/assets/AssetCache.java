@@ -25,17 +25,17 @@ public class AssetCache
     assetCache = new HashMap<>();
   }
     
-  boolean isPresent(Game rom, Asset asset)
+  boolean isPresent(Game game, Asset asset)
   {
-    Set<Game> roms = assetCache.get(asset);
+    Set<Game> games = assetCache.get(asset);
     
-    if (roms == null)
+    if (games == null)
     {
-      fillCache(rom.getRomSet(), asset);
-      roms = assetCache.get(asset);
+      fillCache(game.getRomSet(), asset);
+      games = assetCache.get(asset);
     }
 
-    return roms != null ? roms.contains(rom) : false;
+    return games != null ? games.contains(game) : false;
   }
   
   void rebuild(GameSet set, Asset asset)
@@ -54,16 +54,16 @@ public class AssetCache
        {
          ZipFile file = new ZipFile(archiveFile.toFile());
          
-         for (Game rom : set.list)
+         for (Game game : set)
          {
-           AssetData data = rom.getAssetData(asset);
+           AssetData data = game.getAssetData(asset);
            Path path = data.getPath();
            
            FileHeader header = file.getFileHeader(path.toString());
            
            if (header != null && (!asset.hasCRC() || header.getCrc32() == data.getCRC()))
            {
-             assetCache.computeIfAbsent(asset, k -> new HashSet<Game>()).add(rom);
+             assetCache.computeIfAbsent(asset, k -> new HashSet<Game>()).add(game);
            }
          }
        }

@@ -6,7 +6,14 @@ import com.github.jakz.romlib.data.game.Game;
 
 public interface AssetManager
 {
-  public URL assetURL(Asset asset, Game rom);
+  URL assetURL(Asset asset, Game rom);
+  Asset[] getSupportedAssets();
+  default boolean hasAssets() { return getSupportedAssets().length > 0; }
   
-  public Asset[] getSupportedAssets();
+  public static final AssetManager DUMMY = new AssetManager()
+  {
+    @Override public URL assetURL(Asset asset, Game rom) { return null; }
+    @Override public Asset[] getSupportedAssets() { return new Asset[0]; }
+    
+  };
 }

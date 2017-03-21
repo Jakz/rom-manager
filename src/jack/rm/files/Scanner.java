@@ -103,13 +103,13 @@ public class Scanner
 		if (total)
 		{
 		  logger.i(LogTarget.romset(set), "Scanning for roms");
-			set.list.resetStatus();
+			set.resetStatus();
 		}
 		else
 		{
 		  logger.i(LogTarget.romset(set), "Scanning for new roms");
 
-	    set.list.stream()
+	    set.stream()
 	    .filter(r -> r.status != GameStatus.MISSING)
 	    .map(r -> r.getHandle())
 	    .forEach(existing::add);
@@ -121,7 +121,7 @@ public class Scanner
 		{
 		  logger.e(LogTarget.romset(set), "Scanner plugin not enabled for romset");
 		  Dialogs.showError("Scanner Plugin", "No scanner plugin is enabled for the current romset.", Main.mainFrame);
-		  set.list.resetStatus();
+		  set.resetStatus();
 		  Main.mainFrame.updateTable();
 		  return;
 		}
@@ -129,7 +129,7 @@ public class Scanner
 		{
       logger.e(LogTarget.romset(set), "Verifier plugin not enabled for romset");
       Dialogs.showError("Verifier Plugin", "No verifier plugin is enabled for the current romset.", Main.mainFrame);
-      set.list.resetStatus();
+      set.resetStatus();
       Main.mainFrame.updateTable();
       return;
 		}
@@ -137,7 +137,7 @@ public class Scanner
 		{
 		  logger.e(LogTarget.romset(set), "Roms path doesn't exist! Scanning interrupted");
 		  Dialogs.showError("Romset Path", "Romset path is not set, or it doesn't exists.\nPlease set one in Options.", Main.mainFrame);
-		  set.list.resetStatus();
+		  set.resetStatus();
 		  Main.mainFrame.updateTable();
 		  return;
 		}
@@ -187,7 +187,7 @@ public class Scanner
          List<ScanResult> result = verifier.verifyHandle(entry);
          result.stream().filter(r -> r.rom != null).forEach(r -> foundRom(r));   
          
-         set.list.updateStatus();
+         set.refreshStatus();
 
          publish(i);
          ++i;

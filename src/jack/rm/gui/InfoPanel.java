@@ -515,7 +515,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	      item = new JMenuItem("Remove \'"+cattrib.getCaption()+"\'");
 	      item.addActionListener(e -> {
 	        set.getSettings().getRomAttributes().remove(cattrib);
-	        set.list.stream().forEach(r -> r.clearCustomAttribute(cattrib));
+	        set.stream().forEach(r -> r.clearCustomAttribute(cattrib));
 	        menuItemPostAction.run();
 	      });
 	    }

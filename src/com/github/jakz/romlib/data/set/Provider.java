@@ -48,17 +48,19 @@ public final class Provider
   private final Type type;
   
   private final String name;
+  private final String description;
+  private final String version;
+  private final String author;
+  private final String comment;
+
   private final String flavour;
   
   private final String tag;
   private final String suffix;
   
-  private final String author;
-  private final String description;
+  private final Source source;
   
-  private Source source;
-  
-  public Provider(String name, String tag, String flavour, String suffix, String description, String author, Source source)
+  public Provider(String name, String tag, String flavour, String suffix, String description, String author, String version, String comment, Source source)
   {
     this.name = name;
     this.tag = tag;
@@ -67,17 +69,24 @@ public final class Provider
     this.description = description;
     this.type = Type.DAT_FILE;
     this.author = author;
+    this.version = version;
+    this.comment = comment;
     this.source = source;
+  }
+  
+  public Provider(String name, String description, String version, String comment, String author)
+  {
+    this(name, null, null, null, description, author, version, comment, null);
   }
   
   public Provider(String name, String tag, Source source)
   {
-    this(name, tag, null, null, null, null, source);
+    this(name, tag, null, null, null, null, null, null, source);
   }
   
   public Provider derive(String flavour, String suffix, String description, String author, Source source)
   {
-    return new Provider(name, tag, flavour, suffix, description, author, source);
+    return new Provider(name, tag, flavour, suffix, description, author, version, comment, source);
   }
   
   public Type getType() { return type; }
@@ -86,6 +95,9 @@ public final class Provider
   public String getSuffix() { return suffix; }
   public String getFlavour() { return flavour; }
   public String getAuthor() { return author; }
+  public String getComment() { return comment; }
+  public String getDescription() { return description; }
+  public String getVersion() { return version; }
   
   public boolean canBeUpdated() { return source != null; }
   public Source getSource() { return source; }

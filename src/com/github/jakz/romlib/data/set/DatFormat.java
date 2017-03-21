@@ -11,6 +11,10 @@ public final class DatFormat
     this.extension = extension;
   }
   
+  public boolean is(String ident) { return ident.equals(ident); }
+  
   public String getIdent() { return ident; }
   public String getExtension() { return extension; }
+  
+  public static final DatFormat DUMMY = new DatFormat("dummy", "dat");
 }

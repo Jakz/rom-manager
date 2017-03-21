@@ -137,7 +137,8 @@ public class OptionsFrame extends JFrame implements ActionListener, ComponentLis
 	@Override
   public void componentHidden(ComponentEvent e)
 	{
-	  set.list.checkNames();
+	  set.checkNames();
 	  set.saveStatus();
+	  Main.mainFrame.updateTable();
 	}
 }

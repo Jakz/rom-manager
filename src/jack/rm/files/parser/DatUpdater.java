@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.zip.ZipFile;
 
+import com.github.jakz.romlib.data.set.Provider;
 import com.pixbits.lib.io.FileUtils;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
@@ -122,10 +123,12 @@ public class DatUpdater
     
     logger.i(LogTarget.romset(set), "Downloading DAT for "+set.ident()+" to "+tmpDownloadPath);
     
-    DownloadWorker<?> worker = new DownloadWorker<BackgroundOperation>(set.provider.getSource().getURL(), tmpDownloadPath.get(), new BackgroundOperation() {
+    final Provider.Source source = set.info().getProvider().getSource();
+    
+    DownloadWorker<?> worker = new DownloadWorker<BackgroundOperation>(source.getURL(), tmpDownloadPath.get(), new BackgroundOperation() {
       public String getTitle() { return "Downloading"; }
       public String getProgressText() { return "Progress.."; }
-    }, extractionStep, Main.gsettingsView, set.provider.getSource().getPostArguments());
+    }, extractionStep, Main.gsettingsView, source.getPostArguments());
     
     worker.execute();    
     

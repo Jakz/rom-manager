@@ -1,80 +1,51 @@
 package jack.rm.data.romset;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameID;
 import com.github.jakz.romlib.data.game.GameStatus;
-import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.pixbits.lib.io.digest.HashCache;
-
-import jack.rm.Main;
-import jack.rm.files.MoverWorker;
-import jack.rm.files.RenamerWorker;
-import jack.rm.plugins.folder.FolderPlugin;
-import jack.rm.plugins.renamer.RenamerPlugin;
 
 public class GameList implements Iterable<Game>
 {
-	public final GameSet set;
-  List<Game> list;
-  HashCache<Game> cache;
-	
-	private int countCorrect, countBadlyNamed, countNotFound;
-	
-	public GameList(GameSet set)
+	private final GameSetStatus status;
+  private final Game[] games;
+  private final HashCache<Game> cache;
+  private final HashMap<String, Game> nameMap;
+		
+  public GameList(List<Game> games)
+  {
+    this(games.toArray(new Game[games.size()]));
+  }
+  
+	public GameList(Game[] games)
 	{
-		this.set = set;
-	  list = new ArrayList<>();
+	  this.games = games;
+	  status = new GameSetStatus();
+	  Arrays.sort(games);
+	  cache = new HashCache<>(Arrays.asList(games));
+	  
+	  nameMap = stream().collect(Collectors.toMap(
+	    g -> g.getTitle(), 
+	    g -> g, 
+	    (v1, v2) -> v1, 
+	    () -> new HashMap<>()
+	  ));
 	}
-	
-	public void add(Game rom)
-	{
-		list.add(rom);
-	}
-	
-	public Game get(int i)
-	{
-		return list.get(i);
-	}
-	
-	public Game getByNumber(int number)
-	{
-	  for (Game r : list)
-	  {
-	    int rnumber = r.getAttribute(GameAttribute.NUMBER);
-	    if (rnumber == number)
-	      return r;
-	  }
 
-	  return null;
-	}
+	public Game get(String title) { return nameMap.get(title); }
+	public Game get(int i) { return games[i]; }
 	
-	public int count()
-	{
-		return list.size();
-	}
-	
-	public void precomputeCache()
-	{
-		Collections.sort(list);
-		cache = new HashCache<>(list);
-	}
-	
-	public void clear()
-	{
-		list.clear();
-	}
-	
-	public HashCache<Game> getCache() { return cache; }
+	public GameSetStatus status() { return status; }
+	public int gameCount() { return games.length; }
+
+	public HashCache<Game> cache() { return cache; }
 		
 	public Game getByID(GameID<?> id)
 	{
@@ -86,38 +57,21 @@ public class GameList implements Iterable<Game>
 		return cache.elementForCrc(crc);
 	}
 	
+
 	public void resetStatus()
 	{
-		for (Game r : list)
+		for (Game r : games)
 			r.status = GameStatus.MISSING;
-		
-		updateStatus();
 	}
 	
-	public int getCountCorrect() { return countCorrect; }
-	public int getCountMissing() { return countNotFound; }
-	public int getCountBadName() { return countBadlyNamed; }
-	
-	public void updateStatus()
+	public void refreshStatus()
 	{
-	  countNotFound = 0;
-	  countBadlyNamed = 0;
-	  countCorrect = 0;
-	  
-	  for (Game r : list)
-	  {
-	    switch (r.status)
-	    {
-	      case MISSING: ++countNotFound; break;
-	      case UNORGANIZED: ++countBadlyNamed; break;
-	      case FOUND: ++countCorrect; break;
-	    }
-	  }
+    status.refresh(stream());
 	}
-
+	
 	public void checkNames()
 	{
-    for (Game rom : list)
+    for (Game rom : games)
     {
       if (rom.status != GameStatus.MISSING)
       {  
@@ -130,30 +84,9 @@ public class GameList implements Iterable<Game>
           if (rom.isOrganized())
             rom.status = GameStatus.FOUND;
       }
-    }
-		
-		Main.mainFrame.updateTable();
+    }		
 	}
   
-  public Stream<Game> stream() { return list.stream(); }
-  public Iterator<Game> iterator() { return list.iterator(); }
-  
-  public Game find(String search) { 
-    Optional<Game> rom = list.stream().filter(set.getSearcher().search(search)).findFirst();
-    if (!rom.isPresent()) throw new RuntimeException("RomList::find failed to find any rom");
-    return rom.orElse(null);
-  }
-  
-  public void organize()
-  {
-    RenamerPlugin renamer = set.getSettings().getRenamer();
-    FolderPlugin organizer = set.getSettings().getFolderOrganizer();
-    boolean hasCleanupPhase = set.getSettings().hasCleanupPlugins();
-    
-    Consumer<Boolean> cleanupPhase = b -> { set.cleanup(); set.saveStatus(); };
-    Consumer<Boolean> moverPhase = organizer == null ? cleanupPhase : b -> new MoverWorker(set, organizer, cleanupPhase).execute();
-    Consumer<Boolean> renamerPhase = renamer == null ? moverPhase : b -> new RenamerWorker(set, renamer, moverPhase).execute();
-
-    renamerPhase.accept(true);
-  }  
+  public Stream<Game> stream() { return Arrays.stream(games); }
+  public Iterator<Game> iterator() { return Arrays.asList(games).iterator(); }
 }

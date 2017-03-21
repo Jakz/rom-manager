@@ -3,10 +3,10 @@ package jack.rm.plugins.datparsers;
 import java.util.Map;
 import java.util.function.Predicate;
 
+import com.github.jakz.romlib.data.set.DatLoader;
 import com.pixbits.lib.plugin.PluginType;
 
 import jack.rm.data.romset.GameSet;
-import jack.rm.files.parser.DatLoader;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.PluginRealType;
 

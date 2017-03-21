@@ -14,7 +14,7 @@ import com.pixbits.lib.io.FolderScanner;
 import com.pixbits.lib.plugin.ExposedParameter;
 
 import jack.rm.Settings;
-import jack.rm.data.romset.GameList;
+import jack.rm.data.romset.GameSet;
 import jack.rm.plugins.PluginWithIgnorePaths;
 
 public class MoveUnknownFilesPlugin extends CleanupPlugin implements PluginWithIgnorePaths
@@ -23,7 +23,7 @@ public class MoveUnknownFilesPlugin extends CleanupPlugin implements PluginWithI
   
   int counter;
  
-  @Override public void execute(GameList list)
+  @Override public void execute(GameSet set)
   {
     try
     {  
@@ -31,12 +31,12 @@ public class MoveUnknownFilesPlugin extends CleanupPlugin implements PluginWithI
       if (!Files.exists(path) || !Files.isDirectory(path))
         Files.createDirectory(path);
   
-      Set<Path> existing = list.stream()
+      Set<Path> existing = set.stream()
         .filter( r -> r.status != GameStatus.MISSING )
         .map( r -> r.getHandle().path())
         .collect(Collectors.toSet());
   
-      Settings settings = list.set.getSettings();
+      Settings settings = set.getSettings();
       Set<Path> total = new FolderScanner(FileSystems.getDefault().getPathMatcher("glob:*.*"), settings.getIgnoredPaths(), true).scan(settings.romsPath);
       
       total.removeAll(existing);

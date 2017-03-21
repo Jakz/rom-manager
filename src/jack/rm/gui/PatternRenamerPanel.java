@@ -129,7 +129,7 @@ public class PatternRenamerPanel extends PluginOptionsPanel implements CaretList
   public void caretUpdate(CaretEvent e)
 	{
 	  getRomset().getSettings().renamingPattern = patternField.getText();
-		exampleField.setText(GameSet.current.list.get(0).getCorrectName());
+		exampleField.setText(GameSet.current.getAny().getCorrectName());
 	}
 	
 	@Override

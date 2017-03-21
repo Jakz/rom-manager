@@ -97,8 +97,8 @@ public class RomSetManagerView extends JPanel
       switch (c)
       {
         case 0: return GlobalSettings.settings.getEnabledProviders().contains(rs.ident()); 
-        case 1: return rs.provider.getName();
-        case 2: return rs.provider.getFlavour();
+        case 1: return rs.info().getName();
+        case 2: return rs.info().getFlavour();
         case 3: return rs.ident();
         default: return null;
       }
@@ -277,14 +277,14 @@ public class RomSetManagerView extends JPanel
       
       if (set != null)
       {
-        name.setText(set.provider.prettyName());
+        name.setText(set.info().getProvider().prettyName());
         
         try
         {
           boolean isPresent = Files.exists(set.datPath());
           
           update.setVisible(true);
-          update.setEnabled(set.provider.canBeUpdated());
+          update.setEnabled(set.info().getProvider().canBeUpdated());
           
           if (isPresent)
           {
@@ -304,7 +304,7 @@ public class RomSetManagerView extends JPanel
           e.printStackTrace();
         }
 
-        type.setText("("+set.provider.getType().caption+")");
+        type.setText("("+set.info().getProvider().getType().caption+")");
       }
       else
       {

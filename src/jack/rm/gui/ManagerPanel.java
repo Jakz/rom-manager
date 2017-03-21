@@ -71,13 +71,13 @@ public class ManagerPanel extends JPanel implements ActionListener
 	  InfoTableModel()
 	  {
 	    rows = new InfoRow<?>[] {
-	      new InfoRow<String>("Provider", () -> GameSet.current.provider.getName()),
+	      new InfoRow<String>("Provider", () -> GameSet.current.info().getName()),
 	      new InfoRow<Platform>("System", () -> GameSet.current.platform),
-	      new InfoRow<String>("Count", () -> GameSet.current.list.count() + " roms"),
-	      new InfoRow<String>("Owned", () -> GameSet.current.list.getCountCorrect()+GameSet.current.list.getCountBadName() + " roms"),
+	      new InfoRow<String>("Count", () -> GameSet.current.gameCount() + " roms"),
+	      new InfoRow<String>("Owned", () -> GameSet.current.status().getFoundCount() + " roms"),
         new InfoRow<String>("% Complete", () -> { 
-          int total = GameSet.current.list.count();
-          int owned = GameSet.current.list.getCountCorrect() + GameSet.current.list.getCountBadName();
+          int total = GameSet.current.gameCount();
+          int owned = GameSet.current.status().getFoundCount();
           float percent = Math.round((owned / (float)total) * 100);     
           return String.format("%2.0f", percent) + "%";
         }),

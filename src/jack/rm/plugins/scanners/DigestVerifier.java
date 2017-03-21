@@ -29,7 +29,7 @@ public class DigestVerifier extends VerifierPlugin
   @Override
   public void setup(GameSet romset)
   {
-    HashCache<Game> cache = romset.list.getCache();
+    HashCache<Game> cache = romset.hashCache();
     
     VerifierOptions options = new VerifierOptions();
     options.checkNestedArchives = true;

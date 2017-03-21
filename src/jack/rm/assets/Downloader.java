@@ -51,14 +51,11 @@ public class Downloader
     
     Asset[] assets = set.getAssetManager().getSupportedAssets();
     
-    for (int i = 0; i < set.list.count(); ++i)
-    {
-      Game r = set.list.get(i);
-      
+    set.stream().forEach(g -> {
       for (Asset asset : assets)
-        if (!r.hasAsset(asset))
-          pool.submit(new ArtDownloaderTask(r, asset));
-    }
+        if (!g.hasAsset(asset))
+          pool.submit(new ArtDownloaderTask(g, asset));
+    });
     
     pool.shutdown();
         

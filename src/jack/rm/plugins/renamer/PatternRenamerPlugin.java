@@ -253,7 +253,7 @@ public class PatternRenamerPlugin extends RenamerPlugin
       if (e.getSource() == patternField)
       {
         getRomset().getSettings().renamingPattern = patternField.getText();
-        exampleField.setText(GameSet.current.list.get(0).getCorrectName());
+        exampleField.setText(GameSet.current.getAny().getCorrectName());
         
         if (internalRenameMode.getSelectedItem() == ArchiveRenameMode.Same)
           internalPatternField.setText(patternField.getText());

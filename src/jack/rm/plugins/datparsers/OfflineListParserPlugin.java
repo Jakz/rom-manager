@@ -25,11 +25,12 @@ import com.github.jakz.romlib.data.game.GameSave;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.set.CloneSet;
 import com.github.jakz.romlib.data.set.DatFormat;
+import com.github.jakz.romlib.data.set.DatLoader;
 
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
+import jack.rm.data.romset.GameList;
 import jack.rm.data.romset.GameSet;
-import jack.rm.files.parser.DatLoader;
 import jack.rm.files.parser.SaveParser;
 import jack.rm.files.parser.XMLDatLoader;
 import jack.rm.files.parser.XMLHandler;
@@ -82,18 +83,18 @@ public class OfflineListParserPlugin extends DatParserPlugin
   
   public class OfflineListXMLParser extends XMLHandler
   {
-    CharArrayWriter buffer = new CharArrayWriter();
+    private final CharArrayWriter buffer = new CharArrayWriter();
+
+    private Game rom;
+    private List<Game> games = new ArrayList<>();
+    private Map<String, GameSave<?>> saves = new TreeMap<>();
+    private Map<Integer, Set<Game>> clones = new HashMap<>();
     
     private final DecimalFormat format;
-    
-    private Asset[] assets;
-   
-    
-    Game rom;
-    int curString;
-    
     private SaveParser saveParser;
-    
+
+    private Asset[] assets;
+
     boolean started = false;
     
     public void setRomSet(GameSet set)
@@ -146,9 +147,6 @@ public class OfflineListParserPlugin extends DatParserPlugin
       String value = asString();
       return !value.isEmpty() ? Long.parseLong(asString(), 16) : 0;
     }
-
-    Map<String, GameSave<?>> saves = new TreeMap<>();
-    Map<Integer, Set<Game>> clones = new HashMap<>();
     
     @Override
     public void endElement(String namespaceURI, String localName, String qName) throws SAXException
@@ -220,30 +218,36 @@ public class OfflineListParserPlugin extends DatParserPlugin
           break;
         }
         case "comment": rom.setAttribute(GameAttribute.COMMENT, asString()); break;
-        case "game": set.list.add(rom); break;
+        case "game": games.add(rom); break;
         case "games":
-        {
-          set.list.precomputeCache(); 
-          saves.forEach((k,v) -> System.out.println(k+" -> "+v));
-          
-          List<GameClone> clones = this.clones.values().stream()
-            .filter(s -> s.size() > 1)
-            .map(s -> s.toArray(new Game[s.size()]))
-            .map(g -> new GameClone(g))
-            .collect(Collectors.toList());
-          
-          if (!clones.isEmpty())
-          {
-            CloneSet cloneSet = new CloneSet(set, clones.toArray(new GameClone[clones.size()]));
-            set.setClones(cloneSet);
-            System.out.println("Clones: "+cloneSet.size());
-          }
-          
+        { 
           break;
         }
         
 
       }
+    }
+    
+    @Override public DatLoader.Data get()
+    {
+      saves.forEach((k,v) -> System.out.println(k+" -> "+v));
+
+      GameList list = new GameList(games);
+      CloneSet cloneSet = null;
+      
+      List<GameClone> clones = this.clones.values().stream()
+          .filter(s -> s.size() > 1)
+          .map(s -> s.toArray(new Game[s.size()]))
+          .map(g -> new GameClone(g))
+          .collect(Collectors.toList());
+        
+      if (!clones.isEmpty())
+      {
+        cloneSet = new CloneSet(clones.toArray(new GameClone[clones.size()]));
+        System.out.println("Clones: "+cloneSet.size());
+      }
+      
+      return new DatLoader.Data(list, cloneSet);
     }
     
     @Override

@@ -14,7 +14,7 @@ public abstract class RomSetWorker<T extends BackgroundOperation> extends Backgr
   public RomSetWorker(GameSet set, T plugin, Predicate<Game> filter, Consumer<Boolean> callback)
   {
     super(plugin, callback);
-    set.list.stream().filter(filter).forEach(r -> this.add(r));
+    set.stream().filter(filter).forEach(r -> this.add(r));
     this.romSet = set;
 
   }

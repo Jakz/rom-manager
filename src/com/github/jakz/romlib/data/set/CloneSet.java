@@ -9,21 +9,16 @@ import java.util.stream.Stream;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameClone;
 
-import jack.rm.data.romset.GameSet;
-
 public class CloneSet implements Iterable<GameClone>
 {
-  private final GameSet set;
   private final GameClone[] clones;
-  
   private final Map<Game, GameClone> cloneMap;
   
-  public CloneSet(GameSet set, GameClone[] clones)
+  public CloneSet(GameClone[] clones)
   {
     this.clones = clones;
-    this.set = set;
     
-    cloneMap = new HashMap<>(this.set.size());
+    cloneMap = new HashMap<>((int)Arrays.stream(clones).flatMap(GameClone::stream).count());
     
     Arrays.stream(clones).forEach(gc -> {
       gc.stream().forEach(g -> cloneMap.put(g, gc));

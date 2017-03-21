@@ -258,8 +258,8 @@ public class ClonesDialog extends JDialog
   public void apply()
   {
     keep.forEach( (k, v) -> { if (v) k.assign(); });
-    set.list.checkNames();
-    set.list.updateStatus();
+    set.checkNames();
+    set.refreshStatus();
     Main.mainFrame.updateTable();
   }
   
@@ -272,7 +272,7 @@ public class ClonesDialog extends JDialog
     Set<Game> romClones = clones.stream().map( c -> c.rom ).collect(Collectors.toSet());
    
     this.clones = new ArrayList<>(clones);
-    this.clones.addAll(set.list.stream()
+    this.clones.addAll(set.stream()
         .filter( r -> romClones.contains(r))
         .map( r -> new ScanResult(r, r.getHandle()) )
         .collect(Collectors.toList()));

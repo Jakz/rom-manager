@@ -14,7 +14,7 @@ public class FindStatement implements Statement
   
   public void execute(ScriptEnvironment env)
   {
-    List<Game> roms = env.set.list.stream().filter(query).collect(Collectors.toList());
+    List<Game> roms = env.set.stream().filter(query).collect(Collectors.toList());
   
     env.out.append("Find found "+roms.size()+" elements:");
     

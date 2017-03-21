@@ -26,7 +26,7 @@ public class RenamerWorker extends RomSetWorker<RenamerPlugin>
         Organizer.internalRenameRom(rom);
       
       rom.updateStatus();
-      romSet.list.updateStatus();
+      romSet.refreshStatus();
     }
   }
 

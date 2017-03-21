@@ -29,9 +29,9 @@ public class ExportRomsPlugin extends ActualPlugin implements OperationalPlugin,
   @ExposedParameter(name="Export Path", description="This is the path in which to export roms", params="directories")
   Path path; 
   
-  @Override public void execute(GameList list)
+  @Override public void execute(GameSet set)
   {
-    new CopyWorker(list.set, this, b -> {}).execute();
+    new CopyWorker(set, this, b -> {}).execute();
   }
   
   static Predicate<Game> buildFilterPredicate()

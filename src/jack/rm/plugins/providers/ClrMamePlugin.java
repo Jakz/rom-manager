@@ -46,17 +46,17 @@ public class ClrMamePlugin extends ProviderPlugin
     sets[0] = new GameSet(
         Platform.GG, 
         KnownProviders.NO_INTRO.derive(null, null, "", "", null), 
+        datParser.buildDatLoader("clr-mame-nointro"),
         GG_ATTRIBUTES, 
-        new EmptyAssetManager(), 
-        datParser.buildDatLoader("clr-mame-nointro")
+        new EmptyAssetManager()
     );
     
     sets[1] = new GameSet(
         Platform.LYNX, 
-        KnownProviders.NO_INTRO.derive(null, null, "", "", null), 
+        KnownProviders.NO_INTRO.derive(null, null, "", "", null),
+        datParser.buildDatLoader("clr-mame-nointro"),
         GG_ATTRIBUTES, 
-        new EmptyAssetManager(), 
-        datParser.buildDatLoader("clr-mame-nointro")
+        new EmptyAssetManager()
     );
 
     return sets;

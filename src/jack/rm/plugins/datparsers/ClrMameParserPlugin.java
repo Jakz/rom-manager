@@ -4,8 +4,10 @@ import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -18,11 +20,12 @@ import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.Location;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.set.DatFormat;
+import com.github.jakz.romlib.data.set.DatLoader;
 import com.pixbits.lib.parser.SimpleParser;
 import com.pixbits.lib.parser.SimpleTreeBuilder;
 
+import jack.rm.data.romset.GameList;
 import jack.rm.data.romset.GameSet;
-import jack.rm.files.parser.DatLoader;
 
 public class ClrMameParserPlugin extends DatParserPlugin
 {
@@ -118,16 +121,19 @@ public class ClrMameParserPlugin extends DatParserPlugin
   private class ClrMameParser implements DatLoader
   {
     GameSet set;
+    List<Game> list;
     Game rom;
 
     private final HexBinaryAdapter hexConverter = new HexBinaryAdapter();
     
     @Override public DatFormat getFormat() { return new DatFormat("cm", "dat"); }
 
-    @Override public void load(GameSet set)
+    @Override public DatLoader.Data load(GameSet set)
     {
       this.set = set;
       load(set.datPath());
+
+      return new DatLoader.Data(new GameList(list));
     }
     
     public void load(Path datFile)
@@ -188,9 +194,12 @@ public class ClrMameParserPlugin extends DatParserPlugin
       if (!isEnd && k.equals("game"))
         rom = new Game(set);
       else if (isEnd && k.equals("game"))
-        set.list.add(rom);
+        list.add(rom);
       else if (isEnd && k.equals("clrmamepro"))
+      {
         started = true;
+        list = new ArrayList<>();
+      }
     }
   }
 

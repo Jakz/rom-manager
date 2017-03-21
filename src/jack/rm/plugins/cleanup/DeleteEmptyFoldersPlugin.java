@@ -4,14 +4,14 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import jack.rm.data.romset.GameList;
+import jack.rm.data.romset.GameSet;
 
 public class DeleteEmptyFoldersPlugin extends CleanupPlugin
 {
-  @Override public void execute(GameList list)
+  @Override public void execute(GameSet set)
   {
     Queue<File> files = new LinkedList<File>();
-    files.add(list.set.getSettings().romsPath.toFile());
+    files.add(set.getSettings().romsPath.toFile());
     
     int counter = 0;
     
