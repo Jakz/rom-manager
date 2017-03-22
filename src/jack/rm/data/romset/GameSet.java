@@ -135,6 +135,7 @@ public class GameSet implements Iterable<Game>
 	public GameSetInfo info() { return info; }
 	public GameSetStatus status() { return list.status(); }
 	public HashCache<Game> hashCache() { return list.cache(); }
+	public boolean hasMultipleRomsPerGame() { return list.hasMultipleRomsPerGame(); }
 	
 	public void checkNames() { list.checkNames(); }
 	public void resetStatus() { list.resetStatus(); }

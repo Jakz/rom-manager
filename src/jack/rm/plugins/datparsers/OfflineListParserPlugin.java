@@ -188,11 +188,17 @@ public class OfflineListParserPlugin extends DatParserPlugin
         case "publisher": rom.setAttribute(GameAttribute.PUBLISHER, asString()); break;
         case "location":
         {
-          rom.setAttribute(GameAttribute.LOCATION, locationMap.getOrDefault(asInt(), Location.NONE)); break;
+          Location location = locationMap.get(asInt());
+          
+          if (location != null)
+            rom.getLocation().set(location);
+          
+          break;
         }
         case "language":
         {
           int values = asInt();
+          
           languageMap.forEach( (k, v) -> { if ((values & k) != 0) rom.getLanguages().add(v); });
           break;
         }

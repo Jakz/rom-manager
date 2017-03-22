@@ -14,11 +14,12 @@ import com.pixbits.lib.io.digest.HashCache;
 
 public class GameList implements Iterable<Game>
 {
-	private final GameSetStatus status;
+  private final GameSetStatus status;
   private final Game[] games;
   private final HashCache<Game> cache;
   private final HashMap<String, Game> nameMap;
-		
+  private final boolean hasMultipleRomsPerGame;
+  
   public GameList(List<Game> games)
   {
     this(games.toArray(new Game[games.size()]));
@@ -37,6 +38,8 @@ public class GameList implements Iterable<Game>
 	    (v1, v2) -> v1, 
 	    () -> new HashMap<>()
 	  ));
+	  
+	  hasMultipleRomsPerGame = stream().anyMatch(g -> g.stream().count() > 1);
 	}
 
 	public Game get(String title) { return nameMap.get(title); }
@@ -89,4 +92,6 @@ public class GameList implements Iterable<Game>
   
   public Stream<Game> stream() { return Arrays.stream(games); }
   public Iterator<Game> iterator() { return Arrays.asList(games).iterator(); }
+  
+  public boolean hasMultipleRomsPerGame() { return hasMultipleRomsPerGame; }
 }

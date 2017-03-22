@@ -108,6 +108,14 @@ public enum Location
     
     return locations;
   }
+  
+  public static Location forName(String string)
+  {
+    return Arrays.stream(values())
+      .filter(l -> l.fullName.compareToIgnoreCase(string) == 0)
+      .findFirst()
+      .orElse(null);
+  }
 	
 	@Override
   public String toString()

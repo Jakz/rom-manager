@@ -19,6 +19,7 @@ public class LocationSet
     this.mask = mask;
   }
   
+  public void set(Location location) { mask = location.mask; }
   public void add(Location location) { mask |= location.mask; }
   public boolean is(Location location) { return (mask & location.mask) != 0; }
   public boolean isJust(Location location) { return mask == location.mask; }
@@ -36,7 +37,7 @@ public class LocationSet
       return Location.NONE;
   }
   
-  public Location mostCompatibleLocation()
+  public Location getMostCompatibleLocation()
   {
     Location location = getExactLocation();
     
@@ -57,5 +58,15 @@ public class LocationSet
       return location.icon;
     else
       return null;
+  }
+  
+  public String toString()
+  {
+    Location location = getMostCompatibleLocation();
+    
+    if (location != Location.NONE)
+      return location.toString();
+    else
+      return "Unknown";
   }
 }

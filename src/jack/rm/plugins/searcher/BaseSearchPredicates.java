@@ -10,6 +10,7 @@ import com.pixbits.lib.searcher.BasicPredicate;
 import com.pixbits.lib.searcher.SearchPredicate;
 import com.github.jakz.romlib.data.game.Genre;
 import com.github.jakz.romlib.data.game.Location;
+import com.github.jakz.romlib.data.game.LocationSet;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameSave;
 import com.github.jakz.romlib.data.game.GameStatus;
@@ -131,8 +132,9 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
         if (tokens[0].equals("loc") || tokens[0].equals("location"))
         {
           return r -> {
-            Location location = r.getAttribute(GameAttribute.LOCATION);
-            return location.fullName.toLowerCase().equals(tokens[1]);
+            LocationSet location = r.getLocation();
+            Location slocation = Location.forName(tokens[1]);
+            return slocation == null || location.is(slocation);
           };
         }
       }

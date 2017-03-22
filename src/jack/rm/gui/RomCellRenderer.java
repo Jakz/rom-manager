@@ -13,6 +13,7 @@ import javax.swing.ListCellRenderer;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.Location;
+import com.github.jakz.romlib.data.game.LocationSet;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.ui.Icon;
 
@@ -39,17 +40,17 @@ class RomCellRenderer extends JPanel implements ListCellRenderer<Game>
 	}
 	
 	@Override
-  public Component getListCellRendererComponent(JList<? extends Game> list, Game rom, int index, boolean iss, boolean chf)
+  public Component getListCellRendererComponent(JList<? extends Game> list, Game game, int index, boolean iss, boolean chf)
 	{
-	  mainLabel.setText(rom.toString());
-	  Location location = rom.getAttribute(GameAttribute.LOCATION);
-	  
-	  if (location != null)
-	    mainLabel.setIcon(location.icon.getIcon());
+	  mainLabel.setText(game.toString());
+	  LocationSet location = game.getLocation();
+
+	  if (location != null && location.getIcon() != null)
+	    mainLabel.setIcon(location.getIcon().getIcon());
 	  else
 	    mainLabel.setIcon(null);
 		
-	  if (rom.isFavourite())
+	  if (game.isFavourite())
 	    rightIcon.setIcon(Icon.FAVORITE.getIcon());
 	  else
 	    rightIcon.setIcon(null);
@@ -57,12 +58,12 @@ class RomCellRenderer extends JPanel implements ListCellRenderer<Game>
 		if (iss)
 		{
 		  mainLabel.setForeground(Color.WHITE);
-		  setBackground(rom.status.color);
+		  setBackground(game.status.color);
 		}
 		else
 		{
 		  setBackground(list.getBackground());
-		  mainLabel.setForeground(rom.status.color);
+		  mainLabel.setForeground(game.status.color);
 		}
 		
 		return this;

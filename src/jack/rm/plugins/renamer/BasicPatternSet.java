@@ -64,19 +64,29 @@ public class BasicPatternSet extends PatternSetPlugin
   private static class FullLocationPattern extends Pattern {
     FullLocationPattern() { super("%L", "Full location name"); }
     @Override
-    public String apply(Pattern.RenamingOptions options, String name, Game rom) { return apply(options, name, code, ((Location)rom.getAttribute(GameAttribute.LOCATION)).fullName); }
+    public String apply(Pattern.RenamingOptions options, String name, Game rom) { 
+      Location location = rom.getLocation().getMostCompatibleLocation();
+      return apply(options, name, code, location.fullName);
+      
+    }
   }
   
   private static class ShortLocationPattern extends Pattern {
     ShortLocationPattern() { super("%a", "Short location name"); }
     @Override
-    public String apply(Pattern.RenamingOptions options, String name, Game rom) { return apply(options, name, code, ((Location)rom.getAttribute(GameAttribute.LOCATION)).shortName); }
+    public String apply(Pattern.RenamingOptions options, String name, Game rom) { 
+      Location location = rom.getLocation().getMostCompatibleLocation();
+      return apply(options, name, code, location.shortName);
+    }
   }
   
   private static class TinyLocationPattern extends Pattern {
     TinyLocationPattern() { super("%l", "Tiny location name"); }
     @Override
-    public String apply(Pattern.RenamingOptions options, String name, Game rom) { return apply(options, name, code, ((Location)rom.getAttribute(GameAttribute.LOCATION)).tinyName); }
+    public String apply(Pattern.RenamingOptions options, String name, Game rom) { 
+      Location location = rom.getLocation().getMostCompatibleLocation();
+      return apply(options, name, code, location.tinyName);
+    }
   }
   
   private static class ShortLanguagePattern extends Pattern {

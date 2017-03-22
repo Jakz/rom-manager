@@ -59,8 +59,8 @@ public class ClrMameParserPlugin extends DatParserPlugin
           if (t.equals("USA")) usa.set(true);
           else if (t.equals("Japan")) japan.set(true);
           else if (t.equals("Europe")) europe.set(true);
-          else if (t.equals("Korea")) rom.setAttribute(GameAttribute.LOCATION, Location.KOREA);
-          else if (t.equals("World")) rom.setAttribute(GameAttribute.LOCATION, Location.WORLD);
+          else if (t.equals("Korea")) rom.getLocation().add(Location.KOREA);
+          else if (t.equals("World")) rom.getLocation().add(Location.WORLD);
           else if (t.equals("Ja")) rom.getLanguages().add(Language.JAPANESE);
           else if (t.equals("Nl")) rom.getLanguages().add(Language.DUTCH);
           else if (t.equals("De")) rom.getLanguages().add(Language.GERMAN);
@@ -89,24 +89,20 @@ public class ClrMameParserPlugin extends DatParserPlugin
           rom.setAttribute(RomAttribute.COMMENT, previous + ", " + s);*/
       });
       
-      rom.setAttribute(GameAttribute.TITLE, title.substring(0, firstParen-1));
+      rom.setTitle(title.substring(0, firstParen-1));
       
       if (usa.get() && japan.get() && !europe.get())
-        rom.setAttribute(GameAttribute.LOCATION, Location.USA_JAPAN);
+        rom.getLocation().add(Location.USA_JAPAN);
       else if (usa.get() && !japan.get() && europe.get())
-        rom.setAttribute(GameAttribute.LOCATION, Location.USA_EUROPE);
+        rom.getLocation().add(Location.USA_EUROPE);
       else if (!usa.get() && japan.get() && europe.get())
-        rom.setAttribute(GameAttribute.LOCATION, Location.JAPAN_EUROPE);
+        rom.getLocation().add(Location.JAPAN_EUROPE);
       else if (usa.get() && !japan.get() && !europe.get())
-        rom.setAttribute(GameAttribute.LOCATION, Location.USA);
+        rom.getLocation().add(Location.USA);
       else if (!usa.get() && japan.get() && !europe.get())
-        rom.setAttribute(GameAttribute.LOCATION, Location.JAPAN);
+        rom.getLocation().add(Location.JAPAN);
       else if (!usa.get() && !japan.get() && europe.get())
-        rom.setAttribute(GameAttribute.LOCATION, Location.EUROPE);
-
-      
-      if (rom.getAttribute(GameAttribute.LOCATION) == null)
-        rom.setAttribute(GameAttribute.LOCATION, Location.NONE);
+        rom.getLocation().add(Location.EUROPE);
     }
     
     @Override protected void parsingFinished()

@@ -190,7 +190,7 @@ public class SearchPanel extends JPanel
     GameSize size = sizes.getItemAt(sizes.getSelectedIndex());
     
     if (location != null)
-      predicate = predicate.and(r -> r.getAttribute(GameAttribute.LOCATION).equals(location));
+      predicate = predicate.and(r -> r.getLocation().is(location));
     
     if (language != null)
       predicate = predicate.and(r -> r.getLanguages().includes(language));

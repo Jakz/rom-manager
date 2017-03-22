@@ -11,7 +11,9 @@ import javax.swing.ListCellRenderer;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.Location;
+import com.github.jakz.romlib.data.game.LocationSet;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
+import com.github.jakz.romlib.ui.Icon;
 
 class CellRenderer extends JLabel implements ListCellRenderer<Game>
 {
@@ -23,26 +25,27 @@ class CellRenderer extends JLabel implements ListCellRenderer<Game>
 	}
 	
 	@Override
-  public Component getListCellRendererComponent(JList<? extends Game> list, Game rom, int index, boolean iss, boolean chf)
+  public Component getListCellRendererComponent(JList<? extends Game> list, Game game, int index, boolean iss, boolean chf)
 	{
 		setFont(new Font("Default",Font.PLAIN,12));
-		setText(rom.toString());
+		setText(game.toString());
 		
-		Location location = rom.getAttribute(GameAttribute.LOCATION);
-		setIcon(location.icon.getIcon());
+		LocationSet location = game.getLocation();
+		Icon icon = location.getIcon();
+		setIcon(icon != null ? icon.getIcon() : null);
 		
 		setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));
 		
 		if (iss)
 		{
 			setForeground(Color.WHITE);
-			setBackground(rom.status.color);
+			setBackground(game.status.color);
 			
 		}
 		else
 		{
 			setBackground(list.getBackground());
-			setForeground(rom.status.color);
+			setForeground(game.status.color);
 		}
 		
 		return this;

@@ -273,7 +273,6 @@ public class InfoPanel extends JPanel implements ActionListener
 	    panel.add(value);
       panel.revalidate();
       deleteButton.setVisible(rom.hasCustomAttribute(attrib));
-
 	  }
 	  
 	  public void finishEdit()

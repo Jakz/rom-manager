@@ -63,7 +63,7 @@ public class Game implements Comparable<Game>, Verifiable, GameAttributeInterfac
 	public GameClone getClone() { return clone; }
 	public void setClone(GameClone clone) { this.clone = clone; }
 
-	public Stream<Game> stream() { return Stream.of(this); }
+	public Stream<Rom> stream() { return Stream.empty(); }
 	
 	public boolean shouldSerializeState()
 	{
