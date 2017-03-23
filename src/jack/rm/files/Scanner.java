@@ -128,18 +128,18 @@ public class Scanner
 		handleSet.stream().forEach(h -> logger.d(LogTarget.romset(set), "> %s", h.toString()));
 
 		logger.i(LogTarget.romset(set), "Verifying %s handles for romset", total ? "all" : "new");
-		ScannerWorker worker = new ScannerWorker(handleSet);
+		VerifierWorker worker = new VerifierWorker(handleSet);
 		worker.execute();
 	}
 	
-	public class ScannerWorker extends SwingWorker<Void, Integer>
+	public class VerifierWorker extends SwingWorker<Void, Integer>
 	{
 	  private final long total;
 	  private final long simpleTotal;
 	  
 	  private final HandleSet handles;
 
-	  ScannerWorker(HandleSet handles)
+	  VerifierWorker(HandleSet handles)
 	  {
 	    this.handles = handles;
 	    //TODO maybe manage an unified iteration
@@ -196,6 +196,9 @@ public class Scanner
 	  @Override
 	  public void done()
 	  {	    
+	    if (isCancelled())
+	      return;
+	    
 	    try
       {
         get();
@@ -208,10 +211,6 @@ public class Scanner
       {
         e.printStackTrace();
       }
-	    
-	    if (isCancelled())
-	      return;
-
 	    
 	    Main.progress.finished();
 	    

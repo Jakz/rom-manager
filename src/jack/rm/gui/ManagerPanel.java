@@ -30,17 +30,18 @@ import com.github.jakz.romlib.data.game.RomSize.PrintStyle;
 import com.github.jakz.romlib.data.game.RomSize.PrintUnit;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.set.GameSet;
+import com.pixbits.lib.io.archive.Scanner;
+import com.pixbits.lib.ui.elements.BrowseButton;
 
 import jack.rm.Settings;
 import jack.rm.i18n.Text;
 
-public class ManagerPanel extends JPanel implements ActionListener
+public class ManagerPanel extends JPanel
 {
 	private static final long serialVersionUID = 1L;
 	
 	public JLabel romsPathLabel;
-	public JTextField romsPath;
-	public JButton romsPathButton;
+	public BrowseButton romsPathButton;
 	
 	private final InfoTableModel model;
 	private final JTable infoTable;
@@ -143,9 +144,12 @@ public class ManagerPanel extends JPanel implements ActionListener
 	public ManagerPanel()
 	{
 		romsPathLabel = new JLabel(Text.ROMSET_ROMS_PATH.text());
-		romsPath = new JTextField(30);
-		romsPathButton = new JButton("...");
-		romsPathButton.addActionListener(this);
+		
+		romsPathButton = new BrowseButton(30, BrowseButton.Type.FILES_AND_DIRECTORIES);
+		romsPathButton.setFilter(Scanner.archiveMatcher, "Romsets");
+		romsPathButton.setCallback(p -> {
+      GameSet.current.getSettings().romsPath = p;
+		});
 		
 		model = new InfoTableModel();
 		infoTable = new JTable(model);
@@ -160,8 +164,6 @@ public class ManagerPanel extends JPanel implements ActionListener
 		GridBagConstraints c = new GridBagConstraints();
 		u(c,0,0,1,1);
 		panel.add(romsPathLabel,c);
-		u(c,1,0,3,1);
-		panel.add(romsPath,c);
 		u(c,4,0,1,1);
 		panel.add(romsPathButton,c);
 		u(c,0,1,5,1);
@@ -191,26 +193,6 @@ public class ManagerPanel extends JPanel implements ActionListener
     }*/
 		
 		if (s.romsPath != null)
-		  romsPath.setText(s.romsPath.toString());
-	}
-	
-	@Override
-  public void actionPerformed(ActionEvent e)
-	{
-		if (e.getSource() == romsPathButton)
-		{
-			final JFileChooser jfc = new JFileChooser();
-			jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-			int response = jfc.showOpenDialog(this);
-			
-			if (response == JFileChooser.APPROVE_OPTION)
-			{
-				File f = jfc.getSelectedFile();
-				
-				
-				romsPath.setText(f.getPath());
-				GameSet.current.getSettings().romsPath = f.toPath();
-			}
-		}
+		  romsPathButton.setPath(s.romsPath);
 	}
 }
