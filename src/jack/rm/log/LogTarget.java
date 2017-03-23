@@ -1,7 +1,6 @@
 package jack.rm.log;
 
 import com.pixbits.lib.log.LogAttribute;
-import com.pixbits.lib.log.LogScope;
 
 public abstract class LogTarget implements LogAttribute
 {
@@ -9,6 +8,7 @@ public abstract class LogTarget implements LogAttribute
   {
     FILE,
     HANDLE,
+    GAME,
     ROM,
     ROM_SET,
     PLUGIN,
@@ -32,13 +32,13 @@ public abstract class LogTarget implements LogAttribute
     @Override public String toString() { return ""; }
   }
   
-  public static class Rom extends LogTarget
+  public static class GameLog extends LogTarget
   {
     private final com.github.jakz.romlib.data.game.Game rom;
     
-    Rom(com.github.jakz.romlib.data.game.Game rom)
+    GameLog(com.github.jakz.romlib.data.game.Game rom)
     {
-      super(Type.ROM);
+      super(Type.GAME);
       this.rom = rom;
     }
     
@@ -46,11 +46,25 @@ public abstract class LogTarget implements LogAttribute
     public String toString() { return rom.getTitle(); }
   }
   
+  public static class RomLog extends LogTarget
+  {
+    private final com.github.jakz.romlib.data.game.Rom rom;
+    
+    RomLog(com.github.jakz.romlib.data.game.Rom rom)
+    {
+      super(Type.ROM);
+      this.rom = rom;
+    }
+    
+    @Override
+    public String toString() { return rom.name; }
+  }
+  
   public static class RomSet extends LogTarget
   {
-    private final jack.rm.data.romset.GameSet set;
+    private final com.github.jakz.romlib.data.set.GameSet set;
     
-    RomSet(jack.rm.data.romset.GameSet set)
+    RomSet(com.github.jakz.romlib.data.set.GameSet set)
     {
       super(Type.ROM_SET);
       this.set = set;
@@ -104,8 +118,9 @@ public abstract class LogTarget implements LogAttribute
   public static LogTarget none() { return new None(); }
   public static LogTarget file(java.nio.file.Path file) { return new File(file); }
   public static LogTarget handle(com.pixbits.lib.io.archive.handles.Handle handle) { return new Handle(handle); }
-  public static LogTarget rom(com.github.jakz.romlib.data.game.Game rom) { return new Rom(rom); }
-  public static LogTarget romset(jack.rm.data.romset.GameSet set) { return new RomSet(set); }
+  public static LogTarget game(com.github.jakz.romlib.data.game.Game game) { return new GameLog(game); }
+  public static LogTarget rom(com.github.jakz.romlib.data.game.Rom rom) { return new RomLog(rom); }
+  public static LogTarget romset(com.github.jakz.romlib.data.set.GameSet set) { return new RomSet(set); }
   public static LogTarget plugin(com.pixbits.lib.plugin.Plugin plugin) { return new Plugin(plugin); }
 
 }

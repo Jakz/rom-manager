@@ -15,12 +15,10 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
-import com.pixbits.lib.ui.elements.ProgressDialog;
-
 import jack.rm.Main;
-import jack.rm.data.romset.GameSet;
 import jack.rm.gui.Dialogs;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
@@ -128,7 +126,7 @@ public class Downloader
       }
       catch (FileNotFoundException e)
       {
-        logger.e(LogTarget.rom(rom), "Asset not found at "+url);
+        logger.e(LogTarget.game(rom), "Asset not found at "+url);
         Main.mainFrame.updateInfoPanel(rom);
         return false;
       }

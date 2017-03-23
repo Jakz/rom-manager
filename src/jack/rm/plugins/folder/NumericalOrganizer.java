@@ -6,11 +6,11 @@ import java.util.function.Predicate;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
+import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.plugin.ExposedParameter;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
 
-import jack.rm.data.romset.GameSet;
 import jack.rm.files.Organizer;
 
 public class NumericalOrganizer extends FolderPlugin

@@ -1,26 +1,36 @@
 package jack.rm.json;
 
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameID;
+import com.github.jakz.romlib.data.set.GameList;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
-
-import jack.rm.data.romset.GameList;;
+import com.pixbits.lib.functional.StreamUtil;;
 
 public class GameListAdapter implements JsonSerializer<GameList>, JsonDeserializer<GameList>
 {
   GameList list;
-  
+  Map<GameID<?>, Game> gameMap;
+
   public GameListAdapter(GameList list)
   {
     this.list = list;
+  }
+  
+  private void precomputeGameMap()
+  {
+    gameMap = list.stream()
+      .collect(Collectors.toMap(g -> g.getID(), g -> g, (g1,g2) -> g1, () -> new HashMap<>()));
   }
     
   @Override
@@ -37,24 +47,30 @@ public class GameListAdapter implements JsonSerializer<GameList>, JsonDeserializ
   @Override
   public GameList deserialize(JsonElement json, Type type, JsonDeserializationContext context)
   {
+    precomputeGameMap();
+    
     List<GameSavedState> roms = context.deserialize(json, new TypeToken<List<GameSavedState>>(){}.getType());
 
     for (GameSavedState prom : roms)
     {
-      Game rom = list.getByID(prom.id);
+      Game game = gameMap.get(prom.id);
       
-      if (rom != null)
+      if (game != null)
       {
-        rom.setHandle(prom.file);
-        rom.status = prom.status;
-        rom.setFavourite(prom.favourite);
+        game.setStatus(prom.status);
+        game.setFavourite(prom.favourite);
+        
+        StreamUtil.zip(prom.roms.stream(), game.stream()).forEach( p -> {
+          if (p.first.handle != null)
+            p.second.setHandle(p.first.handle);
+        });
         
         if (prom.attributes != null)
           for (GameSavedAttribute attrib : prom.attributes)
-            rom.setCustomAttribute(attrib.key, attrib.value);
+            game.setCustomAttribute(attrib.key, attrib.value);
         
         if (prom.attachments != null)
-          rom.getAttachments().set(prom.attachments);
+          game.getAttachments().set(prom.attachments);
         
       }
     }

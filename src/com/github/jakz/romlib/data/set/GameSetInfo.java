@@ -1,12 +1,9 @@
-package jack.rm.data.romset;
+package com.github.jakz.romlib.data.set;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.github.jakz.romlib.data.game.Game;
-import com.github.jakz.romlib.data.set.DatFormat;
-import com.github.jakz.romlib.data.set.DatLoader;
-import com.github.jakz.romlib.data.set.Provider;
 
 public class GameSetInfo
 {

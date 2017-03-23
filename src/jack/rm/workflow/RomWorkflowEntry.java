@@ -25,11 +25,11 @@ public class RomWorkflowEntry implements WorkflowData
     destPath = Paths.get(".");
   }
 
-  public Game getRom() { return rom; }
+  public Game getGame() { return rom; }
   
   public void prepareBuffer() throws IOException
   {
-    Handle source = rom.getHandle();
+    Handle source = getGame().rom().handle();
     this.path = Files.createTempFile(null, null);
     Files.copy(source.getInputStream(), path, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
   }

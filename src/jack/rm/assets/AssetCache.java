@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.Set;
 
 import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.set.GameSet;
 
-import jack.rm.data.romset.GameSet;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.FileHeader;

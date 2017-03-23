@@ -18,7 +18,7 @@ public class SortByAttributeOperation extends RomOperation
   
   protected RomWorkflowEntry doApply(RomWorkflowEntry handle)
   {
-    Object value = handle.getRom().getAttribute(attribute);
+    Object value = handle.getGame().getAttribute(attribute);
     String folder = value != null ? value.toString() : "Uncategorized";
     if (isLowercase)
       folder = folder.toLowerCase();

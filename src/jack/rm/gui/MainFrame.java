@@ -39,15 +39,15 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.github.jakz.romlib.data.game.Game;
-import com.github.jakz.romlib.data.game.GameSize;
+import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.platforms.Platform;
+import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.ui.FileTransferHandler;
 
 import jack.rm.GlobalSettings;
 import jack.rm.Main;
 import jack.rm.assets.AssetPacker;
-import jack.rm.data.romset.GameSet;
 import jack.rm.data.romset.GameSetManager;
 import jack.rm.i18n.Text;
 import jack.rm.plugins.OperationalPlugin;
@@ -277,11 +277,11 @@ public class MainFrame extends JFrame implements WindowListener
       romsExportSubmenu.add(exportFavorites);
       
       JMenuItem exportFound = new JMenuItem(Text.MENU_ROMS_EXPORT_FOUND.text());
-      exportFound.addActionListener( e -> { exportList(r -> r.status != GameStatus.MISSING); });
+      exportFound.addActionListener( e -> { exportList(r -> r.getStatus().isComplete()); });
       romsExportSubmenu.add(exportFound);
       
       JMenuItem exportMissing = new JMenuItem(Text.MENU_ROMS_EXPORT_MISSING.text());
-      exportMissing.addActionListener( e -> { exportList(r -> r.status == GameStatus.MISSING); });
+      exportMissing.addActionListener( e -> { exportList(r -> !r.getStatus().isComplete()); });
       romsExportSubmenu.add(exportMissing);
   
       romsMenu.addSeparator();
@@ -419,8 +419,10 @@ public class MainFrame extends JFrame implements WindowListener
 	  
 	  buildMenu(set);
 	  
+	  countPanel.gameSetLoaded(set);
+	  
 	  searchPanel.activate(false);
-	  searchPanel.resetFields(set.sizeSet.values().toArray(new GameSize[set.sizeSet.values().size()]));
+	  searchPanel.resetFields(set.sizeSet.values().toArray(new RomSize[set.sizeSet.values().size()]));
 	  searchPanel.activate(true);
 	  
     cbRomSets.removeItemListener(romSetListener);
@@ -451,9 +453,10 @@ public class MainFrame extends JFrame implements WindowListener
 	  romListModel.clear();
 	  
 	  Predicate<Game> predicate = searchPanel.buildSearchPredicate().and( r ->
-	    r.status == GameStatus.FOUND && MenuElement.VIEW_SHOW_CORRECT.item.isSelected() ||
-	    r.status == GameStatus.MISSING && MenuElement.VIEW_SHOW_NOT_FOUND.item.isSelected() ||
-	    r.status == GameStatus.UNORGANIZED && MenuElement.VIEW_SHOW_UNORGANIZED.item.isSelected()
+	    r.getStatus() == GameStatus.FOUND && MenuElement.VIEW_SHOW_CORRECT.item.isSelected() ||
+	    r.getStatus() == GameStatus.MISSING && MenuElement.VIEW_SHOW_NOT_FOUND.item.isSelected() ||
+	    r.getStatus() == GameStatus.UNORGANIZED && MenuElement.VIEW_SHOW_UNORGANIZED.item.isSelected()
+	    // TODO: missing management for GameStatus.INCOMPLETE
 	  );
 	  
 		set.stream().filter(predicate).forEach(romListModel.collector());

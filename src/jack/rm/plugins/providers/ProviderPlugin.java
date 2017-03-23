@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.plugin.PluginType;
 
-import jack.rm.data.romset.GameSet;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.datparsers.DatParserPlugin;

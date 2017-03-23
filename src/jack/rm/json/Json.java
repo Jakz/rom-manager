@@ -7,6 +7,7 @@ import java.util.Map;
 import com.github.jakz.romlib.data.attachments.Attachment;
 import com.github.jakz.romlib.data.game.GameID;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
+import com.github.jakz.romlib.data.set.GameSet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pixbits.lib.io.archive.handles.Handle;
@@ -16,7 +17,6 @@ import com.pixbits.lib.plugin.JsonPluginSetAdapter;
 import com.pixbits.lib.plugin.Plugin;
 import com.pixbits.lib.plugin.PluginSet;
 
-import jack.rm.data.romset.GameSet;
 import jack.rm.plugins.ActualPlugin;
 
 public class Json
@@ -38,7 +38,7 @@ public class Json
   static
   {
     registerTypeAdapter(GameSet.class, new GameSetAdapter());
-    registerTypeAdapter(GameID.class, new RomIdAdapter());
+    registerTypeAdapter(GameID.class, new GameIdAdapter());
     registerHiearchyAdapter(Handle.class, new JsonHandleAdapter());
     registerTypeAdapter(GameSavedAttribute.class, new GameSavedAttributeAdapter());
     registerHiearchyAdapter(Path.class, new PathAdapter());
@@ -46,7 +46,6 @@ public class Json
     registerTypeAdapter(PluginSet.class, new JsonPluginSetAdapter<ActualPlugin>());
     registerTypeAdapter(Attribute.class, new GameAttributeAdapter());
     registerTypeAdapter(Attachment.class, new AttachmentAdapter());
-
   }
   
   public static Gson build()

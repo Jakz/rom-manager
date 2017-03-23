@@ -3,10 +3,10 @@ package com.github.jakz.romlib.data.game;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
 import com.github.jakz.romlib.data.attachments.Attachments;
@@ -15,26 +15,25 @@ import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttributeInterface;
 import com.github.jakz.romlib.data.game.attributes.GameInfo;
 import com.github.jakz.romlib.data.platforms.Platform;
-import com.pixbits.lib.io.archive.Verifiable;
+import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.io.archive.handles.Handle;
 
 import jack.rm.Settings;
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
-import jack.rm.data.romset.GameSet;
 import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.RenamerPlugin;
 
-public class Game implements Comparable<Game>, Verifiable, GameAttributeInterface
+public class Game implements Comparable<Game>, GameAttributeInterface
 {
 	private final GameSet set;
 
+	private Rom[] roms;
 	private final GameInfo info;
 	private GameClone clone;
+	
   private boolean favourite;
-  private Handle handle;
-  
-  public GameStatus status;
+  private GameStatus status;
 
 	private Map<Asset, AssetData> assetData = new HashMap<>();
 	private final Attachments attachments = new Attachments();
@@ -58,25 +57,52 @@ public class Game implements Comparable<Game>, Verifiable, GameAttributeInterfac
 	  status = GameStatus.MISSING;
 	}
 	
+	public Game(GameSet set, Rom... roms)
+	{
+	  this(set);
+	  this.roms = roms;
+	}
+	
+	public void setRom(Rom... roms)
+	{
+	  this.roms = roms;
+	  Arrays.stream(roms).forEach(r -> r.setGame(this));
+	}
+	
 	public GameSet getRomSet() { return set; }
 	
 	public GameClone getClone() { return clone; }
 	public void setClone(GameClone clone) { this.clone = clone; }
 
-	public Stream<Rom> stream() { return Stream.empty(); }
+	public long getSizeInBytes()
+	{
+	  return Arrays.stream(roms).map(Rom::size).mapToLong(i -> i).sum();
+	}
+
+	public Stream<Rom> stream() { return Arrays.stream(roms); }
+	public Rom rom()
+	{ 
+	  if (roms.length > 1)
+	    throw new UnsupportedOperationException("Can't invoke Game::rom to obtain the single rom on a game with multiple roms");
+	  return roms[0];
+	}
 	
 	public boolean shouldSerializeState()
 	{
 	  return isFavourite() || status != GameStatus.MISSING || info.hasAnyCustomAttribute();
 	}
 	
-	public GameID<?> getID() { return new GameID.CRC(crc()); }
-	
-	public Handle getHandle() { return handle; }
-	public void setHandle(Handle path) { this.handle = path; }
-	
-	public void setCRC(long crc) { setAttribute(GameAttribute.CRC, crc); }
-	
+	public GameID<?> getID()
+	{ 
+	  // TODO: find a generic way
+	  if (!set.hasMultipleRomsPerGame())
+	    return new GameID.CRC(roms[0].crc());
+	  else
+	    throw new UnsupportedOperationException("no GameID generator for sets with multiple roms per game");
+	}
+		
+	public void setStatus(GameStatus status) { this.status = status; } // TODO: should be visible?
+	public GameStatus getStatus() { return status; }
 	public Platform getSystem() { return set.platform; }
 		
 	public AssetData getAssetData(Asset asset)
@@ -112,11 +138,23 @@ public class Game implements Comparable<Game>, Verifiable, GameAttributeInterfac
 	}
 	
 	public void updateStatus()
-	{
-	  if (status != GameStatus.MISSING)
-	  {
-	    status = isOrganized() ? GameStatus.FOUND : GameStatus.UNORGANIZED;
-	  }
+	{ 
+	  AtomicBoolean anyFound = new AtomicBoolean(false);
+	  AtomicBoolean allFound = new AtomicBoolean(true);
+
+	  stream().forEach(rom -> {
+	    anyFound.set(anyFound.get() || rom.isPresent());
+	    allFound.set(allFound.get() && rom.isPresent());
+	  });
+	  
+	  if (!anyFound.get())
+	    status = GameStatus.MISSING;
+	  else if (!allFound.get())
+	    status = GameStatus.INCOMPLETE;
+	  else if (!isOrganized())
+	    status = GameStatus.UNORGANIZED;
+	  else
+	    status = GameStatus.FOUND;
 	}
 
 	public boolean isOrganized()
@@ -145,11 +183,13 @@ public class Game implements Comparable<Game>, Verifiable, GameAttributeInterfac
   
   public boolean hasCorrectInternalName()
   {
-    return !handle.isArchive() || getCorrectInternalName().equals(handle.plainInternalName());
+    return false; // TODO: !handle.isArchive() || getCorrectInternalName().equals(handle.plainInternalName());
   }
   
   public boolean hasCorrectName()
   {
+    return false; /* TODO
+    
     Settings settings = set.getSettings();
     
     boolean hasCorrectName = getCorrectName().equals(handle.plainName());
@@ -158,10 +198,14 @@ public class Game implements Comparable<Game>, Verifiable, GameAttributeInterfac
       return hasCorrectName;
     else
       return hasCorrectName && hasCorrectInternalName();
+      */
   }
   
   public boolean hasCorrectFolder()
   {
+    return false;
+    /* TODO
+    
     try {
       return set.getSettings().getFolderOrganizer() == null || 
         Files.isSameFile(handle.path().getParent(), set.getSettings().romsPath.resolve(getCorrectFolder()));
@@ -170,7 +214,7 @@ public class Game implements Comparable<Game>, Verifiable, GameAttributeInterfac
     {
       e.printStackTrace();
       return false;
-    }
+    }*/
   }
 
 	@Override
@@ -206,10 +250,4 @@ public class Game implements Comparable<Game>, Verifiable, GameAttributeInterfac
 		
 	public boolean isFavourite() { return favourite; }
 	public void setFavourite(boolean value) { favourite = value; }
-  
-	
-	@Override public long crc() { return getAttribute(GameAttribute.CRC); }
-  @Override public long size() { return ((GameSize)getAttribute(GameAttribute.SIZE)).bytes() ; }
-  @Override public byte[] md5() { return getAttribute(GameAttribute.MD5); }
-  @Override public byte[] sha1() { return getAttribute(GameAttribute.SHA1); }
 }

@@ -2,9 +2,8 @@ package jack.rm.plugins;
 
 import java.util.function.Predicate;
 
+import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.plugin.PluginBuilder;
-
-import jack.rm.data.romset.GameSet;
 
 public class ActualPluginBuilder extends PluginBuilder<ActualPlugin>
 {

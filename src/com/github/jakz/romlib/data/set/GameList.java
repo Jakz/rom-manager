@@ -1,22 +1,23 @@
-package jack.rm.data.romset;
+package com.github.jakz.romlib.data.set;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.github.jakz.romlib.data.game.Game;
-import com.github.jakz.romlib.data.game.GameID;
 import com.github.jakz.romlib.data.game.GameStatus;
+import com.github.jakz.romlib.data.game.Rom;
 import com.pixbits.lib.io.digest.HashCache;
 
 public class GameList implements Iterable<Game>
 {
   private final GameSetStatus status;
   private final Game[] games;
-  private final HashCache<Game> cache;
+  private final HashCache<Rom> cache;
   private final HashMap<String, Game> nameMap;
   private final boolean hasMultipleRomsPerGame;
   
@@ -30,7 +31,7 @@ public class GameList implements Iterable<Game>
 	  this.games = games;
 	  status = new GameSetStatus();
 	  Arrays.sort(games);
-	  cache = new HashCache<>(Arrays.asList(games));
+	  cache = new HashCache<>(Arrays.stream(games).flatMap(g -> g.stream()));
 	  
 	  nameMap = stream().collect(Collectors.toMap(
 	    g -> g.getTitle(), 
@@ -48,23 +49,14 @@ public class GameList implements Iterable<Game>
 	public GameSetStatus status() { return status; }
 	public int gameCount() { return games.length; }
 
-	public HashCache<Game> cache() { return cache; }
-		
-	public Game getByID(GameID<?> id)
-	{
-	  return getByCRC32(((GameID.CRC)id).value);
-	}
-	
-	public Game getByCRC32(long crc)
-	{
-		return cache.elementForCrc(crc);
-	}
-	
+	public HashCache<Rom> cache() { return cache; }
 
 	public void resetStatus()
 	{
-		for (Game r : games)
-			r.status = GameStatus.MISSING;
+		Arrays.stream(games).forEach(g -> {
+		  g.setStatus(GameStatus.MISSING);
+		  g.stream().forEach(r -> r.setHandle(null));
+		});
 	}
 	
 	public void refreshStatus()
@@ -74,20 +66,7 @@ public class GameList implements Iterable<Game>
 	
 	public void checkNames()
 	{
-    for (Game rom : games)
-    {
-      if (rom.status != GameStatus.MISSING)
-      {  
-        if (rom.status == GameStatus.FOUND)
-        {
-          if (!rom.isOrganized())
-            rom.status = GameStatus.UNORGANIZED;
-        }
-        else if (rom.status == GameStatus.UNORGANIZED)
-          if (rom.isOrganized())
-            rom.status = GameStatus.FOUND;
-      }
-    }		
+    Arrays.stream(games).forEach(Game::updateStatus);
 	}
   
   public Stream<Game> stream() { return Arrays.stream(games); }

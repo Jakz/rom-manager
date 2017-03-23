@@ -44,15 +44,19 @@ import javax.swing.event.CaretListener;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameStatus;
+import com.github.jakz.romlib.data.game.Rom;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
+import com.github.jakz.romlib.data.game.attributes.RomAttribute;
+import com.github.jakz.romlib.data.set.Feature;
+import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.ui.Icon;
+import com.pixbits.lib.io.archive.handles.Handle;
 
 import jack.rm.Main;
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
 import jack.rm.assets.AssetManager;
-import jack.rm.data.romset.GameSet;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.downloader.RomDownloaderPlugin;
 import net.miginfocom.swing.MigLayout;
@@ -182,17 +186,23 @@ public class InfoPanel extends JPanel implements ActionListener
         setValue(rom);
     }
     
-    void setValue(Game rom)
+    void setValue(Game game)
     {
-      deleteButton.setVisible(mode == Mode.EDIT && rom.hasCustomAttribute(attrib));
+      deleteButton.setVisible(mode == Mode.EDIT && game.hasCustomAttribute(attrib));
 
-      
-      if (attrib == GameAttribute.PATH)
-        value.setText(rom.getHandle() != null ? rom.getHandle().toString() : "");
-      else if (attrib == GameAttribute.FILENAME)
-        value.setText(rom.getHandle() != null ? rom.getHandle().path().getFileName().toString() : "");
+      if (attrib == GameAttribute.PATH || attrib == GameAttribute.FILENAME)
+      {
+        Handle handle = game.rom().handle();
+        String handleValue = handle == null ? "" : (attrib == GameAttribute.PATH ? handle.toString() : handle.path().getFileName().toString());
+        value.setText(handleValue);     
+      }
+      else if (attrib instanceof RomAttribute)
+      {
+        Rom rom = game.rom();
+        value.setText(attrib.prettyValue(rom.getAttribute((RomAttribute)attrib)));
+      }
       else
-        value.setText(attrib.prettyValue(rom.getAttribute(attrib)));
+        value.setText(attrib.prettyValue(game.getAttribute(attrib)));
 
     }
     
@@ -564,8 +574,16 @@ public class InfoPanel extends JPanel implements ActionListener
     List<Attribute> attributes = set.getSettings().getRomAttributes();
     
     fields = attributes.stream().map( a -> buildField(a, true) ).collect(Collectors.toList());
-    fields.add(buildField(GameAttribute.FILENAME, false));
-    fields.add(buildField(GameAttribute.PATH, false));
+    
+    /* add file name and path attributes only if there is a single rom per game */
+    if (set.hasFeature(Feature.SINGLE_ROM_PER_GAME))
+    {
+      // TODO: hardcoded for now
+      fields.add(buildField(RomAttribute.CRC, false));
+      
+      fields.add(buildField(GameAttribute.FILENAME, false));
+      fields.add(buildField(GameAttribute.PATH, false));
+    }
         
     pFields.removeAll();
     
@@ -670,16 +688,16 @@ public class InfoPanel extends JPanel implements ActionListener
 		}
 	}
 	
-	public void updateFields(Game rom)
+	public void updateFields(Game game)
 	{
-		this.rom = rom;
-		attachments.setRom(rom);
+		this.rom = game;
+		attachments.setRom(game);
 		
 		this.setVisible(true);
 		
     for (AttributeField field : fields)
     {
-      try { field.setValue(rom); }
+      try { field.setValue(game); }
       catch (NullPointerException e)
       {
         field.clear();  
@@ -687,12 +705,13 @@ public class InfoPanel extends JPanel implements ActionListener
       }
     }
 
-    if (rom != null)
+    if (game != null)
     {
       for (AssetImage image : images)
-        setImage(rom, image.asset, image.image);
+        setImage(game, image.asset, image.image);
 		
-  		if (rom.status == GameStatus.MISSING)
+      // TODO: missing management for INCOMPLETE
+  		if (game.getStatus() == GameStatus.MISSING)
   		{
   		  openFolderButton.setEnabled(false);
   		  openArchiveButton.setEnabled(false);
@@ -702,13 +721,14 @@ public class InfoPanel extends JPanel implements ActionListener
   		else
   		{
   	    openFolderButton.setEnabled(true);
-  	    if (rom.getHandle().isArchive())
-  	      openArchiveButton.setEnabled(true);
+  	    // TODO: different management for multiple roms per game
+  	    /*if (game.getHandle().isArchive())
+  	      openArchiveButton.setEnabled(true);*/
   	      
   		  downloadButton.setEnabled(false);
   		}
   		
-  		assetsButton.setEnabled(rom != null && !rom.hasAllAssets());
+  		assetsButton.setEnabled(game != null && !game.hasAllAssets());
     }
 
 	}
@@ -735,11 +755,11 @@ public class InfoPanel extends JPanel implements ActionListener
 		}
 	  else if (src == openFolderButton)
 	  {
-	    Main.openFolder(rom.getHandle().path().getParent().toFile());
+	    //TODO: Main.openFolder(rom.getHandle().path().getParent().toFile());
 	  }
 	  else if (src == openArchiveButton)
 	  {
-	    Main.openFolder(rom.getHandle().path().toFile());
+	    //TODO: Main.openFolder(rom.getHandle().path().toFile());
 	  }
 		else if (src == assetsButton)
 		{

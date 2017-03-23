@@ -31,11 +31,11 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
 import com.github.jakz.romlib.data.platforms.Platform;
+import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.ui.table.renderers.AlternateColorTableCellRenderer;
 
 import jack.rm.GlobalSettings;
 import jack.rm.Main;
-import jack.rm.data.romset.GameSet;
 import jack.rm.data.romset.GameSetManager;
 import jack.rm.files.parser.DatUpdater;
 import net.miginfocom.swing.MigLayout;

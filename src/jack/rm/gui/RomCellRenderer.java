@@ -12,9 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 
 import com.github.jakz.romlib.data.game.Game;
-import com.github.jakz.romlib.data.game.Location;
 import com.github.jakz.romlib.data.game.LocationSet;
-import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.ui.Icon;
 
 class RomCellRenderer extends JPanel implements ListCellRenderer<Game>
@@ -58,12 +56,12 @@ class RomCellRenderer extends JPanel implements ListCellRenderer<Game>
 		if (iss)
 		{
 		  mainLabel.setForeground(Color.WHITE);
-		  setBackground(game.status.color);
+		  setBackground(game.getStatus().color);
 		}
 		else
 		{
 		  setBackground(list.getBackground());
-		  mainLabel.setForeground(game.status.color);
+		  mainLabel.setForeground(game.getStatus().color);
 		}
 		
 		return this;

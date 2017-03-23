@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class GameSize implements Comparable<GameSize>
+public class RomSize implements Comparable<RomSize>
 {
 	public final static long GIGABYTE = 1 << 30;
 	public final static long GIGABIT = GIGABYTE / 8;
@@ -59,9 +59,14 @@ public class GameSize implements Comparable<GameSize>
 	
 	private final long bytes;
 	
-	GameSize(long bytes)
+	RomSize(long bytes)
 	{
 		this.bytes = bytes;
+	}
+	
+	@Override public boolean equals(Object other)
+	{
+	  return (other instanceof RomSize) && bytes == ((RomSize)other).bytes;
 	}
 	
 	public long bytes()
@@ -108,21 +113,21 @@ public class GameSize implements Comparable<GameSize>
 	}
 	
 	@Override
-  public int compareTo(GameSize s)
+  public int compareTo(RomSize s)
 	{
 		return Long.compare(this.bytes, s.bytes);
 	}
 	
 	public static class Set
 	{
-	  private final Map<Long, GameSize> mapping = new TreeMap<>();
+	  private final Map<Long, RomSize> mapping = new TreeMap<>();
 	  
-	  public GameSize forBytes(long size)
+	  public RomSize forBytes(long size)
 	  {
 	    return forBytes(size, true);
 	  }
 	  
-	  public GameSize forBytes(long size, boolean addToList)
+	  public RomSize forBytes(long size, boolean addToList)
 	  {
 	    long reminder = size % KBYTE;
 	    
@@ -134,11 +139,11 @@ public class GameSize implements Comparable<GameSize>
 	        size += KBYTE - reminder;
 	    }
 
-	    GameSize m = mapping.get(size);
+	    RomSize m = mapping.get(size);
 	    
 	    if (m == null)
 	    {
-	      m = new GameSize(size);
+	      m = new RomSize(size);
 	      
 	      if (addToList)
 	        mapping.put(size, m);
@@ -147,6 +152,6 @@ public class GameSize implements Comparable<GameSize>
 	    return m;
 	  }
 	  
-	  public Collection<GameSize> values() { return mapping.values(); }
+	  public Collection<RomSize> values() { return mapping.values(); }
 	}
 }

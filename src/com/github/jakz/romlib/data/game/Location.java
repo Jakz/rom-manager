@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.LongStream;
-
 import com.github.jakz.romlib.ui.Icon;
 
 import jack.rm.i18n.Text;

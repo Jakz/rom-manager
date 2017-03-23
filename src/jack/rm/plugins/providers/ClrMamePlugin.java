@@ -5,10 +5,10 @@ import java.util.List;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.platforms.Platform;
+import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.data.set.Provider;
 
 import jack.rm.assets.EmptyAssetManager;
-import jack.rm.data.romset.GameSet;
 import jack.rm.plugins.datparsers.DatParserPlugin;
 
 
@@ -19,12 +19,8 @@ public class ClrMamePlugin extends ProviderPlugin
     GameAttribute.TITLE,
     GameAttribute.LOCATION,
     GameAttribute.LANGUAGE,
-    GameAttribute.CRC,
-    GameAttribute.MD5,
-    GameAttribute.SHA1,
     GameAttribute.VERSION,
     GameAttribute.COMMENT,
-    GameAttribute.SIZE,
   };
   
   @Override

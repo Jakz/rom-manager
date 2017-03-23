@@ -2,34 +2,28 @@ package jack.rm.plugins.scanners;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.Rom;
+import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.io.archive.Verifier;
 import com.pixbits.lib.io.archive.VerifierEntry;
 import com.pixbits.lib.io.archive.VerifierOptions;
 import com.pixbits.lib.io.archive.VerifierResult;
-import com.pixbits.lib.io.archive.handles.Handle;
-import com.pixbits.lib.io.archive.handles.NestedArchiveBatch;
 import com.pixbits.lib.io.digest.DigestOptions;
 import com.pixbits.lib.io.digest.Digester;
 import com.pixbits.lib.io.digest.HashCache;
-import com.pixbits.lib.lang.Pair;
-
-import jack.rm.data.romset.GameSet;
 import jack.rm.files.ScanResult;
 
 public class DigestVerifier extends VerifierPlugin
 {
-  Verifier<Game> verifier;
+  Verifier<Rom> verifier;
   
   @Override
   public void setup(GameSet romset)
   {
-    HashCache<Game> cache = romset.hashCache();
+    HashCache<Rom> cache = romset.hashCache();
     
     VerifierOptions options = new VerifierOptions();
     options.checkNestedArchives = true;
@@ -48,7 +42,7 @@ public class DigestVerifier extends VerifierPlugin
   {
     try
     {
-      List<VerifierResult<Game>> result = verifier.verify(handle);
+      List<VerifierResult<Rom>> result = verifier.verify(handle);
       
       return result.stream()
         .map(vr -> new ScanResult(vr.element, vr.handle))

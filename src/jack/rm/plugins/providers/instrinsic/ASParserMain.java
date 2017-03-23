@@ -30,6 +30,7 @@ import com.github.jakz.romlib.data.game.Version;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.CustomGameAttribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
+import com.github.jakz.romlib.data.game.attributes.RomAttribute;
 import com.github.jakz.romlib.data.platforms.GB;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -467,8 +468,8 @@ public class ASParserMain
     j.publisher = e.publisher;
     j.group = e.group;
     j.version = versionMap.get(e.version).build();
-    j.crc = Long.parseLong(e.crc.toLowerCase(), 16);
-    j.size = sizeMap.get(e.size);
+    j.romCrc = Long.parseLong(e.crc.toLowerCase(), 16);
+    j.romSize = sizeMap.get(e.size);
     j.saveType = saveMap.get(e.saveType).build();
     j.comment = e.releaseNotes;
     j.pocketHeavenRef = Integer.valueOf(e.pocketHeavenRelease);
@@ -489,8 +490,8 @@ public class ASParserMain
     String publisher;
     String group;
     Version version;
-    long crc;
-    int size;
+    long romCrc;
+    int romSize;
     GB.Save saveType;
     String comment;
     int pocketHeavenRef;
@@ -505,8 +506,8 @@ public class ASParserMain
       this.put(GameAttribute.GROUP, group);
       if (!(version == Version.UNSPECIFIED))
         this.put(GameAttribute.VERSION, version);
-      this.put(GameAttribute.CRC, crc);
-      this.put(GameAttribute.SIZE, size);
+      this.put(RomAttribute.CRC, romCrc);
+      this.put(RomAttribute.SIZE, romSize);
       this.put(GameAttribute.SAVE_TYPE, saveType);
       this.put(GameAttribute.COMMENT, comment);
       this.put(POCKET_HEAVEN_REF, pocketHeavenRef);

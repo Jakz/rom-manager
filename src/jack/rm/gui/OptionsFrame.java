@@ -15,10 +15,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.plugin.PluginManager;
 
 import jack.rm.Main;
-import jack.rm.data.romset.GameSet;
 import jack.rm.i18n.Text;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;

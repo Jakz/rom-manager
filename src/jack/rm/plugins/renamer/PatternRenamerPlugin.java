@@ -23,12 +23,12 @@ import javax.swing.event.CaretListener;
 import javax.swing.table.AbstractTableModel;
 
 import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.plugin.ExposedParameter;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
 
 import jack.rm.Settings;
-import jack.rm.data.romset.GameSet;
 import jack.rm.files.Organizer;
 import jack.rm.files.Pattern;
 import jack.rm.gui.PluginOptionsPanel;

@@ -4,8 +4,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import com.github.jakz.romlib.data.game.Game;
-
-import jack.rm.data.romset.GameSet;
+import com.github.jakz.romlib.data.set.GameSet;
 
 public abstract class RomSetWorker<T extends BackgroundOperation> extends BackgroundWorker<Game, T>
 {

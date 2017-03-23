@@ -1,6 +1,5 @@
 package jack.rm.plugins.misc;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,12 +8,11 @@ import java.util.function.Predicate;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameStatus;
+import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.plugin.ExposedParameter;
 import com.pixbits.lib.plugin.PluginType;
 
 import jack.rm.Main;
-import jack.rm.data.romset.GameList;
-import jack.rm.data.romset.GameSet;
 import jack.rm.files.BackgroundOperation;
 import jack.rm.files.RomSetWorker;
 import jack.rm.plugins.ActualPlugin;
@@ -42,7 +40,7 @@ public class ExportRomsPlugin extends ActualPlugin implements OperationalPlugin,
     for (int i = 0; i < count; ++i)
     {
       Game rom = Main.mainFrame.list.getModel().getElementAt(i);
-      if (rom.status != GameStatus.MISSING)
+      if (rom.getStatus().isComplete())
         visibleRoms.add(rom);
     }
     
@@ -59,14 +57,15 @@ public class ExportRomsPlugin extends ActualPlugin implements OperationalPlugin,
     @Override
     public void execute(Game r)
     {
-      try
+      // TODO: rewrite for new management
+      /*try
       {
         Files.copy(r.getHandle().path(), path.resolve(r.getHandle().path().getFileName()));  
       }
       catch (Exception e)
       {
         e.printStackTrace();
-      }
+      }*/
     }
   }
   

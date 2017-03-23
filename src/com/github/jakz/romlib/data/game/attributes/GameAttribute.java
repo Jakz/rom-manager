@@ -1,6 +1,6 @@
 package com.github.jakz.romlib.data.game.attributes;
 
-import com.github.jakz.romlib.data.game.GameSize;
+import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.game.Genre;
 import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.LanguageSet;
@@ -23,38 +23,8 @@ public enum GameAttribute implements Attribute
       return Language.asString((LanguageSet)value); 
       }
   },
-  SIZE(Text.ROM_INFO_SIZE) {
-    public String prettyValue(Object value)
-    {
-      GameSize size = (GameSize)value;
-      return String.format("%s (%s)", size.toString(GameSize.PrintStyle.LONG, GameSize.PrintUnit.BITS), size.toString(GameSize.PrintStyle.LONG, GameSize.PrintUnit.BYTES));
-    }
-  },
   SERIAL(Text.ROM_INFO_SERIAL),
   SAVE_TYPE(Text.ROM_INFO_SAVE_TYPE),
-  
-  CRC(Text.ROM_INFO_CRC)
-  {
-    public String prettyValue(Object value) {
-      return String.format("%08X", (Long)value);
-      //return Long.toHexString((Long)value).toUpperCase();
-    }
-  },
-  
-  SHA1(byte[].class, Text.ROM_INFO_SHA1)
-  {
-    public String prettyValue(Object value) {
-      byte[] digest = (byte[])value;
-      return javax.xml.bind.DatatypeConverter.printHexBinary(digest);
-    }
-  },
-  MD5(byte[].class, Text.ROM_INFO_MD5)
-  {
-    public String prettyValue(Object value) {
-      byte[] digest = (byte[])value;
-      return javax.xml.bind.DatatypeConverter.printHexBinary(digest);
-    }
-  },
   
   GENRE(Genre.class, Text.ROM_INFO_GENRE),
   

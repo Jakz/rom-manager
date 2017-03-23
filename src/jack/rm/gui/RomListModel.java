@@ -18,22 +18,25 @@ public class RomListModel extends AbstractListModel<Game>
 	
 	boolean isCorrect = true;
 	boolean isMissing = true;
+	boolean isIncomplete = true;
 	boolean isBadlyNamed = true;
 	
 	public RomListModel()
 	{
-		list = new ArrayList<Game>();
+		list = new ArrayList<>();
 	}
 	
-	public void addElement(Object o)
+	public void addElement(Game o)
 	{
 		Game rom = (Game)o;
-		if (isCorrect && rom.status == GameStatus.FOUND)
+		if (isCorrect && rom.getStatus() == GameStatus.FOUND)
 			list.add(rom);
-		else if (isMissing && rom.status == GameStatus.MISSING)
+		else if (isMissing && rom.getStatus() == GameStatus.MISSING)
 			list.add(rom);
-		else if (isBadlyNamed && rom.status == GameStatus.UNORGANIZED)
+		else if (isBadlyNamed && rom.getStatus() == GameStatus.UNORGANIZED)
 			list.add(rom);
+		else if (isIncomplete && rom.getStatus() == GameStatus.INCOMPLETE)
+		  list.add(rom);
 
 		return;
 	}

@@ -20,11 +20,10 @@ public class FindStatement implements Statement
     
     for (Game r : roms)
     {
-      if (r.status == GameStatus.MISSING)
-    
+      if (!r.getStatus().isComplete())
         env.out.append("  "+r.getTitle());
       else
-        env.out.append("  "+r.getTitle()+" ==> "+env.set.getSettings().romsPath.relativize(r.getHandle().path()));
+        env.out.append("  "+r.getTitle()/*TODO: +" ==> "+env.set.getSettings().romsPath.relativize(r.getHandle().path())*/);
     }   
   }
 }

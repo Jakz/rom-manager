@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Frame;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,17 +32,16 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
-import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.Rom;
+import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.io.archive.handles.ArchiveHandle;
 import com.pixbits.lib.io.archive.handles.BinaryHandle;
 import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.lib.io.archive.handles.NestedArchiveHandle;
 import com.pixbits.lib.ui.color.ColorGenerator;
 import com.pixbits.lib.ui.color.PastelColorGenerator;
-import com.pixbits.lib.ui.color.PleasantColorGenerator;
 
 import jack.rm.Main;
-import jack.rm.data.romset.GameSet;
 import jack.rm.files.ScanResult;
 
 public class ClonesDialog extends JDialog
@@ -57,7 +54,7 @@ public class ClonesDialog extends JDialog
   
   private List<ScanResult> clones = new ArrayList<>(); 
   private Map<ScanResult, Boolean> keep = new HashMap<>();
-  private Map<Game, Color> colors = new HashMap<>();
+  private Map<Rom, Color> colors = new HashMap<>();
   
   private class CloneTableModel extends AbstractTableModel
   {
@@ -269,12 +266,14 @@ public class ClonesDialog extends JDialog
     this.keep.clear();
     this.clones.clear();
     
-    Set<Game> romClones = clones.stream().map( c -> c.rom ).collect(Collectors.toSet());
+    // TODO: probably requires to be rewritten almost totally to manage multiple roms per game
+    Set<Rom> romClones = clones.stream().map( c -> c.rom ).collect(Collectors.toSet());
    
     this.clones = new ArrayList<>(clones);
     this.clones.addAll(set.stream()
+        .flatMap(g -> g.stream())
         .filter( r -> romClones.contains(r))
-        .map( r -> new ScanResult(r, r.getHandle()) )
+        .map( r -> new ScanResult(r, r.handle()) )
         .collect(Collectors.toList()));
     
     Collections.sort(this.clones);
@@ -340,8 +339,8 @@ public class ClonesDialog extends JDialog
     boolean hasMover = set.getSettings().getFolderOrganizer() != null;
     
     Predicate<ScanResult> predicateAny = e -> true;
-    Predicate<ScanResult> predicateCorrectFolder = e -> !hasMover || set.getSettings().romsPath.resolve(e.rom.getCorrectFolder()).equals(e.path.path().getParent());
-    Predicate<ScanResult> predicateCorrectName = e -> !hasRenamer || e.rom.getCorrectName().equals(e.path.path().getFileName());
+    Predicate<ScanResult> predicateCorrectFolder = e -> !hasMover || set.getSettings().romsPath.resolve(e.rom.game().getCorrectFolder()).equals(e.path.path().getParent());
+    Predicate<ScanResult> predicateCorrectName = e -> !hasRenamer || e.rom.game().getCorrectName().equals(e.path.path().getFileName());
     Predicate<ScanResult> predicateCorrectNameAndFolder = predicateCorrectName.and(predicateCorrectFolder);
     
     List<Predicate<ScanResult>> predicates = Arrays.asList(

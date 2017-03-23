@@ -25,13 +25,13 @@ import javax.swing.border.Border;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 
-import com.github.jakz.romlib.data.game.GameSize;
-import com.github.jakz.romlib.data.game.GameSize.PrintStyle;
-import com.github.jakz.romlib.data.game.GameSize.PrintUnit;
+import com.github.jakz.romlib.data.game.RomSize;
+import com.github.jakz.romlib.data.game.RomSize.PrintStyle;
+import com.github.jakz.romlib.data.game.RomSize.PrintUnit;
 import com.github.jakz.romlib.data.platforms.Platform;
+import com.github.jakz.romlib.data.set.GameSet;
 
 import jack.rm.Settings;
-import jack.rm.data.romset.GameSet;
 import jack.rm.i18n.Text;
 
 public class ManagerPanel extends JPanel implements ActionListener
@@ -82,10 +82,10 @@ public class ManagerPanel extends JPanel implements ActionListener
           return String.format("%2.0f", percent) + "%";
         }),
         new InfoRow<String>("Total Size", () -> {
-          return GameSize.toString(totalSize, PrintStyle.LONG, PrintUnit.BYTES);
+          return RomSize.toString(totalSize, PrintStyle.LONG, PrintUnit.BYTES);
         }),
         new InfoRow<String>("Uncompressed Size", () -> {
-          return GameSize.toString(totalUncompressedSize, PrintStyle.LONG, PrintUnit.BYTES);
+          return RomSize.toString(totalUncompressedSize, PrintStyle.LONG, PrintUnit.BYTES);
         })
 
 	    };

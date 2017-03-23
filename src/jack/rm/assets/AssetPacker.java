@@ -8,8 +8,8 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.set.GameSet;
 
-import jack.rm.data.romset.GameSet;
 import jack.rm.files.BackgroundOperation;
 import jack.rm.files.RomSetWorker;
 import net.lingala.zip4j.core.ZipFile;

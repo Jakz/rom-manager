@@ -2,7 +2,7 @@ package jack.rm.gui;
 
 import javax.swing.JPanel;
 
-import jack.rm.data.romset.GameSet;
+import com.github.jakz.romlib.data.set.GameSet;
 
 public abstract class PluginOptionsPanel extends JPanel
 {

@@ -14,6 +14,7 @@ import com.github.jakz.romlib.data.game.LocationSet;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameSave;
 import com.github.jakz.romlib.data.game.GameStatus;
+import com.github.jakz.romlib.data.game.Rom;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
@@ -60,12 +61,12 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
   
-  private final static SearchPredicate<Game> IS_MISSING = new BasicPredicate<Game>("is-missing", "is:missing, is:mis", "filters roms which are missing")
+  private final static SearchPredicate<Game> IS_MISSING = new BasicPredicate<Game>("is-missing", "is:missing, is:mis", "filters games which are missing")
   {
     @Override public Predicate<Game> buildPredicate(String token)
     {
       if (isSearchArg(splitWithDelimiter(token, ":"), "is", "mis", "missing"))
-        return r -> r.status == GameStatus.MISSING;
+        return r -> !r.getStatus().isComplete();
       else
         return null;
     }
@@ -76,7 +77,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     @Override public Predicate<Game> buildPredicate(String token)
     {
       if (isSearchArg(splitWithDelimiter(token, ":"), "is", "found"))
-        return r -> r.status != GameStatus.MISSING;
+        return r -> r.getStatus().isComplete();
       else
         return null;
     }
@@ -176,10 +177,12 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
       {
         if (tokens[0].equals("format") && !tokens[1].isEmpty())
         {
-          if (tokens[1].equals("bin") || tokens[1].equals("binary"))
-            return r -> r.status != GameStatus.MISSING && !r.getHandle().isArchive();
-          else 
-            return r -> r.status != GameStatus.MISSING && r.getHandle().isArchive() && r.getHandle().getExtension().equals(tokens[1]);
+          final Predicate<Rom> typePredicate = tokens[1].equals("bin") || tokens[1].equals("binary") ? 
+             r -> !r.handle().isArchive() : r -> r.handle().getExtension().equals(tokens[1]);
+
+          final Predicate<Game> hasAtleastOneRomFound = g -> g.stream().anyMatch(Rom::isPresent);
+          
+          return hasAtleastOneRomFound.and(g -> g.stream().filter(Rom::isPresent).allMatch(typePredicate));
         }
       }
      

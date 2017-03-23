@@ -10,7 +10,6 @@ import javax.swing.ImageIcon;
 import com.github.jakz.romlib.data.game.Game;
 import com.pixbits.lib.io.FileUtils;
 
-import jack.rm.files.Scanner;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.FileHeader;

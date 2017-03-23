@@ -5,27 +5,20 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
 import com.github.jakz.romlib.data.game.Game;
-import com.github.jakz.romlib.data.game.GameSize;
-import com.github.jakz.romlib.data.game.Language;
-import com.github.jakz.romlib.data.game.Location;
-import com.github.jakz.romlib.data.game.attributes.GameAttribute;
+import com.github.jakz.romlib.data.game.Rom;
+import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.set.DatFormat;
 import com.github.jakz.romlib.data.set.DatLoader;
+import com.github.jakz.romlib.data.set.GameList;
+import com.github.jakz.romlib.data.set.GameSet;
+import com.github.jakz.romlib.parsers.GameCataloguer;
 import com.pixbits.lib.parser.SimpleParser;
 import com.pixbits.lib.parser.SimpleTreeBuilder;
-
-import jack.rm.data.romset.GameList;
-import jack.rm.data.romset.GameSet;
 
 public class ClrMameParserPlugin extends DatParserPlugin
 {
@@ -35,90 +28,32 @@ public class ClrMameParserPlugin extends DatParserPlugin
   public DatLoader buildDatLoader(String format, Map<String, Object> arguments)
   {
     if (format.equals("clr-mame"))
-      return new ClrMameParser();
+      return new ClrMameParser(t -> {});
     else if (format.equals("clr-mame-nointro"))
-      return new ClrMameNoIntroParser();
+      return new ClrMameParser(new NoIntroGameCataloguer());
     else
       return null;
   }
-  
-  private class ClrMameNoIntroParser extends ClrMameParser
-  {
-    Set<String> addendums = new HashSet<String>();
-    
-    @Override protected void parseRomTitle(String title)
-    {
-      int firstParen = title.indexOf('(');
-      
-      AtomicBoolean usa = new AtomicBoolean(false);
-      AtomicBoolean japan = new AtomicBoolean(false);
-      AtomicBoolean europe = new AtomicBoolean(false);
-            
-      Arrays.stream(title.substring(firstParen).split("\\(|\\)")).filter(s -> !s.isEmpty()).map(s -> s.trim()).forEach(s -> {
-        Arrays.stream(s.split(",")).map(t -> t.trim()).filter(t -> !t.isEmpty()).forEach(t -> {
-          if (t.equals("USA")) usa.set(true);
-          else if (t.equals("Japan")) japan.set(true);
-          else if (t.equals("Europe")) europe.set(true);
-          else if (t.equals("Korea")) rom.getLocation().add(Location.KOREA);
-          else if (t.equals("World")) rom.getLocation().add(Location.WORLD);
-          else if (t.equals("Ja")) rom.getLanguages().add(Language.JAPANESE);
-          else if (t.equals("Nl")) rom.getLanguages().add(Language.DUTCH);
-          else if (t.equals("De")) rom.getLanguages().add(Language.GERMAN);
-          else if (t.equals("No")) rom.getLanguages().add(Language.NORWEGIAN);
-          else if (t.equals("Sv")) rom.getLanguages().add(Language.SWEDISH);
-          else if (t.equals("Pt")) rom.getLanguages().add(Language.PORTUGUESE);
-          else if (t.equals("En")) rom.getLanguages().add(Language.ENGLISH);
-          else if (t.equals("It")) rom.getLanguages().add(Language.ITALIAN);
-          else if (t.equals("Es")) rom.getLanguages().add(Language.SPANISH);
-          else if (t.equals("Fr")) rom.getLanguages().add(Language.FRENCH);
-          else if (t.equals("Proto") || t.equals("Proto 1") || t.equals("Development Edition") || 
-                  t.equals("Rev 1") || t.equals("Proto 2") || t.equals("v2.0") || t.equals("Auto Demo") || t.equals("Sample") || t.equals("Beta"))
-            rom.setAttribute(GameAttribute.VERSION, t);
-          else 
-          {
-            rom.setAttribute(GameAttribute.COMMENT, t);
-            addendums.add(t);
-          }
-          
-        });
-        
-          
-          
-          /*String previous = rom.getAttribute(RomAttribute.COMMENT);
-          if (previous == null) previous = "";
-          rom.setAttribute(RomAttribute.COMMENT, previous + ", " + s);*/
-      });
-      
-      rom.setTitle(title.substring(0, firstParen-1));
-      
-      if (usa.get() && japan.get() && !europe.get())
-        rom.getLocation().add(Location.USA_JAPAN);
-      else if (usa.get() && !japan.get() && europe.get())
-        rom.getLocation().add(Location.USA_EUROPE);
-      else if (!usa.get() && japan.get() && europe.get())
-        rom.getLocation().add(Location.JAPAN_EUROPE);
-      else if (usa.get() && !japan.get() && !europe.get())
-        rom.getLocation().add(Location.USA);
-      else if (!usa.get() && japan.get() && !europe.get())
-        rom.getLocation().add(Location.JAPAN);
-      else if (!usa.get() && !japan.get() && europe.get())
-        rom.getLocation().add(Location.EUROPE);
-    }
-    
-    @Override protected void parsingFinished()
-    {
-      for (String s : addendums)
-      {
-        System.out.println(s);
-      }
-    }
-  }
-  
+
   private class ClrMameParser implements DatLoader
   {
+    GameCataloguer cataloguer;
     GameSet set;
-    List<Game> list;
-    Game rom;
+    List<Rom> roms;
+    List<Game> games;
+    
+    String gameName;
+    
+    String romName;
+    long crc;
+    RomSize size;
+    byte[] md5;
+    byte[] sha1;
+    
+    ClrMameParser(GameCataloguer cataloguer)
+    {
+      this.cataloguer = cataloguer;
+    }
 
     private final HexBinaryAdapter hexConverter = new HexBinaryAdapter();
     
@@ -129,14 +64,13 @@ public class ClrMameParserPlugin extends DatParserPlugin
       this.set = set;
       load(set.datPath());
 
-      return new DatLoader.Data(new GameList(list));
+      return new DatLoader.Data(new GameList(games));
     }
     
     public void load(Path datFile)
     {
       try (InputStream fis = new BufferedInputStream(Files.newInputStream(datFile)))
       {
-
         //StringReader sr = new StringReader(input);  new ByteArrayInputStream(input.getBytes("UTF-8"))
         SimpleParser parser = new SimpleParser(fis);
         parser.addSingle('(', ')').addQuote('\"').addWhiteSpace(' ', '\t', '\r', '\n');
@@ -145,9 +79,6 @@ public class ClrMameParserPlugin extends DatParserPlugin
         builder.setScope("(", ")");
         
         parser.parse();
-        
-        parsingFinished();
-
       }
       catch (Exception e)
       {
@@ -163,38 +94,48 @@ public class ClrMameParserPlugin extends DatParserPlugin
       if (!started)
         return;
       
-      if (k.equals("name") && !insideRom)
-        parseRomTitle(v);
+      if (k.equals("name"))
+      {
+        if (!insideRom)
+          gameName = v;
+        else
+          romName = v;
+      }
       else if (k.equals("size"))
-        rom.setSize(set.sizeSet.forBytes(Long.parseLong(v)));
+        size = set.sizeSet.forBytes(Long.parseLong(v));
       else if (k.equals("crc"))
-        rom.setAttribute(GameAttribute.CRC, Long.parseLong(v, 16));
+        crc = Long.parseLong(v, 16);
       else if (k.equals("sha1"))
-        rom.setAttribute(GameAttribute.MD5, hexConverter.unmarshal(v));
+        md5 = hexConverter.unmarshal(v);
       else if (k.equals("md5"))
-        rom.setAttribute(GameAttribute.SHA1, hexConverter.unmarshal(v));
+        sha1 = hexConverter.unmarshal(v);
     }
-    
-    protected void parseRomTitle(String title)
-    {
-      rom.setTitle(title);
-    }
-    
-    protected void parsingFinished() { }
     
     public void scope(String k, boolean isEnd)
     {   
       if (k.equals("rom"))
+      {
         insideRom = !isEnd;
-      
-      if (!isEnd && k.equals("game"))
-        rom = new Game(set);
-      else if (isEnd && k.equals("game"))
-        list.add(rom);
+        if (isEnd)
+          roms.add(new Rom(romName, size, crc, md5, sha1));
+      }
+      else if (k.equals("game"))
+      {
+        if (isEnd)
+        {
+          Game game = new Game(set, roms.toArray(new Rom[roms.size()]));
+          game.setTitle(gameName);
+          cataloguer.catalogue(game);
+          games.add(game);
+        }
+        else
+          roms = new ArrayList<>();
+      }
       else if (isEnd && k.equals("clrmamepro"))
       {
         started = true;
-        list = new ArrayList<>();
+        games = new ArrayList<>();
+        roms = new ArrayList<>();
       }
     }
   }

@@ -5,7 +5,7 @@ import org.codehaus.jparsec.Parsers;
 import org.codehaus.jparsec.Scanners;
 import org.codehaus.jparsec.pattern.Patterns;
 
-import jack.rm.data.romset.GameSet;
+import com.github.jakz.romlib.data.set.GameSet;
 
 /*
 

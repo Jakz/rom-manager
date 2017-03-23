@@ -4,8 +4,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import com.github.jakz.romlib.data.set.DatLoader;
-
-import jack.rm.data.romset.GameSet;
+import com.github.jakz.romlib.data.set.GameSet;
 
 public abstract class XMLDatLoader implements DatLoader
 {

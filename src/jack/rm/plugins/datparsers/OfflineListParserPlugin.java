@@ -16,9 +16,10 @@ import java.util.stream.Collectors;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.github.jakz.romlib.data.game.GameSize;
+import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.Location;
+import com.github.jakz.romlib.data.game.Rom;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameClone;
 import com.github.jakz.romlib.data.game.GameSave;
@@ -26,11 +27,11 @@ import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.set.CloneSet;
 import com.github.jakz.romlib.data.set.DatFormat;
 import com.github.jakz.romlib.data.set.DatLoader;
+import com.github.jakz.romlib.data.set.GameList;
+import com.github.jakz.romlib.data.set.GameSet;
 
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
-import jack.rm.data.romset.GameList;
-import jack.rm.data.romset.GameSet;
 import jack.rm.files.parser.SaveParser;
 import jack.rm.files.parser.XMLDatLoader;
 import jack.rm.files.parser.XMLHandler;
@@ -85,7 +86,9 @@ public class OfflineListParserPlugin extends DatParserPlugin
   {
     private final CharArrayWriter buffer = new CharArrayWriter();
 
-    private Game rom;
+    private Game game;
+    long crc = -1;
+    RomSize size = null;
     private List<Game> games = new ArrayList<>();
     private Map<String, GameSave<?>> saves = new TreeMap<>();
     private Map<Integer, Set<Game>> clones = new HashMap<>();
@@ -115,7 +118,7 @@ public class OfflineListParserPlugin extends DatParserPlugin
     {     
       if (localName.equals("game"))
       {
-        rom = new Game(set);
+        game = new Game(set);
       }
       else if (localName.equals("games"))
       {
@@ -160,38 +163,37 @@ public class OfflineListParserPlugin extends DatParserPlugin
         {
           for (Asset asset : assets)
           {
-            AssetData data = rom.getAssetData(asset);
+            AssetData data = game.getAssetData(asset);
             data.setPath(Paths.get(format.format(asInt())+".png"));
             data.setURLData(asInt()+(asset==assets[0]?"a":"b")+".png");
           }
-          rom.setAttribute(GameAttribute.IMAGE_NUMBER, asInt());
+          game.setAttribute(GameAttribute.IMAGE_NUMBER, asInt());
           break;
         }
-        case "releaseNumber": rom.setAttribute(GameAttribute.NUMBER, asInt()); break;
-        case "title": rom.setTitle(asString()); break;
+        case "releaseNumber": game.setAttribute(GameAttribute.NUMBER, asInt()); break;
+        case "title": game.setTitle(asString()); break;
         case "saveType":
         {       
           try
           {
             GameSave<?> save = saveParser.parse(asString());
             //saves.put(asString(), save);
-            rom.setAttribute(GameAttribute.SAVE_TYPE, save);
+            game.setAttribute(GameAttribute.SAVE_TYPE, save);
           }
           catch (UnknownFormatConversionException e)
           {
-            System.out.println("Rom: "+rom.getTitle());
+            System.out.println("Rom: "+game.getTitle());
             e.printStackTrace();
           }
           break;
         }
-        case "romSize": rom.setSize(set.sizeSet.forBytes(asLong())); break;
-        case "publisher": rom.setAttribute(GameAttribute.PUBLISHER, asString()); break;
+        case "publisher": game.setAttribute(GameAttribute.PUBLISHER, asString()); break;
         case "location":
         {
           Location location = locationMap.get(asInt());
           
           if (location != null)
-            rom.getLocation().set(location);
+            game.getLocation().set(location);
           
           break;
         }
@@ -199,19 +201,28 @@ public class OfflineListParserPlugin extends DatParserPlugin
         {
           int values = asInt();
           
-          languageMap.forEach( (k, v) -> { if ((values & k) != 0) rom.getLanguages().add(v); });
+          languageMap.forEach( (k, v) -> { if ((values & k) != 0) game.getLanguages().add(v); });
           break;
         }
-        case "sourceRom": rom.setAttribute(GameAttribute.GROUP, asString()); break;
-        case "romCRC": rom.setCRC(asHexLong()); break;
+        case "sourceRom": game.setAttribute(GameAttribute.GROUP, asString()); break;
+        case "romCRC":
+        {
+          crc = asHexLong();
+          break;
+        }
+        case "romSize":
+        {
+          size = set.sizeSet.forBytes(asLong());
+          break;
+        }
         case "im1CRC": 
         {
-          rom.getAssetData(assets[0]).setCRC(asHexLong());
+          game.getAssetData(assets[0]).setCRC(asHexLong());
           break;
         }
         case "im2CRC": 
         {
-          rom.getAssetData(assets[1]).setCRC(asHexLong());
+          game.getAssetData(assets[1]).setCRC(asHexLong());
           break;
         }
         case "duplicateID":
@@ -219,12 +230,22 @@ public class OfflineListParserPlugin extends DatParserPlugin
           int ident = asInt();
           
           Set<Game> currentClones = clones.computeIfAbsent(ident, i -> new HashSet<>());
-          currentClones.add(rom);
+          currentClones.add(game);
 
           break;
         }
-        case "comment": rom.setAttribute(GameAttribute.COMMENT, asString()); break;
-        case "game": games.add(rom); break;
+        case "comment": game.setAttribute(GameAttribute.COMMENT, asString()); break;
+        case "game":
+        {
+          if (crc == -1 || size == null)
+          {
+            //TODO: throw fail exception
+          }
+          
+          Rom rom = new Rom(size, crc);
+          game.setRom(rom);
+          games.add(game); break;
+        }
         case "games":
         { 
           break;

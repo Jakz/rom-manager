@@ -6,7 +6,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
 import javax.swing.JList;
 
-import jack.rm.data.romset.GameSet;
+import com.github.jakz.romlib.data.set.GameSet;
 
 final class RomSetListCellRenderer extends DefaultListCellRenderer
 {

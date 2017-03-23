@@ -11,7 +11,7 @@ public class LogOperation extends RomOperation
   
   protected RomWorkflowEntry doApply(RomWorkflowEntry rom)
   {
-    System.out.println("Working on "+rom.getRom().getTitle());
+    System.out.println("Working on "+rom.getGame().getTitle());
     return rom;
   }
   

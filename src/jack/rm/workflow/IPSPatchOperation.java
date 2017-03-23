@@ -44,16 +44,16 @@ public class IPSPatchOperation extends RomOperation
   
   protected RomWorkflowEntry doApply(RomWorkflowEntry handle) throws Exception
   {
-    IPSPatch patch = patches.get(handle.getRom());
+    IPSPatch patch = patches.get(handle.getGame());
     
     if (patch == null && automaticPatching)
     {
-      Optional<Attachment> attachment = handle.getRom().getAttachments().stream().filter( a -> a.getType() == AttachmentType.IPS_PATCH).findFirst();
+      Optional<Attachment> attachment = handle.getGame().getAttachments().stream().filter( a -> a.getType() == AttachmentType.IPS_PATCH).findFirst();
       
       if (attachment.isPresent())
       {
         patch = new IPSPatch(attachment.get().getPath());
-        System.out.println("Automatic patch on "+handle.getRom().getTitle());
+        System.out.println("Automatic patch on "+handle.getGame().getTitle());
       }
       
     }

@@ -11,8 +11,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.github.jakz.romlib.data.game.GameSize;
 import com.github.jakz.romlib.data.platforms.Platform;
+import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.plugin.PluginManager;
 

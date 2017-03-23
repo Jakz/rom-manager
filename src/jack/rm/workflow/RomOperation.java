@@ -56,7 +56,7 @@ public abstract class RomOperation implements Mutuator<RomWorkflowEntry>
   {
     try
     {
-      return shouldBeProcessed(handle.getRom()) ? doApply(handle) : handle;
+      return shouldBeProcessed(handle.getGame()) ? doApply(handle) : handle;
     }
     catch (Exception e)
     {

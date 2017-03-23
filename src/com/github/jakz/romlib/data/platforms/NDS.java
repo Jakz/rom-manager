@@ -1,6 +1,6 @@
 package com.github.jakz.romlib.data.platforms;
 
-import com.github.jakz.romlib.data.game.GameSize;
+import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.game.GameSave;
 
 public class NDS
@@ -33,7 +33,7 @@ public class NDS
     {
       if (size != 0)
       {
-        return String.format("%s (%s)", type.toString(), GameSize.toString(this.size));
+        return String.format("%s (%s)", type.toString(), RomSize.toString(this.size));
       }
       else
         return type.toString();

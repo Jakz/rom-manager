@@ -9,12 +9,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.github.jakz.romlib.data.game.GameStatus;
+import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.io.FolderScanner;
 import com.pixbits.lib.plugin.ExposedParameter;
 
 import jack.rm.Settings;
-import jack.rm.data.romset.GameSet;
 import jack.rm.plugins.PluginWithIgnorePaths;
 
 public class MoveUnknownFilesPlugin extends CleanupPlugin implements PluginWithIgnorePaths
@@ -31,9 +30,9 @@ public class MoveUnknownFilesPlugin extends CleanupPlugin implements PluginWithI
       if (!Files.exists(path) || !Files.isDirectory(path))
         Files.createDirectory(path);
   
-      Set<Path> existing = set.stream()
-        .filter( r -> r.status != GameStatus.MISSING )
-        .map( r -> r.getHandle().path())
+      Set<Path> existing = set.romStream()
+        .filter(r -> r.isPresent())
+        .map(r -> r.handle().path())
         .collect(Collectors.toSet());
   
       Settings settings = set.getSettings();

@@ -6,9 +6,9 @@ import java.io.IOException;
 
 import javax.swing.JMenuItem;
 
+import com.github.jakz.romlib.data.set.GameSet;
+
 import jack.rm.Main;
-import jack.rm.data.romset.GameList;
-import jack.rm.data.romset.GameSet;
 
 class MenuListener implements ActionListener
 {

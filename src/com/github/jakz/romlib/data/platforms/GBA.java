@@ -1,6 +1,6 @@
 package com.github.jakz.romlib.data.platforms;
 
-import com.github.jakz.romlib.data.game.GameSize;
+import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.game.GameSave;
 import com.github.jakz.romlib.data.game.Version;
 
@@ -46,7 +46,7 @@ public class GBA
         value += " "+version;
       
       if (size != 0)
-        value += " ("+GameSize.toString(size)+")";
+        value += " ("+RomSize.toString(size)+")";
       
       return value;
     }

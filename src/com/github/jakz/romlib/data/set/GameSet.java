@@ -1,4 +1,4 @@
-package jack.rm.data.romset;
+package com.github.jakz.romlib.data.set;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -20,14 +20,10 @@ import java.util.stream.Stream;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameClone;
-import com.github.jakz.romlib.data.game.GameSize;
+import com.github.jakz.romlib.data.game.Rom;
+import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
-import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.platforms.Platform;
-import com.github.jakz.romlib.data.set.CloneSet;
-import com.github.jakz.romlib.data.set.DatFormat;
-import com.github.jakz.romlib.data.set.DatLoader;
-import com.github.jakz.romlib.data.set.Provider;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.pixbits.lib.searcher.DummySearcher;
@@ -64,7 +60,7 @@ public class GameSet implements Iterable<Game>
 
   public final Platform platform;
   private final GameSetInfo info;
-  public final GameSize.Set sizeSet;
+  public final RomSize.Set sizeSet;
   private final AssetManager assetManager;
 
 	private GameList list;
@@ -83,7 +79,7 @@ public class GameSet implements Iterable<Game>
 	  this.searcher = new DummySearcher<>();
 	  this.list = null;
 	  this.clones = null;
-	  this.sizeSet = new GameSize.Set();
+	  this.sizeSet = new RomSize.Set();
 	  this.platform = platform;
 		this.attributes = attributes;
 		this.assetManager = assetManager;
@@ -96,7 +92,7 @@ public class GameSet implements Iterable<Game>
 	  this.searcher = new DummySearcher<>();
 	  this.list = null;
 	  this.clones = null;
-	  this.sizeSet = new GameSize.Set();
+	  this.sizeSet = new RomSize.Set();
 	  this.platform = platform;
 	  this.attributes = new Attribute[0];
 	  this.assetManager = AssetManager.DUMMY;
@@ -134,7 +130,7 @@ public class GameSet implements Iterable<Game>
 	public CloneSet clones() { return clones; }
 	public GameSetInfo info() { return info; }
 	public GameSetStatus status() { return list.status(); }
-	public HashCache<Game> hashCache() { return list.cache(); }
+	public HashCache<Rom> hashCache() { return list.cache(); }
 	public boolean hasMultipleRomsPerGame() { return list.hasMultipleRomsPerGame(); }
 	
 	public void checkNames() { list.checkNames(); }
@@ -146,6 +142,7 @@ public class GameSet implements Iterable<Game>
 	public Game get(String title) { return list.get(title); }
 	public int gameCount() { return list.gameCount(); }
 	public Stream<Game> stream() { return list.stream(); }
+	public Stream<Rom> romStream() { return list.stream().flatMap(g -> g.stream()); }
 	public Iterator<Game> iterator() { return list.iterator(); }
 	
 	public Settings getSettings() { return settings; }
@@ -325,6 +322,14 @@ public class GameSet implements Iterable<Game>
 
     renamerPhase.accept(true);
   }  
+  
+  public boolean hasFeature(Feature feature)
+  {
+    if (feature == Feature.SINGLE_ROM_PER_GAME)
+      return !hasMultipleRomsPerGame();
+    else
+      return false;
+  }
   
   public List<Game> filter(String query)
   { 

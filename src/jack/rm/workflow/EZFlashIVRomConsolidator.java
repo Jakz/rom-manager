@@ -25,7 +25,7 @@ public class EZFlashIVRomConsolidator extends Dumper<RomWorkflowEntry>
   {
     try
     {
-      Game rom = handle.getRom();
+      Game rom = handle.getGame();
       Path finalBasePath = destination.resolve(handle.getDestPath());
       Path finalPath = finalBasePath.resolve(rom.getTitle()+"."+rom.getSystem().exts[0]);
       Files.createDirectories(finalBasePath);

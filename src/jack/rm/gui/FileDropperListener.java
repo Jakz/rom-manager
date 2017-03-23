@@ -5,12 +5,13 @@ import java.nio.file.Path;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameStatus;
+import com.github.jakz.romlib.data.game.Rom;
+import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
 import com.pixbits.lib.ui.FileTransferHandler;
 
 import jack.rm.Main;
-import jack.rm.data.romset.GameSet;
 import jack.rm.files.Organizer;
 import jack.rm.files.ScanResult;
 import jack.rm.log.LogSource;
@@ -47,23 +48,24 @@ public class FileDropperListener implements FileTransferHandler.Listener
             {
             
             // a missing rom has been dropped on list
-            if (result.rom.status == GameStatus.MISSING)
+            if (!result.rom.isPresent())
             {
               result.assign();
-              Game rom = result.rom;
+              
+              Rom rom = result.rom;
+              Game game = rom.game();
               
               // first let's copy the file in the rompath
-              Path romFile = rom.getHandle().path();
+              Path romFile = rom.handle().path();
               if (!romFile.getParent().equals(romsPath))
               {
                 Path destFile = romsPath.resolve(romFile.getFileName());
-                rom.move(destFile);
-                
+                game.move(destFile);                
               }
               
-              rom.status = GameStatus.FOUND;
+              game.updateStatus();
               
-              Organizer.organizeRomIfNeeded(rom);
+              Organizer.organizeRomIfNeeded(game);
               
               GameSet.current.refreshStatus();
               Main.mainFrame.updateTable();

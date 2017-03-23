@@ -1,10 +1,5 @@
 package com.github.jakz.romlib.data.set;
 
-import java.util.function.Supplier;
-
-import jack.rm.data.romset.GameList;
-import jack.rm.data.romset.GameSet;
-
 public interface DatLoader
 {
   public class Data

@@ -4,9 +4,9 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 import com.github.jakz.romlib.data.set.DatLoader;
+import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.plugin.PluginType;
 
-import jack.rm.data.romset.GameSet;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.PluginRealType;
 

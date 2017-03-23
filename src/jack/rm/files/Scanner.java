@@ -1,48 +1,28 @@
 package jack.rm.files;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.nio.channels.ClosedByInterruptException;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.PathMatcher;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.zip.CRC32;
-import java.util.zip.CheckedInputStream;
-
 import javax.swing.SwingWorker;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameStatus;
-import com.pixbits.lib.io.FolderScanner;
+import com.github.jakz.romlib.data.game.Rom;
+import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.io.archive.HandleSet;
 import com.pixbits.lib.io.archive.VerifierEntry;
 import com.pixbits.lib.io.archive.handles.Handle;
-import com.pixbits.lib.io.archive.handles.NestedArchiveBatch;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
-import com.pixbits.lib.plugin.PluginManager;
-
 import jack.rm.Main;
-import jack.rm.data.romset.GameSet;
 import jack.rm.gui.Dialogs;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
-import jack.rm.plugins.ActualPlugin;
-import jack.rm.plugins.ActualPluginBuilder;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.scanners.ScannerPlugin;
 import jack.rm.plugins.scanners.VerifierPlugin;
@@ -72,21 +52,20 @@ public class Scanner
 	  if (result == null)
 	    return;
 	  	  
-	  Game rom = result.rom;
+	  Rom rom = result.rom;
+	  Game game = rom.game();
 	  
-	  if (rom.status != GameStatus.MISSING && !rom.getHandle().equals(result.path))
+	  logger.i(LogTarget.rom(result.rom), "Found a match for "+rom.handle());
+	  
+	  if (rom.isPresent() && !rom.handle().equals(result.path))
 	  {	    
 	    clones.add(result);
-	    logger.w(LogTarget.file(result.path.path().getFileName()), "File contains a rom already present in romset: "+rom.getHandle());
+	    logger.w(LogTarget.file(result.path.path().getFileName()), "File contains a rom already present in romset: "+rom.handle());
 	    return;
 	  }
 	  
 	  result.assign();
-
-	  if (rom.isOrganized())
-	    rom.status = GameStatus.FOUND;
-	  else
-	    rom.status = GameStatus.UNORGANIZED;
+	  game.updateStatus();
 	}
 	
 	public ScanResult scanFile(Path file)
@@ -109,10 +88,10 @@ public class Scanner
 		{
 		  logger.i(LogTarget.romset(set), "Scanning for new roms");
 
-	    set.stream()
-	    .filter(r -> r.status != GameStatus.MISSING)
-	    .map(r -> r.getHandle())
-	    .forEach(existing::add);
+	    set.romStream()
+	      .filter(r -> r.isPresent())
+	      .map(r -> r.handle())
+	      .forEach(existing::add);
 		}
 
 		Path folder = set.getSettings().romsPath;
@@ -172,6 +151,9 @@ public class Scanner
 	  @Override
 	  public Void doInBackground()
 	  {
+	    try
+	    {
+	    
 	    Main.progress.show(Main.mainFrame, "Rom Scan", () -> cancel(true) );
 	    
 	    int i = 0;
@@ -191,6 +173,11 @@ public class Scanner
 
          publish(i);
          ++i;
+	    }
+	    
+	    } catch (NullPointerException e)
+	    {
+	      e.printStackTrace();
 	    }
 	    
 	    return null;

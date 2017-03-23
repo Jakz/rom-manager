@@ -2,11 +2,11 @@ package jack.rm.plugins;
 
 import java.util.function.Predicate;
 
+import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
 import com.pixbits.lib.plugin.Plugin;
 
-import jack.rm.data.romset.GameSet;
 import jack.rm.gui.PluginOptionsPanel;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;

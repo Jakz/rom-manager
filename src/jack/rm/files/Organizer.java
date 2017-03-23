@@ -1,6 +1,5 @@
 package jack.rm.files;
 
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
@@ -9,12 +8,11 @@ import java.util.TreeSet;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameStatus;
-import com.pixbits.lib.io.archive.handles.ArchiveHandle;
+import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
 
-import jack.rm.data.romset.GameSet;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.plugins.PluginRealType;
@@ -62,6 +60,9 @@ public class Organizer
 	
 	public static void internalRenameRom(Game rom)
 	{
+    throw new UnsupportedOperationException("relocate internal name is not compatible with new handles");
+
+	  /* TODO
 	  if (!rom.hasCorrectInternalName())
 	  {
 	    Handle path = rom.getHandle();
@@ -73,13 +74,17 @@ public class Organizer
 	    if (((ArchiveHandle)path).renameInternalFile(name))
 	      rom.setHandle(path.relocateInternal(name));
 	    else
-	      logger.e(LogTarget.rom(rom), "Can't rename internal name of archive: "+path.path());
-	  }
+	      logger.e(LogTarget.game(rom), "Can't rename internal name of archive: "+path.path());
+	  }*/
 	}
 	
 	public static void renameRom(Game rom)
 	{
-    Handle romPath = rom.getHandle();
+    throw new UnsupportedOperationException("relocate name is not compatible with new handles");
+
+	  /* TODO
+
+	  Handle romPath = rom.getHandle();
 	  Path renameTo = romPath.path().getParent();
 	  
 	  //TODO: should fix extensions if wrong and crc is verified but now just keeps them
@@ -91,22 +96,22 @@ public class Organizer
     }
     catch (FileAlreadyExistsException e)
     {
-      logger.e(LogTarget.rom(rom), "Can't rename file, already exists: "+e.getFile());
+      logger.e(LogTarget.game(rom), "Can't rename file, already exists: "+e.getFile());
     }
     catch (Exception e)
     {
       e.printStackTrace();
       // TODO: handle and write on log
-    }
+    }*/
 	}
 	
-	public static void moveRom(Game rom)
+	public static void moveRom(Game game)
 	{
-	  if (rom.status != GameStatus.MISSING)
+	  if (game.getStatus().isComplete())
     {     
       try
       {      
-        Path finalPath = GameSet.current.getSettings().romsPath.resolve(rom.getCorrectFolder());
+        Path finalPath = GameSet.current.getSettings().romsPath.resolve(game.getCorrectFolder());
   
         if (!Files.exists(finalPath) || !Files.isDirectory(finalPath))
         {
@@ -114,17 +119,17 @@ public class Organizer
           logger.i(LogTarget.none(), "Creating folder "+finalPath);
         }
         
-        Handle romPath = rom.getHandle();
+        Handle romPath = game.rom().handle();
         Path newFile = finalPath.resolve(romPath.path().getFileName());
                 
         if (!newFile.equals(romPath.path()) && Files.exists(newFile))
         {
-          logger.e(LogTarget.rom(rom), "Cannot rename to "+newFile.toString()+", file exists");
+          logger.e(LogTarget.game(game), "Cannot rename to "+newFile.toString()+", file exists");
         }
         else if (!newFile.equals(romPath.path()))
         {  
-          rom.move(newFile);
-          logger.e(LogTarget.rom(rom), "Moved rom to "+finalPath);
+          game.move(newFile);
+          logger.e(LogTarget.game(game), "Moved rom to "+finalPath);
         }    
       }
       catch (Exception e)

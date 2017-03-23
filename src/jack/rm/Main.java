@@ -5,9 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.function.Consumer;
 
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
-
+import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.LogBuffer;
 import com.pixbits.lib.log.LoggerFactory;
@@ -19,9 +17,7 @@ import com.pixbits.lib.workflow.Fetcher;
 import com.pixbits.lib.workflow.WorkflowData;
 
 import jack.rm.assets.Downloader;
-import jack.rm.data.romset.GameSet;
 import jack.rm.data.romset.GameSetManager;
-import jack.rm.files.Scanner;
 import jack.rm.gui.ClonesDialog;
 import jack.rm.gui.Dialogs;
 import jack.rm.gui.GlobalSettingsView;

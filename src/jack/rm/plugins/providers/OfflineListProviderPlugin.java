@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UnknownFormatConversionException;
 
-import com.github.jakz.romlib.data.game.GameSize;
+import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameSave;
 import com.github.jakz.romlib.data.game.Version;
@@ -23,10 +23,10 @@ import com.github.jakz.romlib.data.platforms.NDS;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.set.DatFormat;
 import com.github.jakz.romlib.data.set.DatLoader;
+import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.data.set.Provider;
 
 import jack.rm.assets.Asset;
-import jack.rm.data.romset.GameSet;
 import jack.rm.files.parser.SaveParser;
 import jack.rm.files.parser.XMLDatLoader;
 import jack.rm.files.parser.XMLHandler;
@@ -71,11 +71,9 @@ public class OfflineListProviderPlugin extends ProviderPlugin
     GameAttribute.NUMBER,
     GameAttribute.PUBLISHER,
     GameAttribute.GROUP,
-    GameAttribute.SIZE,
     GameAttribute.SAVE_TYPE,
     GameAttribute.LOCATION,
     GameAttribute.LANGUAGE,
-    GameAttribute.CRC,
     GameAttribute.COMMENT
   };
   
@@ -85,10 +83,8 @@ public class OfflineListProviderPlugin extends ProviderPlugin
     GameAttribute.NUMBER,
     GameAttribute.PUBLISHER,
     GameAttribute.GROUP,
-    GameAttribute.SIZE,
     GameAttribute.LOCATION,
     GameAttribute.LANGUAGE,
-    GameAttribute.CRC,
     GameAttribute.COMMENT
   };
   
@@ -97,9 +93,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
     GameAttribute.TITLE,
     GameAttribute.LOCATION,
     GameAttribute.LANGUAGE,
-    GameAttribute.SIZE,
     GameAttribute.PUBLISHER,
-    GameAttribute.CRC,
     GameAttribute.COMMENT,
   };
   
@@ -197,7 +191,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         for (Version version :  GBA.Save.valuesForType(GBA.Save.Type.FLASH))
           if (string.contains(version.toString()))
           {
-            int size = (string.contains("512") ? 512 : 1024 ) * (int)GameSize.KBYTE / 8;
+            int size = (string.contains("512") ? 512 : 1024 ) * (int)RomSize.KBYTE / 8;
             return new GBA.Save(GBA.Save.Type.FLASH, version, size);
           }
       }
@@ -237,9 +231,9 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         throw new UnknownFormatConversionException("Unable to parse NDS save: "+string);
       
       if (tokens[1].endsWith("kbit"))
-        multiplier = GameSize.KBIT;
+        multiplier = RomSize.KBIT;
       else if (tokens[1].endsWith("mbit"))
-        multiplier = GameSize.MEGABIT;
+        multiplier = RomSize.MEGABIT;
       else
         throw new UnknownFormatConversionException("Unable to parse NDS save: "+string);
 

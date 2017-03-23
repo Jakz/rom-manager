@@ -2,14 +2,10 @@ package jack.rm.plugins.scanners;
 
 import java.util.List;
 
-import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.io.archive.VerifierEntry;
-import com.pixbits.lib.io.archive.handles.Handle;
-import com.pixbits.lib.io.archive.handles.NestedArchiveBatch;
-import com.pixbits.lib.lang.Pair;
 import com.pixbits.lib.plugin.PluginType;
 
-import jack.rm.data.romset.GameSet;
 import jack.rm.files.ScanResult;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.PluginRealType;

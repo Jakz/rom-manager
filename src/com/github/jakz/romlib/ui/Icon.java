@@ -29,6 +29,7 @@ public enum Icon
   FLAG_WORLD("flag_usa"),
   STATUS_ALL("status_all"),
   STATUS_BADLY_NAMED("status_badly_named"),
+  STATUS_INCOMPLETE("status_incomplete"),
   STATUS_CORRECT("status_correct"),
   STATUS_NOT_FOUND("status_not_found"),
   FAVORITE("favorite"),

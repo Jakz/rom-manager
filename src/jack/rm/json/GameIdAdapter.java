@@ -9,7 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;;
 
-class RomIdAdapter implements JsonSerializer<GameID<?>>, JsonDeserializer<GameID<?>> {
+class GameIdAdapter implements JsonSerializer<GameID<?>>, JsonDeserializer<GameID<?>> {
   @Override
   public JsonElement serialize(GameID<?> src, Type type, JsonSerializationContext context)
   {

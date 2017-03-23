@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.github.jakz.romlib.data.game.Game;
-import com.github.jakz.romlib.data.game.GameSize;
+import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.game.Location;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
@@ -52,13 +52,19 @@ public class BasicPatternSet extends PatternSetPlugin
   private static class MegabyteSizePattern extends Pattern {
     MegabyteSizePattern() { super("%s", "Size of the game dump in bytes (long)"); }
     @Override
-    public String apply(Pattern.RenamingOptions options, String name, Game rom) { return apply(options, name, code, rom.getSize().toString(GameSize.PrintStyle.LONG, GameSize.PrintUnit.BYTES)); }
+    public String apply(Pattern.RenamingOptions options, String name, Game game)
+    { 
+      return apply(options, name, code, RomSize.toString(game.getSizeInBytes(), RomSize.PrintStyle.LONG, RomSize.PrintUnit.BYTES));
+    }
   }
   
   private static class MegabitSizePattern extends Pattern {
     MegabitSizePattern() { super("%S", "Size of the game dump in bits (short)"); }
     @Override
-    public String apply(Pattern.RenamingOptions options, String name, Game rom) { return apply(options, name, code, rom.getSize().toString(GameSize.PrintStyle.SHORT, GameSize.PrintUnit.BITS)); }
+    public String apply(Pattern.RenamingOptions options, String name, Game game)
+    { 
+      return apply(options, name, code, RomSize.toString(game.getSizeInBytes(), RomSize.PrintStyle.SHORT, RomSize.PrintUnit.BITS));
+    }
   }
   
   private static class FullLocationPattern extends Pattern {

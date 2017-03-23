@@ -1,4 +1,4 @@
-package jack.rm.data.romset;
+package com.github.jakz.romlib.data.set;
 
 import java.util.stream.Stream;
 
@@ -8,13 +8,16 @@ public class GameSetStatus
 {
   private int countCorrect;
   private int countNotFound;
+  private int countIncomplete;
   private int countBadlyNamed;
+  
   
   public GameSetStatus()
   {
     countCorrect = 0;
     countNotFound = 0;
     countBadlyNamed = 0;
+    countIncomplete = 0;
   }
   
   void refresh(Stream<Game> games)
@@ -24,9 +27,10 @@ public class GameSetStatus
     countCorrect = 0;
     
     games.forEach(g -> {
-      switch (g.status)
+      switch (g.getStatus())
       {
         case MISSING: ++countNotFound; break;
+        case INCOMPLETE: ++countIncomplete; break;
         case UNORGANIZED: ++countBadlyNamed; break;
         case FOUND: ++countCorrect; break;
       }
@@ -36,5 +40,6 @@ public class GameSetStatus
   public int getCorrectCount() { return countCorrect; }
   public int getNotFoundCount() { return countNotFound; }
   public int getUnorganizedCount() { return countBadlyNamed; }
+  public int getIncompleteCount() { return countIncomplete; }
   public int getFoundCount() { return countCorrect + countBadlyNamed; }
 }

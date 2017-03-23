@@ -1,7 +1,6 @@
 package com.github.jakz.romlib.data.game;
 
 import java.util.HashMap;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.github.jakz.romlib.ui.Icon;

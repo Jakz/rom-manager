@@ -1,14 +1,14 @@
 package jack.rm.files;
 
-import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.Rom;
 import com.pixbits.lib.io.archive.handles.Handle;
 
 public class ScanResult implements Comparable<ScanResult>
 {
-  public Game rom;
+  public Rom rom;
   public Handle path;
   
-  public ScanResult(Game rom, Handle path)
+  public ScanResult(Rom rom, Handle path)
   {
     this.rom = rom;
     this.path = path;
@@ -21,7 +21,7 @@ public class ScanResult implements Comparable<ScanResult>
   
   @Override public int compareTo(ScanResult other)
   {
-    int i = rom.compareTo(other.rom);
+    int i = rom.game().compareTo(other.rom.game());
     return i == 0 ? path.path().compareTo(other.path.path()) : i;
   }
   

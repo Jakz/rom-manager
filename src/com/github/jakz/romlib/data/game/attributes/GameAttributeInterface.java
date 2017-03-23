@@ -1,6 +1,5 @@
 package com.github.jakz.romlib.data.game.attributes;
 
-import com.github.jakz.romlib.data.game.GameSize;
 import com.github.jakz.romlib.data.game.LanguageSet;
 import com.github.jakz.romlib.data.game.LocationSet;
 import com.github.jakz.romlib.data.game.Version;
@@ -28,9 +27,6 @@ public interface GameAttributeInterface
   
   default void setLicensed(boolean licensed) { setAttribute(GameAttribute.LICENSED, licensed); }
   default boolean getLicensed() { return getAttribute(GameAttribute.LICENSED); }
-  
-  default void setSize(GameSize size) { setAttribute(GameAttribute.SIZE, size); }
-  default GameSize getSize() { return getAttribute(GameAttribute.SIZE); }
   
   default void setComment(String comment) { setAttribute(GameAttribute.COMMENT, comment); }
   default String getComment() { return getAttribute(GameAttribute.COMMENT); }

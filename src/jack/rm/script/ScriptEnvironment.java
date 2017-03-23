@@ -1,6 +1,6 @@
 package jack.rm.script;
 
-import jack.rm.data.romset.GameSet;
+import com.github.jakz.romlib.data.set.GameSet;
 
 public class ScriptEnvironment
 {

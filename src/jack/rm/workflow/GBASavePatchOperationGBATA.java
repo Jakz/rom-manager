@@ -17,7 +17,7 @@ public class GBASavePatchOperationGBATA extends RomOperation
   
   protected RomWorkflowEntry doApply(RomWorkflowEntry handle) throws Exception
   {
-    GBASavePatcherGBATA.patch(handle.getRom().getAttribute(GameAttribute.SAVE_TYPE), handle.getBuffer());
+    GBASavePatcherGBATA.patch(handle.getGame().getAttribute(GameAttribute.SAVE_TYPE), handle.getBuffer());
     return handle;
   }
   
