@@ -18,9 +18,10 @@ import javax.swing.SwingWorker;
 
 import jack.rm.Main;
 
+import com.pixbits.lib.concurrent.OperationDetails;
 import com.pixbits.lib.lang.StringUtils;
 
-public class ZipExtractWorker<T extends BackgroundOperation> extends SwingWorker<Path, Long>
+public class ZipExtractWorker<T extends OperationDetails> extends SwingWorker<Path, Long>
 {
   protected final T operation;
   protected final Consumer<Boolean> callback;

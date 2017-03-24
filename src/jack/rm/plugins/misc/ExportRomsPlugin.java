@@ -9,17 +9,17 @@ import java.util.function.Predicate;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.set.GameSet;
+import com.pixbits.lib.concurrent.OperationDetails;
 import com.pixbits.lib.plugin.ExposedParameter;
 import com.pixbits.lib.plugin.PluginType;
 
 import jack.rm.Main;
-import jack.rm.files.BackgroundOperation;
 import jack.rm.files.RomSetWorker;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.OperationalPlugin;
 import jack.rm.plugins.PluginRealType;
 
-public class ExportRomsPlugin extends ActualPlugin implements OperationalPlugin, BackgroundOperation
+public class ExportRomsPlugin extends ActualPlugin implements OperationalPlugin, OperationDetails
 {
   @Override public PluginType<?> getPluginType() { return PluginRealType.MISC; }
 

@@ -7,9 +7,11 @@ import java.util.function.Consumer;
 
 import javax.swing.SwingWorker;
 
+import com.pixbits.lib.concurrent.OperationDetails;
+
 import jack.rm.Main;
 
-public abstract class BackgroundWorker<E, T extends BackgroundOperation> extends SwingWorker<Void, Integer>
+public abstract class BackgroundWorker<E, T extends OperationDetails> extends SwingWorker<Void, Integer>
 {
   protected final List<E> data;
   protected final T operation;
@@ -18,10 +20,10 @@ public abstract class BackgroundWorker<E, T extends BackgroundOperation> extends
   private String getTitle() { return operation.getTitle(); }
   private String getProgressText() { return operation.getProgressText(); }
   
-  protected BackgroundWorker(T operation, Consumer<Boolean> callback)
+  /*protected BackgroundWorker(T operation, Consumer<Boolean> callback)
   {
     this(new ArrayList<E>(), operation, callback);
-  }
+  }*/
   
   public BackgroundWorker(List<E> data, T operation, Consumer<Boolean> callback)
   {
@@ -30,7 +32,7 @@ public abstract class BackgroundWorker<E, T extends BackgroundOperation> extends
     this.callback = callback;
   }
   
-  protected void add(E item) { data.add(item); }
+  //protected void add(E item) { data.add(item); }
 
   @Override
   public Void doInBackground()

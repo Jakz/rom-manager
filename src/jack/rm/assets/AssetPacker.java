@@ -9,8 +9,8 @@ import java.util.function.Consumer;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.set.GameSet;
+import com.pixbits.lib.concurrent.OperationDetails;
 
-import jack.rm.files.BackgroundOperation;
 import jack.rm.files.RomSetWorker;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
@@ -36,7 +36,7 @@ public class AssetPacker
     callback.accept(true);
   }
   
-  private static class AssetPackerWorker extends RomSetWorker<BackgroundOperation>
+  private static class AssetPackerWorker extends RomSetWorker<OperationDetails>
   {
     private ZipFile file;
     private ZipParameters params;
@@ -45,7 +45,7 @@ public class AssetPacker
     AssetPackerWorker(GameSet romSet, Asset asset, Consumer<Boolean> callback)
     {
       super(romSet,
-        new BackgroundOperation()
+        new OperationDetails()
         {
           public String getTitle() { return "Asset Packer"; }
           public String getProgressText() { return "Packing..."; }

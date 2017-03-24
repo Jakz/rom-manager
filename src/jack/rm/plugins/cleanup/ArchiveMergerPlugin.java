@@ -6,15 +6,15 @@ import java.util.function.Consumer;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.set.GameSet;
+import com.pixbits.lib.concurrent.OperationDetails;
 import com.pixbits.lib.plugin.ExposedParameter;
 
-import jack.rm.files.BackgroundOperation;
 import jack.rm.files.RomSetWorker;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
 
-public class ArchiveMergerPlugin extends CleanupPlugin implements BackgroundOperation
+public class ArchiveMergerPlugin extends CleanupPlugin implements OperationDetails
 {
   @ExposedParameter(name="Archive Path", description="This is the archive that will contain the whole romset", params="files")
   Path path; 

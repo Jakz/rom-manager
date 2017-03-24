@@ -11,12 +11,12 @@ import java.util.zip.ZipFile;
 
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.data.set.Provider;
+import com.pixbits.lib.concurrent.OperationDetails;
 import com.pixbits.lib.io.FileUtils;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
 
 import jack.rm.Main;
-import jack.rm.files.BackgroundOperation;
 import jack.rm.files.DownloadWorker;
 import jack.rm.files.ZipExtractWorker;
 import jack.rm.gui.Dialogs;
@@ -104,7 +104,7 @@ public class DatUpdater
           logger.i(LogTarget.romset(set), "Extracting DAT for "+set.ident()+" to "+tmpDownloadPath);
 
           
-          ZipExtractWorker<?> worker =  new ZipExtractWorker<BackgroundOperation>(tmpZippedPath.get(), tmpDownloadPath.get(), new BackgroundOperation() {
+          ZipExtractWorker<?> worker =  new ZipExtractWorker<OperationDetails>(tmpZippedPath.get(), tmpDownloadPath.get(), new OperationDetails() {
             public String getTitle() { return "Uncompressing"; }
             public String getProgressText() { return "Progress.."; }
             }, consolidationStep.andThen(cleanupStep).andThen(callback), Main.gsettingsView);
@@ -125,7 +125,7 @@ public class DatUpdater
     
     final Provider.Source source = set.info().getProvider().getSource();
     
-    DownloadWorker<?> worker = new DownloadWorker<BackgroundOperation>(source.getURL(), tmpDownloadPath.get(), new BackgroundOperation() {
+    DownloadWorker<?> worker = new DownloadWorker<OperationDetails>(source.getURL(), tmpDownloadPath.get(), new OperationDetails() {
       public String getTitle() { return "Downloading"; }
       public String getProgressText() { return "Progress.."; }
     }, extractionStep, Main.gsettingsView, source.getPostArguments());

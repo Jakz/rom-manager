@@ -8,12 +8,19 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import javax.swing.SwingWorker;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.game.Rom;
 import com.github.jakz.romlib.data.set.GameSet;
+import com.pixbits.lib.concurrent.AsyncGuiPoolWorker;
+import com.pixbits.lib.concurrent.Operation;
 import com.pixbits.lib.io.archive.HandleSet;
 import com.pixbits.lib.io.archive.VerifierEntry;
 import com.pixbits.lib.io.archive.handles.Handle;
@@ -128,8 +135,38 @@ public class Scanner
 		handleSet.stream().forEach(h -> logger.d(LogTarget.romset(set), "> %s", h.toString()));
 
 		logger.i(LogTarget.romset(set), "Verifying %s handles for romset", total ? "all" : "new");
-		VerifierWorker worker = new VerifierWorker(handleSet);
-		worker.execute();
+		
+    final List<Handle> handles = handleSet.stream().collect(Collectors.toList());
+
+		
+    Operation<Handle, List<ScanResult>> operation = handle -> {
+      logger.d(LogTarget.romset(set), "> Verifying %s", handle.toString());
+      return verifier.verifyHandle(handle);
+    };
+    
+    BiConsumer<Long, Float> guiProgress = (i,f) -> {
+      Main.progress.update(f, "Verifying "+i+" of "+handles.size()+"...");
+      Main.mainFrame.updateTable();
+    };
+    
+    Consumer<List<ScanResult>> callback = results -> {
+      results.stream().filter(r -> r.rom != null).forEach(r -> foundRom(r));   
+      set.refreshStatus();
+    };
+    
+    Runnable onComplete = () -> {
+      Main.progress.finished();
+      
+      if (!clones.isEmpty())
+        Main.clonesDialog.activate(set, clones);
+      else
+        set.saveStatus();
+    };
+    
+    AsyncGuiPoolWorker<Handle,List<ScanResult>> worker = new AsyncGuiPoolWorker<>(operation, guiProgress);
+    Main.progress.show(Main.mainFrame, "Verifying roms", () -> worker.cancel() );
+
+    worker.compute(handles, callback, onComplete);
 	}
 	
 	public class VerifierWorker extends SwingWorker<Void, Integer>
@@ -154,7 +191,7 @@ public class Scanner
 	    try
 	    {
 	    
-	    Main.progress.show(Main.mainFrame, "Rom Scan", () -> cancel(true) );
+	    Main.progress.show(Main.mainFrame, "Verifying roms", () -> cancel(true) );
 	    
 	    int i = 0;
 	    for (VerifierEntry entry : handles)
