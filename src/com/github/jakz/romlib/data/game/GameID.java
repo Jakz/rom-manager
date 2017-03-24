@@ -18,5 +18,8 @@ public interface GameID<T>
   {
     public final long value;
     public CRC(long value) { this.value = value; }
+    
+    public boolean equals(Object o) { return o instanceof CRC && ((CRC)o).value == value; }
+    public int hashCode() { return Long.hashCode(value); }
   }
 }

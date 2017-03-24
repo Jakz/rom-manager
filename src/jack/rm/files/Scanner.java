@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
 import com.github.jakz.romlib.data.game.Game;
@@ -40,7 +41,7 @@ public class Scanner
   
   GameSet set;
 	
-	private Set<Handle> existing = new HashSet<>();
+	private Set<Path> ignoredPaths = new HashSet<>();
 	private Set<Path> foundFiles = new HashSet<>();
 	private Set<ScanResult> clones = new TreeSet<>();
 	
@@ -82,7 +83,7 @@ public class Scanner
 		
 	public void scanForRoms(boolean total) throws IOException
 	{
-		existing.clear();
+		ignoredPaths.clear();
 		foundFiles.clear();
 		clones.clear();
 		
@@ -97,12 +98,14 @@ public class Scanner
 
 	    set.romStream()
 	      .filter(r -> r.isPresent())
-	      .map(r -> r.handle())
-	      .forEach(existing::add);
+	      .map(r -> r.handle().path())
+	      .forEach(ignoredPaths::add);
 		}
+		
+		ignoredPaths.addAll(set.getSettings().getIgnoredPaths());
 
 		Path folder = set.getSettings().romsPath;
-			
+					
 		if (scanner == null)
 		{
 		  logger.e(LogTarget.romset(set), "Scanner plugin not enabled for romset");
@@ -128,7 +131,7 @@ public class Scanner
 		  return;
 		}
 			
-		HandleSet handleSet = scanner.scanFiles(folder, set.getSettings().getIgnoredPaths());
+		HandleSet handleSet = scanner.scanFiles(folder, ignoredPaths);
 		verifier.setup(set);
 		
 		logger.i(LogTarget.romset(set), "Found %d potential entries (%d binaries, %d archived, %d nested in %d batches)", handleSet.total(), handleSet.binaryCount(), handleSet.archivedCount(), handleSet.nestedCount(), handleSet.nestedArchives.size());
@@ -155,16 +158,21 @@ public class Scanner
     };
     
     Runnable onComplete = () -> {
-      Main.progress.finished();
-      
-      if (!clones.isEmpty())
-        Main.clonesDialog.activate(set, clones);
-      else
-        set.saveStatus();
+      SwingUtilities.invokeLater(() -> {
+        Main.progress.finished();
+        
+        if (!clones.isEmpty())
+          Main.clonesDialog.activate(set, clones);
+        else
+          set.saveStatus();
+      });
     };
     
     AsyncGuiPoolWorker<Handle,List<ScanResult>> worker = new AsyncGuiPoolWorker<>(operation, guiProgress);
-    Main.progress.show(Main.mainFrame, "Verifying roms", () -> worker.cancel() );
+    
+    SwingUtilities.invokeLater(() -> {
+      Main.progress.show(Main.mainFrame, "Verifying roms", () -> worker.cancel());
+    });
 
     worker.compute(handles, callback, onComplete);
 	}
