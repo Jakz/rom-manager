@@ -167,6 +167,7 @@ public class GameSet implements Iterable<Game>
 	    
 	    list = data.games;
 	    clones = data.clones;
+	    info.computeStats(this);
 	    
 	    loaded = true;
 	  }

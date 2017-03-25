@@ -85,7 +85,7 @@ public class OptionsFrame extends JFrame implements ActionListener, ComponentLis
 		if (this.isVisible())
 			return;		  
 		
-		Main.romsetPanel.updateFields();
+		Main.romsetPanel.updateFields(set);
 
 		for (int i = 2; i < tabs.getTabCount(); ++i)
 		  ((PluginOptionsPanel)tabs.getComponentAt(i)).updateFields();

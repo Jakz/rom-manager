@@ -1,7 +1,6 @@
 package com.github.jakz.romlib.data.game;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,9 +15,7 @@ import com.github.jakz.romlib.data.game.attributes.GameAttributeInterface;
 import com.github.jakz.romlib.data.game.attributes.GameInfo;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.set.GameSet;
-import com.pixbits.lib.io.archive.handles.Handle;
 
-import jack.rm.Settings;
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetData;
 import jack.rm.plugins.folder.FolderPlugin;

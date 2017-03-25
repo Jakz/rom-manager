@@ -88,6 +88,9 @@ public class RomSize implements Comparable<RomSize>
 	{
 	  Unit size = unit == PrintUnit.BITS ? Unit.GIGABIT : Unit.GIGABYTE;
 	  
+	  if (bytes == 0)
+	    return "0 bytes";
+	  
 	  while (size != null)
 	  {
 	    long units = bytes / size.bytes;

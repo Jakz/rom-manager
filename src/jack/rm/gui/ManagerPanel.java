@@ -29,6 +29,7 @@ import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.game.RomSize.PrintStyle;
 import com.github.jakz.romlib.data.game.RomSize.PrintUnit;
 import com.github.jakz.romlib.data.platforms.Platform;
+import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.io.archive.ArchiveFormat;
 import com.pixbits.lib.io.archive.Scanner;
@@ -47,11 +48,11 @@ public class ManagerPanel extends JPanel
 	private final InfoTableModel model;
 	private final JTable infoTable;
 	
+	private GameSet set;
+	
 	private class InfoTableModel extends AbstractTableModel
 	{
-	  private long totalSize;
-	  private long totalUncompressedSize;
-	  
+	  private long totalSize;	  
 	  
 	  private class InfoRow<T>
 	  {
@@ -64,7 +65,6 @@ public class ManagerPanel extends JPanel
 	      this.lambda = lambda;
 	      
 	      totalSize = 0;
-	      totalUncompressedSize = 0;
 	    }
 	  };
 
@@ -73,27 +73,31 @@ public class ManagerPanel extends JPanel
 	  InfoTableModel()
 	  {
 	    rows = new InfoRow<?>[] {
-	      new InfoRow<String>("Provider", () -> GameSet.current.info().getName()),
-	      new InfoRow<Platform>("System", () -> GameSet.current.platform),
-	      new InfoRow<String>("Count", () -> GameSet.current.gameCount() + " roms"),
-	      new InfoRow<String>("Owned", () -> GameSet.current.status().getFoundCount() + " roms"),
+	      new InfoRow<String>("Provider", () -> set.info().getName()),
+	      new InfoRow<Platform>("System", () -> set.platform),
+	      new InfoRow<String>("Games Count", () -> set.info().gameCount() + " games"),
+	      new InfoRow<String>("Roms Count", () -> set.info().romCount() + " roms"),
+	      new InfoRow<String>("Owned", () -> set.status().getFoundCount() + " roms"),
         new InfoRow<String>("% Complete", () -> { 
-          int total = GameSet.current.gameCount();
-          int owned = GameSet.current.status().getFoundCount();
+          int total = set.gameCount();
+          int owned = set.status().getFoundCount();
           float percent = Math.round((owned / (float)total) * 100);     
           return String.format("%2.0f", percent) + "%";
         }),
         new InfoRow<String>("Total Size", () -> {
+          return RomSize.toString(set.info().sizeInBytes(), PrintStyle.LONG, PrintUnit.BYTES);
+        }),
+        new InfoRow<String>("Actual Size", () -> {
           return RomSize.toString(totalSize, PrintStyle.LONG, PrintUnit.BYTES);
         }),
-        new InfoRow<String>("Uncompressed Size", () -> {
-          return RomSize.toString(totalUncompressedSize, PrintStyle.LONG, PrintUnit.BYTES);
+        new InfoRow<String>("Multiple roms per game?", () -> {
+          return set.hasFeature(Feature.SINGLE_ROM_PER_GAME) ? "no" : "yes";
         })
 
 	    };
 	  }
 	  
-    @Override public int getRowCount() { return rows.length; }
+    @Override public int getRowCount() { return set != null ? rows.length : 0; }
     @Override public int getColumnCount() { return 2; }
     @Override public String getColumnName(int c) { return ""; }
     @Override public Class<?> getColumnClass(int c) { return String.class; }
@@ -179,9 +183,10 @@ public class ManagerPanel extends JPanel
 		c.gridx = x; c.gridy = y; c.gridwidth = w; c.gridheight = h;
 	}
 	
-	public void updateFields()
+	public void updateFields(GameSet set)
 	{
-		Settings s = GameSet.current.getSettings();
+		this.set = set;
+	  Settings s = set.getSettings();
 		
     /*if (RomSet.current != null)
     {
