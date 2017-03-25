@@ -3,12 +3,14 @@ package jack.rm.plugins.scanners;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import com.pixbits.lib.io.archive.ArchiveFormat;
 import com.pixbits.lib.io.archive.HandleSet;
 import com.pixbits.lib.io.archive.Scanner;
 import com.pixbits.lib.io.archive.ScannerOptions;
+import com.pixbits.lib.io.archive.VerifierEntry;
 import com.pixbits.lib.plugin.ExposedParameter;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
@@ -31,7 +33,7 @@ public class EmbeddedScanner extends ScannerPlugin
   }
   
   @Override
-  public HandleSet scanFiles(Path file, Set<Path> ignoredPaths) throws IOException
+  public List<VerifierEntry> scanFile(Path path) throws IOException
   {
     ScannerOptions options = new ScannerOptions();
     options.assumeCRCisCorrect = true; // TODO: depends on specs of rom set
@@ -40,11 +42,10 @@ public class EmbeddedScanner extends ScannerPlugin
     options.scanBinaries = scanBinaries;
     options.scanArchives = scanArchives;
     options.scanNestedArchives = scanNestedArchives;
-    options.ignoredPaths = ignoredPaths;
     
     Scanner scanner = new Scanner(options);
     
-    return scanner.computeHandles(Collections.singletonList(file));
+    return scanner.scanSinglePath(path);
   }
 
 }

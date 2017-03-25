@@ -3,6 +3,8 @@ package jack.rm.files;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,6 +24,8 @@ import com.github.jakz.romlib.data.game.Rom;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.concurrent.AsyncGuiPoolWorker;
 import com.pixbits.lib.concurrent.Operation;
+import com.pixbits.lib.functional.StreamException;
+import com.pixbits.lib.io.FolderScanner;
 import com.pixbits.lib.io.archive.HandleSet;
 import com.pixbits.lib.io.archive.VerifierEntry;
 import com.pixbits.lib.io.archive.handles.Handle;
@@ -34,6 +38,7 @@ import jack.rm.log.LogTarget;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.scanners.ScannerPlugin;
 import jack.rm.plugins.scanners.VerifierPlugin;
+import net.sf.sevenzipjbinding.SevenZip;
 
 public class Scanner
 {
@@ -52,6 +57,10 @@ public class Scanner
 	{
 	  scanner = set.getSettings().plugins.getEnabledPlugin(PluginRealType.SCANNER);
 	  verifier = set.getSettings().plugins.getEnabledPlugin(PluginRealType.VERIFIER);
+	  
+	  if (verifier != null)
+	    verifier.setup(set);
+	  
 	  this.set = set;
 	}
 
@@ -63,7 +72,7 @@ public class Scanner
 	  Rom rom = result.rom;
 	  Game game = rom.game();
 	  
-	  logger.i(LogTarget.rom(result.rom), "Found a match for "+rom.handle());
+	  logger.i(LogTarget.rom(result.rom), "Found a match for "+result.path);
 	  
 	  if (rom.isPresent() && !rom.handle().equals(result.path))
 	  {	    
@@ -76,9 +85,97 @@ public class Scanner
 	  game.updateStatus();
 	}
 	
-	public ScanResult scanFile(Path file)
+	
+	private boolean canProceedWithScan()
 	{
-	  return null;
+	  Path folder = set.getSettings().romsPath;
+ 
+	  if (scanner == null)
+    {
+      logger.e(LogTarget.romset(set), "Scanner plugin not enabled for romset");
+      Dialogs.showError("Scanner Plugin", "No scanner plugin is enabled for the current romset.", Main.mainFrame);
+      set.resetStatus();
+      Main.mainFrame.updateTable();
+      return false;
+    }
+    else if (verifier == null)
+    {
+      logger.e(LogTarget.romset(set), "Verifier plugin not enabled for romset");
+      Dialogs.showError("Verifier Plugin", "No verifier plugin is enabled for the current romset.", Main.mainFrame);
+      set.resetStatus();
+      Main.mainFrame.updateTable();
+      return false;
+    }
+    else if (folder == null || !Files.exists(folder))
+    {
+      logger.e(LogTarget.romset(set), "Roms path doesn't exist! Scanning interrupted");
+      Dialogs.showError("Romset Path", "Romset path is not set, or it doesn't exists.\nPlease set one in Options.", Main.mainFrame);
+      set.resetStatus();
+      Main.mainFrame.updateTable();
+      return false;
+    }
+	  
+	  return true;
+	}
+	
+	public List<ScanResult> singleBlockingCheck(Path path)
+	{
+	  List<VerifierEntry> entries;
+    try
+    {
+      entries = scanner.scanFile(path);
+      return entries.stream()
+      .map(entry -> verifier.verifyHandle(entry))
+      .flatMap(r -> r.stream())
+      .filter(s -> s.rom != null)
+      .collect(Collectors.toList());
+    } 
+    catch (IOException e)
+    {
+      e.printStackTrace();
+      return null;
+    }
+	}
+	
+	private Runnable verifyTask(List<VerifierEntry> entries, boolean total)
+	{
+	  return () -> {
+	    logger.i(LogTarget.romset(set), "Verifying %s handles for romset", total ? "all" : "new");
+	    
+	    Operation<VerifierEntry, List<ScanResult>> operation = handle -> {
+	      logger.d(LogTarget.romset(set), "> Verifying %s", handle.toString());
+	      return verifier.verifyHandle(handle);
+	    };
+	    
+	    BiConsumer<Long, Float> guiProgress = (i,f) -> {
+	      Main.progress.update(f, "Verifying "+i+" of "+entries.size()+"...");
+	      Main.mainFrame.updateTable();
+	    };
+	    
+	    Consumer<List<ScanResult>> callback = results -> {
+	      results.stream().filter(r -> r.rom != null).forEach(r -> foundRom(r));   
+	      set.refreshStatus();
+	    };
+	    
+	    Runnable onComplete = () -> {
+	      SwingUtilities.invokeLater(() -> {
+	        Main.progress.finished();
+	        
+	        if (!clones.isEmpty())
+	          Main.clonesDialog.activate(set, clones);
+	        else
+	          set.saveStatus();
+	      });
+	    };
+	    
+	    AsyncGuiPoolWorker<VerifierEntry,List<ScanResult>> worker = new AsyncGuiPoolWorker<>(operation, guiProgress);
+	    
+	    SwingUtilities.invokeLater(() -> {
+	      Main.progress.show(Main.mainFrame, "Verifying roms", () -> worker.cancel());
+	    });
+
+	    worker.compute(entries, callback, onComplete);
+	  };
 	}
 		
 	public void scanForRoms(boolean total) throws IOException
@@ -105,165 +202,69 @@ public class Scanner
 		ignoredPaths.addAll(set.getSettings().getIgnoredPaths());
 
 		Path folder = set.getSettings().romsPath;
-					
-		if (scanner == null)
-		{
-		  logger.e(LogTarget.romset(set), "Scanner plugin not enabled for romset");
-		  Dialogs.showError("Scanner Plugin", "No scanner plugin is enabled for the current romset.", Main.mainFrame);
-		  set.resetStatus();
-		  Main.mainFrame.updateTable();
+		
+		if (!canProceedWithScan())
 		  return;
-		}
-		else if (verifier == null)
+		
+		FolderScanner folderScanner = new FolderScanner(ignoredPaths, true);
+		final Set<Path> pathsToScan = folderScanner.scan(folder);
+		List<VerifierEntry> foundEntries = Collections.synchronizedList(new ArrayList<>());
+		
+		/* scanning task */
 		{
-      logger.e(LogTarget.romset(set), "Verifier plugin not enabled for romset");
-      Dialogs.showError("Verifier Plugin", "No verifier plugin is enabled for the current romset.", Main.mainFrame);
-      set.resetStatus();
-      Main.mainFrame.updateTable();
-      return;
-		}
-		else if (folder == null || !Files.exists(folder))
-		{
-		  logger.e(LogTarget.romset(set), "Roms path doesn't exist! Scanning interrupted");
-		  Dialogs.showError("Romset Path", "Romset path is not set, or it doesn't exists.\nPlease set one in Options.", Main.mainFrame);
-		  set.resetStatus();
-		  Main.mainFrame.updateTable();
-		  return;
-		}
-			
-		HandleSet handleSet = scanner.scanFiles(folder, ignoredPaths);
-		verifier.setup(set);
-		
-		logger.i(LogTarget.romset(set), "Found %d potential entries (%d binaries, %d archived, %d nested in %d batches)", handleSet.total(), handleSet.binaryCount(), handleSet.archivedCount(), handleSet.nestedCount(), handleSet.nestedArchives.size());
-		handleSet.stream().forEach(h -> logger.d(LogTarget.romset(set), "> %s", h.toString()));
-
-		logger.i(LogTarget.romset(set), "Verifying %s handles for romset", total ? "all" : "new");
-		
-    final List<Handle> handles = handleSet.stream().collect(Collectors.toList());
-
-		
-    Operation<Handle, List<ScanResult>> operation = handle -> {
-      logger.d(LogTarget.romset(set), "> Verifying %s", handle.toString());
-      return verifier.verifyHandle(handle);
-    };
-    
-    BiConsumer<Long, Float> guiProgress = (i,f) -> {
-      Main.progress.update(f, "Verifying "+i+" of "+handles.size()+"...");
-      Main.mainFrame.updateTable();
-    };
-    
-    Consumer<List<ScanResult>> callback = results -> {
-      results.stream().filter(r -> r.rom != null).forEach(r -> foundRom(r));   
-      set.refreshStatus();
-    };
-    
-    Runnable onComplete = () -> {
+	    Operation<Path, List<VerifierEntry>> operation = path -> {
+	      logger.d(LogTarget.file(path), "> Scanning %s", path.getFileName().toString());
+	      try
+        {
+          return scanner.scanFile(path);
+        } 
+	      catch (IOException e)
+        {
+	        e.printStackTrace();
+          return null;
+        }
+	      catch (RuntimeException e)
+	      {
+          logger.e(LogTarget.file(path), "Exception while scanning %s", path.toString());
+	        e.printStackTrace();
+	        if (!SevenZip.isInitializedSuccessfully())
+          {
+            Throwable ee = SevenZip.getLastInitializationException();
+            ee.printStackTrace();
+          }
+          return null;
+	      }
+	    };
+	    
+	    BiConsumer<Long, Float> guiProgress = (i,f) -> {
+	      Main.progress.update(f, "Scanning "+i+" of "+pathsToScan.size()+"...");
+	    };
+	    
+	    Consumer<List<VerifierEntry>> callback = results -> {
+	      foundEntries.addAll(results);
+	    };
+	    
+	    Runnable onComplete = () -> {
+	      SwingUtilities.invokeLater(() -> {
+          Main.progress.finished();
+          
+          HandleSet handleSet = new HandleSet(foundEntries);
+          logger.i(LogTarget.romset(set), "Found %d potential matches (%d binary, %d inside archives, %d nested inside %d archives).", 
+              handleSet.totalHandles, handleSet.binaryCount, handleSet.archiveCount, handleSet.nestedArchiveInnerCount, handleSet.nestedArchiveCount);
+          foundEntries.forEach(h -> logger.d(LogTarget.romset(set), "> %s", h.toString()));
+          
+          Runnable verifyTask = verifyTask(foundEntries, total);
+          verifyTask.run();
+	      });
+	    };
+	    
+	    AsyncGuiPoolWorker<Path,List<VerifierEntry>> worker = new AsyncGuiPoolWorker<>(operation, guiProgress, 1);
+      
       SwingUtilities.invokeLater(() -> {
-        Main.progress.finished();
-        
-        if (!clones.isEmpty())
-          Main.clonesDialog.activate(set, clones);
-        else
-          set.saveStatus();
+        Main.progress.show(Main.mainFrame, "Scanning "+pathsToScan.size()+" files", () -> worker.cancel());
       });
-    };
-    
-    AsyncGuiPoolWorker<Handle,List<ScanResult>> worker = new AsyncGuiPoolWorker<>(operation, guiProgress);
-    
-    SwingUtilities.invokeLater(() -> {
-      Main.progress.show(Main.mainFrame, "Verifying roms", () -> worker.cancel());
-    });
 
-    worker.compute(handles, callback, onComplete);
-	}
-	
-	public class VerifierWorker extends SwingWorker<Void, Integer>
-	{
-	  private final long total;
-	  private final long simpleTotal;
-	  
-	  private final HandleSet handles;
-
-	  VerifierWorker(HandleSet handles)
-	  {
-	    this.handles = handles;
-	    //TODO maybe manage an unified iteration
-	    simpleTotal = handles.binaryCount()+handles.archivedCount();
-	    total = simpleTotal + handles.nestedArchives.size();
-	    
-	  }
-
-	  @Override
-	  public Void doInBackground()
-	  {
-	    try
-	    {
-	    
-	    Main.progress.show(Main.mainFrame, "Verifying roms", () -> cancel(true) );
-	    
-	    int i = 0;
-	    for (VerifierEntry entry : handles)
-	    {
-	       if (isCancelled())
-	          return null;
-
-	       int progress = (int)((((float)i)/total)*100);
-	       setProgress(progress);
-	       
-         logger.d(LogTarget.romset(set), "> Verifying %s", entry.toString());
-         List<ScanResult> result = verifier.verifyHandle(entry);
-         result.stream().filter(r -> r.rom != null).forEach(r -> foundRom(r));   
-         
-         set.refreshStatus();
-
-         publish(i);
-         ++i;
-	    }
-	    
-	    } catch (NullPointerException e)
-	    {
-	      e.printStackTrace();
-	    }
-	    
-	    return null;
-	  }
-	  
-	  @Override
-	  public void process(List<Integer> v)
-	  {	    
-	    if (isCancelled())
-        return;
-      	    
-	    Main.progress.update(this, "Scanning "+v.get(v.size()-1)+" of "+total+"..");
-	    Main.mainFrame.updateTable();
-	  }
-	  
-	  @Override
-	  public void done()
-	  {	    
-	    if (isCancelled())
-	      return;
-	    
-	    try
-      {
-        get();
-      } 
-	    catch (InterruptedException e)
-      {
-        e.printStackTrace();
-      } 
-	    catch (ExecutionException e)
-      {
-        e.printStackTrace();
-      }
-	    
-	    Main.progress.finished();
-	    
-	    if (!clones.isEmpty())
-	      Main.clonesDialog.activate(set, clones);
-	    else
-	      set.saveStatus();
-	  }
-	  
+      worker.compute(pathsToScan, callback, onComplete);
+		}
 	}
 }

@@ -30,6 +30,7 @@ import com.github.jakz.romlib.data.game.RomSize.PrintStyle;
 import com.github.jakz.romlib.data.game.RomSize.PrintUnit;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.set.GameSet;
+import com.pixbits.lib.io.archive.ArchiveFormat;
 import com.pixbits.lib.io.archive.Scanner;
 import com.pixbits.lib.ui.elements.BrowseButton;
 
@@ -146,7 +147,7 @@ public class ManagerPanel extends JPanel
 		romsPathLabel = new JLabel(Text.ROMSET_ROMS_PATH.text());
 		
 		romsPathButton = new BrowseButton(30, BrowseButton.Type.FILES_AND_DIRECTORIES);
-		romsPathButton.setFilter(Scanner.archiveMatcher, "Romsets");
+		romsPathButton.setFilter(ArchiveFormat.getReadableMatcher(), "Romsets");
 		romsPathButton.setCallback(p -> {
       GameSet.current.getSettings().romsPath = p;
 		});

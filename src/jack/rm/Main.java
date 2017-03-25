@@ -31,6 +31,8 @@ import jack.rm.gui.ManagerPanel;
 import jack.rm.gui.PluginsPanel;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
+import net.sf.sevenzipjbinding.SevenZip;
+import net.sf.sevenzipjbinding.SevenZipNativeInitializationException;
 
 public class Main
 {		
@@ -86,18 +88,29 @@ public class Main
 	  @Override public void accept(IntHolder holder) { /*System.out.println(holder.get());*/ }
 	}
 
+	public static void initZipLibrary()
+	{
+	  try
+    {
+      SevenZip.initSevenZipFromPlatformJAR();
+    } 
+	  catch (SevenZipNativeInitializationException e)
+    {
+      e.printStackTrace();
+    }
+	}
 	
 	public static LogBuffer logBuffer;
 	public static void initLogging()
 	{
-	  logBuffer = new LogBuffer();
+	  /*logBuffer = new LogBuffer();
 	  logBuffer.setCallback(b -> {
 	    if (mainFrame != null)
 	      mainFrame.logPanel.populate();
 	  });
 	  
 	  LoggerFactory factory = new LoggerFactory.BufferLoggerFactory(logBuffer);
-	  Log.setFactory(factory);
+	  Log.setFactory(factory);*/
 	}
 	
 	public static void loadPlugins()
@@ -307,6 +320,7 @@ public class Main
 	  if (true)
 	  {
 	  
+	  initZipLibrary();
 	  initLogging();
 	  setOS();
 	  UIUtils.setNimbusLNF();

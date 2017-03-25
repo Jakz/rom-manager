@@ -2,6 +2,7 @@ package jack.rm.gui;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameStatus;
@@ -40,47 +41,49 @@ public class FileDropperListener implements FileTransferHandler.Listener
           System.out.println("Processing "+file.getFileName());
   
           
-          ScanResult result = GameSet.current.getScanner().scanFile(file);
+          List<ScanResult> results = GameSet.current.getScanner().singleBlockingCheck(file);
         
-          if (result != null)
+          if (results != null)
           {
-            try
-            {
-            
-            // a missing rom has been dropped on list
-            if (!result.rom.isPresent())
-            {
-              result.assign();
-              
-              Rom rom = result.rom;
-              Game game = rom.game();
-              
-              // first let's copy the file in the rompath
-              Path romFile = rom.handle().path();
-              if (!romFile.getParent().equals(romsPath))
-              {
-                Path destFile = romsPath.resolve(romFile.getFileName());
-                game.move(destFile);                
+            results.forEach(result -> {          
+              try
+              {            
+                // a missing rom has been dropped on list
+                if (!result.rom.isPresent())
+                {
+                  result.assign();
+                  
+                  Rom rom = result.rom;
+                  Game game = rom.game();
+                  
+                  // first let's copy the file in the rompath
+                  Path romFile = rom.handle().path();
+                  if (!romFile.getParent().equals(romsPath))
+                  {
+                    Path destFile = romsPath.resolve(romFile.getFileName());
+                    game.move(destFile);                
+                  }
+                  
+                  game.updateStatus();
+                  
+                  Organizer.organizeRomIfNeeded(game);
+                  
+                  GameSet.current.refreshStatus();
+                  Main.mainFrame.updateTable();
+                  
+                  logger.i(LogTarget.rom(result.rom), "Successfully imported new rom");
+                }
+                else
+                  logger.w(LogTarget.rom(result.rom), "Imported file is a rom already included in romset, skipping import");
               }
-              
-              game.updateStatus();
-              
-              Organizer.organizeRomIfNeeded(game);
-              
-              GameSet.current.refreshStatus();
-              Main.mainFrame.updateTable();
-              
-              logger.i(LogTarget.rom(result.rom), "Successfully imported new rom");
-            }
-            else
-              logger.w(LogTarget.rom(result.rom), "Imported file is a rom already included in romset, skipping import");
-            }
-            catch (Exception e)
-            {
-              // TODO: handle and write on log
-
-              e.printStackTrace();
-            }  
+              catch (Exception e)
+              {
+                // TODO: handle and write on log
+  
+                e.printStackTrace();
+              }  
+            
+            });
           }
           else
             logger.w(LogTarget.file(file), "The file is not any recognized rom for this romset");
