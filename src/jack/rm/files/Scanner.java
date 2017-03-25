@@ -160,6 +160,7 @@ public class Scanner
 	    Runnable onComplete = () -> {
 	      SwingUtilities.invokeLater(() -> {
 	        Main.progress.finished();
+	        Main.mainFrame.updateTable();
 	        
 	        if (!clones.isEmpty())
 	          Main.clonesDialog.activate(set, clones);
