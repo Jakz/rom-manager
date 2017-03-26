@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Consumer;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameStatus;
@@ -13,10 +14,14 @@ import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
 
+import jack.rm.Settings;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.plugins.PluginRealType;
+import jack.rm.plugins.cleanup.CleanupPlugin;
+import jack.rm.plugins.folder.FolderPlugin;
 import jack.rm.plugins.renamer.PatternSetPlugin;
+import jack.rm.plugins.renamer.RenamerPlugin;
 
 public class Organizer
 {	
@@ -139,4 +144,26 @@ public class Organizer
       }   
     } 
 	}
+	
+	public static void organize(GameSet set)
+	{
+    Settings settings = set.getSettings();
+	  
+	  RenamerPlugin renamer = settings.getRenamer();
+    FolderPlugin organizer = settings.getFolderOrganizer();
+    boolean hasCleanupPhase = settings.hasCleanupPlugins();
+    
+    Consumer<Boolean> cleanupPhase = b -> { Organizer.cleanup(set); set.saveStatus(); };
+    Consumer<Boolean> moverPhase = organizer == null ? cleanupPhase : b -> new MoverWorker(set, organizer, cleanupPhase).execute();
+    Consumer<Boolean> renamerPhase = renamer == null ? moverPhase : b -> new RenamerWorker(set, renamer, moverPhase).execute();
+
+    renamerPhase.accept(true);
+	}
+	
+  public static void cleanup(GameSet set)
+  {
+    Settings settings = set.getSettings();
+    Set<CleanupPlugin> plugins = settings.plugins.getEnabledPlugins(PluginRealType.ROMSET_CLEANUP);
+    plugins.stream().forEach( p -> p.execute(set) );
+  }
 }

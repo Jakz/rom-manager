@@ -5,10 +5,13 @@ import java.util.stream.Stream;
 
 import com.github.jakz.romlib.data.game.Game;
 
+import jack.rm.assets.AssetManager;
+
 public class GameSetInfo
 {
   private final Provider provider;
   private final DatLoader datLoader;
+  private final AssetManager assetManager;
   
   private int romCount;
   private int gameCount;
@@ -20,10 +23,16 @@ public class GameSetInfo
     this(provider, null);
   }*/
   
-  public GameSetInfo(Provider provider, DatLoader loader)
+  public GameSetInfo(Provider provider, DatLoader loader, AssetManager assetManager)
   {
     this.provider = provider;
     this.datLoader = loader;
+    this.assetManager = assetManager;
+  }
+  
+  public GameSetInfo(Provider provider, DatLoader loader)
+  {
+    this(provider, loader, AssetManager.DUMMY);
   }
 
   void computeStats(GameSet set)
@@ -38,6 +47,7 @@ public class GameSetInfo
   public Provider getProvider() { return provider; }
   public DatFormat getFormat() { return datLoader.getFormat(); }
   public DatLoader getLoader() { return datLoader; }
+  public AssetManager getAssetManager() { return assetManager; }
   
   public String getName() { return provider.getName(); }
   public String getAuthor() { return provider.getAuthor(); }

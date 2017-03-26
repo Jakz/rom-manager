@@ -72,12 +72,12 @@ public class Scanner
 	  Rom rom = result.rom;
 	  Game game = rom.game();
 	  
-	  logger.i(LogTarget.rom(result.rom), "Found a match for "+result.path);
+	  logger.i(LogTarget.rom(result.rom), "Found a match for "+result.handle);
 	  
-	  if (rom.isPresent() && !rom.handle().equals(result.path))
+	  if (rom.isPresent() && !rom.handle().equals(result.handle))
 	  {	    
 	    clones.add(result);
-	    logger.w(LogTarget.file(result.path.path().getFileName()), "File contains a rom already present in romset: "+rom.handle());
+	    logger.w(LogTarget.file(result.handle.path().getFileName()), "File contains a rom already present in romset: "+rom.handle());
 	    return;
 	  }
 	  

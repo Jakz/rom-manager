@@ -14,6 +14,5 @@ public interface AssetManager
   {
     @Override public URL assetURL(Asset asset, Game rom) { return null; }
     @Override public Asset[] getSupportedAssets() { return new Asset[0]; }
-    
   };
 }

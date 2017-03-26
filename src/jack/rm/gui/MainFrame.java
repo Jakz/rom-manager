@@ -49,6 +49,7 @@ import jack.rm.GlobalSettings;
 import jack.rm.Main;
 import jack.rm.assets.AssetPacker;
 import jack.rm.data.romset.GameSetManager;
+import jack.rm.files.Organizer;
 import jack.rm.gui.gameinfo.InfoPanel;
 import jack.rm.gui.gamelist.CountPanel;
 import jack.rm.gui.gamelist.GameCellRenderer;
@@ -255,7 +256,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
     textFrame.showWithText(this, builder.toString());
 	}
 
-	private void buildMenu(GameSet set)
+	private void buildMenu(final GameSet set)
 	{	
 		MenuElement.clearListeners();
 	  	  
@@ -269,13 +270,13 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	    
 	    JMenuItem renameRoms = new JMenuItem(Text.MENU_ROMS_RENAME.text());
 	    renameRoms.addActionListener(e -> {
-	      set.organize();
+	      Organizer.organize(set);
 	      rebuildGameList();
 	    });
 	    romsMenu.add(renameRoms);
 	    
 	    JMenuItem cleanupRoms = new JMenuItem(Text.MENU_ROMS_CLEANUP.text());
-	    cleanupRoms.addActionListener(e -> set.cleanup());
+	    cleanupRoms.addActionListener(e -> Organizer.cleanup(set));
 	    romsMenu.add(cleanupRoms);
 	    
 	    romsMenu.addSeparator();

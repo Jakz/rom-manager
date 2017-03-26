@@ -5,13 +5,13 @@ import com.pixbits.lib.io.archive.handles.Handle;
 
 public class ScanResult implements Comparable<ScanResult>
 {
-  public Rom rom;
-  public Handle path;
+  public final Rom rom;
+  public final Handle handle;
   
   public ScanResult(Rom rom, Handle path)
   {
     this.rom = rom;
-    this.path = path;
+    this.handle = path;
   }
   
   @Override public boolean equals(Object other)
@@ -22,11 +22,11 @@ public class ScanResult implements Comparable<ScanResult>
   @Override public int compareTo(ScanResult other)
   {
     int i = rom.game().compareTo(other.rom.game());
-    return i == 0 ? path.path().compareTo(other.path.path()) : i;
+    return i == 0 ? handle.path().compareTo(other.handle.path()) : i;
   }
   
   public void assign()
   {
-    rom.setHandle(path);
+    rom.setHandle(handle);
   }
 }

@@ -56,7 +56,7 @@ public class DatUpdater
           
           if (ncrc == crc.get() && nsize == size.get())
           {
-            Dialogs.showWarning("Dat alrady up-to-date", "Your DAT version is already up to date!", Main.gsettingsView);
+            Dialogs.showWarning("Dat already up-to-date", "Your DAT version is already up to date!", Main.gsettingsView);
             return;
           }
         }

@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -38,17 +37,12 @@ import jack.rm.Main;
 import jack.rm.Settings;
 import jack.rm.assets.Asset;
 import jack.rm.assets.AssetManager;
-import jack.rm.files.MoverWorker;
-import jack.rm.files.RenamerWorker;
 import jack.rm.files.Scanner;
 import jack.rm.json.Json;
 import jack.rm.json.GameListAdapter;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.plugins.PluginRealType;
-import jack.rm.plugins.cleanup.CleanupPlugin;
-import jack.rm.plugins.folder.FolderPlugin;
-import jack.rm.plugins.renamer.RenamerPlugin;
 import jack.rm.plugins.searcher.SearchPlugin;
 import jack.rm.plugins.searcher.SearchPredicatesPlugin;
 
@@ -61,7 +55,6 @@ public class GameSet implements Iterable<Game>
   public final Platform platform;
   private final GameSetInfo info;
   public final RomSize.Set sizeSet;
-  private final AssetManager assetManager;
 
 	private GameList list;
 	private CloneSet clones;
@@ -75,14 +68,13 @@ public class GameSet implements Iterable<Game>
 
 	public GameSet(Platform platform, Provider provider, DatLoader loader, Attribute[] attributes, AssetManager assetManager)
 	{
-		this.info = new GameSetInfo(provider, loader);
+		this.info = new GameSetInfo(provider, loader, assetManager);
 	  this.searcher = new DummySearcher<>();
 	  this.list = null;
 	  this.clones = null;
 	  this.sizeSet = new RomSize.Set();
 	  this.platform = platform;
 		this.attributes = attributes;
-		this.assetManager = assetManager;
 		this.loaded = false;
 	}
 	
@@ -95,7 +87,6 @@ public class GameSet implements Iterable<Game>
 	  this.sizeSet = new RomSize.Set();
 	  this.platform = platform;
 	  this.attributes = new Attribute[0];
-	  this.assetManager = AssetManager.DUMMY;
 	  this.loaded = false;
   }
 	
@@ -146,8 +137,7 @@ public class GameSet implements Iterable<Game>
 	public Iterator<Game> iterator() { return list.iterator(); }
 	
 	public Settings getSettings() { return settings; }
-	
-	public final AssetManager getAssetManager() { return assetManager; }
+	public AssetManager getAssetManager() { return info().getAssetManager(); }
 	
 	public boolean doesSupportAttribute(Attribute attribute) { return Arrays.stream(attributes).anyMatch( a -> a == attribute); }
 	public final Attribute[] getSupportedAttributes() { return attributes; }
@@ -208,12 +198,6 @@ public class GameSet implements Iterable<Game>
     else
       return Paths.get(base.toString()+".zip");
   }
-	
-	public final void cleanup()
-	{
-	  Set<CleanupPlugin> plugins = settings.plugins.getEnabledPlugins(PluginRealType.ROMSET_CLEANUP);
-	  plugins.stream().forEach( p -> p.execute(this) );
-	}
 		
 	public void saveStatus()
 	{
@@ -312,20 +296,7 @@ public class GameSet implements Iterable<Game>
 	    return false;
 	  }
 	}
-	
-  public void organize()
-  {
-    RenamerPlugin renamer = settings.getRenamer();
-    FolderPlugin organizer = settings.getFolderOrganizer();
-    boolean hasCleanupPhase = settings.hasCleanupPlugins();
-    
-    Consumer<Boolean> cleanupPhase = b -> { cleanup(); saveStatus(); };
-    Consumer<Boolean> moverPhase = organizer == null ? cleanupPhase : b -> new MoverWorker(this, organizer, cleanupPhase).execute();
-    Consumer<Boolean> renamerPhase = renamer == null ? moverPhase : b -> new RenamerWorker(this, renamer, moverPhase).execute();
 
-    renamerPhase.accept(true);
-  }  
-  
   public boolean hasFeature(Feature feature)
   {
     if (feature == Feature.SINGLE_ROM_PER_GAME)

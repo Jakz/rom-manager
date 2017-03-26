@@ -72,7 +72,7 @@ public class ClonesDialog extends JDialog
       {
         case 0: return keep.get(clones.get(r));
         case 1: return clones.get(r).rom;
-        case 2: return clones.get(r).path.relativePath();  
+        case 2: return clones.get(r).handle.relativePath();  
         default: return null;
       }
     }
@@ -330,7 +330,7 @@ public class ClonesDialog extends JDialog
   {
     if (priority != ClonePriority.ANY)
     {
-      List<ScanResult> filtered = results.stream().filter(r -> r.path.getClass() == priority.type).collect(Collectors.toList());
+      List<ScanResult> filtered = results.stream().filter(r -> r.handle.getClass() == priority.type).collect(Collectors.toList());
       if (!filtered.isEmpty())
         results = filtered;
     }
@@ -339,8 +339,8 @@ public class ClonesDialog extends JDialog
     boolean hasMover = set.getSettings().getFolderOrganizer() != null;
     
     Predicate<ScanResult> predicateAny = e -> true;
-    Predicate<ScanResult> predicateCorrectFolder = e -> !hasMover || set.getSettings().romsPath.resolve(e.rom.game().getCorrectFolder()).equals(e.path.path().getParent());
-    Predicate<ScanResult> predicateCorrectName = e -> !hasRenamer || e.rom.game().getCorrectName().equals(e.path.path().getFileName());
+    Predicate<ScanResult> predicateCorrectFolder = e -> !hasMover || set.getSettings().romsPath.resolve(e.rom.game().getCorrectFolder()).equals(e.handle.path().getParent());
+    Predicate<ScanResult> predicateCorrectName = e -> !hasRenamer || e.rom.game().getCorrectName().equals(e.handle.path().getFileName());
     Predicate<ScanResult> predicateCorrectNameAndFolder = predicateCorrectName.and(predicateCorrectFolder);
     
     List<Predicate<ScanResult>> predicates = Arrays.asList(
