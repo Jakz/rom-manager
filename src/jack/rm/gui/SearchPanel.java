@@ -224,7 +224,7 @@ public class SearchPanel extends JPanel
     public void actionPerformed(ActionEvent e)
 		{
 			if (active)
-				mainFrame.updateTable();
+				mainFrame.rebuildGameList();
 				
 		}
 	}
@@ -236,7 +236,7 @@ public class SearchPanel extends JPanel
 		{
 			if (active)
 			{
-        mainFrame.updateTable();
+        mainFrame.rebuildGameList();
 			}
 		}
 	}

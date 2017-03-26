@@ -49,11 +49,15 @@ import jack.rm.GlobalSettings;
 import jack.rm.Main;
 import jack.rm.assets.AssetPacker;
 import jack.rm.data.romset.GameSetManager;
+import jack.rm.gui.gameinfo.InfoPanel;
+import jack.rm.gui.gamelist.CountPanel;
+import jack.rm.gui.gamelist.GameCellRenderer;
+import jack.rm.gui.gamelist.GameListModel;
 import jack.rm.i18n.Text;
 import jack.rm.plugins.OperationalPlugin;
 import jack.rm.plugins.PluginRealType;
 
-public class MainFrame extends JFrame implements WindowListener
+public class MainFrame extends JFrame implements WindowListener, Mediator
 {	
 	private static final long serialVersionUID = 1L;
 	
@@ -82,7 +86,7 @@ public class MainFrame extends JFrame implements WindowListener
 	//menu Tools
 	final JMenuItem miTools[] = new JMenuItem[3];
 	
-	final RomListModel romListModel = new RomListModel();
+	private final GameListModel romListModel = new GameListModel();
 	final public JList<Game> list = new JList<>();
 	final private ListListener listListener = new ListListener();
 	final private JScrollPane listPane = new JScrollPane(list);
@@ -266,7 +270,7 @@ public class MainFrame extends JFrame implements WindowListener
 	    JMenuItem renameRoms = new JMenuItem(Text.MENU_ROMS_RENAME.text());
 	    renameRoms.addActionListener(e -> {
 	      set.organize();
-	      Main.mainFrame.updateTable();
+	      rebuildGameList();
 	    });
 	    romsMenu.add(renameRoms);
 	    
@@ -439,53 +443,13 @@ public class MainFrame extends JFrame implements WindowListener
     optionsFrame.romSetLoaded(set);
   
     list.clearSelection();
-	  updateTable();
+	  rebuildGameList();
 	}
 	
 	public void updateInfoPanel(Game rom)
 	{
 	  infoPanel.updateFields(rom);
 	}
-	
-	public void updateTable()
-	{
-		Game current = list.getSelectedValue();
-		int index = list.getSelectedIndex();
-	  
-	  /*StackTraceElement[] stack = Thread.currentThread().getStackTrace();
-		Arrays.stream(stack).forEach(s -> System.out.println(s));*/
-	  
-	  //System.out.println("updated table");
-	  romListModel.clear();
-	  
-	  Predicate<Game> predicate = searchPanel.buildSearchPredicate().and( r ->
-	    r.getStatus() == GameStatus.FOUND && MenuElement.VIEW_SHOW_CORRECT.item.isSelected() ||
-	    r.getStatus() == GameStatus.MISSING && MenuElement.VIEW_SHOW_NOT_FOUND.item.isSelected() ||
-	    r.getStatus() == GameStatus.UNORGANIZED && MenuElement.VIEW_SHOW_UNORGANIZED.item.isSelected()
-	    // TODO: missing management for GameStatus.INCOMPLETE
-	  );
-	  
-		set.stream().filter(predicate).forEach(romListModel.collector());
-
-    if (current != null)     
-    {      
-      list.clearSelection();
-      list.setSelectedValue(current, true);
-      
-      if (list.getSelectedValue() == null && index != -1)
-      {
-        list.setSelectedIndex(index);
-        list.ensureIndexIsVisible(index);
-      }
-    }
-		
-    SwingUtilities.invokeLater( () -> {
-      romListModel.fireChanges();
-    });
-
-		countPanel.update();
-	}
-
 	@Override
   public void windowActivated(WindowEvent e) { }
 	@Override
@@ -507,4 +471,63 @@ public class MainFrame extends JFrame implements WindowListener
 	  if (set != null)
       set.saveStatus();
 	}
+
+	
+	@Override public void rebuildGameList()
+	{
+    Game current = list.getSelectedValue();
+    int index = list.getSelectedIndex();
+      
+      /*StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+    Arrays.stream(stack).forEach(s -> System.out.println(s));*/
+    
+    //System.out.println("updated table");
+    romListModel.clear();
+    
+    Predicate<Game> predicate = searchPanel.buildSearchPredicate().and( r ->
+      r.getStatus() == GameStatus.FOUND && MenuElement.VIEW_SHOW_CORRECT.item.isSelected() ||
+      r.getStatus() == GameStatus.MISSING && MenuElement.VIEW_SHOW_NOT_FOUND.item.isSelected() ||
+      r.getStatus() == GameStatus.UNORGANIZED && MenuElement.VIEW_SHOW_UNORGANIZED.item.isSelected()
+      // TODO: missing management for GameStatus.INCOMPLETE
+    );
+    
+    set.stream().filter(predicate).forEach(romListModel.collector());
+    
+    if (current != null)     
+    {      
+      list.clearSelection();
+      list.setSelectedValue(current, true);
+      
+      if (list.getSelectedValue() == null && index != -1)
+      {
+        list.setSelectedIndex(index);
+        list.ensureIndexIsVisible(index);
+      }
+    }
+    
+    SwingUtilities.invokeLater( () -> {
+      romListModel.fireChanges();
+    });
+    
+    countPanel.update();
+	}
+	
+	@Override
+  public void refreshGameList(int row)
+  {
+    romListModel.fireChanges(row);
+  }
+  
+	@Override
+  public void refreshGameList()
+  {
+    romListModel.fireChanges();
+  }
+	
+  @Override
+  public void toggleVisibilityForStatusInGameList(GameStatus status)
+  {
+    romListModel.toggleVisibility(status);
+    rebuildGameList();
+  }
 }

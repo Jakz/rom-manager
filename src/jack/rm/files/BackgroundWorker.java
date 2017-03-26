@@ -57,7 +57,7 @@ public abstract class BackgroundWorker<E, T extends OperationDetails> extends Sw
   public void process(List<Integer> v)
   {
     Main.progress.update(this, getProgressText()+" "+v.get(v.size()-1)+" of "+data.size()+"..");
-    Main.mainFrame.updateTable();
+    Main.mainFrame.rebuildGameList();;
   }
   
   @Override

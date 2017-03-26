@@ -1,4 +1,4 @@
-package jack.rm.gui;
+package jack.rm.gui.gamelist;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -22,11 +22,11 @@ public class CountPanel extends JPanel
 	  Icon.STATUS_CORRECT, Icon.STATUS_BADLY_NAMED, Icon.STATUS_INCOMPLETE, Icon.STATUS_NOT_FOUND, Icon.STATUS_ALL
 	};
 	
-	private final RomListModel model;
+	private final GameListModel model;
 	private final JLabel[] counters = new JLabel[5];
 	JPanel inner;
 	
-	public CountPanel(RomListModel model)
+	public CountPanel(GameListModel model)
 	{
 		this.model = model;
 	  
@@ -42,7 +42,7 @@ public class CountPanel extends JPanel
 		this.add(inner, BorderLayout.WEST);
 	}
 	
-	void gameSetLoaded(GameSet set)
+	public void gameSetLoaded(GameSet set)
 	{
 	  if (inner != null)
 	    inner.removeAll();

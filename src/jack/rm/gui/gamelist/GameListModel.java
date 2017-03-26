@@ -1,6 +1,7 @@
-package jack.rm.gui;
+package jack.rm.gui.gamelist;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -10,35 +11,30 @@ import javax.swing.AbstractListModel;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameStatus;
 
-public class RomListModel extends AbstractListModel<Game>
+public class GameListModel extends AbstractListModel<Game>
 {
 	private static final long serialVersionUID = 1L;
 
 	List<Game> list;
+	final boolean[] visible = new boolean[GameStatus.values().length];
 	
 	boolean isCorrect = true;
 	boolean isMissing = true;
 	boolean isIncomplete = true;
 	boolean isBadlyNamed = true;
 	
-	public RomListModel()
+	public GameListModel()
 	{
 		list = new ArrayList<>();
+		Arrays.fill(visible, true);
 	}
 	
 	public void addElement(Game o)
 	{
 		Game rom = (Game)o;
-		if (isCorrect && rom.getStatus() == GameStatus.FOUND)
-			list.add(rom);
-		else if (isMissing && rom.getStatus() == GameStatus.MISSING)
-			list.add(rom);
-		else if (isBadlyNamed && rom.getStatus() == GameStatus.UNORGANIZED)
-			list.add(rom);
-		else if (isIncomplete && rom.getStatus() == GameStatus.INCOMPLETE)
+		GameStatus status = rom.getStatus();
+		if (visible[status.ordinal()])
 		  list.add(rom);
-
-		return;
 	}
 	
 	public void removeElement(int index)
@@ -63,16 +59,31 @@ public class RomListModel extends AbstractListModel<Game>
 		list.clear();
 	}
 	
+	public boolean isVisible(GameStatus status)
+	{
+	  return visible[status.ordinal()];
+	}
+	
+	public void setVisibility(GameStatus status, boolean visible)
+	{
+	  this.visible[status.ordinal()] = visible;
+	}
+	
+	public void toggleVisibility(GameStatus status)
+	{
+	  setVisibility(status, !isVisible(status));
+	}
+	
 	public Consumer<Game> collector() { return list::add; }
 	public Stream<Game> stream() { return list.stream(); }
 	
 	public void fireChanges(int row)
 	{
-	  this.fireContentsChanged(RomListModel.this, row, row);
+	  this.fireContentsChanged(GameListModel.this, row, row);
 	}
 
 	public void fireChanges()
 	{
-		RomListModel.this.fireContentsChanged(RomListModel.this, 0, list.size());
+		GameListModel.this.fireContentsChanged(GameListModel.this, 0, list.size());
 	}
 }

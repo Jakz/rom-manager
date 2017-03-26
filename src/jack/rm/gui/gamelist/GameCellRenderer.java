@@ -1,4 +1,4 @@
-package jack.rm.gui;
+package jack.rm.gui.gamelist;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -15,14 +15,14 @@ import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.LocationSet;
 import com.github.jakz.romlib.ui.Icon;
 
-class GameCellRenderer extends JPanel implements ListCellRenderer<Game>
+public class GameCellRenderer extends JPanel implements ListCellRenderer<Game>
 {
 	private static final long serialVersionUID = 1L;
 
 	private final JLabel mainLabel = new JLabel();
 	private final JLabel rightIcon = new JLabel();
 	
-	GameCellRenderer()
+	public GameCellRenderer()
 	{
 	  setOpaque(true);
 

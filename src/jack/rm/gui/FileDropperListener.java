@@ -69,7 +69,7 @@ public class FileDropperListener implements FileTransferHandler.Listener
                   Organizer.organizeRomIfNeeded(game);
                   
                   GameSet.current.refreshStatus();
-                  Main.mainFrame.updateTable();
+                  Main.mainFrame.rebuildGameList();;
                   
                   logger.i(LogTarget.rom(result.rom), "Successfully imported new rom");
                 }

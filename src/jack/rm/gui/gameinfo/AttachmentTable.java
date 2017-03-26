@@ -1,4 +1,4 @@
-package jack.rm.gui;
+package jack.rm.gui.gameinfo;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

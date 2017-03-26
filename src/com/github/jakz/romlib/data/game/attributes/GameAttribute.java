@@ -34,7 +34,6 @@ public enum GameAttribute implements Attribute
   
   LICENSED(Text.ROM_INFO_LICENSED),
   
-  FILENAME(Text.ROM_INFO_FILENAME),
   PATH(Text.ROM_INFO_PATH)
   ;
   

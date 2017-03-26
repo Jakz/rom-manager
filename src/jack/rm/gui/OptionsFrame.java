@@ -139,6 +139,6 @@ public class OptionsFrame extends JFrame implements ActionListener, ComponentLis
 	{
 	  set.checkNames();
 	  set.saveStatus();
-	  Main.mainFrame.updateTable();
+    Main.mainFrame.rebuildGameList();
 	}
 }

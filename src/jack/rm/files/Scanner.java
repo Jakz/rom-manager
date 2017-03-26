@@ -95,7 +95,7 @@ public class Scanner
       logger.e(LogTarget.romset(set), "Scanner plugin not enabled for romset");
       Dialogs.showError("Scanner Plugin", "No scanner plugin is enabled for the current romset.", Main.mainFrame);
       set.resetStatus();
-      Main.mainFrame.updateTable();
+      Main.mainFrame.rebuildGameList();
       return false;
     }
     else if (verifier == null)
@@ -103,7 +103,7 @@ public class Scanner
       logger.e(LogTarget.romset(set), "Verifier plugin not enabled for romset");
       Dialogs.showError("Verifier Plugin", "No verifier plugin is enabled for the current romset.", Main.mainFrame);
       set.resetStatus();
-      Main.mainFrame.updateTable();
+      Main.mainFrame.rebuildGameList();
       return false;
     }
     else if (folder == null || !Files.exists(folder))
@@ -111,7 +111,7 @@ public class Scanner
       logger.e(LogTarget.romset(set), "Roms path doesn't exist! Scanning interrupted");
       Dialogs.showError("Romset Path", "Romset path is not set, or it doesn't exists.\nPlease set one in Options.", Main.mainFrame);
       set.resetStatus();
-      Main.mainFrame.updateTable();
+      Main.mainFrame.rebuildGameList();
       return false;
     }
 	  
@@ -149,7 +149,7 @@ public class Scanner
 	    
 	    BiConsumer<Long, Float> guiProgress = (i,f) -> {
 	      Main.progress.update(f, "Verifying "+i+" of "+entries.size()+"...");
-	      Main.mainFrame.updateTable();
+        Main.mainFrame.rebuildGameList();
 	    };
 	    
 	    Consumer<List<ScanResult>> callback = results -> {
@@ -160,7 +160,7 @@ public class Scanner
 	    Runnable onComplete = () -> {
 	      SwingUtilities.invokeLater(() -> {
 	        Main.progress.finished();
-	        Main.mainFrame.updateTable();
+	        Main.mainFrame.rebuildGameList();
 	        
 	        if (!clones.isEmpty())
 	          Main.clonesDialog.activate(set, clones);

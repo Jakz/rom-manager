@@ -257,7 +257,7 @@ public class ClonesDialog extends JDialog
     keep.forEach( (k, v) -> { if (v) k.assign(); });
     set.checkNames();
     set.refreshStatus();
-    Main.mainFrame.updateTable();
+    Main.mainFrame.rebuildGameList();;
   }
   
   public void activate(GameSet set, Set<ScanResult> clones)

@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import javax.swing.JMenuItem;
 
+import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.set.GameSet;
 
 import jack.rm.Main;
@@ -26,27 +27,24 @@ class MenuListener implements ActionListener
   		if (tag == MenuElement.ROMS_SCAN_FOR_ROMS)
   		{
   		  GameSet.current.getScanner().scanForRoms(true);
-  			Main.mainFrame.updateTable();
+  			Main.mainFrame.rebuildGameList();
   		}
   		else if (tag == MenuElement.ROMS_SCAN_FOR_NEW_ROMS)
   		{
   		  GameSet.current.getScanner().scanForRoms(false);
-  			Main.mainFrame.updateTable();
+        Main.mainFrame.rebuildGameList();
   		}
   		else if (tag == MenuElement.VIEW_SHOW_CORRECT)
   		{
-  			Main.mainFrame.romListModel.isCorrect = !Main.mainFrame.romListModel.isCorrect;
-  			Main.mainFrame.updateTable();
+  			Main.mainFrame.toggleVisibilityForStatusInGameList(GameStatus.FOUND);
   		}
   		else if (tag == MenuElement.VIEW_SHOW_NOT_FOUND)
   		{
-  			Main.mainFrame.romListModel.isMissing = !Main.mainFrame.romListModel.isMissing;
-        Main.mainFrame.updateTable();
+        Main.mainFrame.toggleVisibilityForStatusInGameList(GameStatus.MISSING);
   		}
   		else if (tag == MenuElement.VIEW_SHOW_UNORGANIZED)
   		{
-  			Main.mainFrame.romListModel.isBadlyNamed = !Main.mainFrame.romListModel.isBadlyNamed;
-        Main.mainFrame.updateTable();
+        Main.mainFrame.toggleVisibilityForStatusInGameList(GameStatus.UNORGANIZED);
   		}
   		else
   		{
