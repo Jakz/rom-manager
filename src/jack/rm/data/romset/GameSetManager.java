@@ -28,11 +28,17 @@ import jack.rm.plugins.providers.ProviderPlugin;
 
 public class GameSetManager
 {
-	@SuppressWarnings("unchecked")
-  public static void buildRomsetList()
-	{
-	  PluginManager<ActualPlugin, ActualPluginBuilder> manager = Main.manager; 
-	  
+  private final Map<Platform, List<GameSet>> sets = new HashMap<>();
+  private final PluginManager<ActualPlugin, ActualPluginBuilder> manager;
+  
+  public GameSetManager(PluginManager<ActualPlugin, ActualPluginBuilder> manager)
+  {
+    this.manager = manager;
+  }
+
+  @SuppressWarnings("unchecked")
+  public void buildRomsetList()
+	{	  
 	  Set<ActualPluginBuilder> parsers = manager.getBuildersByType(PluginRealType.DAT_PARSER);
 	  List<DatParserPlugin> datParsers = parsers.stream()
 	                                            .map(b -> (DatParserPlugin)manager.build((Class<DatParserPlugin>)b.getID().getType())).collect(Collectors.toList());
@@ -56,16 +62,15 @@ public class GameSetManager
 	    sets.computeIfAbsent(platform, s -> new ArrayList<>());
 	}
   
-  private static Map<Platform, List<GameSet>> sets = new HashMap<>();
 
-	public static List<GameSet> bySystem(Platform platform)
+	public List<GameSet> bySystem(Platform platform)
 	{
 	  return sets.get(platform); 
 	}
 	
-	public static GameSet byIdent(String ident)
+	public GameSet byIdent(String ident)
 	{
-		for (List<GameSet> sets : GameSetManager.sets.values())
+		for (List<GameSet> sets : sets.values())
 		{
 		  Optional<GameSet> rs = sets.stream().filter(set -> set.ident().equals(ident)).findFirst();
 		  
@@ -76,7 +81,7 @@ public class GameSetManager
 		return null;
 	}
 	
-	public static Collection<GameSet> allSets()
+	public Collection<GameSet> allSets()
 	{
 		List<GameSet> allSets = new ArrayList<>();
 		
@@ -85,12 +90,12 @@ public class GameSetManager
 	  return allSets;
 	}
 	
-	public static GameSet loadSet(String ident) throws FileNotFoundException
+	public GameSet loadSet(String ident) throws FileNotFoundException
 	{
 		return loadSet(byIdent(ident));
 	}
 	
-	public static GameSet loadSet(GameSet set) throws FileNotFoundException
+	public GameSet loadSet(GameSet set) throws FileNotFoundException
 	{
 		if (!Files.exists(set.datPath()))
 		  throw new FileNotFoundException("missing DAT files");

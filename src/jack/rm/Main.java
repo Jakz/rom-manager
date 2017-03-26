@@ -27,7 +27,7 @@ import jack.rm.gui.ClonesDialog;
 import jack.rm.gui.Dialogs;
 import jack.rm.gui.GlobalSettingsView;
 import jack.rm.gui.MainFrame;
-import jack.rm.gui.ManagerPanel;
+import jack.rm.gui.SetInfoPanel;
 import jack.rm.gui.PluginsPanel;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
@@ -36,7 +36,8 @@ import net.sf.sevenzipjbinding.SevenZipNativeInitializationException;
 
 public class Main
 {		
-	public static PluginManager<ActualPlugin, ActualPluginBuilder> manager = new PluginManager<>(ActualPluginBuilder.class);
+	public static final PluginManager<ActualPlugin, ActualPluginBuilder> manager = new PluginManager<>(ActualPluginBuilder.class);
+	private static GameSetManager setManager = new GameSetManager(manager);
 	
 	public static ProgressDialog.Manager progress = new ProgressDialog.Manager();
 
@@ -44,7 +45,7 @@ public class Main
 	//public static InfoPanel infoPanel;
 	
   public static GlobalSettingsView gsettingsView;
-	public static ManagerPanel romsetPanel;
+	public static SetInfoPanel romsetPanel;
 	public static PluginsPanel pluginsPanel;
 	
 	public static ClonesDialog clonesDialog;
@@ -154,7 +155,7 @@ public class Main
 	  if (GameSet.current != null)
 	    GameSet.current.saveStatus();
 	  
-	  GameSet set = GameSetManager.loadSet(romSet);
+	  GameSet set = setManager.loadSet(romSet);
     GameSet.current = set;
     boolean wasInit = set.loadStatus();
     
@@ -328,13 +329,13 @@ public class Main
 	  GlobalSettings.load();
 	  loadPlugins();
 	  
-	  GameSetManager.buildRomsetList();
+	  setManager.buildRomsetList();
 	  
-	  romsetPanel = new ManagerPanel();
+	  romsetPanel = new SetInfoPanel();
 	  pluginsPanel = new PluginsPanel(manager);
-		gsettingsView = new GlobalSettingsView();
-	  
-		mainFrame = new MainFrame();
+		gsettingsView = new GlobalSettingsView(setManager);
+		mainFrame = new MainFrame(setManager);
+		
     clonesDialog = new ClonesDialog(mainFrame, "Rom Clones");
 
     String lastProvider = GlobalSettings.settings.getCurrentProvider();
@@ -343,7 +344,7 @@ public class Main
     {
       try
       {
-        loadRomSet(GameSetManager.byIdent(lastProvider));
+        loadRomSet(setManager.byIdent(lastProvider));
         mainFrame.pluginStateChanged();
       }
       catch (FileNotFoundException e)

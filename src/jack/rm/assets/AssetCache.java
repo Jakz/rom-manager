@@ -31,7 +31,7 @@ public class AssetCache
     
     if (games == null)
     {
-      fillCache(game.getRomSet(), asset);
+      fillCache(game.getGameSet(), asset);
       games = assetCache.get(asset);
     }
 

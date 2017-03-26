@@ -17,6 +17,8 @@ import net.miginfocom.swing.MigLayout;
 
 public class RomSetOrderView extends JPanel
 {
+  private final GameSetManager manager;
+  
   private enum SortMode
   {
     NAME("by name"),
@@ -38,8 +40,10 @@ public class RomSetOrderView extends JPanel
   
   private final MigLayout layout;
   
-  RomSetOrderView()
+  RomSetOrderView(GameSetManager manager)
   {
+    this.manager = manager;
+    
     list = new JList<>();
     list.setCellRenderer(new RomSetListCellRenderer());
     list.setModel(model);
@@ -62,6 +66,6 @@ public class RomSetOrderView extends JPanel
   {
     model.clear();
     
-    GlobalSettings.settings.getEnabledProviders().stream().map(GameSetManager::byIdent).forEach(model::addElement); 
+    GlobalSettings.settings.getEnabledProviders().stream().map(manager::byIdent).forEach(model::addElement); 
   }
 }

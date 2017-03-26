@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
 import jack.rm.Main;
+import jack.rm.data.romset.GameSetManager;
 
 public class GlobalSettingsView extends JFrame
 {
@@ -15,14 +16,14 @@ public class GlobalSettingsView extends JFrame
   private final JTabbedPane tabs;
   
   
-  public GlobalSettingsView()
+  public GlobalSettingsView(GameSetManager manager)
   {
     this.getContentPane().setPreferredSize(new Dimension(800,600));
     
     tabs = new JTabbedPane();
     
-    setManager = new RomSetManagerView();
-    setOrdering = new RomSetOrderView();
+    setManager = new RomSetManagerView(manager);
+    setOrdering = new RomSetOrderView(manager);
     
     tabs.addTab("Set Order", setOrdering);
     tabs.addTab("Set Management", setManager);

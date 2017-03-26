@@ -20,7 +20,7 @@ public class Attachment
   {
     // move to attachments folder
     // TODO: manage embedding in rom archive
-    Path attachmentsPath = rom.getRomSet().getAttachmentPath();
+    Path attachmentsPath = rom.getGameSet().getAttachmentPath();
     
     Files.createDirectories(attachmentsPath);
     

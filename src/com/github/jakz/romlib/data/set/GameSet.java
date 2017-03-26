@@ -289,9 +289,11 @@ public class GameSet implements Iterable<Game>
   	    
   	    Gson gson = Json.prebuild().registerTypeAdapter(GameList.class, new GameListAdapter(list)).create();
   	    
+  	    
   	    try (BufferedReader rdr = Files.newBufferedReader(statusPath))
   	    {
   	      gson.fromJson(rdr, GameList.class);
+  	      refreshStatus();
   	      return true;
   	    }
   	    catch (NoSuchFileException e)

@@ -30,7 +30,7 @@ public class AssetData
     
   public long getCRC() { return crc; }
   public Path getPath() { return path; }
-  public Path getFinalPath() { return rom.getRomSet().getAssetPath(asset, false).resolve(path); }
+  public Path getFinalPath() { return rom.getGameSet().getAssetPath(asset, false).resolve(path); }
   public String getURLData() { return urlData; }
   
   public boolean isPresent() { return isPresentAsFile() || isPresentAsArchive(); }
@@ -64,7 +64,7 @@ public class AssetData
     {
       try
       {
-        Path archivePath = rom.getRomSet().getAssetPath(asset,true);
+        Path archivePath = rom.getGameSet().getAssetPath(asset,true);
         ZipFile zip = new ZipFile(archivePath.toFile());
         FileHeader header = zip.getFileHeader(path.toString());
         return new ImageIcon(ImageIO.read(zip.getInputStream(header)));

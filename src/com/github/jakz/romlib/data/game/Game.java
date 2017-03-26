@@ -66,7 +66,7 @@ public class Game implements Comparable<Game>, GameAttributeInterface
 	  Arrays.stream(roms).forEach(r -> r.setGame(this));
 	}
 	
-	public GameSet getRomSet() { return set; }
+	public GameSet getGameSet() { return set; }
 	
 	public GameClone getClone() { return clone; }
 	public void setClone(GameClone clone) { this.clone = clone; }

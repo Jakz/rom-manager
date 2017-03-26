@@ -20,7 +20,7 @@ public class GameSetStatus
     countIncomplete = 0;
   }
   
-  void refresh(Stream<Game> games)
+  public void refresh(Stream<Game> games)
   {
     countNotFound = 0;
     countBadlyNamed = 0;

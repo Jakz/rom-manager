@@ -57,6 +57,8 @@ public class MainFrame extends JFrame implements WindowListener
 {	
 	private static final long serialVersionUID = 1L;
 	
+	private final GameSetManager setManager;
+	
 	private GameSet set = null;
 	
 	 //menu
@@ -134,12 +136,16 @@ public class MainFrame extends JFrame implements WindowListener
 	  
 	  boolean hasSearcher = set.getSettings().plugins.getEnabledPlugin(PluginRealType.SEARCH) != null;
 	  searchPanel.toggle(hasSearcher);
+	  
+    buildMenu(set);
 	}
 
-	public MainFrame()
+	public MainFrame(GameSetManager manager)
 	{
-		list.setModel(romListModel);
-		list.setCellRenderer(new RomCellRenderer());
+		this.setManager = manager;
+	  
+	  list.setModel(romListModel);
+		list.setCellRenderer(new GameCellRenderer());
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.setLayoutOrientation(JList.VERTICAL);
 		list.setFixedCellHeight(16);
@@ -223,7 +229,7 @@ public class MainFrame extends JFrame implements WindowListener
 	  cbRomSets.removeAllItems();
 	  
 	  List<Platform> systems = Platform.sortedValues();
-	  List<GameSet> sets = GlobalSettings.settings.getEnabledProviders().stream().map(GameSetManager::byIdent).collect(Collectors.toList());
+	  List<GameSet> sets = GlobalSettings.settings.getEnabledProviders().stream().map(setManager::byIdent).collect(Collectors.toList());
 	  
 	  systems.forEach(s -> {
 	    sets.stream().filter(rs -> rs.platform.equals(s)).forEach(cbRomSets::addItem);

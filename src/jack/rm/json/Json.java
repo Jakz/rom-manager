@@ -37,7 +37,6 @@ public class Json
   
   static
   {
-    registerTypeAdapter(GameSet.class, new GameSetAdapter());
     registerTypeAdapter(GameID.class, new GameIdAdapter());
     registerHiearchyAdapter(Handle.class, new JsonHandleAdapter());
     registerTypeAdapter(GameSavedAttribute.class, new GameSavedAttributeAdapter());

@@ -42,6 +42,8 @@ import net.miginfocom.swing.MigLayout;
 
 public class RomSetManagerView extends JPanel
 {
+  private final GameSetManager manager;
+  
   private final JList<Platform> systemList;
   private final DefaultListModel<Platform> systemModel;
     
@@ -62,7 +64,7 @@ public class RomSetManagerView extends JPanel
     public Component getListCellRendererComponent(JList<? extends Platform> list, Platform value, int index, boolean isSelected, boolean cellHasFocus) {
       JLabel label = (JLabel)renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
       
-      int count = GameSetManager.bySystem(value).size();
+      int count = manager.bySystem(value).size();
       
       label.setIcon(value.getIcon());
       label.setText(value.name+" ("+count+")");
@@ -127,8 +129,10 @@ public class RomSetManagerView extends JPanel
     }
   };
   
-  RomSetManagerView()
+  RomSetManagerView(GameSetManager manager)
   {
+    this.manager = manager;
+    
     systemSetInfo = new SystemRomSetInfo();
 
     systemModel = new DefaultListModel<>();
@@ -205,7 +209,7 @@ public class RomSetManagerView extends JPanel
     
     public void updateFields(Platform platform)
     {      
-      List<GameSet> sets = GameSetManager.bySystem(platform);
+      List<GameSet> sets = manager.bySystem(platform);
       int count = sets.size();
 
       countLabel.setIcon(platform.getIcon());

@@ -38,7 +38,7 @@ import com.pixbits.lib.ui.elements.BrowseButton;
 import jack.rm.Settings;
 import jack.rm.i18n.Text;
 
-public class ManagerPanel extends JPanel
+public class SetInfoPanel extends JPanel
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -75,8 +75,9 @@ public class ManagerPanel extends JPanel
 	    rows = new InfoRow<?>[] {
 	      new InfoRow<String>("Provider", () -> set.info().getName()),
 	      new InfoRow<Platform>("System", () -> set.platform),
-	      new InfoRow<String>("Games Count", () -> set.info().gameCount() + " games"),
-	      new InfoRow<String>("Roms Count", () -> set.info().romCount() + " roms"),
+	      new InfoRow<String>("Game Count", () -> set.info().gameCount() + " games"),
+	      new InfoRow<String>("Unique Game Count", () -> set.info().uniqueGameCount() + " games"),
+	      new InfoRow<String>("Rom Count", () -> set.info().romCount() + " roms"),
 	      new InfoRow<String>("Owned", () -> set.status().getFoundCount() + " roms"),
         new InfoRow<String>("% Complete", () -> { 
           int total = set.gameCount();
@@ -146,7 +147,7 @@ public class ManagerPanel extends JPanel
 	  }
 	}
 	
-	public ManagerPanel()
+	public SetInfoPanel()
 	{
 		romsPathLabel = new JLabel(Text.ROMSET_ROMS_PATH.text());
 		
