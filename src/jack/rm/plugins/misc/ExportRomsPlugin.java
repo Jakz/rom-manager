@@ -36,15 +36,18 @@ public class ExportRomsPlugin extends ActualPlugin implements OperationalPlugin,
   {
     Set<Game> visibleRoms = new HashSet<>();
     
-    int count = Main.mainFrame.list.getModel().getSize();
+    // TODO: rewrite, list is not accessible anymore
+    /*int count = Main.mainFrame.list.getModel().getSize();
     for (int i = 0; i < count; ++i)
     {
-      Game rom = Main.mainFrame.list.getModel().getElementAt(i);
+      Game rom = Main.mainFrame.getModel().getElementAt(i);
       if (rom.getStatus().isComplete())
         visibleRoms.add(rom);
     }
     
-    return r -> visibleRoms.contains(r);
+    return r -> visibleRoms.contains(r);*/
+    
+    return null;
   }
   
   public class CopyWorker extends RomSetWorker<ExportRomsPlugin>

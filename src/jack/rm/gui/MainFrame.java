@@ -43,6 +43,7 @@ import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.set.GameSet;
+import com.github.jakz.romlib.ui.SearchPanel;
 import com.pixbits.lib.ui.FileTransferHandler;
 
 import jack.rm.GlobalSettings;
@@ -54,6 +55,7 @@ import jack.rm.gui.gameinfo.InfoPanel;
 import jack.rm.gui.gamelist.CountPanel;
 import jack.rm.gui.gamelist.GameCellRenderer;
 import jack.rm.gui.gamelist.GameListModel;
+import jack.rm.gui.gamelist.GameListPanel;
 import jack.rm.i18n.Text;
 import jack.rm.plugins.OperationalPlugin;
 import jack.rm.plugins.PluginRealType;
@@ -86,12 +88,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	
 	//menu Tools
 	final JMenuItem miTools[] = new JMenuItem[3];
-	
-	private final GameListModel romListModel = new GameListModel();
-	final public JList<Game> list = new JList<>();
-	final private ListListener listListener = new ListListener();
-	final private JScrollPane listPane = new JScrollPane(list);
-	
+		
 	private final JComboBox<GameSet> cbRomSets = new JComboBox<>();
 	
 	final MenuListener menuListener = new MenuListener();
@@ -101,8 +98,10 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	final public LogPanel logPanel = new LogPanel();
 	final private ConsolePanel consolePanel = new ConsolePanel();
 	
-	final private CountPanel countPanel = new CountPanel(romListModel);
-	final private SearchPanel searchPanel = new SearchPanel(this);
+	final private GameListPanel gameListPanel = new GameListPanel(this);
+	final private CountPanel countPanel = new CountPanel(gameListPanel.model());
+	
+	final private SearchPanel searchPanel = new SearchPanel(() -> rebuildGameList());
 	final private InfoPanel infoPanel = new InfoPanel();
 	final private OptionsFrame optionsFrame = new OptionsFrame(Main.manager);
 		
@@ -140,7 +139,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	  optionsFrame.pluginStateChanged();
 	  
 	  boolean hasSearcher = set.getSettings().plugins.getEnabledPlugin(PluginRealType.SEARCH) != null;
-	  searchPanel.toggle(hasSearcher);
+	  searchPanel.toggle(hasSearcher ? set.getSearcher() : null);
 	  
     buildMenu(set);
 	}
@@ -148,38 +147,8 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	public MainFrame(GameSetManager manager)
 	{
 		this.setManager = manager;
-	  
-	  list.setModel(romListModel);
-		list.setCellRenderer(new GameCellRenderer());
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list.setLayoutOrientation(JList.VERTICAL);
-		list.setFixedCellHeight(16);
-		list.setBackground(Color.WHITE);
-		list.getSelectionModel().addListSelectionListener(listListener);
-    list.setSelectedIndex(0);
-        
-    list.addMouseListener(
-        new MouseAdapter(){
-          @Override
-          public void mouseClicked(MouseEvent e){
-            if (e.getClickCount() == 2){
-              int r = list.getSelectedIndex();
-              
-              if (r != -1)
-              {
-                Game rom = list.getModel().getElementAt(r);
-                
-                rom.setFavourite(!rom.isFavourite());
-                romListModel.fireChanges(r);   
-              }
-            }
-          }
-        });
-
-		listPane.setPreferredSize(new Dimension(230,500));		
-		
-		
-		listPane.setTransferHandler(new FileTransferHandler(new FileDropperListener()));
+	    
+	
 				
 		menu.add(romsMenu);
 		menu.add(viewMenu);
@@ -195,12 +164,12 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 		cbRomSets.addItemListener(romSetListener);
 		cbRomSets.setRenderer(cbRomSetRenderer);
 
-		JPanel romListPanel = new JPanel(new BorderLayout());
-		romListPanel.add(cbRomSets, BorderLayout.NORTH);
-		romListPanel.add(listPane, BorderLayout.CENTER);
+		JPanel left = new JPanel(new BorderLayout());
+		left.add(cbRomSets, BorderLayout.NORTH);
+		left.add(gameListPanel, BorderLayout.CENTER);
 		
 		JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		split.add(romListPanel);
+		split.add(left);
 		split.add(infoPanel);
 		split.setDividerLocation(400);
 		
@@ -243,10 +212,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	  if (current != null && sets.contains(current))
 	    cbRomSets.setSelectedItem(current);
 	  else if (cbRomSets.getItemCount() == 0)
-	  {
-	    romListModel.clear();
-	    list.clearSelection();
-	  }
+	    gameListPanel.clearEverything();
 	}
 	
 	private void exportList(Predicate<Game> predicate)
@@ -377,28 +343,6 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
     }
 	}
 			
-  class ListListener implements ListSelectionListener
-  {
-    @Override
-    public void valueChanged(ListSelectionEvent e)
-    {
-      if (e.getValueIsAdjusting())
-        return;
-
-      ListSelectionModel lsm = (ListSelectionModel) e.getSource();
-
-      if (lsm.getMinSelectionIndex() == -1)
-      {
-        infoPanel.resetFields();
-        return;
-      }
-
-      Game rom = Main.mainFrame.romListModel.getElementAt(lsm.getMinSelectionIndex());
-
-      infoPanel.updateFields(rom);
-    }
-  }
-
 	private void toggleLogPanel(boolean flag)
 	{
 		if (flag)
@@ -433,8 +377,10 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	  countPanel.gameSetLoaded(set);
 	  
 	  searchPanel.activate(false);
-	  searchPanel.resetFields(set.sizeSet.values().toArray(new RomSize[set.sizeSet.values().size()]));
+	  searchPanel.resetFields(set.getSearcher(), set.sizeSet);
 	  searchPanel.activate(true);
+	  
+	  searchPanel.toggle(set.getSettings().plugins.getEnabledPlugin(PluginRealType.SEARCH) != null ? set.getSearcher() : null);
 	  
     cbRomSets.removeItemListener(romSetListener);
     cbRomSets.setSelectedItem(set);
@@ -443,7 +389,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
     infoPanel.romSetLoaded(set);
     optionsFrame.romSetLoaded(set);
   
-    list.clearSelection();
+    gameListPanel.clearSelection();
 	  rebuildGameList();
 	}
 	
@@ -476,14 +422,8 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	
 	@Override public void rebuildGameList()
 	{
-    Game current = list.getSelectedValue();
-    int index = list.getSelectedIndex();
-      
-      /*StackTraceElement[] stack = Thread.currentThread().getStackTrace();
-    Arrays.stream(stack).forEach(s -> System.out.println(s));*/
-    
-    //System.out.println("updated table");
-    romListModel.clear();
+    gameListPanel.backupSelection();
+    gameListPanel.clearData();
     
     Predicate<Game> predicate = searchPanel.buildSearchPredicate().and( r ->
       r.getStatus() == GameStatus.FOUND && MenuElement.VIEW_SHOW_CORRECT.item.isSelected() ||
@@ -492,43 +432,47 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
       // TODO: missing management for GameStatus.INCOMPLETE
     );
     
-    set.stream().filter(predicate).forEach(romListModel.collector());
+    set.stream().filter(predicate).forEach(gameListPanel.collector());
     
-    if (current != null)     
-    {      
-      list.clearSelection();
-      list.setSelectedValue(current, true);
-      
-      if (list.getSelectedValue() == null && index != -1)
-      {
-        list.setSelectedIndex(index);
-        list.ensureIndexIsVisible(index);
-      }
-    }
+    gameListPanel.restoreSelection();
     
     SwingUtilities.invokeLater( () -> {
-      romListModel.fireChanges();
+      gameListPanel.refresh();
+      countPanel.update();
     });
-    
-    countPanel.update();
 	}
 	
 	@Override
   public void refreshGameList(int row)
   {
-    romListModel.fireChanges(row);
+    gameListPanel.refresh(row);
   }
   
 	@Override
   public void refreshGameList()
   {
-    romListModel.fireChanges();
+    gameListPanel.refresh();
   }
+	
+	@Override
+	public void refreshGameListCurrentSelection()
+	{
+	  gameListPanel.refreshCurrentSelection();
+	}
 	
   @Override
   public void toggleVisibilityForStatusInGameList(GameStatus status)
   {
-    romListModel.toggleVisibility(status);
+    gameListPanel.toggleVisibility(status);
     rebuildGameList();
+  }
+  
+  @Override
+  public void setInfoPanelContent(Game game)
+  {
+    if (game == null)
+      infoPanel.resetFields();
+    else
+      infoPanel.updateFields(game);
   }
 }

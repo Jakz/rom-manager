@@ -44,8 +44,8 @@ abstract class AttributeField
     deleteButton.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
     deleteButton.setVisible(false);
     deleteButton.addActionListener( e -> {
-      this.infoPanel.rom.clearCustomAttribute(attrib);
-      setValue(this.infoPanel.rom);
+      infoPanel.rom.clearCustomAttribute(attrib);
+      setValue(infoPanel.rom);
       attributeCleared();
     });
     
@@ -64,10 +64,10 @@ abstract class AttributeField
   {
     if (this.infoPanel.rom.hasCustomAttribute(attrib))
     {
-      this.infoPanel.rom.clearCustomAttribute(attrib);
+      infoPanel.rom.clearCustomAttribute(attrib);
       setValue(this.infoPanel.rom);
-      this.infoPanel.rom.updateStatus();
-      Main.mainFrame.refreshGameList(Main.mainFrame.list.getSelectedIndex());
+      infoPanel.rom.updateStatus();
+      Main.mainFrame.refreshGameListCurrentSelection();
     }
     deleteButton.setVisible(false);
   }

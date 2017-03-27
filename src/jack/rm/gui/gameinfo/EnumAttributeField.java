@@ -50,7 +50,7 @@ class EnumAttributeField extends AttributeField
         deleteButton.setVisible(true);
         this.infoPanel.rom.updateStatus();
         readValue.setText(value.getSelectedItem().toString());
-        Main.mainFrame.refreshGameList(Main.mainFrame.list.getSelectedIndex());
+        Main.mainFrame.refreshGameListCurrentSelection();
       }
     });
     

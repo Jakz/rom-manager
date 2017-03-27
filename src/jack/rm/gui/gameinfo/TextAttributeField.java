@@ -117,8 +117,8 @@ class TextAttributeField extends AttributeField implements CaretListener, Action
       this.infoPanel.rom.setCustomAttribute(attrib, pv);
       value.setBackground(Color.WHITE);
       deleteButton.setVisible(true);
-      this.infoPanel.rom.updateStatus();
-      Main.mainFrame.refreshGameList(Main.mainFrame.list.getSelectedIndex());
+      infoPanel.rom.updateStatus();
+      Main.mainFrame.refreshGameListCurrentSelection();
     }
     else
       setValue(this.infoPanel.rom);

@@ -1,9 +1,7 @@
-package jack.rm.gui;
+package com.github.jakz.romlib.ui;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.function.Predicate;
 
 import javax.swing.BoxLayout;
@@ -13,14 +11,12 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingUtilities;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.Location;
-import com.github.jakz.romlib.data.set.GameSet;
+import com.pixbits.lib.searcher.SearcherInterface;
 import com.pixbits.lib.ui.elements.JPlaceHolderTextField;
 
 import jack.rm.i18n.Text;
@@ -29,17 +25,18 @@ public class SearchPanel extends JPanel
 {
 	private static final long serialVersionUID = 1L;
 	
+	private final Runnable refreshCallback;
+	private SearcherInterface<Game> searcher = s -> t -> true;
+	
 	final JLabel[] labels = new JLabel[4];
 	final JPlaceHolderTextField freeSearchField = new JPlaceHolderTextField(10, Text.TEXT_SEARCH_IN_TITLE.text());
-	final MainFrame mainFrame;
+	//final MainFrame mainFrame;
 	
 	final JComboBox<RomSize> sizes = new JComboBox<>();
 	//final JComboBox genres = new JComboBox();
 	final JComboBox<Location> locations = new JComboBox<>();
 	final JComboBox<Language> languages = new JComboBox<>();
-		
-	final private SearchListener listener = new SearchListener();
-	
+			
 	boolean active = false;
 
 	abstract class CustomCellRenderer<T> implements ListCellRenderer<T>
@@ -115,14 +112,16 @@ public class SearchPanel extends JPanel
     this.active = active;
   }
   
-  void toggle(boolean enabled)
+  void toggle(SearcherInterface<Game> searcher)
   {
-    freeSearchField.setEnabled(enabled);
+    this.searcher = searcher;
     
-    if (!enabled)
+    freeSearchField.setEnabled(searcher != null);
+    
+    if (searcher == null)
       freeSearchField.setText("");
     
-    freeSearchField.setPlaceholder(enabled ? Text.TEXT_SEARCH_IN_TITLE.text() : "no search plugin present");
+    freeSearchField.setPlaceholder(searcher != null ? Text.TEXT_SEARCH_IN_TITLE.text() : "no search plugin present");
   }
   
   private void setComboBoxSelectedBackground(JComboBox<?> comboBox)
@@ -133,9 +132,9 @@ public class SearchPanel extends JPanel
     list.setSelectionBackground(new Color(164,171,184)); //TODO: hacked
   }
 	  
-	public SearchPanel(MainFrame mainFrame)
+	public SearchPanel(Runnable refreshCallback)
 	{
-	  this.mainFrame = mainFrame;
+	  this.refreshCallback = refreshCallback;
 	  
 	  labels[0] = new JLabel();
 		labels[1] = new JLabel();
@@ -159,12 +158,12 @@ public class SearchPanel extends JPanel
 		languages.setRenderer(new LanguageCellRenderer());
 		
 		sizes.setRenderer(new RomSizeCellRenderer());
-
-		freeSearchField.addCaretListener(new FieldListener());
-		sizes.addActionListener(listener);
+		
+		freeSearchField.addCaretListener(e -> { if (active) refreshCallback.run(); } );
+		sizes.addActionListener(e -> { if (active) refreshCallback.run(); } );
 		//genres.addActionListener(listener);
-		locations.addActionListener(listener);
-		languages.addActionListener(listener);
+		locations.addActionListener(e -> { if (active) refreshCallback.run(); } );
+		languages.addActionListener(e -> { if (active) refreshCallback.run(); } );
 
 		this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		
@@ -182,32 +181,33 @@ public class SearchPanel extends JPanel
 	
 	public Predicate<Game> buildSearchPredicate()
 	{
-	  Predicate<Game> predicate = GameSet.current.getSearcher().search(freeSearchField.getText());
-
-	  Location location = locations.getItemAt(locations.getSelectedIndex());
-    Language language = languages.getItemAt(languages.getSelectedIndex());
-    RomSize size = sizes.getItemAt(sizes.getSelectedIndex());
+	  Predicate<Game> predicate = searcher != null ? searcher.search(freeSearchField.getText()) : g -> true;
     
+    Location location = locations.getItemAt(locations.getSelectedIndex());
     if (location != null)
       predicate = predicate.and(r -> r.getLocation().is(location));
     
+    Language language = languages.getItemAt(languages.getSelectedIndex());
     if (language != null)
       predicate = predicate.and(r -> r.getLanguages().includes(language));
     
+    RomSize size = sizes.getItemAt(sizes.getSelectedIndex());
     if (size != null)
       predicate = predicate.and(r -> r.getSizeInBytes() == size.bytes());
 	  
 	  return predicate;
 	}
 	
-	public void resetFields(final RomSize[] nsizes)
+	public void resetFields(SearcherInterface<Game> searcher, final RomSize.Set set)
 	{
-		SwingUtilities.invokeLater(new Runnable() {
+		this.searcher = searcher;
+	  
+	  SwingUtilities.invokeLater(new Runnable() {
 			@Override
       public void run() {
 				sizes.removeAllItems();
 				sizes.addItem(null);
-				for (RomSize s : nsizes)
+				for (RomSize s : set.values())
 					sizes.addItem(s);
 			}
 		});
@@ -216,28 +216,5 @@ public class SearchPanel extends JPanel
 		sizes.setSelectedIndex(-1);
 		locations.setSelectedIndex(-1);
 		languages.setSelectedIndex(-1);
-	}
-	
-	class SearchListener implements ActionListener
-	{
-		@Override
-    public void actionPerformed(ActionEvent e)
-		{
-			if (active)
-				mainFrame.rebuildGameList();
-				
-		}
-	}
-	
-	class FieldListener implements CaretListener
-	{
-		@Override
-    public void caretUpdate(CaretEvent e)
-		{
-			if (active)
-			{
-        mainFrame.rebuildGameList();
-			}
-		}
 	}
 }
