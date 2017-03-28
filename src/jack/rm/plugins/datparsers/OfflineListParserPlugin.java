@@ -20,6 +20,8 @@ import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.Location;
 import com.github.jakz.romlib.data.game.Rom;
+import com.github.jakz.romlib.data.assets.Asset;
+import com.github.jakz.romlib.data.assets.AssetData;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameClone;
 import com.github.jakz.romlib.data.game.GameSave;
@@ -30,8 +32,6 @@ import com.github.jakz.romlib.data.set.DatLoader;
 import com.github.jakz.romlib.data.set.GameList;
 import com.github.jakz.romlib.data.set.GameSet;
 
-import jack.rm.assets.Asset;
-import jack.rm.assets.AssetData;
 import jack.rm.files.parser.SaveParser;
 import jack.rm.files.parser.XMLDatLoader;
 import jack.rm.files.parser.XMLHandler;

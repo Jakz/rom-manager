@@ -32,6 +32,9 @@ import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
+import com.github.jakz.romlib.data.assets.Asset;
+import com.github.jakz.romlib.data.assets.AssetData;
+import com.github.jakz.romlib.data.assets.AssetManager;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
@@ -42,9 +45,6 @@ import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.ui.Icon;
 
 import jack.rm.Main;
-import jack.rm.assets.Asset;
-import jack.rm.assets.AssetData;
-import jack.rm.assets.AssetManager;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.downloader.RomDownloaderPlugin;
 import net.miginfocom.swing.MigLayout;

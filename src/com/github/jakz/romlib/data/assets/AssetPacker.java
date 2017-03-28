@@ -1,4 +1,4 @@
-package jack.rm.assets;
+package com.github.jakz.romlib.data.assets;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,17 +19,17 @@ import net.lingala.zip4j.util.Zip4jConstants;
 
 public class AssetPacker
 {
-  public static void packAssets(GameSet romSet)
+  public static void packAssets(GameSet gameSet)
   {
-    final Asset[] assets = romSet.getAssetManager().getSupportedAssets();
+    final Asset[] assets = gameSet.getAssetManager().getSupportedAssets();
     
     Consumer<Boolean> callback = r -> {
-      Arrays.stream(assets).forEach(asset -> AssetCache.cache.rebuild(romSet, asset));
+      Arrays.stream(assets).forEach(asset -> gameSet.assetCache().rebuild(gameSet, asset));
     };
     
     for (int i = assets.length - 1; i >= 0; --i)
     {
-      BiFunction<Integer, Consumer<Boolean>, Consumer<Boolean>> a = (c, cb) -> b -> new AssetPackerWorker(romSet, assets[c], cb).execute();
+      BiFunction<Integer, Consumer<Boolean>, Consumer<Boolean>> a = (c, cb) -> b -> new AssetPackerWorker(gameSet, assets[c], cb).execute();
       callback = a.apply(i, callback);
     }
     

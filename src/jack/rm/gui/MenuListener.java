@@ -26,12 +26,12 @@ class MenuListener implements ActionListener
 		{
   		if (tag == MenuElement.ROMS_SCAN_FOR_ROMS)
   		{
-  		  GameSet.current.getScanner().scanForRoms(true);
+  		  GameSet.current.helper().scanner().scanForRoms(true);
   			Main.mainFrame.rebuildGameList();
   		}
   		else if (tag == MenuElement.ROMS_SCAN_FOR_NEW_ROMS)
   		{
-  		  GameSet.current.getScanner().scanForRoms(false);
+  		  GameSet.current.helper().scanner().scanForRoms(false);
         Main.mainFrame.rebuildGameList();
   		}
   		else if (tag == MenuElement.VIEW_SHOW_CORRECT)

@@ -107,12 +107,12 @@ public class SearchPanel extends JPanel
     }
   }
   
-  void activate(boolean active)
+  public void activate(boolean active)
   {
     this.active = active;
   }
   
-  void toggle(SearcherInterface<Game> searcher)
+  public void toggle(SearcherInterface<Game> searcher)
   {
     this.searcher = searcher;
     

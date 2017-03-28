@@ -104,7 +104,7 @@ public class PluginsPanel extends JPanel
       else if (!plugins.get(r).type.isRequired())
         romset.getSettings().plugins.disable(plugins.get(r).getID());
       
-      GameSet.current.pluginStateChanged();
+      GameSet.current.helper().pluginStateChanged();
       Main.mainFrame.pluginStateChanged();
 
       //TODO: enabling or disabling a plugin should have an effect in multiple parts of the UI

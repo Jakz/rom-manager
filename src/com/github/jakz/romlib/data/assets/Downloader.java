@@ -1,4 +1,4 @@
-package jack.rm.assets;
+package com.github.jakz.romlib.data.assets;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

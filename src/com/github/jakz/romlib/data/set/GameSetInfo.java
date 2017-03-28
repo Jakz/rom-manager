@@ -3,9 +3,8 @@ package com.github.jakz.romlib.data.set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.github.jakz.romlib.data.assets.AssetManager;
 import com.github.jakz.romlib.data.game.Game;
-
-import jack.rm.assets.AssetManager;
 
 public class GameSetInfo
 {

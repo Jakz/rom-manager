@@ -41,7 +41,7 @@ public class FileDropperListener implements FileTransferHandler.Listener
           System.out.println("Processing "+file.getFileName());
   
           
-          List<ScanResult> results = GameSet.current.getScanner().singleBlockingCheck(file);
+          List<ScanResult> results = GameSet.current.helper().scanner().singleBlockingCheck(file);
         
           if (results != null)
           {

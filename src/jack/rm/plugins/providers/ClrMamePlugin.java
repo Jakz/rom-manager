@@ -2,13 +2,13 @@ package jack.rm.plugins.providers;
 
 import java.util.List;
 
+import com.github.jakz.romlib.data.assets.AssetManager;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.data.set.Provider;
 
-import jack.rm.assets.EmptyAssetManager;
 import jack.rm.plugins.datparsers.DatParserPlugin;
 
 
@@ -44,7 +44,7 @@ public class ClrMamePlugin extends ProviderPlugin
         KnownProviders.NO_INTRO.derive(null, null, "", "", null), 
         datParser.buildDatLoader("clr-mame-nointro"),
         GG_ATTRIBUTES, 
-        new EmptyAssetManager()
+        AssetManager.DUMMY
     );
     
     sets[1] = new GameSet(
@@ -52,7 +52,7 @@ public class ClrMamePlugin extends ProviderPlugin
         KnownProviders.NO_INTRO.derive(null, null, "", "", null),
         datParser.buildDatLoader("clr-mame-nointro"),
         GG_ATTRIBUTES, 
-        new EmptyAssetManager()
+        AssetManager.DUMMY
     );
 
     return sets;

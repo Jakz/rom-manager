@@ -40,6 +40,7 @@ public class GlobalSettings
   {
     try
     {
+      Files.createDirectories(DATA_PATH);
       Path settingsPath = DATA_PATH.resolve("settings.json");
     
       try (BufferedWriter wrt = Files.newBufferedWriter(settingsPath))

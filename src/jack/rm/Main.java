@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import com.github.jakz.romlib.data.assets.Downloader;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.concurrent.AsyncGuiPoolWorker;
 import com.pixbits.lib.concurrent.Operation;
@@ -21,7 +22,6 @@ import com.pixbits.lib.workflow.Dumper;
 import com.pixbits.lib.workflow.Fetcher;
 import com.pixbits.lib.workflow.WorkflowData;
 
-import jack.rm.assets.Downloader;
 import jack.rm.data.romset.GameSetManager;
 import jack.rm.gui.ClonesDialog;
 import jack.rm.gui.Dialogs;
@@ -159,12 +159,12 @@ public class Main
     GameSet.current = set;
     boolean wasInit = set.loadStatus();
     
-    GameSet.current.pluginStateChanged();
+    set.helper().pluginStateChanged();
 
 
     mainFrame.romSetLoaded(set);
     
-    GameSet.current.getScanner().scanForRoms(!wasInit && GlobalSettings.settings.shouldScanWhenLoadingRomset());
+    set.helper().scanner().scanForRoms(!wasInit && GlobalSettings.settings.shouldScanWhenLoadingRomset());
 
     downloader = new Downloader(set);
     

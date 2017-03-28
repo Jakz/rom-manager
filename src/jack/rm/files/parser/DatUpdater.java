@@ -61,6 +61,7 @@ public class DatUpdater
           }
         }
         
+        Files.createDirectories(destDat.getParent());
         Files.move(src, destDat, StandardCopyOption.REPLACE_EXISTING);
 
       }

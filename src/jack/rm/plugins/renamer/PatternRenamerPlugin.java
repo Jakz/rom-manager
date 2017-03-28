@@ -46,7 +46,7 @@ public class PatternRenamerPlugin extends RenamerPlugin
         "This plugins enables support for renaming through pattern sets.");
   }
   
-  @Override public String getCorrectName(Game rom)
+  @Override public String getNameForGame(Game rom)
   {
     Pattern.RenamingOptions options = new Pattern.RenamingOptions(openBlock, closeBlock);
     

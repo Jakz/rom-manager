@@ -38,6 +38,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.github.jakz.romlib.data.assets.AssetPacker;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.game.GameStatus;
@@ -48,7 +49,6 @@ import com.pixbits.lib.ui.FileTransferHandler;
 
 import jack.rm.GlobalSettings;
 import jack.rm.Main;
-import jack.rm.assets.AssetPacker;
 import jack.rm.data.romset.GameSetManager;
 import jack.rm.files.Organizer;
 import jack.rm.gui.gameinfo.InfoPanel;
@@ -139,7 +139,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	  optionsFrame.pluginStateChanged();
 	  
 	  boolean hasSearcher = set.getSettings().plugins.getEnabledPlugin(PluginRealType.SEARCH) != null;
-	  searchPanel.toggle(hasSearcher ? set.getSearcher() : null);
+	  searchPanel.toggle(hasSearcher ? set.helper().searcher() : null);
 	  
     buildMenu(set);
 	}
@@ -377,10 +377,10 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	  countPanel.gameSetLoaded(set);
 	  
 	  searchPanel.activate(false);
-	  searchPanel.resetFields(set.getSearcher(), set.sizeSet);
+	  searchPanel.resetFields(set.helper().searcher(), set.sizeSet);
 	  searchPanel.activate(true);
 	  
-	  searchPanel.toggle(set.getSettings().plugins.getEnabledPlugin(PluginRealType.SEARCH) != null ? set.getSearcher() : null);
+	  searchPanel.toggle(set.getSettings().plugins.getEnabledPlugin(PluginRealType.SEARCH) != null ? set.helper().searcher() : null);
 	  
     cbRomSets.removeItemListener(romSetListener);
     cbRomSets.setSelectedItem(set);

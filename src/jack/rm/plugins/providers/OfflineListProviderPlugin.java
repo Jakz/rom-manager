@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.UnknownFormatConversionException;
 
 import com.github.jakz.romlib.data.game.RomSize;
+import com.github.jakz.romlib.data.assets.Asset;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameSave;
 import com.github.jakz.romlib.data.game.Version;
@@ -26,7 +27,6 @@ import com.github.jakz.romlib.data.set.DatLoader;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.data.set.Provider;
 
-import jack.rm.assets.Asset;
 import jack.rm.files.parser.SaveParser;
 import jack.rm.files.parser.XMLDatLoader;
 import jack.rm.files.parser.XMLHandler;
@@ -98,7 +98,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
   };
   
   
-  private static class AssetManager implements jack.rm.assets.AssetManager
+  private static class AssetManager implements com.github.jakz.romlib.data.assets.AssetManager
   {
     final URL url;
     private final DecimalFormat format;

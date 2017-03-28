@@ -55,16 +55,16 @@ public class Scanner
 		
   public Scanner(GameSet set)
 	{
-	  scanner = set.getSettings().plugins.getEnabledPlugin(PluginRealType.SCANNER);
+    this.set = set;
+    
+    scanner = set.getSettings().plugins.getEnabledPlugin(PluginRealType.SCANNER);
 	  verifier = set.getSettings().plugins.getEnabledPlugin(PluginRealType.VERIFIER);
 	  
 	  if (verifier != null)
 	    verifier.setup(set);
-	  
-	  this.set = set;
 	}
 
-	public void foundRom(ScanResult result)
+	private void foundRom(ScanResult result)
 	{
 	  if (result == null)
 	    return;

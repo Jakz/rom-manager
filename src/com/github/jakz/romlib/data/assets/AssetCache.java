@@ -1,4 +1,4 @@
-package jack.rm.assets;
+package com.github.jakz.romlib.data.assets;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,11 +16,9 @@ import net.lingala.zip4j.model.FileHeader;
 
 public class AssetCache
 {
-  public static AssetCache cache = new AssetCache();
-
   private Map<Asset, Set<Game>> assetCache;
     
-  AssetCache()
+  public AssetCache()
   {
     assetCache = new HashMap<>();
   }

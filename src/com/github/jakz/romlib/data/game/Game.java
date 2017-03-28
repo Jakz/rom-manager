@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
+import com.github.jakz.romlib.data.assets.Asset;
+import com.github.jakz.romlib.data.assets.AssetData;
 import com.github.jakz.romlib.data.attachments.Attachments;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
@@ -15,11 +17,6 @@ import com.github.jakz.romlib.data.game.attributes.GameAttributeInterface;
 import com.github.jakz.romlib.data.game.attributes.GameInfo;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.set.GameSet;
-
-import jack.rm.assets.Asset;
-import jack.rm.assets.AssetData;
-import jack.rm.plugins.folder.FolderPlugin;
-import jack.rm.plugins.renamer.RenamerPlugin;
 
 public class Game implements Comparable<Game>, GameAttributeInterface
 {
@@ -162,25 +159,15 @@ public class Game implements Comparable<Game>, GameAttributeInterface
   
   public String getCorrectName()
   {
-    RenamerPlugin renamer = set.getSettings().getRenamer();
-    return renamer.getCorrectName(this);
+    return set.helper().renamer().getNameForGame(this);
   }
-  
-  public String getCorrectInternalName()
-  {
-    RenamerPlugin renamer = set.getSettings().getRenamer();
-    return renamer.getCorrectInternalName(this);
-  }
-  
+
   public Path getCorrectFolder()
   {
-    FolderPlugin mover = set.getSettings().getFolderOrganizer();
-    return mover.getFolderForRom(this);
-  }
-  
-  public boolean hasCorrectInternalName()
-  {
-    return false; // TODO: !handle.isArchive() || getCorrectInternalName().equals(handle.plainInternalName());
+    throw new UnsupportedOperationException("Move is not implemented anymore");
+
+    /*FolderPlugin mover = set.getSettings().getFolderOrganizer();
+    return mover.getFolderForRom(this);*/
   }
   
   public boolean hasCorrectName()
@@ -212,6 +199,16 @@ public class Game implements Comparable<Game>, GameAttributeInterface
       e.printStackTrace();
       return false;
     }*/
+  }
+  
+  public boolean hasEquivalentRom(Rom rom)
+  {
+    return Arrays.stream(roms).anyMatch(irom -> irom.isEquivalent(rom));
+  }
+  
+  public boolean isEquivalent(Game game)
+  {
+    return Arrays.stream(roms).allMatch(rom -> game.hasEquivalentRom(rom));
   }
 
 	@Override

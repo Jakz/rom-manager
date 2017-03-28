@@ -1,4 +1,4 @@
-package jack.rm.assets;
+package com.github.jakz.romlib.data.assets;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,12 +17,12 @@ import net.lingala.zip4j.model.FileHeader;
 public class AssetData
 {  
   private final Asset asset;
-  private final Game rom;
+  private final Game game;
   private Path path;
   private String urlData;
   private long crc;
   
-  public AssetData(Asset asset, Game rom) { this.asset = asset; this.rom = rom; }
+  public AssetData(Asset asset, Game game) { this.asset = asset; this.game = game; }
 
   public void setCRC(long crc) { this.crc = crc; }
   public void setPath(Path path) { this.path = path; }
@@ -30,14 +30,14 @@ public class AssetData
     
   public long getCRC() { return crc; }
   public Path getPath() { return path; }
-  public Path getFinalPath() { return rom.getGameSet().getAssetPath(asset, false).resolve(path); }
+  public Path getFinalPath() { return game.getGameSet().getAssetPath(asset, false).resolve(path); }
   public String getURLData() { return urlData; }
   
   public boolean isPresent() { return isPresentAsFile() || isPresentAsArchive(); }
   
   public boolean isPresentAsArchive()
   {
-    return AssetCache.cache.isPresent(rom, asset);
+    return game.getGameSet().assetCache().isPresent(game, asset);
   }
   
   public boolean isPresentAsFile()
@@ -64,7 +64,7 @@ public class AssetData
     {
       try
       {
-        Path archivePath = rom.getGameSet().getAssetPath(asset,true);
+        Path archivePath = game.getGameSet().getAssetPath(asset,true);
         ZipFile zip = new ZipFile(archivePath.toFile());
         FileHeader header = zip.getFileHeader(path.toString());
         return new ImageIcon(ImageIO.read(zip.getInputStream(header)));

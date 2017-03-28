@@ -29,6 +29,7 @@ import jack.rm.plugins.providers.ProviderPlugin;
 public class GameSetManager
 {
   private final Map<Platform, List<GameSet>> sets = new HashMap<>();
+  private final Map<GameSet, GameSetFeatures> helpers = new HashMap<>();
   private final PluginManager<ActualPlugin, ActualPluginBuilder> manager;
   
   public GameSetManager(PluginManager<ActualPlugin, ActualPluginBuilder> manager)
@@ -53,6 +54,8 @@ public class GameSetManager
 	    
 	    for (GameSet set : rsets)
 	    {
+	      helpers.put(set, new GameSetFeatures(set));
+	      
 	      List<GameSet> setsForSystem = sets.computeIfAbsent(set.platform, s -> new ArrayList<>());
 	      setsForSystem.add(set);
 	    }
@@ -80,6 +83,8 @@ public class GameSetManager
 		
 		return null;
 	}
+	
+	public GameSetFeatures helpers(GameSet set) { return helpers.get(set); }
 	
 	public Collection<GameSet> allSets()
 	{

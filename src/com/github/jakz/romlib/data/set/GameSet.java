@@ -17,12 +17,16 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.github.jakz.romlib.data.assets.Asset;
+import com.github.jakz.romlib.data.assets.AssetCache;
+import com.github.jakz.romlib.data.assets.AssetManager;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameClone;
 import com.github.jakz.romlib.data.game.Rom;
 import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.platforms.Platform;
+import com.github.jakz.romlib.data.set.organizers.GameRenamer;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.pixbits.lib.searcher.DummySearcher;
@@ -35,8 +39,7 @@ import com.pixbits.lib.log.Log;
 import jack.rm.GlobalSettings;
 import jack.rm.Main;
 import jack.rm.Settings;
-import jack.rm.assets.Asset;
-import jack.rm.assets.AssetManager;
+import jack.rm.data.romset.GameSetFeatures;
 import jack.rm.files.Scanner;
 import jack.rm.json.Json;
 import jack.rm.json.GameListAdapter;
@@ -61,54 +64,37 @@ public class GameSet implements Iterable<Game>
 	
 	private Settings settings;
 	
-	private Searcher<Game> searcher;
-	private Scanner scanner;
-
+	private GameSetFeatures helper;
+	
+	private final AssetCache assetCache;
 	private final Attribute[] attributes;
 
 	public GameSet(Platform platform, Provider provider, DatLoader loader, Attribute[] attributes, AssetManager assetManager)
 	{
 		this.info = new GameSetInfo(provider, loader, assetManager);
-	  this.searcher = new DummySearcher<>();
 	  this.list = null;
 	  this.clones = null;
 	  this.sizeSet = new RomSize.Set();
 	  this.platform = platform;
 		this.attributes = attributes;
 		this.loaded = false;
+		this.assetCache = new AssetCache();
+		this.helper = new GameSetFeatures(this);
 	}
 	
 	public GameSet(Platform platform, Provider provider, DatLoader loader)
   {
 	  this.info = new GameSetInfo(provider, loader);
-	  this.searcher = new DummySearcher<>();
 	  this.list = null;
 	  this.clones = null;
 	  this.sizeSet = new RomSize.Set();
 	  this.platform = platform;
 	  this.attributes = new Attribute[0];
 	  this.loaded = false;
+	  this.assetCache = new AssetCache();
+	  this.helper = new GameSetFeatures(this);
   }
-	
-	public void pluginStateChanged()
-	{
-	  if (getSettings().getSearchPlugin() != null)
-	  {
-	    List<SearchPredicate<Game>> predicates = new ArrayList<>();
-	    
-	    SearchPlugin plugin = getSettings().plugins.getEnabledPlugin(PluginRealType.SEARCH);
-	    SearchParser<Game> parser = plugin.getSearcher();
-	    
-	    Set<SearchPredicatesPlugin> predicatePlugins = getSettings().plugins.getEnabledPlugins(PluginRealType.SEARCH_PREDICATES);
-	    predicatePlugins.stream().flatMap(p -> p.getPredicates().stream()).forEach(predicates::add);    
-	    searcher = new Searcher<>(parser, predicates);
-	  }
-	  else
-	    searcher = new DummySearcher<>();
-	  
-	  scanner = new Scanner(this);
-	}
-	
+
 	public void setClones(CloneSet clones)
 	{ 
     this.clones = clones;
@@ -118,6 +104,7 @@ public class GameSet implements Iterable<Game>
         game.setClone(clone);
 	}
 	
+	public GameSetFeatures helper() { return helper; }
 	public CloneSet clones() { return clones; }
 	public GameSetInfo info() { return info; }
 	public GameSetStatus status() { return list.status(); }
@@ -142,8 +129,8 @@ public class GameSet implements Iterable<Game>
 	public boolean doesSupportAttribute(Attribute attribute) { return Arrays.stream(attributes).anyMatch( a -> a == attribute); }
 	public final Attribute[] getSupportedAttributes() { return attributes; }
 	
-	public Scanner getScanner() { return scanner; }
-			
+	public AssetCache assetCache() { return assetCache; }
+  	
 	public boolean canBeLoaded()
 	{
 	  return Files.exists(datPath());
@@ -182,11 +169,6 @@ public class GameSet implements Iterable<Game>
 	public Path getAttachmentPath()
 	{
 	  return settings.romsPath.resolve(Paths.get("attachments"));
-	}
-	
-	public Searcher<Game> getSearcher()
-	{
-	  return searcher;
 	}
 	
   public final Path getAssetPath(Asset asset, boolean asArchive)
@@ -301,6 +283,8 @@ public class GameSet implements Iterable<Game>
   {
     if (feature == Feature.SINGLE_ROM_PER_GAME)
       return !hasMultipleRomsPerGame();
+    else if (feature == Feature.CLONES)
+      return clones != null && clones.size() > 0;
     else
       return false;
   }
@@ -308,13 +292,13 @@ public class GameSet implements Iterable<Game>
   public List<Game> filter(String query)
   { 
     return stream()
-      .filter(searcher.search(query))
+      .filter(helper.searcher().search(query))
       .collect(Collectors.toList());
   }
   
   public Game find(String search) 
   { 
-    Optional<Game> rom = list.stream().filter(getSearcher().search(search)).findFirst();
+    Optional<Game> rom = list.stream().filter(helper.searcher().search(search)).findFirst();
     if (!rom.isPresent()) throw new RuntimeException("GameSet::find failed to find any rom");
     return rom.orElse(null);
   }
