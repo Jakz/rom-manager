@@ -3,6 +3,7 @@ package com.github.jakz.romlib.data.game;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Stream;
 
 public class RomSize implements Comparable<RomSize>
 {

@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.game.Rom;
+import com.github.jakz.romlib.data.game.RomSize;
 import com.pixbits.lib.io.digest.HashCache;
 
 public class GameList implements Iterable<Game>
@@ -20,19 +21,21 @@ public class GameList implements Iterable<Game>
   private final HashCache<Rom> cache;
   private final HashMap<String, Game> nameMap;
   private final boolean hasMultipleRomsPerGame;
+  private final RomSize.Set sizeSet;
   
-  public GameList(List<Game> games)
+  public GameList(List<Game> games, RomSize.Set sizeSet)
   {
-    this(games.toArray(new Game[games.size()]));
+    this(games.toArray(new Game[games.size()]), sizeSet);
   }
   
-	public GameList(Game[] games)
+	public GameList(Game[] games, RomSize.Set set)
 	{
 	  this.games = games;
 	  status = new GameSetStatus();
 	  Arrays.sort(games);
 	  cache = new HashCache<>(Arrays.stream(games).flatMap(g -> g.stream()));
-	  
+	  sizeSet = set; //new RomSize.Set();
+	  	  
 	  nameMap = stream().collect(Collectors.toMap(
 	    g -> g.getTitle(), 
 	    g -> g, 
@@ -50,6 +53,7 @@ public class GameList implements Iterable<Game>
 	public int gameCount() { return games.length; }
 
 	public HashCache<Rom> cache() { return cache; }
+	public RomSize.Set sizeSet() { return sizeSet; }
 
 	public void resetStatus()
 	{

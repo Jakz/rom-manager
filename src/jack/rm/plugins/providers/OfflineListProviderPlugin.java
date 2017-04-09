@@ -23,7 +23,7 @@ import com.github.jakz.romlib.data.platforms.GBA;
 import com.github.jakz.romlib.data.platforms.NDS;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.set.DatFormat;
-import com.github.jakz.romlib.data.set.DatLoader;
+import com.github.jakz.romlib.data.set.DataSupplier;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.data.set.Provider;
 
@@ -263,7 +263,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
       {
         Map<String, Object> args = new HashMap<>();
         args.put("save-parser", new GBASaveParserOL());
-        DatLoader datParser = parser.buildDatLoader("offline-list", args);
+        DataSupplier datParser = parser.buildDatLoader("offline-list", args);
         
         sets.add(new GameSet(
             Platform.GBA, 
@@ -277,7 +277,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
       {
         Map<String, Object> args = new HashMap<>();
         args.put("save-parser", new GBASaveParserAS());
-        DatLoader datParser = parser.buildDatLoader("offline-list", args);
+        DataSupplier datParser = parser.buildDatLoader("offline-list", args);
   
         sets.add(new GameSet(
             Platform.GBA, 
@@ -291,7 +291,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
       {
         Map<String, Object> args = new HashMap<>();
         args.put("save-parser", new NDSSaveParser());
-        DatLoader datParser = parser.buildDatLoader("offline-list", args);
+        DataSupplier datParser = parser.buildDatLoader("offline-list", args);
         
         sets.add(new GameSet(
             Platform.NDS, 
@@ -305,7 +305,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
       {
         Map<String, Object> args = new HashMap<>();
         args.put("save-parser", (SaveParser)(r -> null));
-        DatLoader datParser = parser.buildDatLoader("offline-list", args);
+        DataSupplier datParser = parser.buildDatLoader("offline-list", args);
         
         sets.add(new GameSet(
           Platform.GBC,
@@ -319,7 +319,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
       {
         Map<String, Object> args = new HashMap<>();
         args.put("save-parser", (SaveParser)(r -> null));
-        DatLoader datParser = parser.buildDatLoader("offline-list", args);
+        DataSupplier datParser = parser.buildDatLoader("offline-list", args);
         
         sets.add(new GameSet(
             Platform.GB,
@@ -333,7 +333,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
       {
         Map<String, Object> args = new HashMap<>();
         args.put("save-parser", (SaveParser)(r -> null));
-        DatLoader datParser = parser.buildDatLoader("offline-list", args);
+        DataSupplier datParser = parser.buildDatLoader("offline-list", args);
         
         sets.add(new GameSet(
           Platform.NES,
@@ -355,7 +355,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
       {
         Map<String, Object> args = new HashMap<>();
         args.put("save-parser", (SaveParser)(r -> null));
-        DatLoader datParser = parser.buildDatLoader("offline-list", args);
+        DataSupplier datParser = parser.buildDatLoader("offline-list", args);
         
         sets.add(new GameSet(
             Platform.LYNX,

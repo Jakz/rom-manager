@@ -13,10 +13,11 @@ import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.Rom;
 import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.set.DatFormat;
-import com.github.jakz.romlib.data.set.DatLoader;
+import com.github.jakz.romlib.data.set.DataSupplier;
 import com.github.jakz.romlib.data.set.GameList;
 import com.github.jakz.romlib.data.set.GameSet;
-import com.github.jakz.romlib.parsers.GameCataloguer;
+import com.github.jakz.romlib.parsers.cataloguers.GameCataloguer;
+import com.github.jakz.romlib.parsers.cataloguers.NoIntroCataloguer1;
 import com.pixbits.lib.parser.SimpleParser;
 import com.pixbits.lib.parser.SimpleTreeBuilder;
 
@@ -25,19 +26,20 @@ public class ClrMameParserPlugin extends DatParserPlugin
   @Override public String[] getSupportedFormats() { return new String[] {"clr-mame", "clr-mame-nointro"}; }
   
   @Override
-  public DatLoader buildDatLoader(String format, Map<String, Object> arguments)
+  public DataSupplier buildDatLoader(String format, Map<String, Object> arguments)
   {
     if (format.equals("clr-mame"))
       return new ClrMameParser(t -> {});
     else if (format.equals("clr-mame-nointro"))
-      return new ClrMameParser(new NoIntroGameCataloguer());
+      return new ClrMameParser(new NoIntroCataloguer1());
     else
       return null;
   }
 
-  private class ClrMameParser implements DatLoader
+  private class ClrMameParser implements DataSupplier
   {
     GameCataloguer cataloguer;
+    RomSize.Set sizeSet;
     GameSet set;
     List<Rom> roms;
     List<Game> games;
@@ -59,12 +61,12 @@ public class ClrMameParserPlugin extends DatParserPlugin
     
     @Override public DatFormat getFormat() { return new DatFormat("cm", "dat"); }
 
-    @Override public DatLoader.Data load(GameSet set)
+    @Override public DataSupplier.Data load(GameSet set)
     {
       this.set = set;
       load(set.datPath());
 
-      return new DatLoader.Data(new GameList(games));
+      return new DataSupplier.Data(new GameList(games, sizeSet));
     }
     
     public void load(Path datFile)
@@ -102,7 +104,7 @@ public class ClrMameParserPlugin extends DatParserPlugin
           romName = v;
       }
       else if (k.equals("size"))
-        size = set.sizeSet.forBytes(Long.parseLong(v));
+        size = sizeSet.forBytes(Long.parseLong(v));
       else if (k.equals("crc"))
         crc = Long.parseLong(v, 16);
       else if (k.equals("sha1"))
@@ -136,6 +138,7 @@ public class ClrMameParserPlugin extends DatParserPlugin
         started = true;
         games = new ArrayList<>();
         roms = new ArrayList<>();
+        sizeSet = new RomSize.Set();
       }
     }
   }

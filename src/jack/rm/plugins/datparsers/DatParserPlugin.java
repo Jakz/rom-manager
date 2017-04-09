@@ -3,7 +3,7 @@ package jack.rm.plugins.datparsers;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import com.github.jakz.romlib.data.set.DatLoader;
+import com.github.jakz.romlib.data.set.DataSupplier;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.plugin.PluginType;
 
@@ -40,8 +40,8 @@ public abstract class DatParserPlugin extends ActualPlugin
    * @param arguments the map of arguments passed to the parser when instantiating it
    * @return
    */
-  public abstract DatLoader buildDatLoader(String format, Map<String,Object> arguments);
-  public DatLoader buildDatLoader(String format) { return buildDatLoader(format, null); }
+  public abstract DataSupplier buildDatLoader(String format, Map<String,Object> arguments);
+  public DataSupplier buildDatLoader(String format) { return buildDatLoader(format, null); }
   
   protected final Predicate<GameSet> compatibility() { return rs -> false; }
 }

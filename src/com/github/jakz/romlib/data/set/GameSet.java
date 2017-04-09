@@ -57,7 +57,6 @@ public class GameSet implements Iterable<Game>
 
   public final Platform platform;
   private final GameSetInfo info;
-  public final RomSize.Set sizeSet;
 
 	private GameList list;
 	private CloneSet clones;
@@ -69,12 +68,11 @@ public class GameSet implements Iterable<Game>
 	private final AssetCache assetCache;
 	private final Attribute[] attributes;
 
-	public GameSet(Platform platform, Provider provider, DatLoader loader, Attribute[] attributes, AssetManager assetManager)
+	public GameSet(Platform platform, Provider provider, DataSupplier loader, DatFormat format, Attribute[] attributes, AssetManager assetManager)
 	{
-		this.info = new GameSetInfo(provider, loader, assetManager);
+		this.info = new GameSetInfo(provider, loader, format, assetManager);
 	  this.list = null;
 	  this.clones = null;
-	  this.sizeSet = new RomSize.Set();
 	  this.platform = platform;
 		this.attributes = attributes;
 		this.loaded = false;
@@ -82,18 +80,29 @@ public class GameSet implements Iterable<Game>
 		this.helper = new GameSetFeatures(this);
 	}
 	
-	public GameSet(Platform platform, Provider provider, DatLoader loader)
+	public GameSet(Platform platform, Provider provider, DataSupplier loader)
   {
 	  this.info = new GameSetInfo(provider, loader);
 	  this.list = null;
 	  this.clones = null;
-	  this.sizeSet = new RomSize.Set();
 	  this.platform = platform;
 	  this.attributes = new Attribute[0];
 	  this.loaded = false;
 	  this.assetCache = new AssetCache();
 	  this.helper = new GameSetFeatures(this);
   }
+	
+	public GameSet(Platform platform, Provider provider, Game[] games, RomSize.Set sizeSet, CloneSet clones)
+	{
+	  this.info = new GameSetInfo(provider, DataSupplier.build(DatFormat.DUMMY));
+	  this.list = new GameList(games, sizeSet);
+	  this.clones = clones;
+	  this.platform = platform;
+	  this.attributes = new Attribute[0];
+	  this.loaded = true;
+	  this.assetCache = new AssetCache();
+	  this.helper = new GameSetFeatures(this);
+	}
 
 	public void setClones(CloneSet clones)
 	{ 
@@ -109,6 +118,7 @@ public class GameSet implements Iterable<Game>
 	public GameSetInfo info() { return info; }
 	public GameSetStatus status() { return list.status(); }
 	public HashCache<Rom> hashCache() { return list.cache(); }
+	public RomSize.Set sizeSet() { return list.sizeSet(); }
 	public boolean hasMultipleRomsPerGame() { return list.hasMultipleRomsPerGame(); }
 	
 	public void checkNames() { list.checkNames(); }
@@ -122,6 +132,15 @@ public class GameSet implements Iterable<Game>
 	public Stream<Game> stream() { return list.stream(); }
 	public Stream<Rom> romStream() { return list.stream().flatMap(g -> g.stream()); }
 	public Iterator<Game> iterator() { return list.iterator(); }
+	
+	public Stream<Rom> foundRoms()
+  { 
+    return list.stream()
+      .map(game -> game.stream()
+          .filter(r -> r.handle() != null))
+      .reduce((s1,s2) -> Stream.concat(s1, s2))
+      .get(); 
+  }
 	
 	public Settings getSettings() { return settings; }
 	public AssetManager getAssetManager() { return info().getAssetManager(); }
@@ -140,10 +159,10 @@ public class GameSet implements Iterable<Game>
 	{ 
 	  if (!loaded)
 	  {
-	    DatLoader.Data data = info.getLoader().load(this);
+	    DataSupplier.Data data = info.getLoader().load(this);
 	    
-	    list = data.games;
-	    clones = data.clones;
+	    list = data.games.orElse(null);
+	    clones = data.clones.orElse(null);
 	    info.computeStats(this);
 	    
 	    loaded = true;

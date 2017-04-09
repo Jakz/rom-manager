@@ -7,10 +7,12 @@ import com.github.jakz.romlib.data.assets.AssetManager;
 import com.github.jakz.romlib.data.game.Game;
 
 public class GameSetInfo
-{
+{  
   private final Provider provider;
-  private final DatLoader datLoader;
+  private final DatFormat format;
+  private final DataSupplier datLoader;
   private final AssetManager assetManager;
+  
   
   private int romCount;
   private int gameCount;
@@ -22,16 +24,17 @@ public class GameSetInfo
     this(provider, null);
   }*/
   
-  public GameSetInfo(Provider provider, DatLoader loader, AssetManager assetManager)
+  public GameSetInfo(Provider provider, DataSupplier loader, DatFormat format, AssetManager assetManager)
   {
     this.provider = provider;
     this.datLoader = loader;
+    this.format = format;
     this.assetManager = assetManager;
   }
   
-  public GameSetInfo(Provider provider, DatLoader loader)
+  public GameSetInfo(Provider provider, DataSupplier loader)
   {
-    this(provider, loader, AssetManager.DUMMY);
+    this(provider, loader, DatFormat.DUMMY, AssetManager.DUMMY);
   }
 
   void computeStats(GameSet set)
@@ -44,8 +47,8 @@ public class GameSetInfo
   }
   
   public Provider getProvider() { return provider; }
-  public DatFormat getFormat() { return datLoader.getFormat(); }
-  public DatLoader getLoader() { return datLoader; }
+  public DatFormat getFormat() { return format; }
+  public DataSupplier getLoader() { return datLoader; }
   public AssetManager getAssetManager() { return assetManager; }
   
   public String getName() { return provider.getName(); }

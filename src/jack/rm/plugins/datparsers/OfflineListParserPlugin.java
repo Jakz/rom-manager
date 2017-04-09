@@ -28,7 +28,7 @@ import com.github.jakz.romlib.data.game.GameSave;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.set.CloneSet;
 import com.github.jakz.romlib.data.set.DatFormat;
-import com.github.jakz.romlib.data.set.DatLoader;
+import com.github.jakz.romlib.data.set.DataSupplier;
 import com.github.jakz.romlib.data.set.GameList;
 import com.github.jakz.romlib.data.set.GameSet;
 
@@ -89,6 +89,7 @@ public class OfflineListParserPlugin extends DatParserPlugin
     private Game game;
     long crc = -1;
     RomSize size = null;
+    RomSize.Set sizeSet = new RomSize.Set();
     private List<Game> games = new ArrayList<>();
     private Map<String, GameSave<?>> saves = new TreeMap<>();
     private Map<Integer, Set<Game>> clones = new HashMap<>();
@@ -212,7 +213,7 @@ public class OfflineListParserPlugin extends DatParserPlugin
         }
         case "romSize":
         {
-          size = set.sizeSet.forBytes(asLong());
+          size = sizeSet.forBytes(asLong());
           break;
         }
         case "im1CRC": 
@@ -255,11 +256,11 @@ public class OfflineListParserPlugin extends DatParserPlugin
       }
     }
     
-    @Override public DatLoader.Data get()
+    @Override public DataSupplier.Data get()
     {
       saves.forEach((k,v) -> System.out.println(k+" -> "+v));
 
-      GameList list = new GameList(games);
+      GameList list = new GameList(games, sizeSet);
       CloneSet cloneSet = null;
       
       List<GameClone> clones = this.clones.values().stream()
@@ -274,7 +275,7 @@ public class OfflineListParserPlugin extends DatParserPlugin
         System.out.println("Clones: "+cloneSet.size());
       }
       
-      return new DatLoader.Data(list, cloneSet);
+      return new DataSupplier.Data(list, cloneSet);
     }
     
     @Override
@@ -289,7 +290,7 @@ public class OfflineListParserPlugin extends DatParserPlugin
 
 
   @Override
-  public DatLoader buildDatLoader(String format, Map<String, Object> arguments)
+  public DataSupplier buildDatLoader(String format, Map<String, Object> arguments)
   {
     checkArgument(arguments, "save-parser", SaveParser.class);
 

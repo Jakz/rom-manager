@@ -3,7 +3,9 @@ package com.github.jakz.romlib.data.game;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
@@ -18,7 +20,7 @@ import com.github.jakz.romlib.data.game.attributes.GameInfo;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.set.GameSet;
 
-public class Game implements Comparable<Game>, GameAttributeInterface
+public class Game implements Comparable<Game>, Iterable<Rom>, GameAttributeInterface
 {
 	private final GameSet set;
 
@@ -57,6 +59,13 @@ public class Game implements Comparable<Game>, GameAttributeInterface
 	  this.roms = roms;
 	}
 	
+	public Game(Rom... roms)
+	{
+	  this.set = null;
+    this.info = new GameInfo();
+	  this.roms = roms;
+	}
+
 	public void setRom(Rom... roms)
 	{
 	  this.roms = roms;
@@ -73,6 +82,7 @@ public class Game implements Comparable<Game>, GameAttributeInterface
 	  return Arrays.stream(roms).map(Rom::size).mapToLong(i -> i).sum();
 	}
 
+	@Override public Iterator<Rom> iterator() { return Arrays.asList(roms).iterator(); }
 	public Stream<Rom> stream() { return Arrays.stream(roms); }
 	public Rom rom()
 	{ 
@@ -201,6 +211,8 @@ public class Game implements Comparable<Game>, GameAttributeInterface
     }*/
   }
   
+  public boolean isComplete() { return stream().allMatch(Rom::isPresent); }
+  
   public boolean hasEquivalentRom(Rom rom)
   {
     return Arrays.stream(roms).anyMatch(irom -> irom.isEquivalent(rom));
@@ -231,7 +243,7 @@ public class Game implements Comparable<Game>, GameAttributeInterface
 	@Override
   public int compareTo(Game rom)
 	{
-		if (set.doesSupportAttribute(GameAttribute.NUMBER))
+		if (set != null && set.doesSupportAttribute(GameAttribute.NUMBER))
 		{
       int n1 = getAttribute(GameAttribute.NUMBER);
       int n2 = rom.getAttribute(GameAttribute.NUMBER);

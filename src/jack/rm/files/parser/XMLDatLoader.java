@@ -3,10 +3,10 @@ package jack.rm.files.parser;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import com.github.jakz.romlib.data.set.DatLoader;
+import com.github.jakz.romlib.data.set.DataSupplier;
 import com.github.jakz.romlib.data.set.GameSet;
 
-public abstract class XMLDatLoader implements DatLoader
+public abstract class XMLDatLoader implements DataSupplier
 {
   XMLHandler handler;
   //String path;
@@ -18,7 +18,7 @@ public abstract class XMLDatLoader implements DatLoader
   }
   
   @Override
-  public DatLoader.Data load(GameSet set)
+  public DataSupplier.Data load(GameSet set)
   {
     try
     {

@@ -1,4 +1,4 @@
-package jack.rm.plugins.datparsers;
+package com.github.jakz.romlib.parsers.cataloguers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,13 +9,12 @@ import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.Location;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
-import com.github.jakz.romlib.parsers.GameCataloguer;
 
-public class NoIntroGameCataloguer implements GameCataloguer
+public class NoIntroCataloguer1 implements GameCataloguer
 {
   private List<String> addendums;
   
-  NoIntroGameCataloguer()
+  public NoIntroCataloguer1()
   {
     addendums = new ArrayList<>();
   }
