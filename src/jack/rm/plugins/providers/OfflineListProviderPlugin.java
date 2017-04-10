@@ -264,11 +264,13 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         Map<String, Object> args = new HashMap<>();
         args.put("save-parser", new GBASaveParserOL());
         DataSupplier datParser = parser.buildDatLoader("offline-list", args);
+        DatFormat format = datParser.getFormat();
         
         sets.add(new GameSet(
             Platform.GBA, 
             KnownProviders.OFFLINE_LIST.derive("", null, null, "Replouf66", new Provider.Source("http://offlinelistgba.free.fr/tool/ReleaseList/gba_OL_0.7.1.zip")),
             datParser,
+            format,
             GBA_ATTRIBUTES, 
             new AssetManager(GBA_ASSETS, new URL("http://offlinelistgba.free.fr/imgs/")) 
         ));
@@ -278,11 +280,13 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         Map<String, Object> args = new HashMap<>();
         args.put("save-parser", new GBASaveParserAS());
         DataSupplier datParser = parser.buildDatLoader("offline-list", args);
-  
+        DatFormat format = datParser.getFormat();
+
         sets.add(new GameSet(
             Platform.GBA, 
             KnownProviders.ADVAN_SCENE.derive("pure", null, null, "AdvanScene", new Provider.Source("http://www.advanscene.com/offline/datas/ADVANsCEne_GBA.zip")), 
             datParser,
+            format,
             GBA_ATTRIBUTES, 
             new AssetManager(GBA_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_GBA/")) 
         ));
@@ -292,11 +296,13 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         Map<String, Object> args = new HashMap<>();
         args.put("save-parser", new NDSSaveParser());
         DataSupplier datParser = parser.buildDatLoader("offline-list", args);
+        DatFormat format = datParser.getFormat();
         
         sets.add(new GameSet(
             Platform.NDS, 
             KnownProviders.ADVAN_SCENE.derive("collection", null, null, "AdvanceScene", new Provider.Source("http://www.advanscene.com/offline/datas/ADVANsCEne_NDS.zip")),
             datParser,
+            format,
             GBA_ATTRIBUTES, 
             new AssetManager(NDS_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_NDS/"))
         ));
@@ -306,11 +312,13 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         Map<String, Object> args = new HashMap<>();
         args.put("save-parser", (SaveParser)(r -> null));
         DataSupplier datParser = parser.buildDatLoader("offline-list", args);
+        DatFormat format = datParser.getFormat();
         
         sets.add(new GameSet(
           Platform.GBC,
           KnownProviders.NO_INTRO.derive("", "", "", "Replouf66", new Provider.Source("http://nointro.free.fr/datas/Official%20No-Intro%20Nintendo%20Gameboy%20Color.zip")),
           datParser,
+          format,
           GB_ATTRIBUTES,
           new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20Gameboy%20Color/"))
         ));
@@ -320,11 +328,13 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         Map<String, Object> args = new HashMap<>();
         args.put("save-parser", (SaveParser)(r -> null));
         DataSupplier datParser = parser.buildDatLoader("offline-list", args);
+        DatFormat format = datParser.getFormat();
         
         sets.add(new GameSet(
             Platform.GB,
             KnownProviders.NO_INTRO.derive("", "", "", "MadBob", new Provider.Source("http://nointro.free.fr/datas/Official%20No-Intro%20Nintendo%20Gameboy.zip")),
             datParser,
+            format,
             GB_ATTRIBUTES,
             new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20Gameboy/"))
           ));
@@ -334,11 +344,13 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         Map<String, Object> args = new HashMap<>();
         args.put("save-parser", (SaveParser)(r -> null));
         DataSupplier datParser = parser.buildDatLoader("offline-list", args);
+        DatFormat format = datParser.getFormat();
         
         sets.add(new GameSet(
           Platform.NES,
           KnownProviders.NO_INTRO.derive("", "", "", "Zepman", new Provider.Source("http://nointro.free.fr/datas/Official%20No-Intro%20Nintendo%20NES%20-%20Famicom.zip")),
           datParser,
+          format,
           NES_ATTRIBUTES,
           new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20NES%20-%20Famicom/"))
         ));
@@ -347,6 +359,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
           Platform.NES,
           KnownProviders.OFFLINE_LIST.derive("", "", "", "Zepman", new Provider.Source("http://nesofflinelist.free.fr/dat/nes_OL.zip")),
           datParser,
+          format,
           NES_ATTRIBUTES,
           new AssetManager(NES_ASSETS, new URL("http://nesofflinelist.free.fr/imgs/"))
         ));
@@ -356,11 +369,14 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         Map<String, Object> args = new HashMap<>();
         args.put("save-parser", (SaveParser)(r -> null));
         DataSupplier datParser = parser.buildDatLoader("offline-list", args);
+        DatFormat format = datParser.getFormat();
         
         sets.add(new GameSet(
             Platform.LYNX,
             KnownProviders.NO_INTRO.derive("", "", "", "Atari Lynx", new Provider.Source("http://nointro.free.fr/datas/Official%20No-Intro%20Atari%20Lynx.zip")),
             datParser,
+            format,
+
             NES_ATTRIBUTES,
             new AssetManager(LYNX_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Atari%20Lynx/"))
           ));

@@ -52,7 +52,7 @@ public class NoIntroCataloguer1 implements GameCataloguer
           game.setAttribute(GameAttribute.VERSION, t);
         else 
         {
-          game.setAttribute(GameAttribute.COMMENT, t);
+          game.setComment(t);
           addendums.add(t);
         }
         
@@ -65,7 +65,7 @@ public class NoIntroCataloguer1 implements GameCataloguer
         rom.setAttribute(RomAttribute.COMMENT, previous + ", " + s);*/
     });
     
-    game.setTitle(title.substring(0, firstParen-1));
+    game.setNormalizedTitle(title.substring(0, firstParen-1));
     
     if (usa.get() && japan.get() && !europe.get())
       game.getLocation().add(Location.USA_JAPAN);

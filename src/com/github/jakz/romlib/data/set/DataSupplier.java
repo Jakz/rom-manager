@@ -10,22 +10,18 @@ public interface DataSupplier
   {
     public final Optional<GameList> games;
     public final Optional<CloneSet> clones;
-    public final Optional<GameSetInfo> setInfo;
+    public final Optional<Provider> provider;
     
-    public Data(GameList games)
+    public Data(GameList games, CloneSet clones, Provider provider)
     {
-      this.games = Optional.of(games);
-      this.clones = Optional.empty();
-      this.setInfo = Optional.empty();
+      this.games = Optional.ofNullable(games);
+      this.clones = Optional.ofNullable(clones);
+      this.provider = Optional.ofNullable(provider);
     }
     
-    public Data(GameList games, CloneSet clones)
-    {
-      this.games = Optional.of(games);
-      this.clones = Optional.of(clones);
-      this.setInfo = Optional.empty();
-    }
-  
+    public Data(GameList games) { this(games, null, null); } 
+    public Data(GameList games, CloneSet clones) { this(games, clones, null); }
+    public Data(GameList games, Provider provider) { this(games, null, provider); }
   }
   
   Data load(GameSet set);
@@ -54,6 +50,15 @@ public interface DataSupplier
     return new DataSupplier()
     {
       @Override public Data load(GameSet set) { return new Data(gameList); }
+      @Override public DatFormat getFormat() { return DatFormat.DUMMY; }
+    };
+  }
+  
+  public static DataSupplier build(final GameList gameList, final Provider provider)
+  {
+    return new DataSupplier()
+    {
+      @Override public Data load(GameSet set) { return new Data(gameList, provider); }
       @Override public DatFormat getFormat() { return DatFormat.DUMMY; }
     };
   }

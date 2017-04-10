@@ -90,9 +90,8 @@ public final class Provider
   }
   
   public Type getType() { return type; }
-  public String getTag() { return tag; }
   public String getName() { return name; }
-  public String getSuffix() { return suffix; }
+  public String getTag() { return tag; }
   public String getFlavour() { return flavour; }
   public String getAuthor() { return author; }
   public String getComment() { return comment; }
@@ -102,8 +101,10 @@ public final class Provider
   public boolean canBeUpdated() { return source != null; }
   public Source getSource() { return source; }
  
-  public boolean hasSuffix() { return getSuffix() != null && !getSuffix().isEmpty(); }
-  public String builtSuffix() { return hasSuffix() ? "-" + getSuffix() : ""; }
+  private boolean hasSuffix() { return suffix != null && suffix.isEmpty(); }
+  private String builtSuffix() { return hasSuffix() ? "-" + suffix : ""; }
+  
+  public String getIdentifier() { return getTag()+builtSuffix(); }
   
   public String prettyName() {
     if (hasSuffix())
@@ -114,6 +115,6 @@ public final class Provider
   
   public boolean equals(Object o)
   {
-    return o instanceof Provider && ((Provider)o).getTag().equals(getTag()) && ((Provider)o).getSuffix().equals(getSuffix());
+    return o instanceof Provider && ((Provider)o).getIdentifier().equals(getIdentifier());
   }
 }

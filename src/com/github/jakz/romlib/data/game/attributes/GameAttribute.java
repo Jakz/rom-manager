@@ -12,6 +12,7 @@ public enum GameAttribute implements Attribute
   NUMBER(Integer.class, Text.ROM_INFO_NUMBER),
   IMAGE_NUMBER(Integer.class, Text.ROM_INFO_IMAGE_NUMBER),
   TITLE(String.class, Text.ROM_INFO_TITLE),
+  NORMALIZED_TITLE(String.class, Text.ROM_INFO_TITLE),
   DESCRIPTION(String.class, Text.ROM_INFO_DESCRIPTION),
   PUBLISHER(Text.ROM_INFO_PUBLISHER),
   GROUP(Text.ROM_INFO_GROUP),

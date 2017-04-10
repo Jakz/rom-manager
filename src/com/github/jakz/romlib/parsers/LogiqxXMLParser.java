@@ -13,10 +13,11 @@ import com.github.jakz.romlib.data.game.Rom;
 import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.set.DataSupplier;
 import com.github.jakz.romlib.data.set.GameList;
+import com.github.jakz.romlib.data.set.Provider;
 import com.pixbits.lib.io.xml.XMLHandler;
 import com.pixbits.lib.io.xml.XMLParser;
 
-public class ClrMameXMLParser extends XMLHandler<DataSupplier>
+public class LogiqxXMLParser extends XMLHandler<DataSupplier>
 {
   private enum Status
   {
@@ -112,7 +113,15 @@ public class ClrMameXMLParser extends XMLHandler<DataSupplier>
           break;
         }
         case "rom": rom = new Rom(romName, sizeSet.forBytes(size), crc, md5, sha1); break;
-        case "datafile": data = DataSupplier.build(new GameList(games.toArray(new Game[games.size()]), sizeSet));
+        case "datafile": 
+        {
+          Provider provider = new Provider(name, description, version, "", author);
+          data = DataSupplier.build(
+            new GameList(games.toArray(new Game[games.size()]), sizeSet),
+            provider
+          ); 
+          break;
+        }
       }
     }
   }
@@ -122,7 +131,7 @@ public class ClrMameXMLParser extends XMLHandler<DataSupplier>
   
   public static DataSupplier load(Path path) throws IOException, SAXException
   {
-    ClrMameXMLParser xparser = new ClrMameXMLParser();
+    LogiqxXMLParser xparser = new LogiqxXMLParser();
     XMLParser<DataSupplier> parser = new XMLParser<>(xparser);
     parser.load(path);
     return xparser.get();

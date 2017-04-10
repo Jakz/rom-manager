@@ -9,6 +9,13 @@ public class GameClone implements Iterable<Game>
   private final Game[] games;
   private final Game[] zones;
   
+  public GameClone(Game game, Location zone)
+  {
+    this.games = new Game[] { game };
+    this.zones = new Game[Location.values().length];
+    this.zones[zone.ordinal()] = game;
+  }
+  
   public GameClone(Game[] games, Game[] zones)
   {
     this.games = games;

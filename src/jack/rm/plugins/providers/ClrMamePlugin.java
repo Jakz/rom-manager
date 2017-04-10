@@ -6,6 +6,8 @@ import com.github.jakz.romlib.data.assets.AssetManager;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.platforms.Platform;
+import com.github.jakz.romlib.data.set.DatFormat;
+import com.github.jakz.romlib.data.set.DataSupplier;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.data.set.Provider;
 
@@ -27,7 +29,7 @@ public class ClrMamePlugin extends ProviderPlugin
   public GameSet[] buildRomSets(List<DatParserPlugin> datParsers)
   {
     DatParserPlugin datParser = this.findDatParser(datParsers, "clr-mame-nointro");
-    
+
     GameSet[] sets = new GameSet[2];
     
     Provider.Source gameGearSource = new Provider.Source("http://datomatic.no-intro.org/?page=download&fun=dat",
@@ -39,22 +41,34 @@ public class ClrMamePlugin extends ProviderPlugin
       "Download27", ""
     );
 
-    sets[0] = new GameSet(
-        Platform.GG, 
-        KnownProviders.NO_INTRO.derive(null, null, "", "", null), 
-        datParser.buildDatLoader("clr-mame-nointro"),
-        GG_ATTRIBUTES, 
-        AssetManager.DUMMY
-    );
+    {
+      DataSupplier parser = datParser.buildDatLoader("clr-mame-nointro"); 
+      DatFormat format = parser.getFormat();
+          
+      sets[0] = new GameSet(
+          Platform.GG, 
+          KnownProviders.NO_INTRO.derive(null, null, "", "", null), 
+          parser,
+          format,
+          GG_ATTRIBUTES, 
+          AssetManager.DUMMY
+      );
+    }
     
-    sets[1] = new GameSet(
-        Platform.LYNX, 
-        KnownProviders.NO_INTRO.derive(null, null, "", "", null),
-        datParser.buildDatLoader("clr-mame-nointro"),
-        GG_ATTRIBUTES, 
-        AssetManager.DUMMY
-    );
-
+    {
+      DataSupplier parser = datParser.buildDatLoader("clr-mame-nointro"); 
+      DatFormat format = parser.getFormat();
+      
+      sets[1] = new GameSet(
+          Platform.LYNX, 
+          KnownProviders.NO_INTRO.derive(null, null, "", "", null),
+          parser,
+          format,
+          GG_ATTRIBUTES, 
+          AssetManager.DUMMY
+      );
+    }
+    
     return sets;
   }
 }

@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -49,13 +50,14 @@ import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.searcher.SearchPlugin;
 import jack.rm.plugins.searcher.SearchPredicatesPlugin;
 
-public class GameSet implements Iterable<Game>
+public class GameSet implements Iterable<Game>, GameMap
 {
   public static GameSet current = null;
 	
   private boolean loaded;
 
   public final Platform platform;
+  private final List<DataSupplier> loaders;
   private final GameSetInfo info;
 
 	private GameList list;
@@ -70,8 +72,9 @@ public class GameSet implements Iterable<Game>
 
 	public GameSet(Platform platform, Provider provider, DataSupplier loader, DatFormat format, Attribute[] attributes, AssetManager assetManager)
 	{
-		this.info = new GameSetInfo(provider, loader, format, assetManager);
-	  this.list = null;
+		this.info = new GameSetInfo(provider, format, assetManager);
+	  this.loaders = Collections.singletonList(loader);
+		this.list = null;
 	  this.clones = null;
 	  this.platform = platform;
 		this.attributes = attributes;
@@ -82,7 +85,8 @@ public class GameSet implements Iterable<Game>
 	
 	public GameSet(Platform platform, Provider provider, DataSupplier loader)
   {
-	  this.info = new GameSetInfo(provider, loader);
+	  this.info = new GameSetInfo(provider);
+	  this.loaders = Collections.singletonList(loader);
 	  this.list = null;
 	  this.clones = null;
 	  this.platform = platform;
@@ -94,9 +98,10 @@ public class GameSet implements Iterable<Game>
 	
 	public GameSet(Platform platform, Provider provider, Game[] games, RomSize.Set sizeSet, CloneSet clones)
 	{
-	  this.info = new GameSetInfo(provider, DataSupplier.build(DatFormat.DUMMY));
+	  this.info = new GameSetInfo(provider);
+	  this.loaders = null;
 	  this.list = new GameList(games, sizeSet);
-	  this.clones = clones;
+	  setClones(clones);
 	  this.platform = platform;
 	  this.attributes = new Attribute[0];
 	  this.loaded = true;
@@ -108,9 +113,12 @@ public class GameSet implements Iterable<Game>
 	{ 
     this.clones = clones;
     
-    for (GameClone clone : clones)
-      for (Game game : clone)
-        game.setClone(clone);
+    if (clones != null)
+    {
+      for (GameClone clone : clones)
+        for (Game game : clone)
+          game.setClone(clone);
+    }
 	}
 	
 	public GameSetFeatures helper() { return helper; }
@@ -127,7 +135,7 @@ public class GameSet implements Iterable<Game>
 	
 	public Game getAny() { return get(0); }
 	public Game get(int index) { return list.get(index); }
-	public Game get(String title) { return list.get(title); }
+	@Override public Game get(String title) { return list.get(title); }
 	public int gameCount() { return list.gameCount(); }
 	public Stream<Game> stream() { return list.stream(); }
 	public Stream<Rom> romStream() { return list.stream().flatMap(g -> g.stream()); }
@@ -159,13 +167,15 @@ public class GameSet implements Iterable<Game>
 	{ 
 	  if (!loaded)
 	  {
-	    DataSupplier.Data data = info.getLoader().load(this);
-	    
-	    list = data.games.orElse(null);
-	    clones = data.clones.orElse(null);
-	    info.computeStats(this);
-	    
-	    loaded = true;
+	    loaders.stream().forEach(l -> {
+	      DataSupplier.Data data = l.load(this);
+	      
+	      list = data.games.orElse(null);
+	      data.clones.ifPresent(this::setClones);
+	      info.computeStats(this);
+	      
+	      loaded = true;
+	    });
 	  }
 	}
 	
@@ -177,7 +187,7 @@ public class GameSet implements Iterable<Game>
 	
 	public String ident()
 	{
-		return info.getFormat().getIdent()+"-"+platform.tag+"-"+info.getProvider().getTag()+info.getProvider().builtSuffix();
+		return info.getFormat().getIdent()+"-"+platform.tag+"-"+info.getProvider().getIdentifier();
 	}
 	
 	public Path datPath()

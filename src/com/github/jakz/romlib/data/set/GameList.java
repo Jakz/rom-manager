@@ -14,7 +14,7 @@ import com.github.jakz.romlib.data.game.Rom;
 import com.github.jakz.romlib.data.game.RomSize;
 import com.pixbits.lib.io.digest.HashCache;
 
-public class GameList implements Iterable<Game>
+public class GameList implements Iterable<Game>, GameMap
 {
   private final GameSetStatus status;
   private final Game[] games;
@@ -46,7 +46,7 @@ public class GameList implements Iterable<Game>
 	  hasMultipleRomsPerGame = stream().anyMatch(g -> g.stream().count() > 1);
 	}
 
-	public Game get(String title) { return nameMap.get(title); }
+	@Override public Game get(String title) { return nameMap.get(title); }
 	public Game get(int i) { return games[i]; }
 	
 	public GameSetStatus status() { return status; }

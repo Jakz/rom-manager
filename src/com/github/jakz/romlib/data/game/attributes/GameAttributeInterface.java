@@ -16,6 +16,12 @@ public interface GameAttributeInterface
   default void setTitle(String title) { setAttribute(GameAttribute.TITLE, title); }
   default String getTitle() { return getAttribute(GameAttribute.TITLE); }
   
+  default void setNormalizedTitle(String title) { setAttribute(GameAttribute.NORMALIZED_TITLE, title); }
+  default String getNormalizedTitle() { 
+    String title = getAttribute(GameAttribute.NORMALIZED_TITLE);
+    return title != null ? title : getTitle();
+  }
+  
   default void setDescription(String description) { setAttribute(GameAttribute.DESCRIPTION, description); }
   default String getDescription() { return getAttribute(GameAttribute.DESCRIPTION); }
   
