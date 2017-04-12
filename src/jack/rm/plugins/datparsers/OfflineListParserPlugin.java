@@ -265,7 +265,6 @@ public class OfflineListParserPlugin extends DatParserPlugin
       
       List<GameClone> clones = this.clones.values().stream()
           .filter(s -> s.size() > 1)
-          .map(s -> s.toArray(new Game[s.size()]))
           .map(g -> new GameClone(g))
           .collect(Collectors.toList());
         

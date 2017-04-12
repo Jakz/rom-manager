@@ -115,10 +115,9 @@ public class LogiqxXMLParser extends XMLHandler<DataSupplier>
         case "rom": rom = new Rom(romName, sizeSet.forBytes(size), crc, md5, sha1); break;
         case "datafile": 
         {
-          Provider provider = new Provider(name, description, version, "", author);
+          //Provider provider = new Provider(name, description, version, "", author);
           data = DataSupplier.build(
-            new GameList(games.toArray(new Game[games.size()]), sizeSet),
-            provider
+            new GameList(games.toArray(new Game[games.size()]), sizeSet)
           ); 
           break;
         }

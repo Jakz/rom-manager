@@ -28,6 +28,9 @@ public class NoIntroCataloguer2 implements GameCataloguer
     locations.put("(Korea)", Location.KOREA);
     locations.put("(Sweden)", Location.SWEDEN);
     locations.put("(China)", Location.CHINA);
+    locations.put("(Australia)", Location.AUSTRALIA);
+    locations.put("(Brazil)", Location.BRASIL);
+    locations.put("(Netherlands)", Location.NETHERLANDS);
 
     
     locations.put("(Japan, USA)", Location.USA_JAPAN);

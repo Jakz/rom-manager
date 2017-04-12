@@ -96,11 +96,11 @@ public class GameSet implements Iterable<Game>, GameMap
 	  this.helper = new GameSetFeatures(this);
   }
 	
-	public GameSet(Platform platform, Provider provider, Game[] games, RomSize.Set sizeSet, CloneSet clones)
+	public GameSet(Platform platform, Provider provider, GameList list, CloneSet clones)
 	{
 	  this.info = new GameSetInfo(provider);
 	  this.loaders = null;
-	  this.list = new GameList(games, sizeSet);
+	  this.list = list;
 	  setClones(clones);
 	  this.platform = platform;
 	  this.attributes = new Attribute[0];

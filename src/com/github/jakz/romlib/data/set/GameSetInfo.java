@@ -53,11 +53,6 @@ public class GameSetInfo implements GameSetAttributeInterface
   public DatFormat getFormat() { return format; }
   public AssetManager getAssetManager() { return assetManager; }
   
-  public String getName() { return provider.getName(); }
-  public String getAuthor() { return provider.getAuthor(); }
-  public String getDescription() { return provider.getDescription(); }
-  public String getComment() { return provider.getComment(); }
-  public String getVersion() { return provider.getVersion(); }
   public String getFlavour() { return provider.getFlavour(); }
   
   public int romCount() { return romCount; }
