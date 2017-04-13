@@ -1,6 +1,7 @@
 package com.github.jakz.romlib.data.game.attributes;
 
 import com.github.jakz.romlib.data.game.RomSize;
+import com.github.jakz.romlib.data.game.VideoFormat;
 import com.github.jakz.romlib.data.game.Genre;
 import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.LanguageSet;
@@ -30,6 +31,8 @@ public enum GameAttribute implements Attribute
   GENRE(Genre.class, Text.ROM_INFO_GENRE),
   
   TAG(String.class, Text.ROM_INFO_TAG),
+  
+  VIDEO_FORMAT(VideoFormat.class, Text.ROM_INFO_VIDEO_FORMAT),
   
   VERSION(Text.ROM_INFO_VERSION),
   

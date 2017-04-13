@@ -11,7 +11,7 @@ import jack.rm.i18n.Text;
 
 public enum Location
 {
-	USA(Text.LOCATION_USA, "US", "U", Icon.FLAG_USA, Language.ENGLISH),
+  USA(Text.LOCATION_USA, "US", "U", Icon.FLAG_USA, Language.ENGLISH),
 	GERMANY(Text.LOCATION_GERMANY, "GE", "G", Icon.FLAG_GERMANY, Language.GERMAN),
 	CHINA(Text.LOCATION_CHINA, "CH", "C", Icon.FLAG_CHINA, Language.CHINESE),
 	SPAIN(Text.LOCATION_SPAIN, "SP", "S", Icon.FLAG_SPAIN, Language.SPANISH),
@@ -30,6 +30,8 @@ public enum Location
 	
 	KOREA(Text.LOCATION_KOREA, "SW", "SW", Icon.FLAG_KOREA, Language.KOREAN),
 	TAIWAN(Text.LOCATION_TAIWAN, "TW", "TW", Icon.FLAG_CHINA, Language.CHINESE), // TODO: taiwan flag
+	HONG_KONG(Text.LOCATION_TAIWAN, "HK", "HK", Icon.FLAG_CHINA, Language.CHINESE), // TODO: hong kong flag
+
 	
 	BRASIL(Text.LOCATION_BRAZIL, "BR", "BR", Icon.FLAG_BRAZIL, Language.PORTUGUESE_BR),
 
@@ -37,7 +39,7 @@ public enum Location
 	USA_JAPAN(Text.LOCATION_USA_JAPAN, "US-JP", "UJ", Icon.FLAG_JAPAN_USA, USA, JAPAN),
 	JAPAN_EUROPE(Text.LOCATION_JAPAN_EUROPE, "JP-EU", "JE", Icon.FLAG_JAPAN_USA, JAPAN, EUROPE), //TODO japan europe icon
 	USA_EUROPE(Text.LOCATION_USA_EUROPE, "US-EU", "UE", Icon.FLAG_USA_EUROPE, USA, EUROPE),
-	ASIA(Text.LOCATION_ASIA, "Asia", "Asia", Icon.FLAG_JAPAN, JAPAN, CHINA), // TODO verify
+	ASIA(Text.LOCATION_ASIA, "Asia", "Asia", Icon.FLAG_JAPAN, JAPAN, CHINA, HONG_KONG, TAIWAN), // TODO verify
 	
 	WORLD(Text.LOCATION_WORLD, "W", "W", Icon.FLAG_WORLD, USA, JAPAN, EUROPE),
 	

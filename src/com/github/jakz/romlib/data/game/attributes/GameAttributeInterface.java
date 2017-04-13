@@ -3,6 +3,7 @@ package com.github.jakz.romlib.data.game.attributes;
 import com.github.jakz.romlib.data.game.LanguageSet;
 import com.github.jakz.romlib.data.game.LocationSet;
 import com.github.jakz.romlib.data.game.Version;
+import com.github.jakz.romlib.data.game.VideoFormat;
 
 public interface GameAttributeInterface
 {
@@ -30,10 +31,13 @@ public interface GameAttributeInterface
   
   default void setVersion(Version version) { setAttribute(GameAttribute.VERSION, version); }
   default Version getVersion() { return getAttribute(GameAttribute.VERSION); }
+   
+  default void setComment(String comment) { setAttribute(GameAttribute.COMMENT, comment); }
+  default String getComment() { return getAttribute(GameAttribute.COMMENT); }
   
   default void setLicensed(boolean licensed) { setAttribute(GameAttribute.LICENSED, licensed); }
   default boolean getLicensed() { return getAttribute(GameAttribute.LICENSED); }
   
-  default void setComment(String comment) { setAttribute(GameAttribute.COMMENT, comment); }
-  default String getComment() { return getAttribute(GameAttribute.COMMENT); }
+  default void setVideoFormat(VideoFormat format) { setAttribute(GameAttribute.VIDEO_FORMAT, format); }
+  default VideoFormat getVideoFormat() { return getAttribute(GameAttribute.VIDEO_FORMAT); }
 }
