@@ -11,7 +11,6 @@ public interface GameAttributeInterface
   public <T> T getAttribute(Attribute key);
   
   void setCustomAttribute(Attribute key, Object value);
-  
   boolean hasAttribute(Attribute key);
   
   default void setTitle(String title) { setAttribute(GameAttribute.TITLE, title); }
@@ -21,6 +20,12 @@ public interface GameAttributeInterface
   default String getNormalizedTitle() { 
     String title = getAttribute(GameAttribute.NORMALIZED_TITLE);
     return title != null ? title : getTitle();
+  }
+  
+  default boolean getBoolAttribute(Attribute key)
+  {
+    Boolean b = getAttribute(key);
+    return b != null && b;
   }
   
   default void setDescription(String description) { setAttribute(GameAttribute.DESCRIPTION, description); }

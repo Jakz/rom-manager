@@ -25,7 +25,7 @@ public class GameAttributeAdapter implements JsonDeserializer<Attribute>, JsonSe
   public JsonElement serialize(Attribute entry, Type typeOfT, JsonSerializationContext context)
   {
     if (entry instanceof GameAttribute)
-      return context.serialize(((GameAttribute)entry).name(), String.class);
+      return context.serialize(((GameAttribute)entry).getIdent(), String.class);
     
     return null;
   }

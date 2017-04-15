@@ -17,7 +17,7 @@ import com.github.jakz.romlib.data.set.DataSupplier;
 import com.github.jakz.romlib.data.set.GameList;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.parsers.cataloguers.GameCataloguer;
-import com.github.jakz.romlib.parsers.cataloguers.NoIntroCataloguer1;
+import com.github.jakz.romlib.parsers.cataloguers.NoIntroCataloguer;
 import com.pixbits.lib.parser.SimpleParser;
 import com.pixbits.lib.parser.SimpleTreeBuilder;
 
@@ -31,7 +31,7 @@ public class ClrMameParserPlugin extends DatParserPlugin
     if (format.equals("clr-mame"))
       return new ClrMameParser(t -> {});
     else if (format.equals("clr-mame-nointro"))
-      return new ClrMameParser(new NoIntroCataloguer1());
+      return new ClrMameParser(new NoIntroCataloguer());
     else
       return null;
   }

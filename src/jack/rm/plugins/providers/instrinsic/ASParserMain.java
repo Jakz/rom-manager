@@ -479,7 +479,7 @@ public class ASParserMain
     return j;
   }
   
-  private final static CustomGameAttribute POCKET_HEAVEN_REF = new CustomGameAttribute("Pocket Heaven #", "pocket-heaven-reference", null);
+  private final static CustomGameAttribute POCKET_HEAVEN_REF = new CustomGameAttribute("pocket-heaven-reference", "Pocket Heaven #", null);
   
   static class JsonRomField extends HashMap<Attribute, Object>
   {

@@ -20,8 +20,9 @@ import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.Location;
 import com.github.jakz.romlib.data.game.Version;
 import com.github.jakz.romlib.data.game.VideoFormat;
+import com.github.jakz.romlib.data.platforms.GBC;
 
-public class NoIntroCataloguer2 implements GameCataloguer
+public class NoIntroCataloguer implements GameCataloguer
 {
   private static final Map<String, Consumer<Game>> mappers;
   private static final List<LambdaCataloguer> lambdas;
@@ -62,6 +63,7 @@ public class NoIntroCataloguer2 implements GameCataloguer
     mappers.put("Ja", game -> game.getLanguages().add(Language.JAPANESE));
     mappers.put("No", game -> game.getLanguages().add(Language.NORWEGIAN));
     mappers.put("Sv", game -> game.getLanguages().add(Language.SWEDISH));
+    mappers.put("Fi", game -> game.getLanguages().add(Language.FINNISH));
     mappers.put("Da", game -> game.getLanguages().add(Language.DANISH));
     mappers.put("Ca", game -> game.getLanguages().add(Language.CATALAN));
     mappers.put("Zh", game -> game.getLanguages().add(Language.CHINESE));
@@ -74,6 +76,10 @@ public class NoIntroCataloguer2 implements GameCataloguer
     
     mappers.put("NTSC", game -> game.setVideoFormat(VideoFormat.NTSC));
     mappers.put("PAL", game -> game.setVideoFormat(VideoFormat.PAL));
+    
+    mappers.put("GB Compatible", game -> game.setCustomAttribute(GBC.Attribute.GB_COMPATIBLE, true));
+    mappers.put("SGB Enhanced", game -> game.setCustomAttribute(GBC.Attribute.SGB_ENHANCED, true));
+
     
     lambdas = new ArrayList<>();
     
@@ -144,7 +150,7 @@ public class NoIntroCataloguer2 implements GameCataloguer
   
   private final Map<String, List<String>> unknownTokens;
   
-  public NoIntroCataloguer2()
+  public NoIntroCataloguer()
   {
     unknownTokens = new TreeMap<>();
   }

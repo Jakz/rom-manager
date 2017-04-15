@@ -55,7 +55,8 @@ public enum GameAttribute implements Attribute
   private final Class<?> clazz; 
   private final Text caption;
   
-  public String toString() { return this.name().toLowerCase(); }
+  @Override
+  public String getIdent() { return this.name().toLowerCase(); }
   
   @Override
   public String prettyValue(Object value) { return value != null ? value.toString() : null; }

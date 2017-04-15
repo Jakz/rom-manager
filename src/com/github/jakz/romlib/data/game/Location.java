@@ -6,8 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.github.jakz.romlib.ui.Icon;
+import com.github.jakz.romlib.ui.i18n.I18N;
 
 import jack.rm.i18n.Text;
+
 
 public enum Location
 {
@@ -54,7 +56,7 @@ public enum Location
 	public final Icon icon;
 	public final Language language;
 	
-	Location(Text name, String shortName, String tinyName, Icon icon, Language language)
+	Location(I18N name, String shortName, String tinyName, Icon icon, Language language)
 	{
 		if (this.ordinal() >= Long.BYTES*8)
 		  new EnumConstantNotPresentException(Location.class, "Maximum amount of locations is " + (Long.BYTES*8));
@@ -67,7 +69,7 @@ public enum Location
 		this.language = language;
 	}
 	
-  private Location(Text name, String shortName, String tinyName, Icon icon, Location... locations)
+  private Location(I18N name, String shortName, String tinyName, Icon icon, Location... locations)
   { 
     this.fullName = name.text();
     this.shortName = shortName;

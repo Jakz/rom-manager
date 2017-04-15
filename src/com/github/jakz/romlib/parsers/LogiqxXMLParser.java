@@ -3,7 +3,9 @@ package com.github.jakz.romlib.parsers;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -13,7 +15,6 @@ import com.github.jakz.romlib.data.game.Rom;
 import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.set.DataSupplier;
 import com.github.jakz.romlib.data.set.GameList;
-import com.github.jakz.romlib.data.set.Provider;
 import com.pixbits.lib.io.xml.XMLHandler;
 import com.pixbits.lib.io.xml.XMLParser;
 
@@ -29,12 +30,7 @@ public class LogiqxXMLParser extends XMLHandler<DataSupplier>
   
   RomSize.Set sizeSet;
   
-  String name;
-  String description;
-  String version;
-  String author;
-  String homePage;
-  String url;  
+  Map<String, String> attributes;
   
   List<Game> games;
   
@@ -55,6 +51,7 @@ public class LogiqxXMLParser extends XMLHandler<DataSupplier>
     status = Status.NOWHERE;
     games = new ArrayList<>();
     sizeSet = new RomSize.Set();
+    attributes = new HashMap<>();
   }
 
   @Override
@@ -88,13 +85,7 @@ public class LogiqxXMLParser extends XMLHandler<DataSupplier>
       switch (name)
       {
         case "header": status = Status.NOWHERE; break;
-
-        case "name": this.name = asString(); break;
-        case "description": description = asString(); break;
-        case "version": version = asString(); break;
-        case "author": author = asString(); break;
-        case "homepage": homePage = asString(); break;
-        case "url": url = asString(); break;
+        default: attributes.put(name, asString()); break;
       }
     }
     else
