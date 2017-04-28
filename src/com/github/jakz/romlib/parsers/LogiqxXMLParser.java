@@ -18,8 +18,14 @@ import com.github.jakz.romlib.data.set.GameList;
 import com.pixbits.lib.io.xml.XMLHandler;
 import com.pixbits.lib.io.xml.XMLParser;
 
-public class LogiqxXMLParser extends XMLHandler<DataSupplier>
+public class LogiqxXMLParser extends XMLHandler<LogiqxXMLParser.Data>
 {
+  public static class Data
+  {
+    public Map<String, String> setAttributes;
+    public GameList list;
+  }
+ 
   private enum Status
   {
     NOWHERE,
@@ -107,22 +113,22 @@ public class LogiqxXMLParser extends XMLHandler<DataSupplier>
         case "datafile": 
         {
           //Provider provider = new Provider(name, description, version, "", author);
-          data = DataSupplier.build(
-            new GameList(games.toArray(new Game[games.size()]), sizeSet)
-          ); 
+          data = new Data();
+          data.setAttributes = attributes;
+          data.list = new GameList(games.toArray(new Game[games.size()]), sizeSet);
           break;
         }
       }
     }
   }
 
-  private DataSupplier data;
-  @Override public DataSupplier get() { return data; }
+  private Data data;
+  @Override public Data get() { return data; }
   
-  public static DataSupplier load(Path path) throws IOException, SAXException
+  public static Data load(Path path) throws IOException, SAXException
   {
     LogiqxXMLParser xparser = new LogiqxXMLParser();
-    XMLParser<DataSupplier> parser = new XMLParser<>(xparser);
+    XMLParser<Data> parser = new XMLParser<>(xparser);
     parser.load(path);
     return xparser.get();
   }

@@ -33,5 +33,8 @@ public class GBC
     
     public static final com.github.jakz.romlib.data.game.attributes.Attribute SGB_ENHANCED = 
         new CustomGameAttribute.Boolean("sgb-enhanced", Text.ATTRIBUTE_GBC_SGB_ENHANCED);
+    
+    public static final com.github.jakz.romlib.data.game.attributes.Attribute RUMBLE_VERSION = 
+        new CustomGameAttribute.Boolean("rumble-version", Text.ATTRIBUTE_GBC_RUMBLE_VERSION);
   }
 }

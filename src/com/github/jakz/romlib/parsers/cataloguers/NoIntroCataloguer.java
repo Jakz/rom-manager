@@ -79,6 +79,7 @@ public class NoIntroCataloguer implements GameCataloguer
     
     mappers.put("GB Compatible", game -> game.setCustomAttribute(GBC.Attribute.GB_COMPATIBLE, true));
     mappers.put("SGB Enhanced", game -> game.setCustomAttribute(GBC.Attribute.SGB_ENHANCED, true));
+    mappers.put("Rumble Version", game -> game.setCustomAttribute(GBC.Attribute.RUMBLE_VERSION, true));
 
     
     lambdas = new ArrayList<>();

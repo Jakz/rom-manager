@@ -6,7 +6,8 @@ import java.util.ResourceBundle;
 public enum Text implements I18N
 { 
   ATTRIBUTE_GBC_GB_COMPATIBLE,
-  ATTRIBUTE_GBC_SGB_ENHANCED
+  ATTRIBUTE_GBC_SGB_ENHANCED,
+  ATTRIBUTE_GBC_RUMBLE_VERSION
   ;
   
   private static final ResourceBundle res = ResourceBundle.getBundle("com.github.jakz.romlib.ui.i18n.Strings", Locale.ENGLISH);
