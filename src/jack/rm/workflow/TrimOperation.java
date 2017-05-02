@@ -14,7 +14,7 @@ public class TrimOperation extends RomOperation
     this.filler = filler;
   }
   
-  protected RomWorkflowEntry doApply(RomWorkflowEntry rom)
+  protected GameEntry doApply(GameEntry rom)
   {
     try {
       Trimmer.trim(rom.getBuffer(), filler);

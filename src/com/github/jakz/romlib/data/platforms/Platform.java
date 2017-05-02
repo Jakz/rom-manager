@@ -58,6 +58,6 @@ public enum Platform
   
   public static Platform forIdent(String tag)
   {
-    return Arrays.asList(values()).stream().filter(s -> s.tag.equals(tag)).findFirst().orElse(null);
+    return Arrays.asList(values()).stream().filter(s -> s.tag.equals(tag)).findFirst().get();
   }
 }

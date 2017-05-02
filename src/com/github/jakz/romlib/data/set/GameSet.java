@@ -18,6 +18,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import com.github.jakz.romlib.data.assets.Asset;
 import com.github.jakz.romlib.data.assets.AssetCache;
 import com.github.jakz.romlib.data.assets.AssetManager;
@@ -70,7 +72,7 @@ public class GameSet implements Iterable<Game>, GameMap
 	private final AssetCache assetCache;
 	private final Attribute[] attributes;
 
-	public GameSet(Platform platform, Provider provider, DataSupplier loader, DatFormat format, Attribute[] attributes, AssetManager assetManager)
+	public GameSet(@NonNull Platform platform, Provider provider, DataSupplier loader, DatFormat format, Attribute[] attributes, AssetManager assetManager)
 	{
 		this.info = new GameSetInfo(provider, format, assetManager);
 	  this.loaders = Collections.singletonList(loader);

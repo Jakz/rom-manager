@@ -12,7 +12,7 @@ import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.platforms.GBA;
 import com.pixbits.lib.workflow.Dumper;
 
-public class EZFlashIVRomConsolidator extends Dumper<RomWorkflowEntry>
+public class EZFlashIVRomConsolidator extends Dumper<GameEntry>
 {
   Path destination;
   
@@ -21,14 +21,13 @@ public class EZFlashIVRomConsolidator extends Dumper<RomWorkflowEntry>
     this.destination = destination;
   }
   
-  public void accept(RomWorkflowEntry handle)
+  public void accept(GameEntry handle)
   {
     try
     {
       Game rom = handle.getGame();
-      Path finalBasePath = destination.resolve(handle.getDestPath());
-      Path finalPath = finalBasePath.resolve(rom.getTitle()+"."+rom.getSystem().exts[0]);
-      Files.createDirectories(finalBasePath);
+      Path finalPath = handle.getFinalPath(destination);
+      Files.createDirectories(finalPath.getParent());
       
       if (handle.getPath() == null)
         handle.getBuffer();

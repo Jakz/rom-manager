@@ -8,19 +8,19 @@ import com.github.jakz.romlib.data.game.Game;
 import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.lib.workflow.Dumper;
 
-public class RomConsolidator extends Dumper<RomWorkflowEntry>
+public class GameConsolidator extends Dumper<GameEntry>
 {
   Path destination;
   boolean overwrite;
 
   
-  public RomConsolidator(Path path)
+  public GameConsolidator(Path path)
   {
     this.destination = path;
     this.overwrite = false;
   }
   
-  public void accept(RomWorkflowEntry handle)
+  public void accept(GameEntry handle)
   {
     Game game = handle.getGame();
     
@@ -28,13 +28,12 @@ public class RomConsolidator extends Dumper<RomWorkflowEntry>
     game.stream().forEach(rom -> { 
       try
       {
-        Path basePath = destination.resolve(handle.getDestPath());
-        Path finalPath = basePath.resolve(game.getTitle()+"."+game.getSystem().exts[0]);
+        Path finalPath = handle.getFinalPath(destination);
         
         if (!overwrite && Files.exists(finalPath))
           return;
         
-        Files.createDirectories(basePath);
+        Files.createDirectories(finalPath.getParent());
         
         if (handle.hasBeenModified())
         {

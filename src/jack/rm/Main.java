@@ -3,12 +3,15 @@ package jack.rm;
 import java.awt.Desktop;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.github.jakz.romlib.data.assets.Downloader;
+import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.concurrent.AsyncGuiPoolWorker;
 import com.pixbits.lib.concurrent.Operation;
@@ -20,6 +23,8 @@ import com.pixbits.lib.ui.UIUtils;
 import com.pixbits.lib.ui.elements.ProgressDialog;
 import com.pixbits.lib.workflow.Dumper;
 import com.pixbits.lib.workflow.Fetcher;
+import com.pixbits.lib.workflow.Mutuator;
+import com.pixbits.lib.workflow.Workflow;
 import com.pixbits.lib.workflow.WorkflowData;
 
 import jack.rm.data.romset.GameSetManager;
@@ -31,6 +36,12 @@ import jack.rm.gui.SetInfoPanel;
 import jack.rm.gui.PluginsPanel;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
+import jack.rm.workflow.LogOperation;
+import jack.rm.workflow.MultipleGameSource;
+import jack.rm.workflow.organizers.OrganizeByAttribute;
+import jack.rm.workflow.organizers.RenameByExportTitle;
+import jack.rm.workflow.GameConsolidator;
+import jack.rm.workflow.GameEntry;
 import net.sf.sevenzipjbinding.SevenZip;
 import net.sf.sevenzipjbinding.SevenZipNativeInitializationException;
 
@@ -167,22 +178,18 @@ public class Main
     set.helper().scanner().scanForRoms(!wasInit && GlobalSettings.settings.shouldScanWhenLoadingRomset());
 
     downloader = new Downloader(set);
-    
-    /*List<Rom> zip7 = set.filter("format:7z");
-    Fetcher<RomHandle> source = new SingleRomSource(zip7.get(0));
-    Dumper<RomHandle> dumper = new RomConsolidator(Paths.get("/Users/jack/Desktop/CAH"));
-    Workflow<RomHandle> workflow = new Workflow<>(source,dumper);
+
+    List<Game> favourites = set.filter("is:fav");
+    Fetcher<GameEntry> source = new MultipleGameSource(favourites);
+    Mutuator<GameEntry> sorter = new OrganizeByAttribute(GameAttribute.GENRE, false);
+    Mutuator<GameEntry> renamer = new RenameByExportTitle();
+    Dumper<GameEntry> dumper = new GameConsolidator(Paths.get("/Users/jack/Desktop/romset/everdrive"));
+    Workflow<GameEntry> workflow = new Workflow<>(source,dumper);
     workflow.addStep(new LogOperation());
+    workflow.addStep(sorter);
+    workflow.addStep(renamer);
     workflow.execute();
-    java.lang.System.exit(0);*/
-    
-    /*List<Rom> favourites = set.filter("is:fav");
-    Fetcher<RomHandle> source = new MultipleRomSource(favourites);
-    Dumper<RomHandle> dumper = new RomConsolidator(Paths.get("/Users/jack/Documents/Dev/gba/ez/gb"));
-    Workflow<RomHandle> workflow = new Workflow<>(source,dumper);
-    workflow.addStep(new LogOperation());
-    workflow.execute();
-    java.lang.System.exit(0);*/
+    java.lang.System.exit(0);
 
     /*List<Rom> favourites = set.filter("is:fav");*/
     

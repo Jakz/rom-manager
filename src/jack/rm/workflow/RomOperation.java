@@ -7,7 +7,7 @@ import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.pixbits.lib.workflow.Mutuator;
 
-public abstract class RomOperation implements Mutuator<RomWorkflowEntry>
+public abstract class RomOperation implements Mutuator<GameEntry>
 {  
   public static enum Mode
   {
@@ -18,7 +18,7 @@ public abstract class RomOperation implements Mutuator<RomWorkflowEntry>
   private final Set<Game> specifics;
   private Mode mode;
   
-  RomOperation()
+  public RomOperation()
   {
     specifics = new HashSet<Game>();
     mode = Mode.EXCLUDE;
@@ -48,11 +48,11 @@ public abstract class RomOperation implements Mutuator<RomWorkflowEntry>
     return !(mode == Mode.INCLUDE ^ specifics.contains(rom));
   }
   
-  abstract String getName();
-  abstract String getDescription();
+  public abstract String getName();
+  public abstract String getDescription();
   boolean isPlatformSupported(Platform platform) { return true; }
   
-  public final RomWorkflowEntry apply(RomWorkflowEntry handle)
+  public final GameEntry apply(GameEntry handle)
   {
     try
     {
@@ -65,5 +65,5 @@ public abstract class RomOperation implements Mutuator<RomWorkflowEntry>
     }
   }
   
-  abstract protected RomWorkflowEntry doApply(RomWorkflowEntry handle) throws Exception;
+  abstract protected GameEntry doApply(GameEntry handle) throws Exception;
 }

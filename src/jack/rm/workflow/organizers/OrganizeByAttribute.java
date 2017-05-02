@@ -1,13 +1,18 @@
-package jack.rm.workflow;
+package jack.rm.workflow.organizers;
+
+import java.nio.file.Paths;
 
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 
-public class SortByAttributeOperation extends RomOperation
+import jack.rm.workflow.GameEntry;
+import jack.rm.workflow.RomOperation;
+
+public class OrganizeByAttribute extends RomOperation
 {
   private boolean isLowercase;
   private Attribute attribute;
   
-  public SortByAttributeOperation(Attribute attrib, boolean isLowercase)
+  public OrganizeByAttribute(Attribute attrib, boolean isLowercase)
   {
     this.attribute = attrib;
     this.isLowercase = isLowercase;
@@ -16,15 +21,12 @@ public class SortByAttributeOperation extends RomOperation
   public String getDescription() { return "Sorts ROM by a specific attribute while consolidating workflow"; }
   public String getName() { return "Sorter By Attribute"; }
   
-  protected RomWorkflowEntry doApply(RomWorkflowEntry handle)
+  protected GameEntry doApply(GameEntry handle)
   {
     Object value = handle.getGame().getAttribute(attribute);
     String folder = value != null ? value.toString() : "Uncategorized";
-    if (isLowercase)
-      folder = folder.toLowerCase();
     
-    handle.setDestPath(handle.getDestPath().resolve(folder));
-    
+    handle.setFolder(() -> Paths.get(isLowercase ? folder : folder.toLowerCase()));
     return handle;
   }
 }

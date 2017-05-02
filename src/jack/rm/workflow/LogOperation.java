@@ -9,7 +9,7 @@ public class LogOperation extends RomOperation
   {
   }
   
-  protected RomWorkflowEntry doApply(RomWorkflowEntry rom)
+  protected GameEntry doApply(GameEntry rom)
   {
     System.out.println("Working on "+rom.getGame().getTitle());
     return rom;

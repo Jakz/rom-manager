@@ -42,7 +42,7 @@ public class IPSPatchOperation extends RomOperation
   public String getName() { return "IPS Patcher"; }
   public String getDescription() { return "This operation applies an IPS patch to a ROM"; }
   
-  protected RomWorkflowEntry doApply(RomWorkflowEntry handle) throws Exception
+  protected GameEntry doApply(GameEntry handle) throws Exception
   {
     IPSPatch patch = patches.get(handle.getGame());
     

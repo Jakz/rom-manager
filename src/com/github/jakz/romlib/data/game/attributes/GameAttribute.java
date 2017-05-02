@@ -2,6 +2,9 @@ package com.github.jakz.romlib.data.game.attributes;
 
 import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.game.VideoFormat;
+
+import java.util.Arrays;
+
 import com.github.jakz.romlib.data.game.Genre;
 import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.LanguageSet;
@@ -29,8 +32,8 @@ public enum GameAttribute implements Attribute
   SAVE_TYPE(Text.ROM_INFO_SAVE_TYPE),
   
   GENRE(Genre.class, Text.ROM_INFO_GENRE),
-  
   TAG(String.class, Text.ROM_INFO_TAG),
+  EXPORT_TITLE(String.class, Text.GAME_INFO_EXPORT_TITLE),
   
   VIDEO_FORMAT(VideoFormat.class, Text.ROM_INFO_VIDEO_FORMAT),
   
@@ -65,5 +68,10 @@ public enum GameAttribute implements Attribute
   public Class<?> getClazz() { return clazz; }
 
   @Override
-  public String getCaption() { return caption.text(); } 
+  public String getCaption() { return caption.text(); }
+  
+  public static GameAttribute forIdent(String string)
+  {
+    return Arrays.stream(values()).filter(a -> a.getIdent().equals(string)).findFirst().get();
+  }
 }

@@ -87,8 +87,8 @@ public final class Provider
   public boolean canBeUpdated() { return source != null; }
   public Source getSource() { return source; }
  
-  private boolean hasSuffix() { return suffix != null && suffix.isEmpty(); }
-  private String builtSuffix() { return hasSuffix() ? "-" + suffix : ""; }
+  private boolean hasSuffix() { return suffix != null && !suffix.isEmpty(); }
+  private String builtSuffix() { return hasSuffix() ? ("-" + suffix) : ""; }
   
   public String getIdentifier() { return getTag()+builtSuffix(); }
   

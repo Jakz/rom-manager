@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 import com.github.jakz.romlib.data.game.Game;
 import com.pixbits.lib.workflow.Fetcher;
 
-public class SingleRomSource extends Fetcher<RomWorkflowEntry>
+public class SingleRomSource extends Fetcher<GameEntry>
 {
   private final Game rom;
   private boolean done;
@@ -17,11 +17,11 @@ public class SingleRomSource extends Fetcher<RomWorkflowEntry>
     this.done = false;
   }
   
-  @Override public boolean tryAdvance(Consumer<? super RomWorkflowEntry> operation)
+  @Override public boolean tryAdvance(Consumer<? super GameEntry> operation)
   {
     if (!done)
     {
-      operation.accept(new RomWorkflowEntry(rom));
+      operation.accept(new GameEntry(rom));
       done = true;
       return true;
     }

@@ -17,8 +17,7 @@ public class GameAttributeAdapter implements JsonDeserializer<Attribute>, JsonSe
   public Attribute deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
   {
     String value = json.getAsString();
-    
-    return GameAttribute.valueOf(value);
+    return GameAttribute.forIdent(value);
   }
   
   @Override

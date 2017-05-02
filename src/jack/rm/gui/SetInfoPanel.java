@@ -102,7 +102,17 @@ public class SetInfoPanel extends JPanel
     @Override public int getColumnCount() { return 2; }
     @Override public String getColumnName(int c) { return ""; }
     @Override public Class<?> getColumnClass(int c) { return String.class; }
-    @Override public Object getValueAt(int r, int c) { return c == 0 ? rows[r].label : rows[r].lambda.get().toString(); }
+    @Override public Object getValueAt(int r, int c)
+    { 
+      if (c == 0)
+        return rows[r].label;
+      else
+      {
+        Object object = rows[r].lambda.get();
+        return object != null ? object.toString() : null;
+      }
+    }
+      
     @Override public boolean isCellEditable(int r, int c) { return false; }
 	}
 	

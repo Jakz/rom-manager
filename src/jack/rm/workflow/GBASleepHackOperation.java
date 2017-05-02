@@ -16,7 +16,7 @@ public class GBASleepHackOperation extends RomOperation
     hacker = new GBASleepHack();
   }
   
-  protected RomWorkflowEntry doApply(RomWorkflowEntry handle)
+  protected GameEntry doApply(GameEntry handle)
   {
     try
     {

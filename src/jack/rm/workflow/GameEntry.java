@@ -5,27 +5,30 @@ import java.nio.ByteOrder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.function.Supplier;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.pixbits.lib.io.BinaryBuffer;
 import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.lib.workflow.WorkflowData;
 
-public class RomWorkflowEntry implements WorkflowData
+public class GameEntry implements WorkflowData
 {
-  private final Game rom;
+  private final Game game;
   private BinaryBuffer buffer;
   private Path path;
-  private Path destPath;
-
-
-  public RomWorkflowEntry(Game rom)
+  
+  private Supplier<String> fileName;
+  private Supplier<Path> folder;
+  
+  public GameEntry(Game game)
   {
-    this.rom = rom;
-    destPath = Paths.get(".");
+    this.game = game;
+    this.fileName = () -> game.getTitle() + "." + game.getSystem().exts[0];
+    this.folder = () -> Paths.get(".");
   }
 
-  public Game getGame() { return rom; }
+  public Game getGame() { return game; }
   
   public void prepareBuffer() throws IOException
   {
@@ -47,8 +50,16 @@ public class RomWorkflowEntry implements WorkflowData
   
   public boolean hasBeenModified() { return buffer != null; }
   
-  public Path getDestPath() { return destPath; }
-  public void setDestPath(Path path) { this.destPath = path; }
+  public Supplier<String> getFileName() { return fileName; }
+  public void setFileName(Supplier<String> fileName) { this.fileName = fileName; } 
   
+  public Supplier<Path> getFolder() { return folder; }
+  public void setFolder(Supplier<Path> folder) { this.folder = folder; }
+  
+  public Path getFinalPath(Path base)
+  {
+    return base.resolve(folder.get()).resolve(fileName.get());
+  }
+
   public Path getPath() { return path; }
 }

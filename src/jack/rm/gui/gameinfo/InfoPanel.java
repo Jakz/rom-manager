@@ -194,7 +194,8 @@ public class InfoPanel extends JPanel implements ActionListener
 	  
 	  Attribute[] cattributes = new Attribute[] {
 	    GameAttribute.GENRE,
-	    GameAttribute.TAG
+	    GameAttribute.TAG,
+	    GameAttribute.EXPORT_TITLE
 	  };
 	  
 	  List<Attribute> enabledAttribs = set.getSettings().getRomAttributes();

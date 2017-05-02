@@ -22,6 +22,12 @@ public interface GameAttributeInterface
     return title != null ? title : getTitle();
   }
   
+  default void setExportTitle(String title) { setAttribute(GameAttribute.EXPORT_TITLE, title); }
+  default String getExportTitle() {
+    String title = getAttribute(GameAttribute.EXPORT_TITLE);
+    return title != null ? title : getTitle();
+  }
+  
   default boolean getBoolAttribute(Attribute key)
   {
     Boolean b = getAttribute(key);
