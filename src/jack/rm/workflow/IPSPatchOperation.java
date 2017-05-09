@@ -11,7 +11,7 @@ import com.github.jakz.romlib.data.game.Game;
 
 import jack.rm.files.IPSPatch;
 
-public class IPSPatchOperation extends RomOperation
+public class IPSPatchOperation extends DefaultGameOperation
 {
   Map<Game, IPSPatch> patches;
   boolean automaticPatching;

@@ -18,8 +18,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.eclipse.jdt.annotation.NonNull;
-
 import com.github.jakz.romlib.data.assets.Asset;
 import com.github.jakz.romlib.data.assets.AssetCache;
 import com.github.jakz.romlib.data.assets.AssetManager;
@@ -72,7 +70,7 @@ public class GameSet implements Iterable<Game>, GameMap
 	private final AssetCache assetCache;
 	private final Attribute[] attributes;
 
-	public GameSet(@NonNull Platform platform, Provider provider, DataSupplier loader, DatFormat format, Attribute[] attributes, AssetManager assetManager)
+	public GameSet(Platform platform, Provider provider, DataSupplier loader, DatFormat format, Attribute[] attributes, AssetManager assetManager)
 	{
 		this.info = new GameSetInfo(provider, format, assetManager);
 	  this.loaders = Collections.singletonList(loader);
@@ -139,7 +137,9 @@ public class GameSet implements Iterable<Game>, GameMap
 	public Game get(int index) { return list.get(index); }
 	@Override public Game get(String title) { return list.get(title); }
 	public int gameCount() { return list.gameCount(); }
-	public Stream<Game> stream() { return list.stream(); }
+	public Stream<Game> stream() { return games(); }
+	public Stream<Game> games() { return list.stream(); }
+	public Stream<Game> orphanGames() { return games().filter(g -> !g.hasClone()); }
 	public Stream<Rom> romStream() { return list.stream().flatMap(g -> g.stream()); }
 	public Iterator<Game> iterator() { return list.iterator(); }
 	

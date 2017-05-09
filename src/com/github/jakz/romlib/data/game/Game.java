@@ -42,6 +42,7 @@ public class Game implements Comparable<Game>, Iterable<Rom>, GameAttributeInter
 	
   public Stream<Map.Entry<Attribute, Object>> getCustomAttributes() { return info.getCustomAttributes(); }
   public boolean hasCustomAttribute(Attribute attrib) { return info.hasCustomAttribute(attrib); }
+  public boolean hasAnyCustomAttribute() { return info.hasAnyCustomAttribute(); }
   public void clearCustomAttribute(Attribute attrib) { info.clearCustomAttribute(attrib); }
   
   public Attachments getAttachments() { return attachments; }
@@ -74,6 +75,7 @@ public class Game implements Comparable<Game>, Iterable<Rom>, GameAttributeInter
 	
 	public GameSet getGameSet() { return set; }
 	
+	public boolean hasClone() { return clone != null; }
 	public GameClone getClone() { return clone; }
 	public void setClone(GameClone clone) { this.clone = clone; }
 

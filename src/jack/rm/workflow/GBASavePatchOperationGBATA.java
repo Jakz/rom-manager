@@ -5,7 +5,7 @@ import com.github.jakz.romlib.data.platforms.Platform;
 
 import jack.rm.files.GBASavePatcherGBATA;
 
-public class GBASavePatchOperationGBATA extends RomOperation
+public class GBASavePatchOperationGBATA extends DefaultGameOperation
 {
   public String getName() { return "GBA Save Patcher"; }
   public String getDescription() { return "This operation patches all save types of a GBA rom to SRAM"; }

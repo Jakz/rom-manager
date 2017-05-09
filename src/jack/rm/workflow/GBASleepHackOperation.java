@@ -4,7 +4,7 @@ import com.github.jakz.romlib.data.platforms.Platform;
 
 import jack.rm.files.GBASleepHack;
 
-public class GBASleepHackOperation extends RomOperation
+public class GBASleepHackOperation extends DefaultGameOperation
 {
   public String getName() { return "GBA Sleephack"; }
   public String getDescription() { return "This operation patches a GBA rom to enable sleep and reset for EZ-IV flash, credits to dwedit/kuwanger"; }

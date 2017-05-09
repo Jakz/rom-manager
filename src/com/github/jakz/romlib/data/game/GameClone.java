@@ -67,22 +67,15 @@ public class GameClone implements Iterable<Game>
     }
   }
    
-  private Game getBestMatchForBias(BiasSet bias, boolean acceptFallback)
+  public Game getBestMatchForBias(BiasSet bias, boolean acceptFallback)
   {    
-    for (Location location : bias.getLocations())
-    {
-      Optional<Game> game = Arrays.stream(games).filter(g -> g.getLocation().isJust(location)).findAny();
-      if (game.isPresent())
-        return game.get();
-    }
-    
     for (Location location : bias.getLocations())
     {
       Optional<Game> game = Arrays.stream(games).filter(g -> g.getLocation().is(location)).findAny();
       if (game.isPresent())
         return game.get();
     }
-    
+
     if (acceptFallback)
       return games[0];
     else

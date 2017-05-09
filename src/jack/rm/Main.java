@@ -179,17 +179,23 @@ public class Main
 
     downloader = new Downloader(set);
 
-    List<Game> favourites = set.filter("is:fav");
+    /*List<Game> favourites = set.filter("is:fav");
     Fetcher<GameEntry> source = new MultipleGameSource(favourites);
-    Mutuator<GameEntry> sorter = new OrganizeByAttribute(GameAttribute.GENRE, false);
+    Mutuator<GameEntry> sorter = new OrganizeByAttribute(GameAttribute.TAG, false);
     Mutuator<GameEntry> renamer = new RenameByExportTitle();
-    Dumper<GameEntry> dumper = new GameConsolidator(Paths.get("/Users/jack/Desktop/romset/everdrive"));
+    Dumper<GameEntry> dumper = new GameConsolidator(Paths.get("/Users/jack/Desktop/everdrive"));
     Workflow<GameEntry> workflow = new Workflow<>(source,dumper);
     workflow.addStep(new LogOperation());
     workflow.addStep(sorter);
     workflow.addStep(renamer);
+    workflow.addStep(e -> {
+      Game g = e.getGame();
+      if (g.hasAnyCustomAttribute() && !g.isFavourite())
+        System.out.println("Missing favorite on "+g.getTitle());
+      return e;
+    });
     workflow.execute();
-    java.lang.System.exit(0);
+    java.lang.System.exit(0);*/
 
     /*List<Rom> favourites = set.filter("is:fav");*/
     

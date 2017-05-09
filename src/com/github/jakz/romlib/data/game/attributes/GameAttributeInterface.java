@@ -12,6 +12,7 @@ public interface GameAttributeInterface
   
   void setCustomAttribute(Attribute key, Object value);
   boolean hasAttribute(Attribute key);
+  boolean hasAnyCustomAttribute();
   
   default void setTitle(String title) { setAttribute(GameAttribute.TITLE, title); }
   default String getTitle() { return getAttribute(GameAttribute.TITLE); }

@@ -1,9 +1,9 @@
 package jack.rm.workflow.organizers;
 
 import jack.rm.workflow.GameEntry;
-import jack.rm.workflow.RomOperation;
+import jack.rm.workflow.DefaultGameOperation;
 
-public class RenameByExportTitle extends RomOperation
+public class RenameByExportTitle extends DefaultGameOperation
 {
 
   @Override

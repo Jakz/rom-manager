@@ -5,9 +5,9 @@ import java.nio.file.Paths;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 
 import jack.rm.workflow.GameEntry;
-import jack.rm.workflow.RomOperation;
+import jack.rm.workflow.DefaultGameOperation;
 
-public class OrganizeByAttribute extends RomOperation
+public class OrganizeByAttribute extends DefaultGameOperation
 {
   private boolean isLowercase;
   private Attribute attribute;
@@ -26,7 +26,7 @@ public class OrganizeByAttribute extends RomOperation
     Object value = handle.getGame().getAttribute(attribute);
     String folder = value != null ? value.toString() : "Uncategorized";
     
-    handle.setFolder(() -> Paths.get(isLowercase ? folder : folder.toLowerCase()));
+    handle.setFolder(() -> Paths.get(isLowercase ? folder.toLowerCase() : folder));
     return handle;
   }
 }

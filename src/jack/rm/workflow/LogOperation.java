@@ -1,6 +1,6 @@
 package jack.rm.workflow;
 
-public class LogOperation extends RomOperation
+public class LogOperation extends DefaultGameOperation
 {  
   public String getName() { return "Logger"; }
   public String getDescription() { return "This operation logs current target"; }

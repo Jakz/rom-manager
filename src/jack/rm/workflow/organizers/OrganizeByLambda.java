@@ -4,9 +4,9 @@ import java.nio.file.Path;
 import java.util.function.Function;
 
 import jack.rm.workflow.GameEntry;
-import jack.rm.workflow.RomOperation;
+import jack.rm.workflow.DefaultGameOperation;
 
-public class OrganizeByLambda extends RomOperation
+public class OrganizeByLambda extends DefaultGameOperation
 {
   private final Function<GameEntry, Path> lambda;
   

@@ -2,7 +2,7 @@ package jack.rm.workflow;
 
 import jack.rm.files.Trimmer;
 
-public class TrimOperation extends RomOperation
+public class TrimOperation extends DefaultGameOperation
 {
   byte[] filler;
   

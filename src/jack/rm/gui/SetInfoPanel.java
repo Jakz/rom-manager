@@ -211,5 +211,7 @@ public class SetInfoPanel extends JPanel
 		
 		if (s.romsPath != null)
 		  romsPathButton.setPath(s.romsPath);
+		else
+		  romsPathButton.clear();
 	}
 }
