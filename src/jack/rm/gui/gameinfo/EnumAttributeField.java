@@ -46,9 +46,9 @@ class EnumAttributeField extends AttributeField
     value.addItemListener(e -> {
       if (e.getStateChange() == ItemEvent.SELECTED)
       {
-        this.infoPanel.rom.setCustomAttribute(attrib, value.getSelectedItem());
+        this.infoPanel.game.setCustomAttribute(attrib, value.getSelectedItem());
         deleteButton.setVisible(true);
-        this.infoPanel.rom.updateStatus();
+        this.infoPanel.game.updateStatus();
         readValue.setText(value.getSelectedItem().toString());
         Main.mainFrame.refreshGameListCurrentSelection();
       }
@@ -93,7 +93,7 @@ class EnumAttributeField extends AttributeField
     panel.remove(readValue);
     panel.add(value);
     panel.revalidate();
-    deleteButton.setVisible(this.infoPanel.rom.hasCustomAttribute(attrib));
+    deleteButton.setVisible(this.infoPanel.game.hasCustomAttribute(attrib));
   }
   
   public void finishEdit()

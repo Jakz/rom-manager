@@ -21,6 +21,8 @@ public enum Platform
 
   LYNX("lynx", "Atary Lynx", new String[] { "lnx" }),
   
+  PSP("psp", "Sony Playstation Portable", new String[] { "iso", "cso" }),
+  
   WS("ws", "WonderSwan", new String[] {"ws"}, Icon.SYSTEM_WONDERSWAN),
   GG("gg", "Game Gear", new String[] {"gg"}, Icon.SYSTEM_GAME_GEAR),
   C64("c64", "Commodore 64", null, Icon.SYSTEM_COMMODORE_64),

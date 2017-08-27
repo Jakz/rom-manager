@@ -69,6 +69,20 @@ public class ClrMamePlugin extends ProviderPlugin
       );
     }
     
+    {
+      DataSupplier parser = datParser.buildDatLoader("clr-mame-nointro"); 
+      DatFormat format = parser.getFormat();
+      
+      sets[1] = new GameSet(
+          Platform.PSP, 
+          KnownProviders.NO_INTRO.derive("", "", "", null),
+          parser,
+          format,
+          GG_ATTRIBUTES, 
+          AssetManager.DUMMY
+      );
+    }
+    
     return sets;
   }
 }

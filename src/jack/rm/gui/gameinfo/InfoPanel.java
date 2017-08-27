@@ -93,7 +93,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	
 	final private JPanel buttons = new JPanel();
 	
-	Game rom;
+	Game game;
 	
 	private class AssetImage
 	{
@@ -119,7 +119,7 @@ public class InfoPanel extends JPanel implements ActionListener
     editButton.setToolTipText("Switch between edit and normal mode");
     
     editButton.addActionListener(e -> {
-      if (rom != null)
+      if (game != null)
       {    
         mode = editButton.isSelected() ? Mode.EDIT : Mode.VIEW;
         
@@ -205,7 +205,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	  Runnable menuItemPostAction = () -> {
 	    buildFields();
 	    pFields.revalidate();
-	    updateFields(rom);
+	    updateFields(game);
 	    buildPopupMenu();
 	  };
 	  
@@ -382,7 +382,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	
 	public void updateFields(Game game)
 	{
-		this.rom = game;
+		this.game = game;
 		attachments.setRom(game);
 		
 		this.setVisible(true);
@@ -436,7 +436,7 @@ public class InfoPanel extends JPanel implements ActionListener
 			{
 				Set<RomDownloaderPlugin> downloaders = GameSet.current.getSettings().plugins.getEnabledPlugins(PluginRealType.ROM_DOWNLOADER);
 				
-				URL url = downloaders.stream().filter( p -> p.isPlatformSupported(GameSet.current.platform)).findFirst().get().getDownloadURL(GameSet.current.platform, rom);
+				URL url = downloaders.stream().filter( p -> p.isPlatformSupported(GameSet.current.platform)).findFirst().get().getDownloadURL(GameSet.current.platform, game);
 			  
 			  Desktop.getDesktop().browse(url.toURI());
 			}
@@ -447,6 +447,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		}
 	  else if (src == openFolderButton)
 	  {
+	    Main.openFolder(game.rom().handle().path().getParent().toFile());
 	    //TODO: Main.openFolder(rom.getHandle().path().getParent().toFile());
 	  }
 	  else if (src == openArchiveButton)
@@ -455,8 +456,8 @@ public class InfoPanel extends JPanel implements ActionListener
 	  }
 		else if (src == assetsButton)
 		{
-			if (rom != null)
-			  Main.downloader.downloadArt(rom);
+			if (game != null)
+			  Main.downloader.downloadArt(game);
 		}
 	}
 }

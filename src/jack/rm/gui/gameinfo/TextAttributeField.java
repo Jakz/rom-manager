@@ -79,7 +79,7 @@ class TextAttributeField extends AttributeField implements CaretListener, Action
       value.addCaretListener(this);
       value.addActionListener(this);
       
-      deleteButton.setVisible(this.infoPanel.rom.hasCustomAttribute(attrib));
+      deleteButton.setVisible(this.infoPanel.game.hasCustomAttribute(attrib));
     }
   }
   
@@ -102,7 +102,7 @@ class TextAttributeField extends AttributeField implements CaretListener, Action
   {
     Object pv = parseValue();
      
-    if (pv != null && !pv.equals(this.infoPanel.rom.getAttribute(attrib)))
+    if (pv != null && !pv.equals(this.infoPanel.game.getAttribute(attrib)))
       value.setBackground(new Color(255,175,0));
     else
       value.setBackground(Color.WHITE);
@@ -112,16 +112,16 @@ class TextAttributeField extends AttributeField implements CaretListener, Action
   {
     Object pv = parseValue();
      
-    if (pv != null && !pv.equals(this.infoPanel.rom.getAttribute(attrib)))
+    if (pv != null && !pv.equals(this.infoPanel.game.getAttribute(attrib)))
     {
-      this.infoPanel.rom.setCustomAttribute(attrib, pv);
+      this.infoPanel.game.setCustomAttribute(attrib, pv);
       value.setBackground(Color.WHITE);
       deleteButton.setVisible(true);
-      infoPanel.rom.updateStatus();
+      infoPanel.game.updateStatus();
       Main.mainFrame.refreshGameListCurrentSelection();
     }
     else
-      setValue(this.infoPanel.rom);
+      setValue(this.infoPanel.game);
   }
   
   void setValue(Game game)
