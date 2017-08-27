@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -56,7 +57,7 @@ public class GameSet implements Iterable<Game>, GameMap
 	
   private boolean loaded;
 
-  public final Platform platform;
+  private final Platform platform;
   private final List<DataSupplier> loaders;
   private final GameSetInfo info;
 
@@ -72,7 +73,8 @@ public class GameSet implements Iterable<Game>, GameMap
 
 	public GameSet(Platform platform, Provider provider, DataSupplier loader, DatFormat format, Attribute[] attributes, AssetManager assetManager)
 	{
-		this.info = new GameSetInfo(provider, format, assetManager);
+		Objects.requireNonNull(platform);
+	  this.info = new GameSetInfo(provider, format, assetManager);
 	  this.loaders = Collections.singletonList(loader);
 		this.list = null;
 	  this.clones = null;
@@ -85,6 +87,7 @@ public class GameSet implements Iterable<Game>, GameMap
 	
 	public GameSet(Platform platform, Provider provider, DataSupplier loader)
   {
+	  Objects.requireNonNull(platform);
 	  this.info = new GameSetInfo(provider);
 	  this.loaders = Collections.singletonList(loader);
 	  this.list = null;
@@ -98,6 +101,7 @@ public class GameSet implements Iterable<Game>, GameMap
 	
 	public GameSet(Platform platform, Provider provider, GameList list, CloneSet clones)
 	{
+	  Objects.requireNonNull(platform);
 	  this.info = new GameSetInfo(provider);
 	  this.loaders = null;
 	  this.list = list;
@@ -121,6 +125,7 @@ public class GameSet implements Iterable<Game>, GameMap
     }
 	}
 	
+	public Platform platform() { return platform; }
 	public GameSetFeatures helper() { return helper; }
 	public CloneSet clones() { return clones; }
 	public GameSetInfo info() { return info; }

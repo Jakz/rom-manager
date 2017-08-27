@@ -9,14 +9,16 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import jack.rm.data.romset.GameSetManager;
 import jack.rm.json.Json;
 
 public class GlobalSettings
 {  
   public static final Path DATA_PATH = Paths.get("data/");
   
-  private final List<String> enabledProviders;
+  private List<String> enabledProviders;
   private String currentProvider;
   private boolean alwaysScanWhenLoadingRomset;
   
@@ -33,6 +35,20 @@ public class GlobalSettings
   public void disableProvider(String ident) { enabledProviders.remove(ident); }
   
   public boolean shouldScanWhenLoadingRomset() { return alwaysScanWhenLoadingRomset; }
+  
+  /**
+   * Removes sets from enabled sets or current selected which are 
+   * not available anymore to the <code>GameSetManager</code>.
+   * @param manager
+   */
+  public void sanitize(GameSetManager manager)
+  {
+    enabledProviders = enabledProviders.stream()
+      .filter(i -> manager.byIdent(i) != null)
+      .collect(Collectors.toList());
+    
+    currentProvider = manager.byIdent(currentProvider) != null ? currentProvider : null;
+  }
   
   public static GlobalSettings settings = new GlobalSettings();
   

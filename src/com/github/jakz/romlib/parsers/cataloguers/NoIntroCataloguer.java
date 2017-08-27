@@ -47,6 +47,7 @@ public class NoIntroCataloguer implements GameCataloguer
     mappers.put("Brazil", game -> game.getLocation().add(Location.BRASIL));
     mappers.put("Netherlands", game -> game.getLocation().add(Location.NETHERLANDS));
     mappers.put("Russia", game -> game.getLocation().add(Location.RUSSIA));
+    mappers.put("Croatia", game -> game.getLocation().add(Location.CROATIA));
     mappers.put("Taiwan", game -> game.getLocation().add(Location.TAIWAN));
     mappers.put("Hong Kong", game -> game.getLocation().add(Location.HONG_KONG));
     mappers.put("Unknown", game -> {}); // maybe a Location.UNKNOWN should be used?
@@ -67,6 +68,7 @@ public class NoIntroCataloguer implements GameCataloguer
     mappers.put("Da", game -> game.getLanguages().add(Language.DANISH));
     mappers.put("Ca", game -> game.getLanguages().add(Language.CATALAN));
     mappers.put("Zh", game -> game.getLanguages().add(Language.CHINESE));
+    mappers.put("Hr", game -> game.getLanguages().add(Language.CROATIAN));
     
     mappers.put("Demo", game -> game.setVersion(Version.DEMO));
     mappers.put("Sample", game -> game.setVersion(Version.SAMPLE));

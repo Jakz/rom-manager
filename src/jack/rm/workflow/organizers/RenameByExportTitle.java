@@ -20,7 +20,7 @@ public class RenameByExportTitle extends DefaultGameOperation
   protected GameEntry doApply(GameEntry handle) throws Exception {
     handle.setFileName(() -> 
       handle.getGame().getExportTitle() + "." + 
-      handle.getGame().getSystem().exts[0]);
+      handle.getGame().getPlatform().exts[0]);
     return handle;
   }
 

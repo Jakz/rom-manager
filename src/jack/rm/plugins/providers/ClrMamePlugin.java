@@ -70,7 +70,7 @@ public class ClrMamePlugin extends ProviderPlugin
     }
     
     {
-      DataSupplier parser = datParser.buildDatLoader("clr-mame-nointro"); 
+      DataSupplier parser = findDatParser(datParsers, "logiqx-xml").buildDatLoader("logiqx-xml"); 
       DatFormat format = parser.getFormat();
       
       sets[1] = new GameSet(

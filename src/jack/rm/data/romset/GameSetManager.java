@@ -3,6 +3,7 @@ package jack.rm.data.romset;
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.log.Log;
+import com.pixbits.lib.log.Logger;
 import com.pixbits.lib.plugin.PluginManager;
 
 import jack.rm.Main;
@@ -28,6 +30,8 @@ import jack.rm.plugins.providers.ProviderPlugin;
 
 public class GameSetManager
 {
+  private static final Logger logger = Log.getLogger(GameSetManager.class);
+  
   private final Map<Platform, List<GameSet>> sets = new HashMap<>();
   private final Map<GameSet, GameSetFeatures> helpers = new HashMap<>();
   private final PluginManager<ActualPlugin, ActualPluginBuilder> manager;
@@ -46,9 +50,15 @@ public class GameSetManager
 	  
 	  Set<ActualPluginBuilder> builders = manager.getBuildersByType(PluginRealType.PROVIDER);
 
+	  logger.d("Building available rom sets");
+	  logger.ld("Found %d dat parsers: %s", () -> datParsers.size(), () -> datParsers.stream().map(p -> Arrays.toString(p.getSupportedFormats())).collect(Collectors.joining(", ")));
+	  
 	  for (ActualPluginBuilder builder : builders)
 	  {
 	    ProviderPlugin plugin = (ProviderPlugin)manager.build((Class<ProviderPlugin>)builder.getID().getType());
+	    
+	    logger.d("Found ProviderPlugin: %s", plugin.getClass().getName());
+
 	    
 	    GameSet[] rsets = plugin.buildRomSets(datParsers);
 	    
@@ -56,8 +66,8 @@ public class GameSetManager
 	    {
 	      helpers.put(set, new GameSetFeatures(set));
 	      
-	      List<GameSet> setsForSystem = sets.computeIfAbsent(set.platform, s -> new ArrayList<>());
-	      setsForSystem.add(set);
+	      List<GameSet> setsForPlatform = sets.computeIfAbsent(set.platform(), s -> new ArrayList<>());
+	      setsForPlatform.add(set);
 	    }
 	  }
 	  

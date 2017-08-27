@@ -152,13 +152,18 @@ public class Main
     
     manager.register(jack.rm.plugins.datparsers.ClrMameParserPlugin.class);
     manager.register(jack.rm.plugins.datparsers.OfflineListParserPlugin.class);
+    manager.register(jack.rm.plugins.datparsers.LogiqxXmlParserPlugin.class);
 
     manager.register(jack.rm.plugins.misc.ExportRomsPlugin.class);
 
     manager.register(jack.rm.plugins.scanners.EmbeddedScanner.class);
     
     manager.register(jack.rm.plugins.scanners.DigestVerifier.class);
-
+	}
+	
+	public static void dumpInfo()
+	{
+	  
 	}
 	
 	public static void loadRomSet(GameSet romSet) throws FileNotFoundException, IOException
@@ -341,8 +346,9 @@ public class Main
 	  
 	  GlobalSettings.load();
 	  loadPlugins();
-	  
+	 
 	  setManager.buildRomsetList();
+	  GlobalSettings.settings.sanitize(setManager);
 	  
 	  romsetPanel = new SetInfoPanel();
 	  pluginsPanel = new PluginsPanel(manager);

@@ -21,11 +21,15 @@ public enum Language
 	PORTUGUESE("Portuguese", "PT", Icon.FLAG_PORTUGAL),
 	SPANISH("Spanish", "ES", Icon.FLAG_SPAIN),
 	SWEDISH("Swedish", "SV", Icon.FLAG_SWEDEN),
+  GREEK("Greek", "EL", Icon.FLAG_GREECE),
+  CATALAN("Catalan", "CA", Icon.FLAG_SPAIN), //TODO flag
+  CROATIAN("Croatian", "HR", Icon.FLAG_CROATIA),
+  
 	ENGLISH_UK("English (UK)", "EN", Icon.FLAG_UNITED_KINGDOM),
 	PORTUGUESE_BR("Portuguese (BR)", "PT", Icon.FLAG_BRAZIL),
 	KOREAN("Korean", "KO", Icon.FLAG_KOREA),
-	RUSSIAN("Russian", "RU", Icon.FLAG_JAPAN), //TODO flag
-	CATALAN("Catalan", "CA", Icon.FLAG_SPAIN) //TODO flag
+	RUSSIAN("Russian", "RU", Icon.FLAG_RUSSIA),
+
 	;
 	
 	public final String fullName;

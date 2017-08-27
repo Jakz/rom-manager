@@ -121,7 +121,7 @@ public class RomSize implements Comparable<RomSize>
 	{
 		return Long.compare(this.bytes, s.bytes);
 	}
-	
+
 	public static class Set
 	{
 	  private final Map<Long, RomSize> mapping = new TreeMap<>();

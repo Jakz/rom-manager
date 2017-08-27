@@ -57,14 +57,14 @@ public class Game implements Comparable<Game>, Iterable<Rom>, GameAttributeInter
 	public Game(GameSet set, Rom... roms)
 	{
 	  this(set);
-	  this.roms = roms;
+	  setRom(roms);
 	}
 	
 	public Game(Rom... roms)
 	{
 	  this.set = null;
     this.info = new GameInfo();
-	  this.roms = roms;
+    setRom(roms);
 	}
 
 	public void setRom(Rom... roms)
@@ -109,7 +109,7 @@ public class Game implements Comparable<Game>, Iterable<Rom>, GameAttributeInter
 		
 	public void setStatus(GameStatus status) { this.status = status; } // TODO: should be visible?
 	public GameStatus getStatus() { return status; }
-	public Platform getSystem() { return set.platform; }
+	public Platform getPlatform() { return set.platform(); }
 		
 	public AssetData getAssetData(Asset asset)
 	{

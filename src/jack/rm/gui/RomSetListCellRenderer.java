@@ -16,7 +16,7 @@ final class RomSetListCellRenderer extends DefaultListCellRenderer
     JLabel c = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
     GameSet set = (GameSet)value;   
     if (set != null)
-      c.setIcon(set.platform.getIcon());
+      c.setIcon(set.platform().getIcon());
     return c;
   }
 }

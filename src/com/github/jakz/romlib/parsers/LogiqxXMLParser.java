@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -32,6 +33,8 @@ public class LogiqxXMLParser extends XMLHandler<LogiqxXMLParser.Data>
     HEADER,
   }
   
+  Supplier<Game> gameFactory = () -> new Game();
+  
   Status status;
   
   RomSize.Set sizeSet;
@@ -50,6 +53,11 @@ public class LogiqxXMLParser extends XMLHandler<LogiqxXMLParser.Data>
   long crc;
   byte[] md5;
   byte[] sha1;
+  
+  public void setGameFactory(Supplier<Game> gameFactory)
+  {
+    this.gameFactory = gameFactory;
+  }
   
   @Override
   protected void init()
@@ -101,10 +109,13 @@ public class LogiqxXMLParser extends XMLHandler<LogiqxXMLParser.Data>
         case "description": gameDescription = asString(); break;
         case "game":
         {
-          game = new Game(rom);
+          game = gameFactory.get();
+          
+          game.setRom(rom);
           game.setTitle(gameName);
           game.setDescription(gameDescription);
           games.add(game); 
+          
           game = null; 
           rom = null;
           break;

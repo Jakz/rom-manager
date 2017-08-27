@@ -109,6 +109,13 @@
     </repository>
   </repositories>
 	<dependencies>
+    <!-- pixlib related -->
+    <dependency>
+        <groupId>com.esotericsoftware.yamlbeans</groupId>
+        <artifactId>yamlbeans</artifactId>
+        <version>1.08</version>
+    </dependency>
+    <!-- normal -->
 		<dependency>
 			<groupId>org.jparsec</groupId>
 			<artifactId>jparsec</artifactId>

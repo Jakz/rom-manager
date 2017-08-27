@@ -202,11 +202,11 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	  
 	  cbRomSets.removeAllItems();
 	  
-	  List<Platform> systems = Platform.sortedValues();
+	  List<Platform> platforms = Platform.sortedValues();
 	  List<GameSet> sets = GlobalSettings.settings.getEnabledProviders().stream().map(setManager::byIdent).collect(Collectors.toList());
 	  
-	  systems.forEach(s -> {
-	    sets.stream().filter(rs -> rs.platform.equals(s)).forEach(cbRomSets::addItem);
+	  platforms.forEach(s -> {
+	    sets.stream().filter(rs -> rs.platform().equals(s)).forEach(cbRomSets::addItem);
 	  });
 	  
 	  if (current != null && sets.contains(current))

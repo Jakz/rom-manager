@@ -24,7 +24,7 @@ public class GameEntry implements WorkflowData
   public GameEntry(Game game)
   {
     this.game = game;
-    this.fileName = () -> game.getTitle() + "." + game.getSystem().exts[0];
+    this.fileName = () -> game.getTitle() + "." + game.getPlatform().exts[0];
     this.folder = () -> Paths.get(".");
   }
 

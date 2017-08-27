@@ -74,7 +74,7 @@ public class SetInfoPanel extends JPanel
 	  {
 	    rows = new InfoRow<?>[] {
 	      new InfoRow<String>("Provider", () -> set.info().getName()),
-	      new InfoRow<Platform>("System", () -> set.platform),
+	      new InfoRow<Platform>("System", () -> set.platform()),
 	      new InfoRow<String>("Game Count", () -> set.info().gameCount() + " games"),
 	      new InfoRow<String>("Unique Game Count", () -> set.info().uniqueGameCount() + " games"),
 	      new InfoRow<String>("Rom Count", () -> set.info().romCount() + " roms"),

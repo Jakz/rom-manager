@@ -48,7 +48,7 @@ public class Rom implements Verifiable
   public void setHandle(Handle handle) { this.handle = handle; }
   public Handle handle() { return handle; }
   
-  public void setGame(Game game) { this.game = game; }
+  void setGame(Game game) { this.game = game; }
   public Game game() { return game; }
     
   @Override public String toString()
