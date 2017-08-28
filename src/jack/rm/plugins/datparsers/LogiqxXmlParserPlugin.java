@@ -12,6 +12,7 @@ import com.github.jakz.romlib.data.set.GameList;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.parsers.LogiqxXMLParser;
 import com.github.jakz.romlib.parsers.XMDBParser;
+import com.github.jakz.romlib.parsers.cataloguers.NoIntroCataloguer;
 import com.pixbits.lib.io.FileUtils;
 import com.pixbits.lib.io.xml.XMLParser;
 
@@ -27,7 +28,7 @@ public class LogiqxXmlParserPlugin extends DatParserPlugin
   @Override
   public DataSupplier buildDatLoader(String format, Map<String, Object> arguments)
   {
-    return new LogiqxXmlSupplier();
+    return DataSupplier.derive(new LogiqxXmlSupplier(), new NoIntroCataloguer());
   }
   
   class LogiqxXmlSupplier implements DataSupplier

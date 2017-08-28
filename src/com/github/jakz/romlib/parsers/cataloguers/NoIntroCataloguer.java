@@ -39,6 +39,8 @@ public class NoIntroCataloguer implements GameCataloguer
     mappers.put("France", game -> game.getLocation().add(Location.FRANCE));
     mappers.put("Germany", game -> game.getLocation().add(Location.GERMANY));
     mappers.put("Spain", game -> game.getLocation().add(Location.SPAIN));
+    mappers.put("Poland", game -> game.getLocation().add(Location.POLAND));
+    mappers.put("Portugal", game -> game.getLocation().add(Location.PORTUGAL));
     mappers.put("Canada", game -> game.getLocation().add(Location.CANADA));
     mappers.put("Korea", game -> game.getLocation().add(Location.KOREA));
     mappers.put("Sweden", game -> game.getLocation().add(Location.SWEDEN));
@@ -47,11 +49,11 @@ public class NoIntroCataloguer implements GameCataloguer
     mappers.put("Brazil", game -> game.getLocation().add(Location.BRASIL));
     mappers.put("Netherlands", game -> game.getLocation().add(Location.NETHERLANDS));
     mappers.put("Russia", game -> game.getLocation().add(Location.RUSSIA));
+    mappers.put("Norway", game -> game.getLocation().add(Location.NORWAY));
     mappers.put("Croatia", game -> game.getLocation().add(Location.CROATIA));
     mappers.put("Taiwan", game -> game.getLocation().add(Location.TAIWAN));
     mappers.put("Hong Kong", game -> game.getLocation().add(Location.HONG_KONG));
     mappers.put("Unknown", game -> {}); // maybe a Location.UNKNOWN should be used?
-
 
     mappers.put("En", game -> game.getLanguages().add(Language.ENGLISH));
     mappers.put("It", game -> game.getLanguages().add(Language.ITALIAN));
@@ -69,6 +71,11 @@ public class NoIntroCataloguer implements GameCataloguer
     mappers.put("Ca", game -> game.getLanguages().add(Language.CATALAN));
     mappers.put("Zh", game -> game.getLanguages().add(Language.CHINESE));
     mappers.put("Hr", game -> game.getLanguages().add(Language.CROATIAN));
+    mappers.put("Ru", game -> game.getLanguages().add(Language.RUSSIAN));
+    mappers.put("Pl", game -> game.getLanguages().add(Language.POLISH));
+    mappers.put("Ru", game -> game.getLanguages().add(Language.RUSSIAN));
+    mappers.put("El", game -> game.getLanguages().add(Language.GREEK));
+
     
     mappers.put("Demo", game -> game.setVersion(Version.DEMO));
     mappers.put("Sample", game -> game.setVersion(Version.SAMPLE));
@@ -113,9 +120,9 @@ public class NoIntroCataloguer implements GameCataloguer
           if (matched)
           {
             int major = Integer.parseInt(matcher.group(1));
-            int minor = Integer.parseInt(matcher.group(2));
+            //int minor = Integer.parseInt(matcher.group(2));
             String suffix = matcher.group(3);
-            game.setVersion(new Version.Numbered(major, minor, suffix));
+            game.setVersion(new Version.Numbered(major, matcher.group(2), suffix));
           }
           
           return matched;
@@ -186,15 +193,10 @@ public class NoIntroCataloguer implements GameCataloguer
     });    
   }
   
+  @Override public void done() { printAddendums(); }
+  
   public void printAddendums()
-  {
-    /*AtomicInteger cnt = new AtomicInteger();
-    unknownTokens.forEach((k,v) -> {
-      System.out.print(k+", ");
-      if (cnt.incrementAndGet() % 10 == 0)
-        System.out.println("");
-    });*/
-    
+  {    
     unknownTokens.forEach((k,v) -> {
       System.out.println(k+":");
       v.forEach(g -> System.out.println("   "+g));

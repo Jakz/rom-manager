@@ -3,14 +3,15 @@ package com.github.jakz.romlib.data.set;
 import java.util.Optional;
 
 import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.parsers.cataloguers.GameCataloguer;
 
 public interface DataSupplier
-{
+{ 
   public class Data
   {
     public final Optional<GameList> games;
     public final Optional<CloneSet> clones;
-    public final Optional<Provider> provider;
+    public final Optional<Provider> provider;    
     
     public Data(GameList games, CloneSet clones, Provider provider)
     {
@@ -26,6 +27,22 @@ public interface DataSupplier
   
   Data load(GameSet set);
   DatFormat getFormat();
+  
+  public static DataSupplier derive(final DataSupplier supplier, final GameCataloguer cataloguer)
+  {
+    return new DataSupplier()
+    {
+      @Override public Data load(GameSet set)
+      {
+        Data data = supplier.load(set);
+        data.games.ifPresent(games -> games.forEach(game -> cataloguer.catalogue(game)));
+        cataloguer.done();
+        return data;
+      }
+      
+      @Override public DatFormat getFormat() { return supplier.getFormat(); }
+    };
+  }
   
   public static DataSupplier build(final DatFormat format)
   {

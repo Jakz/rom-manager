@@ -19,6 +19,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -213,7 +214,7 @@ public class ASParserMain
   private static Map<String, Language> languageMap = new HashMap<>();
   private static Map<String, SaveFactory> saveMap = new HashMap<>();
   private static Map<String, Integer> sizeMap = new HashMap<>();
-  private static Map<String, VersionFactory> versionMap = new HashMap<>();
+  private static Map<String, Supplier<Version>> versionMap = new HashMap<>();
 
 
   private static class SaveFactory
@@ -223,14 +224,6 @@ public class ASParserMain
     
     SaveFactory(GB.Save.Type type, long size) { this.type = type; this.size = size; }
     GB.Save build() { return new GB.Save(type, size); }
-  }
-  
-  private static class VersionFactory
-  {
-    final private int major, minor;
-
-    VersionFactory(int major, int minor) { this.major = major; this.minor = minor; }
-    Version build() { return major != 0 || minor != 0 ? new Version.Numbered(major, minor) : Version.UNSPECIFIED; }
   }
   
   static
@@ -286,12 +279,12 @@ public class ASParserMain
     sizeMap.put("64 Mbit", mbit1*64);
 
     
-    versionMap.put("1.0", new VersionFactory(1,0));
-    versionMap.put("1.1)", new VersionFactory(1,1));
-    versionMap.put("1.1", new VersionFactory(1,1));
-    versionMap.put("1.16", new VersionFactory(1,16));
-    versionMap.put("1.2", new VersionFactory(1,2));
-    versionMap.put("n/a", new VersionFactory(0,0));
+    versionMap.put("1.0", () -> new Version.Numbered(1, 0));
+    versionMap.put("1.1)", () -> new Version.Numbered(1, 1));
+    versionMap.put("1.1", () -> new Version.Numbered(1, 1));
+    versionMap.put("1.16", () -> new Version.Numbered(1, 16));
+    versionMap.put("1.2", () -> new Version.Numbered(1, 2));
+    versionMap.put("n/a", () -> Version.UNSPECIFIED);
 
   }
   
@@ -467,7 +460,7 @@ public class ASParserMain
     
     j.publisher = e.publisher;
     j.group = e.group;
-    j.version = versionMap.get(e.version).build();
+    j.version = versionMap.get(e.version).get();
     j.romCrc = Long.parseLong(e.crc.toLowerCase(), 16);
     j.romSize = sizeMap.get(e.size);
     j.saveType = saveMap.get(e.saveType).build();
