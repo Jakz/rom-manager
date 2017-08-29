@@ -1,6 +1,8 @@
 package com.github.jakz.romlib.data.game.attributes;
 
 import com.github.jakz.romlib.data.game.RomSize;
+import com.github.jakz.romlib.data.game.RomSize.PrintStyle;
+import com.github.jakz.romlib.data.game.RomSize.PrintUnit;
 import com.github.jakz.romlib.data.game.VideoFormat;
 
 import java.util.Arrays;
@@ -24,13 +26,18 @@ public enum GameAttribute implements Attribute
   COMMENT(String.class, Text.ROM_INFO_COMMENT),
   LOCATION(Text.ROM_INFO_LOCATION),
   LANGUAGE(Text.ROM_INFO_LANGUAGES) { 
-    public String prettyValue(Object value) { 
+    @Override public String prettyValue(Object value) { 
       return Language.asString((LanguageSet)value); 
       }
   },
   SERIAL(Text.ROM_INFO_SERIAL),
   SAVE_TYPE(Text.ROM_INFO_SAVE_TYPE),
-  SIZE(Text.GAME_INFO_SIZE),
+  SIZE(Text.GAME_INFO_SIZE) {
+    @Override public String prettyValue(Object value) {
+      RomSize size = (RomSize)value;
+      return size.toString(PrintStyle.SHORT, PrintUnit.BITS) + " (" + size.toString(PrintStyle.SHORT, PrintUnit.BYTES) + ")";
+    }
+  },
   
   GENRE(Genre.class, Text.ROM_INFO_GENRE),
   TAG(String.class, Text.ROM_INFO_TAG),

@@ -93,7 +93,8 @@ public class SetInfoPanel extends JPanel
         }),
         new InfoRow<String>("Multiple roms per game?", () -> {
           return set.hasFeature(Feature.SINGLE_ROM_PER_GAME) ? "no" : "yes";
-        })
+        }),
+        new InfoRow<String>("Has finite size set?", () -> set.hasFeature(Feature.FINITE_SIZE_SET) ? "yes" : "no")
 
 	    };
 	  }

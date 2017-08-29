@@ -30,7 +30,7 @@ class TextAttributeField extends AttributeField implements CaretListener, Action
   
   private Border defaultBorder;
   private Color defaultColor;
-  
+    
   JComponent getComponent() { return value; }
   
   Object parseValue()

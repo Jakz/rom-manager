@@ -44,13 +44,7 @@ public class Game implements Comparable<Game>, Iterable<Rom>, GameAttributeInter
   public boolean hasCustomAttribute(Attribute attrib) { return info.hasCustomAttribute(attrib); }
   public boolean hasAnyCustomAttribute() { return info.hasAnyCustomAttribute(); }
   public void clearCustomAttribute(Attribute attrib) { info.clearCustomAttribute(attrib); }
-  
-  @Override public RomSize getSize()
-  {
-    return info.computeIfAbsent(GameAttribute.SIZE, 
-      () -> new RomSize(stream().mapToLong(Rom::size).sum()));
-  }
-  
+
   public Attachments getAttachments() { return attachments; }
 
 	public Game(GameSet set)
@@ -77,6 +71,7 @@ public class Game implements Comparable<Game>, Iterable<Rom>, GameAttributeInter
 	{
 	  this.roms = roms;
 	  Arrays.stream(roms).forEach(r -> r.setGame(this));
+	  info.setAttribute(GameAttribute.SIZE, new RomSize(stream().mapToLong(Rom::size).sum()));
 	}
 	
 	public GameSet getGameSet() { return set; }
@@ -87,7 +82,7 @@ public class Game implements Comparable<Game>, Iterable<Rom>, GameAttributeInter
 
 	public long getSizeInBytes()
 	{
-	  return Arrays.stream(roms).map(Rom::size).mapToLong(i -> i).sum();
+	  return info.getSize().bytes();
 	}
 
 	@Override public Iterator<Rom> iterator() { return Arrays.asList(roms).iterator(); }
