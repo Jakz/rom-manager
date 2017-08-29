@@ -14,6 +14,7 @@ import com.github.jakz.romlib.data.game.Rom;
 import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.set.DatFormat;
 import com.github.jakz.romlib.data.set.DataSupplier;
+import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameList;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.parser.SimpleParser;
@@ -114,7 +115,7 @@ public class ClrMameProParser implements DataSupplier
       started = true;
       games = new ArrayList<>();
       roms = new ArrayList<>();
-      sizeSet = new RomSize.Set();
+      sizeSet = set.hasFeature(Feature.FINITE_SIZE_SET) ? new RomSize.RealSet() : new RomSize.NullSet();
     }
   }
 }

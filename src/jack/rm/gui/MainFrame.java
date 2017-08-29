@@ -377,7 +377,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	  countPanel.gameSetLoaded(set);
 	  
 	  searchPanel.activate(false);
-	  searchPanel.resetFields(set.helper().searcher(), set.sizeSet());
+	  searchPanel.resetFields(set);
 	  searchPanel.activate(true);
 	  
 	  searchPanel.toggle(set.getSettings().plugins.getEnabledPlugin(PluginRealType.SEARCH) != null ? set.helper().searcher() : null);

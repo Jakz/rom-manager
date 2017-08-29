@@ -5,9 +5,11 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.set.CloneSet;
 import com.github.jakz.romlib.data.set.DatFormat;
 import com.github.jakz.romlib.data.set.DataSupplier;
+import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameList;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.parsers.LogiqxXMLParser;
@@ -41,6 +43,8 @@ public class LogiqxXmlParserPlugin extends DatParserPlugin
       {
         LogiqxXMLParser xmlParser = new LogiqxXMLParser();
         xmlParser.setGameFactory(() -> new Game(set));
+        xmlParser.initSizeSet(set.hasFeature(Feature.FINITE_SIZE_SET));
+
         
         XMLParser<LogiqxXMLParser.Data> parser = new XMLParser<>(xmlParser);
         LogiqxXMLParser.Data data = parser.load(set.datPath());

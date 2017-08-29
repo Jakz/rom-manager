@@ -1,10 +1,13 @@
 package jack.rm.data.romset;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.data.set.organizers.GameRenamer;
 import com.pixbits.lib.searcher.DummySearcher;
@@ -25,11 +28,14 @@ public class GameSetFeatures
   private GameRenamer renamer;
   private Scanner scanner;
   
-  public GameSetFeatures(GameSet set)
+  private Set<Feature> features;
+    
+  public GameSetFeatures(GameSet set, Feature... features)
   {
     this.set = set;
-    searcher = new DummySearcher<>();
-    renamer = GameRenamer.DUMMY;
+    this.searcher = new DummySearcher<>();
+    this.renamer = GameRenamer.DUMMY;
+    this.features = new HashSet<>(Arrays.asList(features));
   }
   
   public void pluginStateChanged()
@@ -58,6 +64,7 @@ public class GameSetFeatures
     scanner = new Scanner(set);
   }
   
+  public boolean hasFeature(Feature feature) { return features.contains(feature); }
   public Searcher<Game> searcher() { return searcher; }
   public GameRenamer renamer() { return renamer; }
   public Scanner scanner() { return scanner; }

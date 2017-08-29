@@ -1,6 +1,8 @@
 package com.github.jakz.romlib.data.game;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Stream;
@@ -126,27 +128,50 @@ public class RomSize implements Comparable<RomSize>
 	{
 		return Long.compare(this.bytes, s.bytes);
 	}
-
-	public static class Set
+	
+	private static long roundToKByte(long size)
 	{
-	  private final Map<Long, RomSize> mapping = new TreeMap<>();
+    long reminder = size % KBYTE;
+    
+    if (reminder != 0)
+    {
+      if (reminder < KBYTE/2)
+        size -= reminder;
+      else
+        size += KBYTE - reminder;
+    }
+    
+    return size;
+	}
+	
+	public static abstract class Set implements Iterable<RomSize>
+	{
+	  public final RomSize forBytes(long size) { return forBytes(size, true); }
+	  abstract RomSize forBytes(long size, boolean addToList);
 	  
-	  public RomSize forBytes(long size)
+	  protected RomSize forBytesImpl(long size)
 	  {
-	    return forBytes(size, true);
+	    return new RomSize(size);
 	  }
-	  
+	}
+	
+	public static class NullSet extends Set
+	{
 	  public RomSize forBytes(long size, boolean addToList)
 	  {
-	    long reminder = size % KBYTE;
-	    
-	    if (reminder != 0)
-	    {
-	      if (reminder < KBYTE/2)
-	        size -= reminder;
-	      else
-	        size += KBYTE - reminder;
-	    }
+	    return forBytesImpl(size);
+	  }
+	  
+	  public Iterator<RomSize> iterator() { return Collections.emptyIterator(); }
+	}
+
+	public static class RealSet extends Set
+	{
+	  private final Map<Long, RomSize> mapping = new TreeMap<>();
+
+	  public RomSize forBytes(long size, boolean addToList)
+	  {
+	    size = roundToKByte(size);
 
 	    RomSize m = mapping.get(size);
 	    
@@ -161,6 +186,7 @@ public class RomSize implements Comparable<RomSize>
 	    return m;
 	  }
 	  
+	  public Iterator<RomSize> iterator() { return values().iterator(); }
 	  public Collection<RomSize> values() { return mapping.values(); }
 	}
 }

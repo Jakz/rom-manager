@@ -71,7 +71,7 @@ public class GameSet implements Iterable<Game>, GameMap
 	private final AssetCache assetCache;
 	private final Attribute[] attributes;
 
-	public GameSet(Platform platform, Provider provider, DataSupplier loader, DatFormat format, Attribute[] attributes, AssetManager assetManager)
+	public GameSet(Platform platform, Provider provider, DataSupplier loader, DatFormat format, Attribute[] attributes, AssetManager assetManager, Feature... features)
 	{
 		Objects.requireNonNull(platform);
 	  this.info = new GameSetInfo(provider, format, assetManager);
@@ -82,7 +82,7 @@ public class GameSet implements Iterable<Game>, GameMap
 		this.attributes = attributes;
 		this.loaded = false;
 		this.assetCache = new AssetCache();
-		this.helper = new GameSetFeatures(this);
+		this.helper = new GameSetFeatures(this, features);
 	}
 	
 	public GameSet(Platform platform, Provider provider, DataSupplier loader)
@@ -322,7 +322,7 @@ public class GameSet implements Iterable<Game>, GameMap
     else if (feature == Feature.CLONES)
       return clones != null && clones.size() > 0;
     else
-      return false;
+      return helper.hasFeature(feature);
   }
   
   public List<Game> filter(String query)

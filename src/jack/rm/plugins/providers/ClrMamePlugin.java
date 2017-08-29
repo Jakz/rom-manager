@@ -8,6 +8,7 @@ import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.set.DatFormat;
 import com.github.jakz.romlib.data.set.DataSupplier;
+import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.data.set.Provider;
 
@@ -52,7 +53,8 @@ public class ClrMamePlugin extends ProviderPlugin
           parser,
           format,
           GG_ATTRIBUTES, 
-          AssetManager.DUMMY
+          AssetManager.DUMMY,
+          Feature.FINITE_SIZE_SET
       );
     }
     
@@ -66,7 +68,8 @@ public class ClrMamePlugin extends ProviderPlugin
           parser,
           format,
           GG_ATTRIBUTES, 
-          AssetManager.DUMMY
+          AssetManager.DUMMY,
+          Feature.FINITE_SIZE_SET
       );
     }
     

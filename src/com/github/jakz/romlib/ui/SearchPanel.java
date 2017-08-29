@@ -2,6 +2,9 @@ package com.github.jakz.romlib.ui;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import javax.swing.BoxLayout;
@@ -14,8 +17,11 @@ import javax.swing.SwingUtilities;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.RomSize;
+import com.github.jakz.romlib.data.set.Feature;
+import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.Location;
+import com.github.jakz.romlib.data.game.LocationSet;
 import com.pixbits.lib.searcher.SearcherInterface;
 import com.pixbits.lib.ui.elements.JPlaceHolderTextField;
 
@@ -146,17 +152,8 @@ public class SearchPanel extends JPanel
 		setComboBoxSelectedBackground(languages);
 		setComboBoxSelectedBackground(sizes);
 		
-		locations.addItem(null);
-		for (Location l : Location.values())
-		  if (l != Location.NONE)
-		    locations.addItem(l);
 		locations.setRenderer(new LocationCellRenderer());
-		
-		languages.addItem(null);
-		for (Language l : Language.values())
-			languages.addItem(l);
 		languages.setRenderer(new LanguageCellRenderer());
-		
 		sizes.setRenderer(new RomSizeCellRenderer());
 		
 		freeSearchField.addCaretListener(e -> { if (active) refreshCallback.run(); } );
@@ -198,23 +195,63 @@ public class SearchPanel extends JPanel
 	  return predicate;
 	}
 	
-	public void resetFields(SearcherInterface<Game> searcher, final RomSize.Set set)
+	public void resetFields(GameSet set)//  SearcherInterface<Game> searcher, final RomSize.Set set)
 	{
-		this.searcher = searcher;
+		this.searcher = set.helper().searcher();
 	  
-	  SwingUtilities.invokeLater(new Runnable() {
-			@Override
-      public void run() {
-				sizes.removeAllItems();
-				sizes.addItem(null);
-				for (RomSize s : set.values())
-					sizes.addItem(s);
-			}
+		final boolean supportSizeSet = set.hasFeature(Feature.FINITE_SIZE_SET);
+
+	  SwingUtilities.invokeLater(() -> {
+	    freeSearchField.setText("");
+	    sizes.setSelectedIndex(-1);
+	    locations.setSelectedIndex(-1);
+	    languages.setSelectedIndex(-1);
+	    
+		  sizes.setVisible(supportSizeSet);
+		  if (supportSizeSet)
+		  {
+		    sizes.removeAllItems();
+		    sizes.addItem(null);
+		    for (RomSize s : set.sizeSet())
+		      sizes.addItem(s);		    
+		  }
+		  
+      Set<Language> usedLanguages = new HashSet<>();
+      LocationSet usedLocations = new LocationSet();
+      
+      /* add all found languages to used languages set */
+      set.stream()
+        .flatMap(game -> game.getLanguages().stream())
+        .forEach(usedLanguages::add);
+      
+      languages.removeAllItems();
+      languages.addItem(null);
+      usedLanguages.stream()
+        .sorted((l1,l2) -> l1.fullName.compareTo(l2.fullName))
+        .forEach(languages::addItem);
+      
+      /* add all found locations to used locations set */
+      set.stream()
+        .map(game -> game.getLocation())
+        .forEach(locations -> usedLocations.add(locations));
+      
+      locations.removeAllItems();
+      locations.addItem(null);
+      Arrays.stream(Location.values())
+        .filter(location -> usedLocations.is(location))
+        .sorted((l1,l2) -> {
+          if (!(l1.isComposite() ^ l2.isComposite()))
+            return l1.fullName.compareTo(l2.fullName);
+          else if (!l1.isComposite())
+            return -1;
+          else if (!l2.isComposite())
+            return 1;
+          else
+            return 0;
+        })
+        .forEach(locations::addItem);
 		});
 		
-		freeSearchField.setText("");
-		sizes.setSelectedIndex(-1);
-		locations.setSelectedIndex(-1);
-		languages.setSelectedIndex(-1);
+
 	}
 }

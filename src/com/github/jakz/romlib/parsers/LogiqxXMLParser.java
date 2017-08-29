@@ -15,6 +15,7 @@ import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.Rom;
 import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.set.DataSupplier;
+import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameList;
 import com.pixbits.lib.io.xml.XMLHandler;
 import com.pixbits.lib.io.xml.XMLParser;
@@ -37,7 +38,7 @@ public class LogiqxXMLParser extends XMLHandler<LogiqxXMLParser.Data>
   
   Status status;
   
-  RomSize.Set sizeSet;
+  RomSize.Set sizeSet = new RomSize.NullSet();
   
   Map<String, String> attributes;
   
@@ -54,6 +55,12 @@ public class LogiqxXMLParser extends XMLHandler<LogiqxXMLParser.Data>
   byte[] md5;
   byte[] sha1;
   
+  public void initSizeSet(boolean finite)
+  {
+    sizeSet = finite ? new RomSize.RealSet() : new RomSize.NullSet();
+
+  }
+  
   public void setGameFactory(Supplier<Game> gameFactory)
   {
     this.gameFactory = gameFactory;
@@ -64,7 +71,6 @@ public class LogiqxXMLParser extends XMLHandler<LogiqxXMLParser.Data>
   {
     status = Status.NOWHERE;
     games = new ArrayList<>();
-    sizeSet = new RomSize.Set();
     attributes = new HashMap<>();
   }
 

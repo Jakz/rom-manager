@@ -63,7 +63,7 @@ public enum Language
 	{
 		return fullName;
 	}
-	
+		
 	static Language forName(String language)
 	{
 		return mapping.get(language);

@@ -29,6 +29,7 @@ import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.set.CloneSet;
 import com.github.jakz.romlib.data.set.DatFormat;
 import com.github.jakz.romlib.data.set.DataSupplier;
+import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameList;
 import com.github.jakz.romlib.data.set.GameSet;
 
@@ -89,7 +90,7 @@ public class OfflineListParserPlugin extends DatParserPlugin
     private Game game;
     long crc = -1;
     RomSize size = null;
-    RomSize.Set sizeSet = new RomSize.Set();
+    RomSize.Set sizeSet;
     private List<Game> games = new ArrayList<>();
     private Map<String, GameSave<?>> saves = new TreeMap<>();
     private Map<Integer, Set<Game>> clones = new HashMap<>();
@@ -104,6 +105,7 @@ public class OfflineListParserPlugin extends DatParserPlugin
     public void setRomSet(GameSet set)
     {
       super.setRomSet(set);
+      this.sizeSet = set.hasFeature(Feature.FINITE_SIZE_SET) ? new RomSize.RealSet() : new RomSize.NullSet();
       this.assets = set.getAssetManager().getSupportedAssets();
     }
     
