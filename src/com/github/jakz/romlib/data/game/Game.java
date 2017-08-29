@@ -45,6 +45,12 @@ public class Game implements Comparable<Game>, Iterable<Rom>, GameAttributeInter
   public boolean hasAnyCustomAttribute() { return info.hasAnyCustomAttribute(); }
   public void clearCustomAttribute(Attribute attrib) { info.clearCustomAttribute(attrib); }
   
+  @Override public RomSize getSize()
+  {
+    return info.computeIfAbsent(GameAttribute.SIZE, 
+      () -> new RomSize(stream().mapToLong(Rom::size).sum()));
+  }
+  
   public Attachments getAttachments() { return attachments; }
 
 	public Game(GameSet set)

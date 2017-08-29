@@ -36,6 +36,7 @@ import jack.rm.gui.Dialogs;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.plugins.PluginRealType;
+import jack.rm.plugins.scanners.FormatSupportPlugin;
 import jack.rm.plugins.scanners.ScannerPlugin;
 import jack.rm.plugins.scanners.VerifierPlugin;
 import net.sf.sevenzipjbinding.SevenZip;
@@ -51,7 +52,9 @@ public class Scanner
 	private Set<ScanResult> clones = new TreeSet<>();
 	
 	ScannerPlugin scanner;
+	// TODO: support for multiple verifiers?
 	VerifierPlugin verifier;
+	Set<FormatSupportPlugin> formats;
 		
   public Scanner(GameSet set)
 	{
@@ -59,10 +62,19 @@ public class Scanner
     
     scanner = set.getSettings().plugins.getEnabledPlugin(PluginRealType.SCANNER);
 	  verifier = set.getSettings().plugins.getEnabledPlugin(PluginRealType.VERIFIER);
+	  //TODO: sort according to priority
+	  formats = set.getSettings().plugins.getEnabledPlugins(PluginRealType.FORMAT_SUPPORT);
 	  
 	  if (verifier != null)
 	    verifier.setup(set);
 	}
+  
+  private VerifierEntry transformEntry(VerifierEntry entry)
+  {
+    for (FormatSupportPlugin plugin : formats)
+      entry = plugin.getSpecializedEntry(entry);
+    return entry;
+  }
 
 	private void foundRom(ScanResult result)
 	{
@@ -125,6 +137,7 @@ public class Scanner
     {
       entries = scanner.scanFile(path);
       return entries.stream()
+      .map(entry -> transformEntry(entry))
       .map(entry -> verifier.verifyHandle(entry))
       .flatMap(r -> r.stream())
       .filter(s -> s.rom != null)
@@ -169,6 +182,7 @@ public class Scanner
 	      });
 	    };
 	    
+	    /*
 	    AsyncGuiPoolWorker<VerifierEntry,List<ScanResult>> worker = new AsyncGuiPoolWorker<>(operation, guiProgress);
 	    
 	    SwingUtilities.invokeLater(() -> {
@@ -176,6 +190,7 @@ public class Scanner
 	    });
 
 	    worker.compute(entries, callback, onComplete);
+	    */
 	  };
 	}
 		
@@ -249,12 +264,21 @@ public class Scanner
 	      SwingUtilities.invokeLater(() -> {
           Main.progress.finished();
           
-          HandleSet handleSet = new HandleSet(foundEntries);
-          logger.i(LogTarget.romset(set), "Found %d potential matches (%d binary, %d inside archives, %d nested inside %d archives).", 
-              handleSet.totalHandles, handleSet.binaryCount, handleSet.archiveCount, handleSet.nestedArchiveInnerCount, handleSet.nestedArchiveCount);
-          foundEntries.forEach(h -> logger.d(LogTarget.romset(set), "> %s", h.toString()));
+          List<VerifierEntry> transformedEntries = foundEntries.stream()
+            .map(e -> transformEntry(e))
+            .collect(Collectors.toList());
           
-          Runnable verifyTask = verifyTask(foundEntries, total);
+          HandleSet handleSet = new HandleSet(transformedEntries);
+          HandleSet.Stats stats = handleSet.stats();
+
+          
+          
+          logger.i(LogTarget.romset(set), "Found %d potential matches (%d binary, %d inside archives, %d nested inside %d archives).", 
+              stats.totalHandles, stats.binaryCount, stats.archiveCount, stats.nestedArchiveInnerCount, stats.nestedArchiveCount);
+          
+          transformedEntries.forEach(h -> logger.d(LogTarget.romset(set), "> %s", h.toString()));
+          
+          Runnable verifyTask = verifyTask(transformedEntries, total);
           verifyTask.run();
 	      });
 	    };

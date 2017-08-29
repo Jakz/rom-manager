@@ -131,7 +131,6 @@ public class CSOInputStream extends InputStream implements AutoCloseable
   {
     if (in != null)
       in.close();
-    System.out.println("closed");
   }
   
   @Override

@@ -75,6 +75,11 @@ public class RomSize implements Comparable<RomSize>
 		return bytes;
 	}
 	
+	public RomSize add(RomSize other)
+	{
+	  return new RomSize(bytes + other.bytes);
+	}
+	
 	public String toString(PrintStyle style, PrintUnit unit)
 	{
 	  return toString(bytes, style, unit);

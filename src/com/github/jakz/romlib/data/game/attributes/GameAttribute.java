@@ -30,6 +30,7 @@ public enum GameAttribute implements Attribute
   },
   SERIAL(Text.ROM_INFO_SERIAL),
   SAVE_TYPE(Text.ROM_INFO_SAVE_TYPE),
+  SIZE(Text.GAME_INFO_SIZE),
   
   GENRE(Genre.class, Text.ROM_INFO_GENRE),
   TAG(String.class, Text.ROM_INFO_TAG),

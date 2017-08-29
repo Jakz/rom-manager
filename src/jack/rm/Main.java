@@ -170,6 +170,8 @@ public class Main
     manager.register(jack.rm.plugins.scanners.EmbeddedScanner.class);
     
     manager.register(jack.rm.plugins.scanners.DigestVerifier.class);
+    
+    manager.register(jack.rm.plugins.scanners.CSOSupportPlugin.class);
 	}
 	
 	public static void dumpInfo()
@@ -334,7 +336,7 @@ public class Main
 	
 	public static void main(String[] args)
 	{    
-	  try
+	  /*try
     {
 	    Path path = Paths.get("/Volumes/Vicky/Roms/roms/psp/SORTED/Action/Diner Dash [EUR].cso");
 	    
@@ -342,7 +344,7 @@ public class Main
 	    handle.computeCRC();
 	    System.out.printf("%08X %s %s\n", handle.crc(), StringUtils.humanReadableByteCount(handle.compressedSize()), StringUtils.humanReadableByteCount(handle.size()));
 	    
-	    /*
+	    
 	    CSOInfo info = new CSOInfo(path);
       System.out.println("Sectors: "+info.sectorCount()+" size: "+info.uncompressedSize());
       
@@ -353,7 +355,7 @@ public class Main
       Digester digester = new Digester(new DigestOptions(true, false, false, false));
       DigestInfo d = digester.digest(null, mis);
         
-      System.out.println(d);    */  
+      System.out.println(d);      
     } 
 	  catch (IOException | NoSuchAlgorithmException e1)
     {
@@ -361,7 +363,7 @@ public class Main
     }
 	  
 	  if (true)
-	    return;
+	    return;*/
 	  
 	  //patchTest();
 	  

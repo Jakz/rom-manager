@@ -2,6 +2,7 @@ package com.github.jakz.romlib.data.game.attributes;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class AttributeSet implements GameAttributeInterface
@@ -37,6 +38,19 @@ public class AttributeSet implements GameAttributeInterface
   public boolean hasAnyCustomAttribute()
   {
     return !customAttributes.isEmpty();
+  }
+  
+  public <T> T computeIfAbsent(Attribute key, Supplier<T> supplier)
+  {
+    T attrib = getAttribute(key);
+    
+    if (attrib == null)
+    {
+      attrib = supplier.get();
+      setAttribute(key, attrib);
+    }
+   
+    return attrib;
   }
   
   public Stream<Map.Entry<Attribute, Object>> getCustomAttributes() { return customAttributes.entrySet().stream(); }

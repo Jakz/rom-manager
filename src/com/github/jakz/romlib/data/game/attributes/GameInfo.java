@@ -2,6 +2,7 @@ package com.github.jakz.romlib.data.game.attributes;
 
 import com.github.jakz.romlib.data.game.LanguageSet;
 import com.github.jakz.romlib.data.game.LocationSet;
+import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.game.Version;
 
 public class GameInfo extends AttributeSet

@@ -14,6 +14,11 @@ import com.pixbits.lib.plugin.PluginType;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.PluginRealType;
 
+/**
+ * This plugin type is meant t
+ * @author jack
+ *
+ */
 public abstract class ScannerPlugin extends ActualPlugin
 {  
   @Override public final boolean isNative() { return false; }

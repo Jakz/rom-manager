@@ -28,7 +28,12 @@ public class CSOBinaryHandle extends Handle
     size = -1L;
     compressedSize = -1L;
     crc = -1L;
-    
+  }
+  
+  public CSOBinaryHandle(Path path, CSOInfo info)
+  {
+    this(path);
+    this.info = info;
   }
   
   private void cacheInfoIfNeeded() throws IOException
@@ -72,7 +77,17 @@ public class CSOBinaryHandle extends Handle
   @Override
   public long crc()
   {
-     return crc;
+    try
+    {
+      if (crc == -1)
+        computeCRC();
+    } 
+    catch (IOException|NoSuchAlgorithmException e)
+    {
+      e.printStackTrace();
+    }
+
+    return crc;
   }
 
   @Override

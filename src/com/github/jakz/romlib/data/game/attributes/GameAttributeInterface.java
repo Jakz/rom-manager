@@ -2,6 +2,7 @@ package com.github.jakz.romlib.data.game.attributes;
 
 import com.github.jakz.romlib.data.game.LanguageSet;
 import com.github.jakz.romlib.data.game.LocationSet;
+import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.game.Version;
 import com.github.jakz.romlib.data.game.VideoFormat;
 
@@ -38,6 +39,7 @@ public interface GameAttributeInterface
   default void setDescription(String description) { setAttribute(GameAttribute.DESCRIPTION, description); }
   default String getDescription() { return getAttribute(GameAttribute.DESCRIPTION); }
   
+  default RomSize getSize() { return getAttribute(GameAttribute.SIZE); }
   default LocationSet getLocation() { return getAttribute(GameAttribute.LOCATION); }
   default LanguageSet getLanguages() { return getAttribute(GameAttribute.LANGUAGE); }
   
@@ -52,4 +54,5 @@ public interface GameAttributeInterface
   
   default void setVideoFormat(VideoFormat format) { setAttribute(GameAttribute.VIDEO_FORMAT, format); }
   default VideoFormat getVideoFormat() { return getAttribute(GameAttribute.VIDEO_FORMAT); }
+  
 }

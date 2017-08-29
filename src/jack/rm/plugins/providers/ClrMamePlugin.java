@@ -19,6 +19,7 @@ public class ClrMamePlugin extends ProviderPlugin
   private final static Attribute[] GG_ATTRIBUTES = 
   {
     GameAttribute.TITLE,
+    GameAttribute.SIZE,
     GameAttribute.LOCATION,
     GameAttribute.LANGUAGE,
     GameAttribute.VERSION,

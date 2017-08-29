@@ -81,7 +81,7 @@ public class CSOInfo
     header.get(magic);
     
     if (!Arrays.equals(magic, "CISO".getBytes()))
-      throw new IllegalArgumentException("CSO Image should start with CISO magic value.");;
+      throw new IOException("CSO Image should start with CISO magic value.");;
     
     headerSize = header.getInt();
     uncompressedSize = header.getLong();
