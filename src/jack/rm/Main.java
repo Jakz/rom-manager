@@ -3,7 +3,10 @@ package jack.rm;
 import java.awt.Desktop;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -13,8 +16,16 @@ import com.github.jakz.romlib.data.assets.Downloader;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.set.GameSet;
+import com.github.jakz.romlib.support.cso.CSOInputStream;
+import com.github.jakz.romlib.support.cso.CSOBinaryHandle;
+import com.github.jakz.romlib.support.cso.CSOInfo;
 import com.pixbits.lib.concurrent.AsyncGuiPoolWorker;
 import com.pixbits.lib.concurrent.Operation;
+import com.pixbits.lib.io.MonitoredInputStream;
+import com.pixbits.lib.io.digest.DigestInfo;
+import com.pixbits.lib.io.digest.DigestOptions;
+import com.pixbits.lib.io.digest.Digester;
+import com.pixbits.lib.lang.StringUtils;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.LogBuffer;
 import com.pixbits.lib.log.LoggerFactory;
@@ -322,7 +333,36 @@ public class Main
 
 	
 	public static void main(String[] args)
-	{  
+	{    
+	  try
+    {
+	    Path path = Paths.get("/Volumes/Vicky/Roms/roms/psp/SORTED/Action/Diner Dash [EUR].cso");
+	    
+	    CSOBinaryHandle handle = new CSOBinaryHandle(path);
+	    handle.computeCRC();
+	    System.out.printf("%08X %s %s\n", handle.crc(), StringUtils.humanReadableByteCount(handle.compressedSize()), StringUtils.humanReadableByteCount(handle.size()));
+	    
+	    /*
+	    CSOInfo info = new CSOInfo(path);
+      System.out.println("Sectors: "+info.sectorCount()+" size: "+info.uncompressedSize());
+      
+      CSOInputStream stream = new CSOInputStream(path, info);
+      MonitoredInputStream mis = new MonitoredInputStream(stream);
+      mis.addChangeListener(e -> System.out.println(mis.location()));
+        
+      Digester digester = new Digester(new DigestOptions(true, false, false, false));
+      DigestInfo d = digester.digest(null, mis);
+        
+      System.out.println(d);    */  
+    } 
+	  catch (IOException | NoSuchAlgorithmException e1)
+    {
+      e1.printStackTrace();
+    }
+	  
+	  if (true)
+	    return;
+	  
 	  //patchTest();
 	  
 	  /*try {

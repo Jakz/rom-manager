@@ -1,9 +1,11 @@
 package com.github.jakz.romlib.support.cso;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.nio.file.Path;
+import java.util.Objects;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
@@ -29,9 +31,7 @@ public class CSOInputStream extends InputStream implements AutoCloseable
     offset = 0;
     
     currentCache = -1;
-    current = new byte[2048];
-    buffer = new byte[2048];
-    
+
     inflater = new Inflater(true);
   }
   
@@ -53,6 +53,8 @@ public class CSOInputStream extends InputStream implements AutoCloseable
     this.info = info;
     this.path = null;
     this.in = null;
+    allocateBuffers();
+
   }
   
   public CSOInputStream(Path path) throws IOException
@@ -60,6 +62,13 @@ public class CSOInputStream extends InputStream implements AutoCloseable
     this();
     this.path = path;
     this.info = new CSOInfo(path);
+    allocateBuffers();
+  }
+  
+  public void allocateBuffers()
+  {
+    current = new byte[info.blockSize];
+    buffer = new byte[info.blockSize];
   }
   
   private void cacheSector(int index) throws IOException
@@ -82,7 +91,7 @@ public class CSOInputStream extends InputStream implements AutoCloseable
       {
         int i = inflater.inflate(current);
         
-        if (i != 2048)
+        if (i != info.blockSize)
           throw new DataFormatException();
       } 
       catch (DataFormatException e)
@@ -98,6 +107,15 @@ public class CSOInputStream extends InputStream implements AutoCloseable
     }
    
     currentCache = index;
+  }
+  
+  private void ensureOpen() throws IOException
+  {
+    if (in == null)
+    {
+      in = new RandomAccessFile(path.toFile(), "r");
+      info.cacheOffsets(in);
+    }
   }
   
   @Override
@@ -119,12 +137,13 @@ public class CSOInputStream extends InputStream implements AutoCloseable
   @Override
   public int read() throws IOException
   {
-    if (in == null)
-      in = new RandomAccessFile(path.toFile(), "r");
+    ensureOpen();
 
+    /* if cached sector is not current one then cache current */
     if (currentCache != sector)
       cacheSector(sector);
 
+    /* if we're at end then we're done and return EOF */
     if (sector >= info.sectorCount - 1)
       return -1;
     
@@ -151,8 +170,7 @@ public class CSOInputStream extends InputStream implements AutoCloseable
   {
     int i = 0;
     
-    if (in == null)
-      in = new RandomAccessFile(path.toFile(), "r");
+    ensureOpen();
 
     if (sector >= info.sectorCount - 1)
       return -1;
@@ -167,6 +185,7 @@ public class CSOInputStream extends InputStream implements AutoCloseable
         return i > 0 ? i : -1;
       else
       {
+        /* if there is data in the current sector copy it to the destination array */
         if (offset < info.blockSize)
         {
           int remainder = Math.min(l - i, info.blockSize - offset);

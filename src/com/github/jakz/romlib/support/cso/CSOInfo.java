@@ -11,11 +11,11 @@ import java.util.BitSet;
 
 public class CSOInfo
 {
-  int headerSize;
-  long uncompressedSize;
+  private int headerSize;
+  private long uncompressedSize;
   int blockSize;
-  int version;
-  int indexShift;
+  private int version;
+  private int indexShift;
   
   int sectorCount;
   BitSet compressedBitmap;
@@ -23,21 +23,53 @@ public class CSOInfo
   
   public long uncompressedSize() { return uncompressedSize; }
   public int sectorCount() { return sectorCount; }
-  
+   
   public CSOInfo(RandomAccessFile in) throws IOException
   {
-    load(in);
+    loadHeader(in);
   }
   
   public CSOInfo(Path path) throws IOException
   {
     try (RandomAccessFile in = new RandomAccessFile(path.toFile(), "r"))
     {
-      load(in);
+      loadHeader(in);
     }
   }
   
-  private void load(RandomAccessFile in) throws IOException
+  public void cacheOffsets(RandomAccessFile in) throws IOException
+  {
+    in.seek(4+4+8+4+1+1+2);
+
+    compressedBitmap = new BitSet(sectorCount);
+    
+    ByteBuffer offsets = ByteBuffer.allocate(4 * sectorCount);
+    offsets.order(ByteOrder.LITTLE_ENDIAN);
+    in.readFully(offsets.array());
+    
+    this.offsets = new long[sectorCount];
+    
+    /* each offset is a uint32_t, lower 31 bits are the position of the sector in the file
+     * shifted by indexShift from header, while 32th bit is 1 if the sector is uncompressed
+     */
+    
+    for (int i = 0; i < sectorCount; ++i)
+    {
+      int offset = offsets.getInt();
+      if ((offset & 0x80000000) == 0)
+        compressedBitmap.set(i);
+      this.offsets[i] = (offset & 0x7FFFFFFFL);
+    }
+
+    for (int i = 0; i < sectorCount; ++i)
+    {
+      long offset = this.offsets[i];
+      long realOffset = (offset & ~0x80000000L) << indexShift;
+      this.offsets[i] = realOffset;
+    }
+  }
+  
+  private void loadHeader(RandomAccessFile in) throws IOException
   {    
     in.seek(0);
     
@@ -58,27 +90,5 @@ public class CSOInfo
     indexShift = header.get();
     
     sectorCount = (int)Math.ceil((float)uncompressedSize / blockSize) + 1;
-    compressedBitmap = new BitSet(sectorCount);
-    
-    ByteBuffer offsets = ByteBuffer.allocate(4 * sectorCount);
-    offsets.order(ByteOrder.LITTLE_ENDIAN);
-    in.readFully(offsets.array());
-    
-    this.offsets = new long[sectorCount];
-    
-    for (int i = 0; i < sectorCount; ++i)
-    {
-      int offset = offsets.getInt();
-      if ((offset & 0x80000000) == 0)
-        compressedBitmap.set(i);
-      this.offsets[i] = (offset & 0x7FFFFFFFL);
-    }
-
-    for (int i = 0; i < sectorCount; ++i)
-    {
-      long offset = this.offsets[i];
-      long realOffset = (offset & ~0x80000000L) << indexShift;
-      this.offsets[i] = realOffset;
-    }
   }
 }
