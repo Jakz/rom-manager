@@ -1,4 +1,4 @@
-package jack.rm.files;
+package com.github.jakz.romlib.support.patches;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -135,7 +135,7 @@ public class GBASleepHack
     handlers = new ArrayList<>();
   }
   
-  public void setup() throws IOException
+  private void setup() throws IOException
   {
     patchLocation = buffer.length() - 1;
     byte value = buffer.read(patchLocation);
@@ -153,7 +153,7 @@ public class GBASleepHack
     hookLocation = patchLocation + patch.length;
   }
   
-  public void adjustFileSize() throws IOException
+  private void adjustFileSize() throws IOException
   {
     long size = buffer.length() + patch.length + handlers.size()*ACTIVATION_LENGTH;
     
@@ -166,7 +166,7 @@ public class GBASleepHack
     buffer.resize(size);
   }
   
-  public void writePayload() throws IOException
+  private void writePayload() throws IOException
   {
     buffer.write(patch, (int)patchLocation);
   }

@@ -37,33 +37,38 @@ public class GameCellRenderer extends JPanel implements ListCellRenderer<Game>
 	  add(rightIcon);
 	}
 	
+	private void decorate(Game game, boolean isSelected, Color bg)
+	{
+	   mainLabel.setText(game.toString());
+	    LocationSet location = game.getLocation();
+
+	    if (location != null && location.getIcon() != null)
+	      mainLabel.setIcon(location.getIcon().getIcon());
+	    else
+	      mainLabel.setIcon(null);
+	    
+	    if (game.isFavourite())
+	      rightIcon.setIcon(Icon.FAVORITE.getIcon());
+	    else
+	      rightIcon.setIcon(null);
+	    
+	    if (isSelected)
+	    {
+	      mainLabel.setForeground(Color.WHITE);
+	      setBackground(game.getStatus().color);
+	    }
+	    else
+	    {
+	      setBackground(bg);
+	      mainLabel.setForeground(game.getStatus().color);
+	    }
+	    
+	}
+	
 	@Override
   public Component getListCellRendererComponent(JList<? extends Game> list, Game game, int index, boolean iss, boolean chf)
 	{
-	  mainLabel.setText(game.toString());
-	  LocationSet location = game.getLocation();
-
-	  if (location != null && location.getIcon() != null)
-	    mainLabel.setIcon(location.getIcon().getIcon());
-	  else
-	    mainLabel.setIcon(null);
-		
-	  if (game.isFavourite())
-	    rightIcon.setIcon(Icon.FAVORITE.getIcon());
-	  else
-	    rightIcon.setIcon(null);
-		
-		if (iss)
-		{
-		  mainLabel.setForeground(Color.WHITE);
-		  setBackground(game.getStatus().color);
-		}
-		else
-		{
-		  setBackground(list.getBackground());
-		  mainLabel.setForeground(game.getStatus().color);
-		}
-		
+	  decorate(game, iss, list.getBackground());
 		return this;
 	}
 }

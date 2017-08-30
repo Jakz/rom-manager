@@ -8,8 +8,7 @@ import java.util.Optional;
 import com.github.jakz.romlib.data.attachments.Attachment;
 import com.github.jakz.romlib.data.attachments.AttachmentType;
 import com.github.jakz.romlib.data.game.Game;
-
-import jack.rm.files.IPSPatch;
+import com.github.jakz.romlib.support.patches.IPSPatch;
 
 public class IPSPatchOperation extends DefaultGameOperation
 {

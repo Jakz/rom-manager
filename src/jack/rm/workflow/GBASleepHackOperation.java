@@ -1,8 +1,7 @@
 package jack.rm.workflow;
 
 import com.github.jakz.romlib.data.platforms.Platform;
-
-import jack.rm.files.GBASleepHack;
+import com.github.jakz.romlib.support.patches.GBASleepHack;
 
 public class GBASleepHackOperation extends DefaultGameOperation
 {

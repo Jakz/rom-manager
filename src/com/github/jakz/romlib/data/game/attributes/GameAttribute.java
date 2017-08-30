@@ -35,7 +35,7 @@ public enum GameAttribute implements Attribute
   SIZE(Text.GAME_INFO_SIZE) {
     @Override public String prettyValue(Object value) {
       RomSize size = (RomSize)value;
-      return size.toString(PrintStyle.SHORT, PrintUnit.BITS) + " (" + size.toString(PrintStyle.SHORT, PrintUnit.BYTES) + ")";
+      return size.toString(PrintStyle.LONG, PrintUnit.BITS) + " (" + size.toString(PrintStyle.SHORT, PrintUnit.BYTES) + ")";
     }
   },
   

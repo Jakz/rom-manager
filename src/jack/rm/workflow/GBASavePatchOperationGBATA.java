@@ -2,8 +2,7 @@ package jack.rm.workflow;
 
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.platforms.Platform;
-
-import jack.rm.files.GBASavePatcherGBATA;
+import com.github.jakz.romlib.support.patches.GBASavePatcherGBATA;
 
 public class GBASavePatchOperationGBATA extends DefaultGameOperation
 {

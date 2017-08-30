@@ -1,4 +1,4 @@
-package jack.rm.files;
+package com.github.jakz.romlib.support.patches;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
