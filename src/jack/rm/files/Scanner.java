@@ -182,7 +182,7 @@ public class Scanner
 	      });
 	    };
 	    
-	    /*
+	    
 	    AsyncGuiPoolWorker<VerifierEntry,List<ScanResult>> worker = new AsyncGuiPoolWorker<>(operation, guiProgress);
 	    
 	    SwingUtilities.invokeLater(() -> {
@@ -190,7 +190,7 @@ public class Scanner
 	    });
 
 	    worker.compute(entries, callback, onComplete);
-	    */
+	    
 	  };
 	}
 		

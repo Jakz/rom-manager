@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 
+import com.google.gson.JsonElement;
 import com.pixbits.lib.io.FileUtils;
 import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.lib.io.digest.DigestInfo;
@@ -34,6 +35,15 @@ public class CSOBinaryHandle extends Handle
   {
     this(path);
     this.info = info;
+  }
+  
+  public CSOBinaryHandle(Path path, byte[] header, long crc, long size, long csize)
+  {
+    this(path);
+    this.info = new CSOInfo(header);
+    this.crc = crc;
+    this.size = size;
+    this.compressedSize = csize;
   }
   
   private void cacheInfoIfNeeded() throws IOException
@@ -137,5 +147,7 @@ public class CSOBinaryHandle extends Handle
       crc = d.crc;
     }
   }
+  
+  public JsonElement serializeHeader() { return info.serialize(); }
 
 }

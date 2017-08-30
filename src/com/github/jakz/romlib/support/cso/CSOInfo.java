@@ -9,8 +9,13 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.BitSet;
 
-public class CSOInfo
+import com.pixbits.lib.json.Jsonnable;
+import com.pixbits.lib.lang.StringUtils;
+
+public class CSOInfo implements Jsonnable<CSOInfo>
 {
+  private ByteBuffer header;
+  
   private int headerSize;
   private long uncompressedSize;
   int blockSize;
@@ -23,6 +28,19 @@ public class CSOInfo
   
   public long uncompressedSize() { return uncompressedSize; }
   public int sectorCount() { return sectorCount; }
+  
+  public CSOInfo(byte[] header)
+  {
+    this.header = ByteBuffer.wrap(header);
+    try
+    {
+      parseHeader();
+    } 
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+  }
    
   public CSOInfo(RandomAccessFile in) throws IOException
   {
@@ -69,14 +87,8 @@ public class CSOInfo
     }
   }
   
-  private void loadHeader(RandomAccessFile in) throws IOException
-  {    
-    in.seek(0);
-    
-    ByteBuffer header = ByteBuffer.allocate(4+4+8+4+1+1+2);
-    header.order(ByteOrder.LITTLE_ENDIAN);
-    in.readFully(header.array());
-    
+  private void parseHeader() throws IOException
+  {
     byte[] magic = new byte[4];
     header.get(magic);
     
@@ -90,5 +102,38 @@ public class CSOInfo
     indexShift = header.get();
     
     sectorCount = (int)Math.ceil((float)uncompressedSize / blockSize) + 1;
+  }
+  
+  private void loadHeader(RandomAccessFile in) throws IOException
+  {    
+    in.seek(0);
+    
+    header = ByteBuffer.allocate(4+4+8+4+1+1+2);
+    header.order(ByteOrder.LITTLE_ENDIAN);
+    in.readFully(header.array());
+    
+    parseHeader();
+  }
+  
+  
+  
+  @Override
+  public com.google.gson.JsonElement serialize()
+  {
+    return new com.google.gson.JsonPrimitive(StringUtils.toHexString(header.array()));
+  }
+  @Override
+  public void unserialize(com.google.gson.JsonElement element)
+  {
+    try
+    {
+      String payload = element.getAsString();
+      header = ByteBuffer.wrap(StringUtils.fromHexString(payload));
+      parseHeader();
+    } 
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
   }
 }
