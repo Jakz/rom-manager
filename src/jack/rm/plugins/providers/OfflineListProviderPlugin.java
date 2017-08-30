@@ -298,6 +298,42 @@ public class OfflineListProviderPlugin extends ProviderPlugin
       
       {
         Map<String, Object> args = new HashMap<>();
+        args.put("save-parser", (SaveParser)(s -> GameSave.NULL));
+
+        DataSupplier datParser = parser.buildDatLoader("offline-list", args);
+        DatFormat format = datParser.getFormat();
+        
+        final Asset[] PSP_ASSETS =  
+        {
+          new Asset.Image(Paths.get("title"), new Dimension(208,181*2)),
+          new Asset.Image(Paths.get("gameplay"), new Dimension(320*2,181*2))
+        };
+        
+        final Attribute[] attributes = 
+        {
+          GameAttribute.TITLE,
+          GameAttribute.NUMBER,
+          GameAttribute.SIZE,
+          GameAttribute.PUBLISHER,
+          GameAttribute.LOCATION,
+          GameAttribute.LANGUAGE,
+          GameAttribute.GROUP,
+          GameAttribute.COMMENT
+        };
+          
+
+        sets.add(new GameSet(
+            Platform.PSP, 
+            KnownProviders.ADVAN_SCENE.derive("", "", "AdvanScene", new Provider.Source("http://www.advanscene.com/offline/datas/ADVANsCEne_PSP.zip")), 
+            datParser,
+            format,
+            attributes, 
+            new AssetManager(PSP_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_PSP/"))
+        ));
+      }
+      
+      {
+        Map<String, Object> args = new HashMap<>();
         args.put("save-parser", new NDSSaveParser());
         DataSupplier datParser = parser.buildDatLoader("offline-list", args);
         DatFormat format = datParser.getFormat();
