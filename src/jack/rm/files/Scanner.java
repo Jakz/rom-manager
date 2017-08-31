@@ -182,11 +182,15 @@ public class Scanner
 	      });
 	    };
 	    
-	    
 	    AsyncGuiPoolWorker<VerifierEntry,List<ScanResult>> worker = new AsyncGuiPoolWorker<>(operation, guiProgress);
 	    
+      Runnable onCancel = () -> {
+        logger.d(LogTarget.romset(set), "Verification halted by user");
+        worker.cancel();
+      };
+	    
 	    SwingUtilities.invokeLater(() -> {
-	      Main.progress.show(Main.mainFrame, "Verifying roms", () -> worker.cancel());
+	      Main.progress.show(Main.mainFrame, "Verifying roms", onCancel);
 	    });
 
 	    worker.compute(entries, callback, onComplete);

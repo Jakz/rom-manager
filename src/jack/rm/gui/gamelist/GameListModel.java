@@ -18,11 +18,6 @@ public class GameListModel extends AbstractListModel<Game>
 	List<Game> list;
 	final boolean[] visible = new boolean[GameStatus.values().length];
 	
-	boolean isCorrect = true;
-	boolean isMissing = true;
-	boolean isIncomplete = true;
-	boolean isBadlyNamed = true;
-	
 	public GameListModel()
 	{
 		list = new ArrayList<>();
@@ -37,21 +32,16 @@ public class GameListModel extends AbstractListModel<Game>
 		  list.add(rom);
 	}
 	
-	public void removeElement(int index)
-	{
-		list.remove(index);
-	}
-	
 	@Override
   public Game getElementAt(int index)
 	{
-		return(list.get(index));
+		return list.get(index);
 	}
 	
 	@Override
   public int getSize()
 	{
-		return(list.size());
+		return list.size();
 	}
 	
 	public void clear()

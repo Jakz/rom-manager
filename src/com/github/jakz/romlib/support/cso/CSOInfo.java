@@ -87,6 +87,17 @@ public class CSOInfo implements Jsonnable<CSOInfo>
     }
   }
   
+  private void writeHeader()
+  {
+    header.position(0);
+    header.put(new byte[] {'C', 'I', 'S', 'O'});
+    header.putInt(0x18);
+    header.putLong(uncompressedSize);
+    header.putInt(blockSize);
+    header.put((byte)0x1);
+    //TODO: finish
+  }
+  
   private void parseHeader() throws IOException
   {
     byte[] magic = new byte[4];
