@@ -6,7 +6,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -32,7 +36,7 @@ public class GameListPanel extends JPanel
   
   final private CardLayout layout;
   
-  final private GameListModel romListModel = new GameListModel();
+  final private GameListModel gameListModel = new GameListModel();
   final private JList<Game> list = new JList<>();
   final private ListListener listListener = new ListListener();
   final private JScrollPane listPane = new JScrollPane(list);
@@ -41,7 +45,7 @@ public class GameListPanel extends JPanel
   {
     this.mediator = mediator;
     
-    list.setModel(romListModel);
+    list.setModel(gameListModel);
     list.setCellRenderer(new GameCellRenderer());
     list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     list.setLayoutOrientation(JList.VERTICAL);
@@ -62,7 +66,7 @@ public class GameListPanel extends JPanel
                 Game rom = list.getModel().getElementAt(r);
                 
                 rom.setFavourite(!rom.isFavourite());
-                romListModel.fireChanges(r);   
+                gameListModel.fireChanges(r);   
               }
             }
           }
@@ -83,7 +87,7 @@ public class GameListPanel extends JPanel
   public void clearEverything()
   {
     clearSelection();
-    clearData();
+    setData(Collections.emptyList());
   }
   
   public void backupSelection()
@@ -107,14 +111,16 @@ public class GameListPanel extends JPanel
     }  
   }
   
-  public GameListModel model() { return romListModel; }
+  public void sortData(Comparator<Game> sorter) { gameListModel.setSorter(sorter); }
+  public void filterData(Predicate<Game> predicate) { gameListModel.setFilter(predicate); }
+  public void setData(List<Game> data) { gameListModel.setData(data); }
+  
+  public GameListModel model() { return gameListModel; }
   public void clearSelection() { list.clearSelection(); }
-  public void clearData() { romListModel.clear(); }
-  public void refresh() { romListModel.fireChanges(); }
-  public void refresh(int row) { romListModel.fireChanges(row); }
-  public void refreshCurrentSelection() { romListModel.fireChanges(list.getSelectedIndex()); }
-  public void toggleVisibility(GameStatus status) { romListModel.toggleVisibility(status); }
-  public Consumer<Game> collector() { return romListModel.collector(); }
+  public void refresh() { gameListModel.fireChanges(); }
+  public void refresh(int row) { gameListModel.fireChanges(row); }
+  public void refreshCurrentSelection() { gameListModel.fireChanges(list.getSelectedIndex()); }
+  public void toggleVisibility(GameStatus status) { gameListModel.toggleVisibility(status); }
 
   class ListListener implements ListSelectionListener
   {
@@ -132,7 +138,7 @@ public class GameListPanel extends JPanel
         return;
       }
 
-      Game game = romListModel.getElementAt(lsm.getMinSelectionIndex());
+      Game game = gameListModel.getElementAt(lsm.getMinSelectionIndex());
 
       mediator.setInfoPanelContent(game);
     }

@@ -69,11 +69,14 @@ public class OfflineListXMLParser extends XMLHandler
     locationMap.put(6, Location.ITALY);
     locationMap.put(7, Location.JAPAN);
     locationMap.put(8, Location.NETHERLANDS);
-    locationMap.put(19, Location.AUSTRALIA);
-    locationMap.put(22, Location.KOREA);
+    locationMap.put(10, Location.DENMARK);
+    locationMap.put(11, Location.FINLAND);
+    locationMap.put(12, Location.NORWAY);
     locationMap.put(15, Location.SWEDEN);
     locationMap.put(16, Location.JAPAN);
     locationMap.put(18, Location.JAPAN);
+    locationMap.put(19, Location.AUSTRALIA);
+    locationMap.put(22, Location.KOREA);
   }
 
   private final CharArrayWriter buffer = new CharArrayWriter();

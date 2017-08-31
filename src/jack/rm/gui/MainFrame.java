@@ -22,6 +22,7 @@ import java.util.TreeMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -30,6 +31,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.ListCellRenderer;
@@ -41,6 +43,8 @@ import javax.swing.event.ListSelectionListener;
 import com.github.jakz.romlib.data.assets.AssetPacker;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.RomSize;
+import com.github.jakz.romlib.data.game.attributes.Attribute;
+import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.set.GameSet;
@@ -270,6 +274,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
     romsMenu.add(menuExit);
     menuExit.addActionListener(e -> java.lang.System.exit(0));
     
+    viewMenu.removeAll();
     if (set != null)
     {    
       JMenuItem[] filters = { MenuElement.VIEW_SHOW_CORRECT.item, MenuElement.VIEW_SHOW_UNORGANIZED.item, MenuElement.VIEW_SHOW_NOT_FOUND.item };
@@ -277,6 +282,29 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
         viewMenu.add(mi);
         mi.setSelected(true);
       });
+      
+      viewMenu.addSeparator();
+      
+      /* sort criterias */
+      JMenu sortMenu = new JMenu(Text.MENU_VIEW_SORT_BY.text());
+      Attribute[] attributes = new Attribute[] { GameAttribute.TITLE, GameAttribute.SIZE, GameAttribute.NUMBER };
+      JRadioButtonMenuItem[] sortMenuItems = new JRadioButtonMenuItem[attributes.length + 1];
+      
+      sortMenuItems[0] = new JRadioButtonMenuItem("None");
+      for (int i = 0; i < attributes.length; ++i)
+        sortMenuItems[i+1] = new JRadioButtonMenuItem(attributes[i].getCaption());
+      
+      ButtonGroup sortGroup = new ButtonGroup();
+      for (JRadioButtonMenuItem menuItem : sortMenuItems)
+      {
+        sortGroup.add(menuItem);
+        sortMenu.add(menuItem);
+      }
+      
+      sortMenuItems[0].setSelected(true);
+      
+      viewMenu.add(sortMenu);
+      viewMenu.add(MenuElement.VIEW_REVERSE_ORDER.item); 
     }
 
     
@@ -422,24 +450,29 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	
 	@Override public void rebuildGameList()
 	{
-    gameListPanel.backupSelection();
-    gameListPanel.clearData();
-    
-    Predicate<Game> predicate = searchPanel.buildSearchPredicate().and( r ->
-      r.getStatus() == GameStatus.FOUND && MenuElement.VIEW_SHOW_CORRECT.item.isSelected() ||
-      r.getStatus() == GameStatus.MISSING && MenuElement.VIEW_SHOW_NOT_FOUND.item.isSelected() ||
-      r.getStatus() == GameStatus.UNORGANIZED && MenuElement.VIEW_SHOW_UNORGANIZED.item.isSelected()
-      // TODO: missing management for GameStatus.INCOMPLETE
-    );
-    
-    set.stream().filter(predicate).forEach(gameListPanel.collector());
-    
-    gameListPanel.restoreSelection();
-    
-    SwingUtilities.invokeLater( () -> {
-      gameListPanel.refresh();
-      countPanel.update();
-    });
+    synchronized (gameListPanel)
+    {
+  	  gameListPanel.backupSelection();
+      
+      List<Game> data = set.stream().collect(Collectors.toList());
+      gameListPanel.setData(data);
+  
+      Predicate<Game> predicate = searchPanel.buildSearchPredicate().and( r ->
+        r.getStatus() == GameStatus.FOUND && MenuElement.VIEW_SHOW_CORRECT.item.isSelected() ||
+        r.getStatus() == GameStatus.MISSING && MenuElement.VIEW_SHOW_NOT_FOUND.item.isSelected() ||
+        r.getStatus() == GameStatus.UNORGANIZED && MenuElement.VIEW_SHOW_UNORGANIZED.item.isSelected()
+        // TODO: missing management for GameStatus.INCOMPLETE
+      );
+      
+      gameListPanel.filterData(predicate);
+          
+      gameListPanel.restoreSelection();
+      
+      SwingUtilities.invokeLater( () -> {
+        gameListPanel.refresh();
+        countPanel.update();
+      });
+    }
 	}
 	
 	@Override

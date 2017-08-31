@@ -2,36 +2,31 @@ package jack.rm.gui.gamelist;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import javax.swing.AbstractListModel;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameStatus;
+import com.pixbits.lib.ui.table.FilterableListDataSource;
 
 public class GameListModel extends AbstractListModel<Game>
 {
 	private static final long serialVersionUID = 1L;
-
-	List<Game> list;
-	final boolean[] visible = new boolean[GameStatus.values().length];
+	
+	private FilterableListDataSource<Game> list;
+	private final boolean[] visible = new boolean[GameStatus.values().length];
 	
 	public GameListModel()
 	{
-		list = new ArrayList<>();
+		list = new FilterableListDataSource<>();
 		Arrays.fill(visible, true);
 	}
-	
-	public void addElement(Game o)
-	{
-		Game rom = (Game)o;
-		GameStatus status = rom.getStatus();
-		if (visible[status.ordinal()])
-		  list.add(rom);
-	}
-	
+
 	@Override
   public Game getElementAt(int index)
 	{
@@ -42,11 +37,6 @@ public class GameListModel extends AbstractListModel<Game>
   public int getSize()
 	{
 		return list.size();
-	}
-	
-	public void clear()
-	{
-		list.clear();
 	}
 	
 	public boolean isVisible(GameStatus status)
@@ -64,7 +54,10 @@ public class GameListModel extends AbstractListModel<Game>
 	  setVisibility(status, !isVisible(status));
 	}
 	
-	public Consumer<Game> collector() { return list::add; }
+	public void setData(List<Game> data) { list.setData(data); }
+	public void setFilter(Predicate<Game> filter) { list.filter(filter); }
+	public void setSorter(Comparator<Game> sorter) { list.sort(sorter); }
+	
 	public Stream<Game> stream() { return list.stream(); }
 	
 	public void fireChanges(int row)
