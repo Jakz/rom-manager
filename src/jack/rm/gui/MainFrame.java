@@ -78,7 +78,8 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
   final JMenu romsMenu = new JMenu(Text.MENU_ROMS_TITLE.text());
   final JMenu romsExportSubmenu = new JMenu(Text.MENU_ROMS_EXPORT.text());
 
-  final JMenu viewMenu = new JMenu(Text.MENU_VIEW_TITLE.text());
+  final private ViewMenu viewMenu = new ViewMenu(this);
+  
   final JMenu toolsMenu = new JMenu(Text.MENU_TOOLS_TITLE.text());
 	
 	final JMenu langMenu = new JMenu(Text.MENU_LANGUAGE_TITLE.text());
