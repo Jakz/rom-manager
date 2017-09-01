@@ -18,31 +18,25 @@ public class GameListModel extends AbstractListModel<Game>
 {
 	private static final long serialVersionUID = 1L;
 	
-	private FilterableListDataSource<Game> list;
+	private final GameListData data;
 	
-	public GameListModel()
+	public GameListModel(GameListData data)
 	{
-		list = new FilterableListDataSource<>();
+		this.data = data;
 	}
 
 	@Override
   public Game getElementAt(int index)
 	{
-		return list.get(index);
+		return data.gameAt(index);
 	}
 	
 	@Override
   public int getSize()
 	{
-		return list.size();
+		return data.getSize();
 	}
-	
-	public void setData(List<Game> data) { list.setData(data); }
-	public void setFilter(Predicate<Game> filter) { list.filter(filter); }
-	public void setSorter(Comparator<Game> sorter) { list.sort(sorter); }
-	
-	public Stream<Game> stream() { return list.stream(); }
-	
+
 	public void fireChanges(int row)
 	{
 	  this.fireContentsChanged(GameListModel.this, row, row);
@@ -50,6 +44,6 @@ public class GameListModel extends AbstractListModel<Game>
 
 	public void fireChanges()
 	{
-		GameListModel.this.fireContentsChanged(GameListModel.this, 0, list.size());
+		GameListModel.this.fireContentsChanged(GameListModel.this, 0, getSize());
 	}
 }

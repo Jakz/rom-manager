@@ -31,12 +31,14 @@ public class GameListPanel extends JPanel
 {
   private final Mediator mediator;
   
+  private final GameListData data;
+  
   private Game lastSelectedGame;
   private int lastSelectedIndex;
   
   final private CardLayout layout;
   
-  final private GameListModel gameListModel = new GameListModel();
+  final private GameListModel gameListModel;
   final private JList<Game> list = new JList<>();
   final private ListListener listListener = new ListListener();
   final private JScrollPane listPane = new JScrollPane(list);
@@ -44,6 +46,9 @@ public class GameListPanel extends JPanel
   public GameListPanel(Mediator mediator)
   {
     this.mediator = mediator;
+    
+    data = new GameListData();
+    gameListModel = new GameListModel(data);
     
     list.setModel(gameListModel);
     list.setCellRenderer(new GameCellRenderer());
@@ -111,11 +116,11 @@ public class GameListPanel extends JPanel
     }  
   }
   
-  public void sortData(Comparator<Game> sorter) { gameListModel.setSorter(sorter); }
-  public void filterData(Predicate<Game> predicate) { gameListModel.setFilter(predicate); }
-  public void setData(List<Game> data) { gameListModel.setData(data); }
+  public void sortData(Comparator<Game> sorter) { data.setSorter(sorter); }
+  public void filterData(Predicate<Game> predicate) { data.setFilter(predicate); }
+  public void setData(List<Game> data) { this.data.setData(data); }
   
-  public GameListModel model() { return gameListModel; }
+  public GameListData data() { return data; }
   public void clearSelection() { list.clearSelection(); }
   public void refresh() { gameListModel.fireChanges(); }
   public void refresh(int row) { gameListModel.fireChanges(row); }

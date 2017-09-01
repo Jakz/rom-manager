@@ -102,7 +102,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	final private ConsolePanel consolePanel = new ConsolePanel();
 	
 	final private GameListPanel gameListPanel = new GameListPanel(this);
-	final private CountPanel countPanel = new CountPanel(gameListPanel.model());
+	final private CountPanel countPanel = new CountPanel(gameListPanel.data());
 	
 	final private SearchPanel searchPanel = new SearchPanel(() -> rebuildGameList());
 	final private InfoPanel infoPanel = new InfoPanel();

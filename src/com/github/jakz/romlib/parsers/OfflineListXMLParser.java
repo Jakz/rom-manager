@@ -77,6 +77,7 @@ public class OfflineListXMLParser extends XMLHandler
     locationMap.put(12, Location.NORWAY);
     locationMap.put(15, Location.SWEDEN);
     locationMap.put(16, Location.JAPAN);
+    locationMap.put(17, Location.JAPAN); // TODO: world
     locationMap.put(18, Location.JAPAN);
     locationMap.put(19, Location.AUSTRALIA);
     locationMap.put(22, Location.KOREA);

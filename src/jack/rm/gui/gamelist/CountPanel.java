@@ -22,13 +22,13 @@ public class CountPanel extends JPanel
 	  Icon.STATUS_CORRECT, Icon.STATUS_BADLY_NAMED, Icon.STATUS_INCOMPLETE, Icon.STATUS_NOT_FOUND, Icon.STATUS_ALL
 	};
 	
-	private final GameListModel model;
+	private final GameListData data;
 	private final JLabel[] counters = new JLabel[5];
 	JPanel inner;
 	
-	public CountPanel(GameListModel model)
+	public CountPanel(GameListData data)
 	{
-		this.model = model;
+		this.data = data;
 	  
 	  inner = new JPanel();
 		for (int i = 0; i < counters.length; ++i)
@@ -61,12 +61,12 @@ public class CountPanel extends JPanel
 	
 	public void update()
 	{	  
-	  Map<GameStatus, Long> status = model.stream().collect(Collectors.groupingBy( r -> r.getStatus(), HashMap::new, Collectors.counting()));
+	  Map<GameStatus, Long> status = data.stream().collect(Collectors.groupingBy( r -> r.getStatus(), HashMap::new, Collectors.counting()));
 	    
     counters[0].setText(""+status.getOrDefault(GameStatus.FOUND, 0L));
     counters[1].setText(""+status.getOrDefault(GameStatus.UNORGANIZED, 0L));
     counters[2].setText(""+status.getOrDefault(GameStatus.INCOMPLETE, 0L));
     counters[3].setText(""+status.getOrDefault(GameStatus.MISSING, 0L));
-    counters[4].setText(""+model.getSize());
+    counters[4].setText(""+data.getSize());
 	}
 }
