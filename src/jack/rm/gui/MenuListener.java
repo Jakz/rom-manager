@@ -34,18 +34,6 @@ class MenuListener implements ActionListener
   		  GameSet.current.helper().scanner().scanForRoms(false);
         Main.mainFrame.rebuildGameList();
   		}
-  		else if (tag == MenuElement.VIEW_SHOW_CORRECT)
-  		{
-  			Main.mainFrame.toggleVisibilityForStatusInGameList(GameStatus.FOUND);
-  		}
-  		else if (tag == MenuElement.VIEW_SHOW_NOT_FOUND)
-  		{
-        Main.mainFrame.toggleVisibilityForStatusInGameList(GameStatus.MISSING);
-  		}
-  		else if (tag == MenuElement.VIEW_SHOW_UNORGANIZED)
-  		{
-        Main.mainFrame.toggleVisibilityForStatusInGameList(GameStatus.UNORGANIZED);
-  		}
   		else
   		{
   			//StringManager.loadLanguage(((JMenuItem)source).getText());

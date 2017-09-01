@@ -19,12 +19,10 @@ public class GameListModel extends AbstractListModel<Game>
 	private static final long serialVersionUID = 1L;
 	
 	private FilterableListDataSource<Game> list;
-	private final boolean[] visible = new boolean[GameStatus.values().length];
 	
 	public GameListModel()
 	{
 		list = new FilterableListDataSource<>();
-		Arrays.fill(visible, true);
 	}
 
 	@Override
@@ -37,21 +35,6 @@ public class GameListModel extends AbstractListModel<Game>
   public int getSize()
 	{
 		return list.size();
-	}
-	
-	public boolean isVisible(GameStatus status)
-	{
-	  return visible[status.ordinal()];
-	}
-	
-	public void setVisibility(GameStatus status, boolean visible)
-	{
-	  this.visible[status.ordinal()] = visible;
-	}
-	
-	public void toggleVisibility(GameStatus status)
-	{
-	  setVisibility(status, !isVisible(status));
 	}
 	
 	public void setData(List<Game> data) { list.setData(data); }

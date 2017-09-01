@@ -88,8 +88,6 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	//menu File
 	final JMenuItem miRoms[] = new JMenuItem[6];
 	
-	//menu View
-	final JCheckBoxMenuItem miView[] = new JCheckBoxMenuItem[3];
 	
 	//menu Tools
 	final JMenuItem miTools[] = new JMenuItem[3];
@@ -275,40 +273,9 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
     romsMenu.add(menuExit);
     menuExit.addActionListener(e -> java.lang.System.exit(0));
     
-    viewMenu.removeAll();
-    if (set != null)
-    {    
-      JMenuItem[] filters = { MenuElement.VIEW_SHOW_CORRECT.item, MenuElement.VIEW_SHOW_UNORGANIZED.item, MenuElement.VIEW_SHOW_NOT_FOUND.item };
-      Arrays.stream(filters).forEach( mi -> {
-        viewMenu.add(mi);
-        mi.setSelected(true);
-      });
-      
-      viewMenu.addSeparator();
-      
-      /* sort criterias */
-      JMenu sortMenu = new JMenu(Text.MENU_VIEW_SORT_BY.text());
-      Attribute[] attributes = new Attribute[] { GameAttribute.TITLE, GameAttribute.SIZE, GameAttribute.NUMBER };
-      JRadioButtonMenuItem[] sortMenuItems = new JRadioButtonMenuItem[attributes.length + 1];
-      
-      sortMenuItems[0] = new JRadioButtonMenuItem("None");
-      for (int i = 0; i < attributes.length; ++i)
-        sortMenuItems[i+1] = new JRadioButtonMenuItem(attributes[i].getCaption());
-      
-      ButtonGroup sortGroup = new ButtonGroup();
-      for (JRadioButtonMenuItem menuItem : sortMenuItems)
-      {
-        sortGroup.add(menuItem);
-        sortMenu.add(menuItem);
-      }
-      
-      sortMenuItems[0].setSelected(true);
-      
-      viewMenu.add(sortMenu);
-      viewMenu.add(MenuElement.VIEW_REVERSE_ORDER.item); 
-    }
+    viewMenu.clear();
+    viewMenu.rebuild(set);
 
-    
     toolsMenu.removeAll();
     
     MenuElement.TOOLS_GLOBAL_SETTINGS.item.addActionListener( e -> Main.gsettingsView.showMe());
@@ -458,14 +425,10 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
       List<Game> data = set.stream().collect(Collectors.toList());
       gameListPanel.setData(data);
   
-      Predicate<Game> predicate = searchPanel.buildSearchPredicate().and( r ->
-        r.getStatus() == GameStatus.FOUND && MenuElement.VIEW_SHOW_CORRECT.item.isSelected() ||
-        r.getStatus() == GameStatus.MISSING && MenuElement.VIEW_SHOW_NOT_FOUND.item.isSelected() ||
-        r.getStatus() == GameStatus.UNORGANIZED && MenuElement.VIEW_SHOW_UNORGANIZED.item.isSelected()
-        // TODO: missing management for GameStatus.INCOMPLETE
-      );
+      Predicate<Game> predicate = searchPanel.buildSearchPredicate().and(viewMenu.buildPredicate());
       
       gameListPanel.filterData(predicate);
+      gameListPanel.sortData(viewMenu.buildSorter());
           
       gameListPanel.restoreSelection();
       
@@ -493,13 +456,6 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	{
 	  gameListPanel.refreshCurrentSelection();
 	}
-	
-  @Override
-  public void toggleVisibilityForStatusInGameList(GameStatus status)
-  {
-    gameListPanel.toggleVisibility(status);
-    rebuildGameList();
-  }
   
   @Override
   public void setInfoPanelContent(Game game)

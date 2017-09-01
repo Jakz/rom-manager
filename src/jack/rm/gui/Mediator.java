@@ -8,7 +8,6 @@ public interface Mediator
   public void refreshGameList();
   public void refreshGameList(int row);
   public void refreshGameListCurrentSelection();
-  public void toggleVisibilityForStatusInGameList(GameStatus status);
   public void rebuildGameList();
   public void setInfoPanelContent(Game game);
 }

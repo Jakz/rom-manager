@@ -120,7 +120,6 @@ public class GameListPanel extends JPanel
   public void refresh() { gameListModel.fireChanges(); }
   public void refresh(int row) { gameListModel.fireChanges(row); }
   public void refreshCurrentSelection() { gameListModel.fireChanges(list.getSelectedIndex()); }
-  public void toggleVisibility(GameStatus status) { gameListModel.toggleVisibility(status); }
 
   class ListListener implements ListSelectionListener
   {

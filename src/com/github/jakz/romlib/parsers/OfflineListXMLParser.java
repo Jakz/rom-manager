@@ -60,6 +60,9 @@ public class OfflineListXMLParser extends XMLHandler
     languageMap.put(32768, Language.PORTUGUESE_BR);
     languageMap.put(65536, Language.KOREAN);
     
+    languageMap.put(-1, null);
+
+    
     locationMap.put(0, Location.EUROPE);
     locationMap.put(1, Location.USA);
     locationMap.put(2, Location.GERMANY);
@@ -77,6 +80,9 @@ public class OfflineListXMLParser extends XMLHandler
     locationMap.put(18, Location.JAPAN);
     locationMap.put(19, Location.AUSTRALIA);
     locationMap.put(22, Location.KOREA);
+    
+    locationMap.put(-1, Location.NONE);
+
   }
 
   private final CharArrayWriter buffer = new CharArrayWriter();
@@ -191,7 +197,8 @@ public class OfflineListXMLParser extends XMLHandler
         
         if (location != null)
           game.getLocation().set(location);
-        else throw new IllegalArgumentException(String.format("Unknown language: %d for OfflineList DAT (game: %s)", asInt(), game.getTitle()));
+        else if (location != Location.NONE)
+         throw new IllegalArgumentException(String.format("Unknown location: %d for OfflineList DAT (game: %s)", asInt(), game.getTitle()));
         
         
         break;
@@ -200,7 +207,7 @@ public class OfflineListXMLParser extends XMLHandler
       {
         int values = asInt();
         
-        languageMap.forEach( (k, v) -> { if ((values & k) != 0) game.getLanguages().add(v); });
+        languageMap.forEach( (k, v) -> { if (v != null & (values & k) != 0) game.getLanguages().add(v); });
         break;
       }
       case "sourceRom": game.setAttribute(GameAttribute.GROUP, asString()); break;
