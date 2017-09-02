@@ -126,10 +126,14 @@ public class DatUpdater
     
     final Provider.Source source = set.info().getProvider().getSource();
     
-    DownloadWorker<?> worker = new DownloadWorker<OperationDetails>(source.getURL(), tmpDownloadPath.get(), new OperationDetails() {
-      public String getTitle() { return "Downloading"; }
-      public String getProgressText() { return "Progress.."; }
-    }, extractionStep, Main.gsettingsView, source.getPostArguments());
+    DownloadWorker<?> worker = new DownloadWorker<OperationDetails>(
+        source.getURL(), 
+        tmpDownloadPath.get(), 
+        OperationDetails.of("Downloading", "Progress.."), 
+        extractionStep, 
+        Main.progress,
+        Main.gsettingsView, 
+        source.getPostArguments());
     
     worker.execute();    
     

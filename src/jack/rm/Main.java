@@ -61,7 +61,7 @@ public class Main
 	public static final PluginManager<ActualPlugin, ActualPluginBuilder> manager = new PluginManager<>(ActualPluginBuilder.class);
 	private static GameSetManager setManager = new GameSetManager(manager);
 	
-	public static ProgressDialog.Manager progress = new ProgressDialog.Manager();
+	public static ProgressDialog.Manager progress;
 
   public static MainFrame mainFrame;
 	//public static InfoPanel infoPanel;
@@ -398,6 +398,8 @@ public class Main
 		mainFrame = new MainFrame(setManager);
 		
     clonesDialog = new ClonesDialog(mainFrame, "Rom Clones");
+    
+    progress = new ProgressDialog.Manager(mainFrame);
 
     String lastProvider = GlobalSettings.settings.getCurrentProvider();
  

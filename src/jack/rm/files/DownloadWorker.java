@@ -18,15 +18,13 @@ import java.util.function.Consumer;
 import javax.swing.JFrame;
 import javax.swing.SwingWorker;
 
-import jack.rm.Main;
-
 import com.pixbits.lib.concurrent.OperationDetails;
 import com.pixbits.lib.lang.StringUtils;
+import com.pixbits.lib.ui.elements.ProgressDialog;
 
 public class DownloadWorker<T extends OperationDetails> extends SwingWorker<Path, Long>
 {
   protected final T operation;
-  protected final Consumer<Boolean> callback;
   protected final String title;
   protected final String progressText;
   protected final URL url;
@@ -37,24 +35,29 @@ public class DownloadWorker<T extends OperationDetails> extends SwingWorker<Path
   
   protected final JFrame parent;
   
+  protected final Consumer<Boolean> onComplete;
+  
   protected long downloadStatus;
   protected long downloadSize;
   protected int BUFFER_SIZE = 8192;
+    
+  protected final ProgressDialog.Manager progress;
   
-  public DownloadWorker(URL url, Path dest, T operation, Consumer<Boolean> callback, JFrame parent)
+  public DownloadWorker(URL url, Path dest, T operation, Consumer<Boolean> onComplete, ProgressDialog.Manager progress, JFrame parent)
   {
-    this(url, dest, operation, callback, parent, null);
+    this(url, dest, operation, onComplete, progress, parent, null);
   }
   
-  public DownloadWorker(URL url, Path dest, T operation, Consumer<Boolean> callback, JFrame parent, Map<String,String> postArguments)
+  public DownloadWorker(URL url, Path dest, T operation, Consumer<Boolean> onComplete, ProgressDialog.Manager progress, JFrame parent, Map<String,String> postArguments)
   {
     this.url = url;
     this.savePath = dest;
     
+    this.progress = progress;
     this.parent = parent;
     
     this.operation = operation;
-    this.callback = callback;
+    this.onComplete = onComplete;
     
     this.title = operation.getTitle();
     this.progressText = operation.getProgressText();
@@ -67,7 +70,8 @@ public class DownloadWorker<T extends OperationDetails> extends SwingWorker<Path
   @Override
   public Path doInBackground()
   {
-    Main.progress.show(parent, title, null);
+    if (progress != null)
+      progress.show(parent, title, null);
     
     try
     { 
@@ -155,7 +159,8 @@ public class DownloadWorker<T extends OperationDetails> extends SwingWorker<Path
   @Override
   public void process(List<Long> v)
   {
-    Main.progress.update(this, progressText + " " + 
+    if (progress != null)
+      progress.update(this, progressText + " " + 
                                 StringUtils.humanReadableByteCount(v.get(v.size()-1)) +
                                 " of " + 
                                 StringUtils.humanReadableByteCount(downloadSize)+"..");
@@ -171,8 +176,9 @@ public class DownloadWorker<T extends OperationDetails> extends SwingWorker<Path
       if (tmpPath != null)
         Files.move(tmpPath, savePath, StandardCopyOption.REPLACE_EXISTING);
       
-      Main.progress.finished();
-      callback.accept(true);
+      if (progress != null)
+        progress.finished();
+      onComplete.accept(true);
     }
     catch (IOException e)
     {
