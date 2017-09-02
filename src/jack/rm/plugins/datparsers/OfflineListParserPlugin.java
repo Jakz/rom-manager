@@ -13,9 +13,6 @@ import java.util.TreeMap;
 import java.util.UnknownFormatConversionException;
 import java.util.stream.Collectors;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-
 import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.Location;

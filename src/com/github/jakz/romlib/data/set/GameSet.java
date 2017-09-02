@@ -8,14 +8,12 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -28,13 +26,8 @@ import com.github.jakz.romlib.data.game.Rom;
 import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.platforms.Platform;
-import com.github.jakz.romlib.data.set.organizers.GameRenamer;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
-import com.pixbits.lib.searcher.DummySearcher;
-import com.pixbits.lib.searcher.SearchParser;
-import com.pixbits.lib.searcher.SearchPredicate;
-import com.pixbits.lib.searcher.Searcher;
 import com.pixbits.lib.io.digest.HashCache;
 import com.pixbits.lib.log.Log;
 
@@ -42,14 +35,10 @@ import jack.rm.GlobalSettings;
 import jack.rm.Main;
 import jack.rm.Settings;
 import jack.rm.data.romset.GameSetFeatures;
-import jack.rm.files.Scanner;
 import jack.rm.json.Json;
 import jack.rm.json.GameListAdapter;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
-import jack.rm.plugins.PluginRealType;
-import jack.rm.plugins.searcher.SearchPlugin;
-import jack.rm.plugins.searcher.SearchPredicatesPlugin;
 
 public class GameSet implements Iterable<Game>, GameMap
 {
