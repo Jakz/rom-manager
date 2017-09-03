@@ -1,4 +1,0 @@
-[submodule "libs/pixlib"]
-	path = libs/pixlib
-	url = git@github.com:Jakz/java-pix-lib.git
-  branch = master
