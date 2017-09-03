@@ -4,7 +4,7 @@ public interface Version
 {    
   public final static Version PROPER = new Version() {
     @Override public boolean equals(Object obj) { return obj == this; }
-    @Override public String toString() { return "PROPER"; }
+    @Override public String toString() { return "Proper"; }
   };
   
   public final static Version SAMPLE = new Version() {
@@ -65,6 +65,8 @@ public interface Version
     {
       return obj instanceof Beta && ((Beta)obj).type.equals(type);
     }  
+    
+    public String toString() { return "Beta (" + type + ")"; }
   }
   
   public final class Revision implements Version

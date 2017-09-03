@@ -12,5 +12,7 @@ public enum GameSetAttribute
   EMAIL,
   HOMEPAGE,
   URL,
-  COMMENT
+  COMMENT,
+  
+  CAPTION
 }

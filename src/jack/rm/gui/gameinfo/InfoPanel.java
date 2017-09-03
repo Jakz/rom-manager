@@ -46,7 +46,7 @@ import com.github.jakz.romlib.ui.Icon;
 
 import jack.rm.Main;
 import jack.rm.plugins.PluginRealType;
-import jack.rm.plugins.downloader.RomDownloaderPlugin;
+import jack.rm.plugins.types.RomDownloaderPlugin;
 import net.miginfocom.swing.MigLayout;
 
 public class InfoPanel extends JPanel implements ActionListener

@@ -178,7 +178,7 @@ public class GameSet implements Iterable<Game>, GameMap
 	@Override
   public String toString()
 	{
-		return platform.name+" ("+info.getName()+")";
+		return platform.name+" ("+info.getCaption()+")";
 	}
 	
 	public String ident()

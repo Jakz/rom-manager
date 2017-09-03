@@ -34,9 +34,9 @@ import jack.rm.gui.Dialogs;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.plugins.PluginRealType;
-import jack.rm.plugins.scanners.FormatSupportPlugin;
-import jack.rm.plugins.scanners.ScannerPlugin;
-import jack.rm.plugins.scanners.VerifierPlugin;
+import jack.rm.plugins.types.FormatSupportPlugin;
+import jack.rm.plugins.types.ScannerPlugin;
+import jack.rm.plugins.types.VerifierPlugin;
 import net.sf.sevenzipjbinding.SevenZip;
 
 public class Scanner

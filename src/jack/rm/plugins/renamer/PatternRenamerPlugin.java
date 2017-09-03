@@ -33,6 +33,7 @@ import jack.rm.files.Organizer;
 import jack.rm.files.Pattern;
 import jack.rm.gui.PluginOptionsPanel;
 import jack.rm.i18n.Text;
+import jack.rm.plugins.types.RenamerPlugin;
 
 public class PatternRenamerPlugin extends RenamerPlugin
 {

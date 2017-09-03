@@ -12,7 +12,8 @@ import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.data.set.Provider;
 
-import jack.rm.plugins.datparsers.DatParserPlugin;
+import jack.rm.plugins.types.DatParserPlugin;
+import jack.rm.plugins.types.ProviderPlugin;
 
 
 public class ClrMamePlugin extends ProviderPlugin
@@ -30,7 +31,7 @@ public class ClrMamePlugin extends ProviderPlugin
   @Override
   public GameSet[] buildRomSets(List<DatParserPlugin> datParsers)
   {
-    DatParserPlugin datParser = this.findDatParser(datParsers, "clr-mame-nointro");
+    DatParserPlugin datParser = this.findDatParser(datParsers, "clr-mame-pro-nointro");
 
     GameSet[] sets = new GameSet[2];
     
@@ -44,7 +45,7 @@ public class ClrMamePlugin extends ProviderPlugin
     );
 
     {
-      DataSupplier parser = datParser.buildDatLoader("clr-mame-nointro"); 
+      DataSupplier parser = datParser.buildDatLoader("clr-mame-pro-nointro"); 
       DatFormat format = parser.getFormat();
           
       sets[0] = new GameSet(
@@ -59,7 +60,7 @@ public class ClrMamePlugin extends ProviderPlugin
     }
     
     {
-      DataSupplier parser = datParser.buildDatLoader("clr-mame-nointro"); 
+      DataSupplier parser = datParser.buildDatLoader("clr-mame-pro-nointro"); 
       DatFormat format = parser.getFormat();
       
       sets[1] = new GameSet(

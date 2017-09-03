@@ -1,4 +1,4 @@
-package jack.rm.plugins.providers;
+package jack.rm.plugins.types;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +10,6 @@ import com.pixbits.lib.plugin.PluginType;
 
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.PluginRealType;
-import jack.rm.plugins.datparsers.DatParserPlugin;
 
 public abstract class ProviderPlugin extends ActualPlugin
 {

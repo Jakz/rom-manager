@@ -1,6 +1,7 @@
 package com.github.jakz.romlib.data.set;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.parsers.cataloguers.GameCataloguer;
@@ -27,6 +28,15 @@ public interface DataSupplier
   
   Data load(GameSet set);
   DatFormat getFormat();
+  
+  public static DataSupplier of(DatFormat format, Function<GameSet, Data> loader)
+  {
+    return new DataSupplier()
+    {
+      @Override public Data load(GameSet set) { return loader.apply(set); }
+      @Override public DatFormat getFormat() { return format; }
+    };
+  }
   
   public static DataSupplier derive(final DataSupplier supplier, final GameCataloguer cataloguer)
   {

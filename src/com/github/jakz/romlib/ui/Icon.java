@@ -53,6 +53,8 @@ public enum Icon
   SYSTEM_GAMEBOY_COLOR("systems/gameboy-color"),
   SYSTEM_NINTENDO_DS("systems/nintendo-ds"),
   
+  SYSTEM_PLAYSTATION_PORTABLE("systems/playstation-portable"),
+  
   SYSTEM_NES("systems/nes"),
   SYSTEM_SUPER_NINTENDO("systems/super-nintendo"),
   SYSTEM_NINTENDO_64("systems/nintendo-64"),

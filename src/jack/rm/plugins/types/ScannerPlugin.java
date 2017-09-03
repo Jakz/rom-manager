@@ -1,4 +1,4 @@
-package jack.rm.plugins.scanners;
+package jack.rm.plugins.types;
 
 import java.io.IOException;
 import java.nio.file.Path;

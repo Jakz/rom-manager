@@ -20,7 +20,7 @@ import com.github.jakz.romlib.data.set.GameList;
 import com.pixbits.lib.io.xml.XMLHandler;
 import com.pixbits.lib.io.xml.XMLParser;
 
-public class LogiqxXMLParser extends XMLHandler<LogiqxXMLParser.Data>
+public class LogiqxXMLHandler extends XMLHandler<LogiqxXMLHandler.Data>
 {
   public static class Data
   {
@@ -144,7 +144,7 @@ public class LogiqxXMLParser extends XMLHandler<LogiqxXMLParser.Data>
   
   public static Data load(Path path) throws IOException, SAXException
   {
-    LogiqxXMLParser xparser = new LogiqxXMLParser();
+    LogiqxXMLHandler xparser = new LogiqxXMLHandler();
     XMLParser<Data> parser = new XMLParser<>(xparser);
     parser.load(path);
     return xparser.get();

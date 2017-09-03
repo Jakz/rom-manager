@@ -1,4 +1,4 @@
-package jack.rm.plugins.scanners;
+package jack.rm.plugins.types;
 
 import com.pixbits.lib.io.archive.VerifierEntry;
 import com.pixbits.lib.plugin.PluginType;

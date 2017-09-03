@@ -4,6 +4,8 @@ import com.github.jakz.romlib.data.game.Game;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
 
+import jack.rm.plugins.types.RenamerPlugin;
+
 public class BasicRenamerPlugin extends RenamerPlugin
 {
   @Override

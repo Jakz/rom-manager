@@ -24,8 +24,8 @@ import jack.rm.log.LogTarget;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
 import jack.rm.plugins.PluginRealType;
-import jack.rm.plugins.datparsers.DatParserPlugin;
-import jack.rm.plugins.providers.ProviderPlugin;
+import jack.rm.plugins.types.DatParserPlugin;
+import jack.rm.plugins.types.ProviderPlugin;
 
 
 public class GameSetManager

@@ -15,6 +15,8 @@ import com.pixbits.lib.plugin.ExposedParameter;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
 
+import jack.rm.plugins.types.ScannerPlugin;
+
 public class EmbeddedScanner extends ScannerPlugin
 {
   @ExposedParameter(name="Scan subfolders", description="whether the plugin should scan subfolders") boolean scanSubfolders = true;

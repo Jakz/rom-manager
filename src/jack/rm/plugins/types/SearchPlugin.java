@@ -1,4 +1,4 @@
-package jack.rm.plugins.searcher;
+package jack.rm.plugins.types;
 
 import com.pixbits.lib.searcher.SearchParser;
 import com.github.jakz.romlib.data.game.Game;

@@ -1,4 +1,4 @@
-package jack.rm.plugins.renamer;
+package jack.rm.plugins.types;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.set.organizers.GameRenamer;

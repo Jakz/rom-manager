@@ -1,4 +1,4 @@
-package jack.rm.plugins.renamer;
+package jack.rm.plugins.types;
 
 import java.util.List;
 

@@ -1,58 +1,42 @@
 package jack.rm.plugins.datparsers;
 
-import java.io.CharArrayWriter;
-import java.nio.file.Paths;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.UnknownFormatConversionException;
-import java.util.stream.Collectors;
 
-import com.github.jakz.romlib.data.game.RomSize;
-import com.github.jakz.romlib.data.game.Language;
-import com.github.jakz.romlib.data.game.Location;
-import com.github.jakz.romlib.data.game.Rom;
-import com.github.jakz.romlib.data.assets.Asset;
-import com.github.jakz.romlib.data.assets.AssetData;
-import com.github.jakz.romlib.data.game.Game;
-import com.github.jakz.romlib.data.game.GameClone;
-import com.github.jakz.romlib.data.game.GameSave;
-import com.github.jakz.romlib.data.game.attributes.GameAttribute;
-import com.github.jakz.romlib.data.set.CloneSet;
 import com.github.jakz.romlib.data.set.DatFormat;
 import com.github.jakz.romlib.data.set.DataSupplier;
-import com.github.jakz.romlib.data.set.Feature;
-import com.github.jakz.romlib.data.set.GameList;
-import com.github.jakz.romlib.data.set.GameSet;
-import com.github.jakz.romlib.parsers.OfflineListXMLParser;
+import com.github.jakz.romlib.parsers.OfflineListXMLHandler;
+import com.pixbits.lib.functional.StreamException;
+import com.pixbits.lib.io.xml.XMLParser;
 
 import jack.rm.files.parser.SaveParser;
-import jack.rm.files.parser.XMLDatLoader;
-import jack.rm.files.parser.XMLHandler;
+import jack.rm.plugins.types.DatParserPlugin;
 
 public class OfflineListParserPlugin extends DatParserPlugin
 {  
-  class OfflineListXMLDatLoader extends XMLDatLoader
-  {
-    protected OfflineListXMLDatLoader(XMLHandler handler) { super(handler); }
-    @Override public DatFormat getFormat() { return new DatFormat("ol", "xml"); }
-  }
+  private final DatFormat format = DatFormat.of("offline-list", "ol", "xml");
   
-  @Override public String[] getSupportedFormats() { return new String[] { "offline-list" }; }
+  @Override public String[] getSupportedFormats() { return new String[] { format.getLongIdentifier() }; }
 
   @Override
   public DataSupplier buildDatLoader(String format, Map<String, Object> arguments)
   {
     checkArgument(arguments, "save-parser", SaveParser.class);
 
-    if (format.equals("offline-list"))
+    if (format.equals(this.format.getLongIdentifier()))
     {
-      return new OfflineListXMLDatLoader(new OfflineListXMLParser((SaveParser)arguments.get("save-parser")));
+      return DataSupplier.of(
+      this.format,
+      StreamException.rethrowFunction(set -> {
+        OfflineListXMLHandler xmlParser = new OfflineListXMLHandler((SaveParser)arguments.get("save-parser"));
+        xmlParser.setRomSet(set);
+        //xmlParser.setGameFactory(() -> new Game(set));
+        //xmlParser.initSizeSet(set.hasFeature(Feature.FINITE_SIZE_SET));
+
+        XMLParser<DataSupplier.Data> parser = new XMLParser<>(xmlParser);
+        DataSupplier.Data data = parser.load(set.datPath());
+        
+        return data;
+      }));
     }
     else
       return null;

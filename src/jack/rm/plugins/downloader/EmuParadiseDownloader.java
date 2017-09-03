@@ -8,6 +8,8 @@ import java.util.Map;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.platforms.Platform;
 
+import jack.rm.plugins.types.RomDownloaderPlugin;
+
 public class EmuParadiseDownloader extends RomDownloaderPlugin
 {
   private final Map<Platform, Integer> idents = new HashMap<>();

@@ -12,25 +12,32 @@ import com.github.jakz.romlib.data.set.DataSupplier;
 import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameList;
 import com.github.jakz.romlib.data.set.GameSet;
-import com.github.jakz.romlib.parsers.LogiqxXMLParser;
-import com.github.jakz.romlib.parsers.XMDBParser;
+import com.github.jakz.romlib.parsers.LogiqxXMLHandler;
+import com.github.jakz.romlib.parsers.XMDBHandler;
 import com.github.jakz.romlib.parsers.cataloguers.NoIntroCataloguer;
 import com.pixbits.lib.io.FileUtils;
 import com.pixbits.lib.io.xml.XMLParser;
 
+import jack.rm.plugins.types.DatParserPlugin;
+
 public class LogiqxXmlParserPlugin extends DatParserPlugin
 {
-
+  private final DatFormat format = DatFormat.of("logiqx-xml", "lx", "xml");
+  
+  
   @Override
   public String[] getSupportedFormats()
   {
-    return new String[] { "logiqx-xml" };
+    return new String[] { format.getLongIdentifier() };
   }
 
   @Override
   public DataSupplier buildDatLoader(String format, Map<String, Object> arguments)
   {
-    return DataSupplier.derive(new LogiqxXmlSupplier(), new NoIntroCataloguer());
+    if (format.equals(this.format.getLongIdentifier()))
+      return DataSupplier.derive(new LogiqxXmlSupplier(), new NoIntroCataloguer());
+    else
+      return null;
   }
   
   class LogiqxXmlSupplier implements DataSupplier
@@ -41,16 +48,15 @@ public class LogiqxXmlParserPlugin extends DatParserPlugin
       //TODO: probably exceptions should be catched by loader not here
       try
       {
-        LogiqxXMLParser xmlParser = new LogiqxXMLParser();
+        LogiqxXMLHandler xmlParser = new LogiqxXMLHandler();
         xmlParser.setGameFactory(() -> new Game(set));
         xmlParser.initSizeSet(set.hasFeature(Feature.FINITE_SIZE_SET));
 
-        
-        XMLParser<LogiqxXMLParser.Data> parser = new XMLParser<>(xmlParser);
-        LogiqxXMLParser.Data data = parser.load(set.datPath());
+        XMLParser<LogiqxXMLHandler.Data> parser = new XMLParser<>(xmlParser);
+        LogiqxXMLHandler.Data data = parser.load(set.datPath());
         
         Path xmdbPath = Paths.get(FileUtils.trimExtension(set.datPath().toString()) + ".xmdb");  
-        CloneSet clones = XMDBParser.loadCloneSet(data.list, xmdbPath);
+        CloneSet clones = XMDBHandler.loadCloneSet(data.list, xmdbPath);
         
         return new DataSupplier.Data(data.list, clones);
       }
@@ -63,7 +69,7 @@ public class LogiqxXmlParserPlugin extends DatParserPlugin
       return null;
     }
 
-    @Override public DatFormat getFormat() { return new DatFormat("lx", "xml"); }    
+    @Override public DatFormat getFormat() { return format; }  
   }
 
 }

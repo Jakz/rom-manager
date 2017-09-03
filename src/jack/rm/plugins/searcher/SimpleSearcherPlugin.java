@@ -4,6 +4,9 @@ import com.pixbits.lib.searcher.BasicSearchParser;
 import com.pixbits.lib.searcher.LambdaPredicate;
 import com.pixbits.lib.searcher.SearchParser;
 import com.pixbits.lib.searcher.SearchPredicate;
+
+import jack.rm.plugins.types.SearchPlugin;
+
 import com.github.jakz.romlib.data.game.Game;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;

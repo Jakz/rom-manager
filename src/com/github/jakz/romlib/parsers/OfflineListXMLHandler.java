@@ -31,11 +31,11 @@ import com.github.jakz.romlib.data.set.DataSupplier;
 import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameList;
 import com.github.jakz.romlib.data.set.GameSet;
+import com.pixbits.lib.io.xml.XMLHandler;
 
 import jack.rm.files.parser.SaveParser;
-import jack.rm.files.parser.XMLHandler;
 
-public class OfflineListXMLParser extends XMLHandler
+public class OfflineListXMLHandler extends XMLHandler<DataSupplier.Data>
 {
   static final private Map<Integer, Language> languageMap = new HashMap<>();
   static final private Map<Integer, Location> locationMap = new HashMap<>();
@@ -98,6 +98,8 @@ public class OfflineListXMLParser extends XMLHandler
   
   private final DecimalFormat format;
   private SaveParser saveParser;
+  
+  private GameSet set;
 
   private Asset[] assets;
 
@@ -105,63 +107,44 @@ public class OfflineListXMLParser extends XMLHandler
   
   public void setRomSet(GameSet set)
   {
-    super.setRomSet(set);
+    this.set = set;
     this.sizeSet = set.hasFeature(Feature.FINITE_SIZE_SET) ? new RomSize.RealSet() : new RomSize.NullSet();
     this.assets = set.getAssetManager().getSupportedAssets();
   }
   
-  public OfflineListXMLParser(SaveParser saveParser)
+  public OfflineListXMLHandler(SaveParser saveParser)
   {
     format = new DecimalFormat();
     format.applyPattern("0000");
     this.saveParser = saveParser;
   }
+  
+  @Override
+  protected void init()
+  {
+    
+  }
 
   @Override
-  public void startElement(String namespaceURI, String localName, String qName, Attributes attr) throws SAXException
-  {     
-    if (localName.equals("game"))
+  protected void start(String ns, String name, Attributes attr) throws SAXException
+  {
+    if (name.equals("game"))
     {
       game = new Game(set);
     }
-    else if (localName.equals("games"))
+    else if (name.equals("games"))
     {
       started = true;
     }
-    
-    buffer.reset();
   }
-  
-  public String asString()
-  {
-    return buffer.toString().replaceAll("[\r\n]"," ").trim();
-  }
-  
-  public int asInt()
-  {
-    String value = asString();
-    return !value.isEmpty() ? Integer.parseInt(asString()) : 0;
-  }
-  
-  public long asLong()
-  {
-    String value = asString();
-    return !value.isEmpty() ? Long.parseLong(asString()) : 0;
-  }
-  
-  public long asHexLong()
-  {
-    String value = asString();
-    return !value.isEmpty() ? Long.parseLong(asString(), 16) : 0;
-  }
-  
+
   @Override
-  public void endElement(String namespaceURI, String localName, String qName) throws SAXException
+  protected void end(String ns, String name) throws SAXException
   {
     if (!started)
       return;
         
-    switch(localName)
+    switch (name)
     {
       case "imageNumber":
       {
@@ -260,8 +243,6 @@ public class OfflineListXMLParser extends XMLHandler
       { 
         break;
       }
-      
-
     }
   }
   
@@ -284,11 +265,5 @@ public class OfflineListXMLParser extends XMLHandler
     }
     
     return new DataSupplier.Data(list, cloneSet);
-  }
-  
-  @Override
-  public void characters(char[] ch, int start, int length)
-  {
-    buffer.write(ch,start,length);
   }
 }

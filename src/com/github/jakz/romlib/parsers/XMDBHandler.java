@@ -24,7 +24,7 @@ import com.pixbits.lib.lang.Pair;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
 
-public class XMDBParser extends XMLHandler<CloneSet>
+public class XMDBHandler extends XMLHandler<CloneSet>
 {
   private final static Map<String, Location> zoneMap = new HashMap<>();
   
@@ -56,7 +56,7 @@ public class XMDBParser extends XMLHandler<CloneSet>
   }
   
   
-  private final static Logger logger = Log.getLogger(XMDBParser.class);
+  private final static Logger logger = Log.getLogger(XMDBHandler.class);
   
   
   
@@ -66,7 +66,7 @@ public class XMDBParser extends XMLHandler<CloneSet>
   List<Game> clone;
   List<Pair<Location,String>> biases;
   
-  public XMDBParser(GameMap list)
+  public XMDBHandler(GameMap list)
   {
     this.list = list;
   }
@@ -160,7 +160,7 @@ public class XMDBParser extends XMLHandler<CloneSet>
     final String packageName = MethodHandles.lookup().lookupClass().getPackage().getName().replaceAll("\\.", "/");
     
     XMLEmbeddedDTD resolver = new XMLEmbeddedDTD(dtdName, packageName + "/" + dtdName);    
-    XMDBParser xparser = new XMDBParser(list);
+    XMDBHandler xparser = new XMDBHandler(list);
     XMLParser<CloneSet> xmdbParser = new XMLParser<>(xparser, resolver);
 
     CloneSet cloneSet = xmdbParser.load(path);

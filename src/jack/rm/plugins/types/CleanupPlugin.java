@@ -1,4 +1,4 @@
-package jack.rm.plugins.cleanup;
+package jack.rm.plugins.types;
 
 import com.pixbits.lib.plugin.PluginType;
 

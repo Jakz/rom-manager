@@ -12,6 +12,7 @@ import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
 
 import jack.rm.files.Pattern;
+import jack.rm.plugins.types.PatternSetPlugin;
 
 public class BasicPatternSet extends PatternSetPlugin
 {

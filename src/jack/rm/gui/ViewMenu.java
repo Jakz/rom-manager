@@ -100,6 +100,8 @@ public class ViewMenu extends JMenu
       
       sortCriteria[0].setSelected(true);
       
+      sortCriteria[2].setEnabled(set.doesSupportAttribute(GameAttribute.NUMBER));
+      
       reverseSortOrder = new JCheckBoxMenuItem(Text.MENU_VIEW_REVERSE_ORDER.text());
       reverseSortOrder.addActionListener(listener);
       

@@ -6,6 +6,9 @@ import java.util.function.Predicate;
 
 import com.pixbits.lib.searcher.SearchParser;
 import com.pixbits.lib.searcher.SearchPredicate;
+
+import jack.rm.plugins.types.SearchPlugin;
+
 import com.github.jakz.romlib.data.game.Game;
 import com.pixbits.lib.parser.shuntingyard.ASTBinary;
 import com.pixbits.lib.parser.shuntingyard.ASTNode;

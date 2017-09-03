@@ -15,6 +15,7 @@ import com.pixbits.lib.plugin.ExposedParameter;
 
 import jack.rm.Settings;
 import jack.rm.plugins.PluginWithIgnorePaths;
+import jack.rm.plugins.types.CleanupPlugin;
 
 public class MoveUnknownFilesPlugin extends CleanupPlugin implements PluginWithIgnorePaths
 {

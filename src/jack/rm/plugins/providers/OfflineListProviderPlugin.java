@@ -29,9 +29,8 @@ import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.data.set.Provider;
 
 import jack.rm.files.parser.SaveParser;
-import jack.rm.files.parser.XMLDatLoader;
-import jack.rm.files.parser.XMLHandler;
-import jack.rm.plugins.datparsers.DatParserPlugin;
+import jack.rm.plugins.types.DatParserPlugin;
+import jack.rm.plugins.types.ProviderPlugin;
 
 public class OfflineListProviderPlugin extends ProviderPlugin
 {  
@@ -245,13 +244,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
       return new NDS.Save(type, multiplier);
     }
   }
-  
-  class OfflineListXMLDatLoader extends XMLDatLoader
-  {
-    protected OfflineListXMLDatLoader(XMLHandler handler) { super(handler); }
-    @Override public DatFormat getFormat() { return new DatFormat("ol", "xml"); }
-  }
-  
+
   @Override
   public GameSet[] buildRomSets(List<DatParserPlugin> datParsers)
   {

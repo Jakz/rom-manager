@@ -1,4 +1,4 @@
-package jack.rm.plugins.scanners;
+package jack.rm.plugins.types;
 
 import java.util.List;
 
@@ -9,6 +9,7 @@ import com.pixbits.lib.plugin.PluginType;
 import jack.rm.files.ScanResult;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.PluginRealType;
+import jack.rm.plugins.scanners.VerifierException;
 
 public abstract class VerifierPlugin extends ActualPlugin
 {  

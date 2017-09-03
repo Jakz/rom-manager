@@ -19,4 +19,6 @@ public interface GameSetAttributeInterface
   
   default void setVersion(String version) { setAttribute(GameSetAttribute.VERSION, version); }
   default String getVersion() { return getAttribute(GameSetAttribute.VERSION); }
+  
+  default String getCaption() { return getAttribute(GameSetAttribute.CAPTION); }
 }

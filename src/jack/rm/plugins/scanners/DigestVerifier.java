@@ -15,6 +15,7 @@ import com.pixbits.lib.io.digest.DigestOptions;
 import com.pixbits.lib.io.digest.Digester;
 import com.pixbits.lib.io.digest.HashCache;
 import jack.rm.files.ScanResult;
+import jack.rm.plugins.types.VerifierPlugin;
 
 public class DigestVerifier extends VerifierPlugin
 {

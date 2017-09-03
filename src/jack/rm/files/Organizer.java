@@ -18,10 +18,10 @@ import jack.rm.Settings;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.plugins.PluginRealType;
-import jack.rm.plugins.cleanup.CleanupPlugin;
 import jack.rm.plugins.folder.FolderPlugin;
-import jack.rm.plugins.renamer.PatternSetPlugin;
-import jack.rm.plugins.renamer.RenamerPlugin;
+import jack.rm.plugins.types.CleanupPlugin;
+import jack.rm.plugins.types.PatternSetPlugin;
+import jack.rm.plugins.types.RenamerPlugin;
 
 public class Organizer
 {	

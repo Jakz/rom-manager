@@ -6,7 +6,7 @@ import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.set.GameSet;
 
-import jack.rm.plugins.renamer.RenamerPlugin;
+import jack.rm.plugins.types.RenamerPlugin;
 
 public class RenamerWorker extends RomSetWorker<RenamerPlugin>
 {

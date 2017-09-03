@@ -1,4 +1,4 @@
-package jack.rm.plugins.downloader;
+package jack.rm.plugins.types;
 
 import java.net.URL;
 

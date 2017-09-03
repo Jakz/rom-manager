@@ -37,7 +37,7 @@ public class ClrMameProParser implements DataSupplier
   
   private final HexBinaryAdapter hexConverter = new HexBinaryAdapter();
   
-  @Override public DatFormat getFormat() { return new DatFormat("cm", "dat"); }
+  @Override public DatFormat getFormat() { return DatFormat.of("clr-mame-pro", "cm", "dat"); }
 
   @Override public DataSupplier.Data load(GameSet set)
   {

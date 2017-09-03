@@ -11,6 +11,7 @@ import com.pixbits.lib.io.archive.handles.BinaryHandle;
 import com.pixbits.lib.log.Log;
 
 import jack.rm.log.LogSource;
+import jack.rm.plugins.types.FormatSupportPlugin;
 
 public class CSOSupportPlugin extends FormatSupportPlugin
 {

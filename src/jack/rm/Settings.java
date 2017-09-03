@@ -17,10 +17,10 @@ import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.PluginWithIgnorePaths;
-import jack.rm.plugins.downloader.RomDownloaderPlugin;
 import jack.rm.plugins.folder.FolderPlugin;
-import jack.rm.plugins.renamer.RenamerPlugin;
-import jack.rm.plugins.searcher.SearchPlugin;
+import jack.rm.plugins.types.RenamerPlugin;
+import jack.rm.plugins.types.RomDownloaderPlugin;
+import jack.rm.plugins.types.SearchPlugin;
 
 public class Settings
 {	

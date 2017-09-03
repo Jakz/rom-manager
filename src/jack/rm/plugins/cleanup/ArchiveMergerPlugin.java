@@ -10,6 +10,7 @@ import com.pixbits.lib.concurrent.OperationDetails;
 import com.pixbits.lib.plugin.ExposedParameter;
 
 import jack.rm.files.RomSetWorker;
+import jack.rm.plugins.types.CleanupPlugin;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;

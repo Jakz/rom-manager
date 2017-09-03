@@ -18,8 +18,8 @@ import com.pixbits.lib.searcher.Searcher;
 import jack.rm.Settings;
 import jack.rm.files.Scanner;
 import jack.rm.plugins.PluginRealType;
-import jack.rm.plugins.searcher.SearchPlugin;
-import jack.rm.plugins.searcher.SearchPredicatesPlugin;
+import jack.rm.plugins.types.SearchPlugin;
+import jack.rm.plugins.types.SearchPredicatesPlugin;
 
 public class GameSetFeatures
 {
