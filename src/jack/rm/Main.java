@@ -172,6 +172,8 @@ public class Main
     manager.register(jack.rm.plugins.scanners.DigestVerifier.class);
     
     manager.register(jack.rm.plugins.scanners.CSOSupportPlugin.class);
+    manager.register(jack.rm.plugins.scanners.NesHeaderSupportPlugin.class);
+
 	}
 	
 	public static void dumpInfo()
