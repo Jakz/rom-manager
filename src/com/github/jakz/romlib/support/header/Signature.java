@@ -32,7 +32,7 @@ public class Signature
     /* TODO: only offset zero is handled */
     byte[] buffer = new byte[data.length];
 
-    try (InputStream is = handle.getVerifierHandle().getInputStream())
+    /*try (*/InputStream is = handle.getVerifierHandle().getInputStream();/*)*/
     {    
       
       int r = 0;
@@ -42,6 +42,7 @@ public class Signature
       {
         /* read up to missing bytes to check signature */
         int c = is.read(buffer, r, data.length - r);
+        r += c;
         
         /* if EOS is reached before then return false */
         if (c == -1) return false;
@@ -51,6 +52,6 @@ public class Signature
     return Arrays.equals(data, buffer);
   }
   
-  public static Signature of(byte[] bytes) { return new Signature(bytes); }
+  public static Signature of(byte... bytes) { return new Signature(bytes); }
   public static Signature of(String string) { return new Signature(string.getBytes()); }
 }

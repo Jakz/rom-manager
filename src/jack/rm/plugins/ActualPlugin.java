@@ -17,6 +17,7 @@ public abstract class ActualPlugin extends Plugin
   
   protected Predicate<GameSet> compatibility() { return rs -> true; }
     
+  protected void debug(String message) { logger.d(LogTarget.plugin(this), message); }
   protected void message(String message) { logger.i(LogTarget.plugin(this), message); }
   protected void warning(String message) { logger.w(LogTarget.plugin(this), message); }
   protected void error(String message) { logger.e(LogTarget.plugin(this), message); }

@@ -34,6 +34,9 @@ public abstract class HeaderSupportPlugin extends FormatSupportPlugin
       .filter(StreamException.rethrowPredicate(e -> e.getKey().verify(entry)))
       .findAny();
     
+    if (rule.isPresent())
+      this.debug("Found potential header match for plugin "+this.getClass().getName()+" with "+entry.toString());
+    
     return rule.isPresent() ? new SkipHeaderHandle(entry.getVerifierHandle(), rule.get().getValue()) : entry;
   }
 

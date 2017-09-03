@@ -8,6 +8,6 @@ public class NesHeaderSupportPlugin extends HeaderSupportPlugin
   public NesHeaderSupportPlugin()
   {
     super();
-    addRule(Signature.of("NES\r"), Rule.of(16));
+    addRule(Signature.of(new byte[] {'N', 'E', 'S', 0x1A}), Rule.of(16));
   }
 }
