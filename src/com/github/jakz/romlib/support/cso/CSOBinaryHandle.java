@@ -6,12 +6,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 
+import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.pixbits.lib.io.FileUtils;
 import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.lib.io.digest.DigestInfo;
 import com.pixbits.lib.io.digest.DigestOptions;
 import com.pixbits.lib.io.digest.Digester;
+import com.pixbits.lib.lang.StringUtils;
 
 public class CSOBinaryHandle extends Handle
 {
@@ -148,6 +151,23 @@ public class CSOBinaryHandle extends Handle
     }
   }
   
-  public JsonElement serializeHeader() { return info.serialize(); }
+  private JsonElement serializeHeader() { return info.serialize(); }
 
+  public void serializeToJson(JsonObject j)
+  {
+    j.add("header", serializeHeader());
+    j.addProperty("size", size());
+    j.addProperty("csize", compressedSize());
+  }
+  
+  public CSOBinaryHandle(JsonObject o, JsonDeserializationContext context)
+  {
+    this(
+      context.deserialize(o.get("path"), Path.class), 
+      StringUtils.fromHexString(o.get("header").getAsString()), 
+      Long.parseUnsignedLong(o.get("crc").getAsString(), 16), 
+      o.get("size").getAsLong(), 
+      o.get("csize").getAsLong()
+    );
+  }
 }

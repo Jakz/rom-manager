@@ -3,8 +3,8 @@ package com.github.jakz.romlib.data.set;
 import java.util.Optional;
 import java.util.function.Function;
 
+import com.github.jakz.romlib.data.cataloguers.GameCataloguer;
 import com.github.jakz.romlib.data.game.Game;
-import com.github.jakz.romlib.parsers.cataloguers.GameCataloguer;
 
 public interface DataSupplier
 { 

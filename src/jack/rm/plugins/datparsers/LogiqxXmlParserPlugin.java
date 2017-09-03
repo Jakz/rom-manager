@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 
+import com.github.jakz.romlib.data.cataloguers.NoIntroCataloguer;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.set.CloneSet;
@@ -14,7 +15,6 @@ import com.github.jakz.romlib.data.set.GameList;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.parsers.LogiqxXMLHandler;
 import com.github.jakz.romlib.parsers.XMDBHandler;
-import com.github.jakz.romlib.parsers.cataloguers.NoIntroCataloguer;
 import com.pixbits.lib.io.FileUtils;
 import com.pixbits.lib.io.xml.XMLParser;
 

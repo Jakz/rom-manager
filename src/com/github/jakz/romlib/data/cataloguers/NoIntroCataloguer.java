@@ -1,4 +1,4 @@
-package com.github.jakz.romlib.parsers.cataloguers;
+package com.github.jakz.romlib.data.cataloguers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -149,6 +149,7 @@ public class NoIntroCataloguer implements GameCataloguer
             
             Date date = new Date(year, month, day);
               
+            //TODO: set attribute
           }
           
           return matched;

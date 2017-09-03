@@ -2,11 +2,11 @@ package jack.rm.plugins.datparsers;
 
 import java.util.Map;
 
+import com.github.jakz.romlib.data.cataloguers.NoIntroCataloguer;
 import com.github.jakz.romlib.data.set.DatFormat;
 import com.github.jakz.romlib.data.set.DataSupplier;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.parsers.ClrMameProParser;
-import com.github.jakz.romlib.parsers.cataloguers.NoIntroCataloguer;
 
 import jack.rm.plugins.types.DatParserPlugin;
 

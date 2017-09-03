@@ -1,4 +1,4 @@
-package com.github.jakz.romlib.parsers.cataloguers;
+package com.github.jakz.romlib.data.cataloguers;
 
 import com.github.jakz.romlib.data.game.Game;
 
