@@ -12,22 +12,12 @@ public class GameClone implements Iterable<Game>
   private final Game[] games;
   
   private final String[] names;
-  //private final Game[] zones;
   
-  /*public GameClone(Game game, Location zone)
+  public GameClone(Game game)
   {
     this.games = new Game[] { game };
-    this.zones = new Game[Location.values().length];
-    this.zones[zone.ordinal()] = game;
     this.names = null;
   }
-  
-  public GameClone(Collection<Game> games, Game[] zones)
-  {
-    this.games = games.toArray(new Game[games.size()]);
-    this.zones = zones;
-    this.names = null;
-  }*/
   
   public GameClone(Game game, Location location, String name)
   {

@@ -8,6 +8,7 @@ import com.github.jakz.romlib.support.cso.CSOBinaryHandle;
 import com.github.jakz.romlib.support.cso.CSOInfo;
 import com.pixbits.lib.io.archive.VerifierEntry;
 import com.pixbits.lib.io.archive.handles.BinaryHandle;
+import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.lib.log.Log;
 
 import jack.rm.log.LogSource;
@@ -16,7 +17,7 @@ import jack.rm.plugins.types.FormatSupportPlugin;
 public class CSOSupportPlugin extends FormatSupportPlugin
 {
   @Override
-  public VerifierEntry getSpecializedEntry(VerifierEntry entry)
+  public Handle getSpecializedEntry(Handle entry)
   {
     try
     {  

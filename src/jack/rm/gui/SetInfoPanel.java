@@ -22,10 +22,12 @@ import javax.swing.border.Border;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 
+import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.game.RomSize.PrintStyle;
 import com.github.jakz.romlib.data.game.RomSize.PrintUnit;
 import com.github.jakz.romlib.data.platforms.Platform;
+import com.github.jakz.romlib.data.set.CloneSet;
 import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.io.archive.ArchiveFormat;
@@ -73,7 +75,12 @@ public class SetInfoPanel extends JPanel
 	      new InfoRow<String>("Provider", () -> set.info().getName()),
 	      new InfoRow<Platform>("System", () -> set.platform()),
 	      new InfoRow<String>("Game Count", () -> set.info().gameCount() + " games"),
-	      new InfoRow<String>("Unique Game Count", () -> set.info().uniqueGameCount() + " games"),
+	      new InfoRow<String>("Unique Game Count", () -> 
+	        String.format("%d games (%.2f per clone)", 
+	          set.info().uniqueGameCount(), 
+	          (float)set.info().gameCount()/set.info().uniqueGameCount() 
+	        )
+	      ),
 	      new InfoRow<String>("Rom Count", () -> set.info().romCount() + " roms"),
 	      new InfoRow<String>("Owned", () -> set.status().getFoundCount() + " roms"),
         new InfoRow<String>("% Complete", () -> { 
@@ -85,6 +92,20 @@ public class SetInfoPanel extends JPanel
         new InfoRow<String>("Total Size", () -> {
           return RomSize.toString(set.info().sizeInBytes(), PrintStyle.LONG, PrintUnit.BYTES);
         }),
+        new InfoRow<String>("Estimate Size per bias", () -> {
+	        if (set.clones() == null)
+	          return RomSize.toString(set.info().sizeInBytes(), PrintStyle.LONG, PrintUnit.BYTES);
+	        else
+	        {
+	          /* TODO: here we're assuming that there are no orphaned games for cloneset, this should be
+	          intended behavior right? */
+	          CloneSet clones = set.clones();
+	          return RomSize.toString((clones.stream().mapToLong(clone -> {
+	            return (long)clone.stream().mapToLong(Game::getSizeInBytes).average().getAsDouble();
+	          }).sum()), PrintStyle.LONG, PrintUnit.BYTES);
+	        }
+          
+	      }),
         new InfoRow<String>("Actual Size", () -> {
           return RomSize.toString(totalSize, PrintStyle.LONG, PrintUnit.BYTES);
         }),

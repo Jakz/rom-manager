@@ -9,6 +9,7 @@ import java.security.NoSuchAlgorithmException;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
 import com.pixbits.lib.io.FileUtils;
 import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.lib.io.digest.DigestInfo;
@@ -153,7 +154,7 @@ public class CSOBinaryHandle extends Handle
   
   private JsonElement serializeHeader() { return info.serialize(); }
 
-  public void serializeToJson(JsonObject j)
+  public void serializeToJson(JsonObject j, JsonSerializationContext context)
   {
     j.add("header", serializeHeader());
     j.addProperty("size", size());

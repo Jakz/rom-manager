@@ -12,6 +12,7 @@ import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -64,15 +65,11 @@ public class Scanner
 	  formats = set.getSettings().plugins.getEnabledPlugins(PluginRealType.FORMAT_SUPPORT);
 	  
 	  if (verifier != null)
+	  {
 	    verifier.setup(set);
+      verifier.setEntryTransformer(getTransformer());
+	  }
 	}
-  
-  private VerifierEntry transformEntry(VerifierEntry entry)
-  {
-    for (FormatSupportPlugin plugin : formats)
-      entry = plugin.getSpecializedEntry(entry);
-    return entry;
-  }
 
 	private void foundRom(ScanResult result)
 	{
@@ -128,14 +125,24 @@ public class Scanner
 	  return true;
 	}
 	
+	private Function<Handle, Handle> getTransformer()
+	{
+    Function<Handle, Handle> transformer = formats.stream().reduce(
+        h -> h, 
+        (f,p) -> f.andThen(ff -> p.getSpecializedEntry(ff)),
+        Function::andThen
+    );
+    
+    return transformer;
+	}
+	
 	public List<ScanResult> singleBlockingCheck(Path path)
 	{
 	  List<VerifierEntry> entries;
     try
-    {
+    {      
       entries = scanner.scanFile(path);
       return entries.stream()
-      .map(entry -> transformEntry(entry))
       .map(entry -> verifier.verifyHandle(entry))
       .flatMap(r -> r.stream())
       .filter(s -> s.rom != null)
@@ -152,7 +159,7 @@ public class Scanner
 	{
 	  return () -> {
 	    logger.i(LogTarget.romset(set), "Verifying %s handles for romset", total ? "all" : "new");
-	    
+
 	    Operation<VerifierEntry, List<ScanResult>> operation = handle -> {
 	      logger.d(LogTarget.romset(set), "> Verifying %s", handle.toString());
 	      return verifier.verifyHandle(handle);
@@ -267,7 +274,6 @@ public class Scanner
           Main.progress.finished();
           
           List<VerifierEntry> transformedEntries = foundEntries.stream()
-            .map(e -> transformEntry(e))
             .collect(Collectors.toList());
           
           HandleSet handleSet = new HandleSet(transformedEntries);

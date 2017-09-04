@@ -4,15 +4,28 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
 import com.pixbits.lib.io.archive.handles.Handle;
 
 public abstract class WrapperStreamHandle extends Handle
 {
   protected final Handle handle;
   
+  public WrapperStreamHandle(JsonObject o, JsonDeserializationContext context)
+  {
+    handle = context.deserialize(o.get("handle"), Handle.class);
+  }
+  
   protected WrapperStreamHandle(Handle handle)
   {
     this.handle = handle;
+  }
+  
+  public void serializeToJson(JsonObject j, JsonSerializationContext context)
+  {
+    j.add("handle", context.serialize(handle, Handle.class));
   }
   
   @Override public Handle getVerifierHandle() { return this; }

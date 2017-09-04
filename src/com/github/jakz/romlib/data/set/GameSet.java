@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
@@ -94,7 +95,7 @@ public class GameSet implements Iterable<Game>, GameMap
 	  this.info = new GameSetInfo(provider);
 	  this.loaders = null;
 	  this.list = list;
-	  setClones(clones);
+	  setClones(clones, true);
 	  this.platform = platform;
 	  this.attributes = new Attribute[0];
 	  this.loaded = true;
@@ -102,16 +103,36 @@ public class GameSet implements Iterable<Game>, GameMap
 	  this.helper = new GameSetFeatures(this);
 	}
 
-	public void setClones(CloneSet clones)
+	public void setClones(CloneSet clones) { setClones(clones, true); }
+	public void setClones(CloneSet clones, boolean assignOrphanedGames)
 	{ 
     this.clones = clones;
     
     if (clones != null)
     {
+      if (assignOrphanedGames)
+        assignOrphanedGamesToClones();
+      
       for (GameClone clone : clones)
         for (Game game : clone)
           game.setClone(clone);
     }
+	}
+	
+	private void assignOrphanedGamesToClones()
+	{
+	  if (this.clones != null)
+	  {
+	    List<GameClone> orphanClones = stream()
+	      .filter(game -> clones.get(game) == null)
+	      .map(game -> new GameClone(game))
+	      .collect(Collectors.toList());
+	    
+	    List<GameClone> clones = this.clones.stream().collect(Collectors.toList());
+	    clones.addAll(orphanClones);
+	    
+	    this.clones = new CloneSet(clones.toArray(new GameClone[clones.size()]));
+	  }
 	}
 	
 	public Platform platform() { return platform; }

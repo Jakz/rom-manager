@@ -3,6 +3,7 @@ package jack.rm.plugins.scanners;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.github.jakz.romlib.data.game.Rom;
@@ -11,6 +12,7 @@ import com.pixbits.lib.io.archive.Verifier;
 import com.pixbits.lib.io.archive.VerifierEntry;
 import com.pixbits.lib.io.archive.VerifierOptions;
 import com.pixbits.lib.io.archive.VerifierResult;
+import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.lib.io.digest.DigestOptions;
 import com.pixbits.lib.io.digest.Digester;
 import com.pixbits.lib.io.digest.HashCache;
@@ -36,6 +38,12 @@ public class DigestVerifier extends VerifierPlugin
     Digester digester = new Digester(doptions);
     
     verifier = new Verifier<>(options, digester, cache);
+  }
+  
+  @Override
+  public void setEntryTransformer(Function<Handle, Handle> transformer)
+  {
+    verifier.setTransformer(transformer);
   }
   
   @Override
