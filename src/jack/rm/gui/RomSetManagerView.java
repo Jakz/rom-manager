@@ -31,6 +31,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
 import com.github.jakz.romlib.data.platforms.Platform;
+import com.github.jakz.romlib.data.platforms.Platforms;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.ui.table.renderers.AlternateColorTableCellRenderer;
 
@@ -67,7 +68,7 @@ public class RomSetManagerView extends JPanel
       int count = manager.bySystem(value).size();
       
       label.setIcon(value.getIcon());
-      label.setText(value.name+" ("+count+")");
+      label.setText(value.getName()+" ("+count+")");
       label.setForeground(count == 0 ? Color.GRAY : Color.BLACK);
     
       return label;
@@ -136,7 +137,7 @@ public class RomSetManagerView extends JPanel
     systemSetInfo = new SystemRomSetInfo();
 
     systemModel = new DefaultListModel<>();
-    Arrays.stream(Platform.values()).sorted((o1, o2) -> o1.name.compareTo(o2.name)).forEach(s -> systemModel.addElement(s));
+    Arrays.stream(Platforms.values()).sorted((o1, o2) -> o1.name.compareTo(o2.name)).forEach(s -> systemModel.addElement(s));
     
     systemList = new JList<>();
     systemList.setModel(systemModel);
@@ -215,9 +216,9 @@ public class RomSetManagerView extends JPanel
       countLabel.setIcon(platform.getIcon());
       
       if (count > 0)
-        countLabel.setText(count+" available DATs for "+platform.name);
+        countLabel.setText(count+" available DATs for "+platform.getName());
       else
-        countLabel.setText("No available DATs for "+platform.name);
+        countLabel.setText("No available DATs for "+platform.getName());
             
       datTable.clearSelection();
       datModel.setData(sets);

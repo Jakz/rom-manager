@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.platforms.Platform;
+import com.github.jakz.romlib.data.platforms.Platforms;
 
 import jack.rm.plugins.types.RomDownloaderPlugin;
 
@@ -18,11 +19,11 @@ public class EmuParadiseDownloader extends RomDownloaderPlugin
   
   public EmuParadiseDownloader()
   {
-    idents.put(Platform.GBA, 31);
-    idents.put(Platform.GBC, 11);
-    idents.put(Platform.GB, 12);
-    idents.put(Platform.NES, 13);
-    idents.put(Platform.NDS, 32);
+    idents.put(Platforms.GBA, 31);
+    idents.put(Platforms.GBC, 11);
+    idents.put(Platforms.GB, 12);
+    idents.put(Platforms.NES, 13);
+    idents.put(Platforms.NDS, 32);
   }
   
   @Override public boolean isPlatformSupported(Platform platform)

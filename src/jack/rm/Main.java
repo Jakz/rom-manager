@@ -21,7 +21,6 @@ import com.github.jakz.romlib.support.cso.CSOBinaryHandle;
 import com.github.jakz.romlib.support.cso.CSOInfo;
 import com.pixbits.lib.concurrent.AsyncGuiPoolWorker;
 import com.pixbits.lib.concurrent.Operation;
-import com.pixbits.lib.io.MonitoredInputStream;
 import com.pixbits.lib.io.digest.DigestInfo;
 import com.pixbits.lib.io.digest.DigestOptions;
 import com.pixbits.lib.io.digest.Digester;

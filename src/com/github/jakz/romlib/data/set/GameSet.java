@@ -199,12 +199,12 @@ public class GameSet implements Iterable<Game>, GameMap
 	@Override
   public String toString()
 	{
-		return platform.name+" ("+info.getCaption()+")";
+		return platform.getName()+" ("+info.getCaption()+")";
 	}
 	
 	public String ident()
 	{
-		return info.getFormat().getIdent()+"-"+platform.tag+"-"+info.getProvider().getIdentifier();
+		return info.getFormat().getIdent()+"-"+platform.getTag()+"-"+info.getProvider().getIdentifier();
 	}
 	
 	public Path datPath()

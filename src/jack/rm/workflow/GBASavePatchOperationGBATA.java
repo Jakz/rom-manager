@@ -2,6 +2,7 @@ package jack.rm.workflow;
 
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.platforms.Platform;
+import com.github.jakz.romlib.data.platforms.Platforms;
 import com.github.jakz.romlib.support.patches.GBASavePatcherGBATA;
 
 public class GBASavePatchOperationGBATA extends DefaultGameOperation
@@ -22,7 +23,7 @@ public class GBASavePatchOperationGBATA extends DefaultGameOperation
   
   public boolean isPlatformSupported(Platform platform)
   {
-    return platform == Platform.GBA;
+    return platform == Platforms.GBA;
   }
   
 }

@@ -22,6 +22,7 @@ import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.platforms.GBA;
 import com.github.jakz.romlib.data.platforms.NDS;
 import com.github.jakz.romlib.data.platforms.Platform;
+import com.github.jakz.romlib.data.platforms.Platforms;
 import com.github.jakz.romlib.data.set.DatFormat;
 import com.github.jakz.romlib.data.set.DataSupplier;
 import com.github.jakz.romlib.data.set.Feature;
@@ -261,7 +262,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         DatFormat format = datParser.getFormat();
         
         sets.add(new GameSet(
-            Platform.GBA, 
+            Platforms.GBA, 
             KnownProviders.OFFLINE_LIST.derive("", "", "Replouf66", new Provider.Source("http://offlinelistgba.free.fr/tool/ReleaseList/gba_OL_0.7.1.zip")),
             datParser,
             format,
@@ -279,7 +280,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         DatFormat format = datParser.getFormat();
 
         sets.add(new GameSet(
-            Platform.GBA, 
+            Platforms.GBA, 
             KnownProviders.ADVAN_SCENE.derive("pure", "", "AdvanScene", new Provider.Source("http://www.advanscene.com/offline/datas/ADVANsCEne_GBA.zip")), 
             datParser,
             format,
@@ -316,7 +317,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
           
 
         sets.add(new GameSet(
-            Platform.PSP, 
+            Platforms.PSP, 
             KnownProviders.ADVAN_SCENE.derive("", "", "AdvanScene", new Provider.Source("http://www.advanscene.com/offline/datas/ADVANsCEne_PSP.zip")), 
             datParser,
             format,
@@ -332,7 +333,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         DatFormat format = datParser.getFormat();
         
         sets.add(new GameSet(
-            Platform.NDS, 
+            Platforms.NDS, 
             KnownProviders.ADVAN_SCENE.derive("collection", "", "AdvanScene", new Provider.Source("http://www.advanscene.com/offline/datas/ADVANsCEne_NDS.zip")),
             datParser,
             format,
@@ -349,7 +350,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         DatFormat format = datParser.getFormat();
         
         sets.add(new GameSet(
-          Platform.GBC,
+          Platforms.GBC,
           KnownProviders.NO_INTRO.derive("", "", "Replouf66", new Provider.Source("http://nointro.free.fr/datas/Official%20No-Intro%20Nintendo%20Gameboy%20Color.zip")),
           datParser,
           format,
@@ -366,7 +367,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         DatFormat format = datParser.getFormat();
         
         sets.add(new GameSet(
-            Platform.GB,
+            Platforms.GB,
             KnownProviders.NO_INTRO.derive("", "", "MadBob", new Provider.Source("http://nointro.free.fr/datas/Official%20No-Intro%20Nintendo%20Gameboy.zip")),
             datParser,
             format,
@@ -384,7 +385,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         DatFormat format = datParser.getFormat();
         
         sets.add(new GameSet(
-          Platform.NES,
+          Platforms.NES,
           KnownProviders.NO_INTRO.derive("", "", "Zepman", new Provider.Source("http://nointro.free.fr/datas/Official%20No-Intro%20Nintendo%20NES%20-%20Famicom.zip")),
           datParser,
           format,
@@ -394,7 +395,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         ));
         
         sets.add(new GameSet(
-          Platform.NES,
+          Platforms.NES,
           KnownProviders.OFFLINE_LIST.derive("", "", "Zepman", new Provider.Source("http://nesofflinelist.free.fr/dat/nes_OL.zip")),
           datParser,
           format,
@@ -411,7 +412,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         DatFormat format = datParser.getFormat();
         
         sets.add(new GameSet(
-            Platform.LYNX,
+            Platforms.LYNX,
             KnownProviders.NO_INTRO.derive("", "", "Atari Lynx", new Provider.Source("http://nointro.free.fr/datas/Official%20No-Intro%20Atari%20Lynx.zip")),
             datParser,
             format,

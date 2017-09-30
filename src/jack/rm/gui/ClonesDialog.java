@@ -40,6 +40,7 @@ import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.lib.io.archive.handles.NestedArchiveHandle;
 import com.pixbits.lib.ui.color.ColorGenerator;
 import com.pixbits.lib.ui.color.PastelColorGenerator;
+import com.pixbits.lib.ui.table.renderers.NimbusBooleanCellRenderer;
 
 import jack.rm.Main;
 import jack.rm.files.ScanResult;
@@ -92,36 +93,6 @@ public class ClonesDialog extends JDialog
     }
     
     public void fireChanges() { this.fireTableDataChanged(); }
-    
-    class BooleanTableCellRenderer extends JCheckBox implements TableCellRenderer
-    {
-
-      public BooleanTableCellRenderer()
-      {
-        super();
-        setHorizontalAlignment(SwingConstants.CENTER);
-      }
-
-      @Override
-      public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
-      {  
-        if (isSelected) 
-        {
-          setForeground(table.getSelectionForeground());
-          setBackground(table.getSelectionBackground());
-        } 
-        else
-        {
-          setForeground(table.getForeground());
-          setBackground(table.getBackground());
-        }
-      
-        setSelected((value != null && ((Boolean)value).booleanValue())); return this; 
-      }
-      
-      @Override public boolean isOpaque() { return true; }
-    }
-    
     
     class Renderer implements TableCellRenderer
     {
@@ -188,7 +159,7 @@ public class ClonesDialog extends JDialog
     JScrollPane pane = new JScrollPane(table);
     pane.setPreferredSize(new java.awt.Dimension(800,600));
     
-    table.setDefaultRenderer(Boolean.class, model.new Renderer(model.new BooleanTableCellRenderer()));
+    table.setDefaultRenderer(Boolean.class, model.new Renderer(new NimbusBooleanCellRenderer()));
     table.setDefaultRenderer(String.class, model.new Renderer(new DefaultTableCellRenderer()));
     
     autoSelect.addActionListener( e -> autoChoose(clonePolicy.getItemAt(clonePolicy.getSelectedIndex()), clonePriority.getItemAt(clonePriority.getSelectedIndex())));

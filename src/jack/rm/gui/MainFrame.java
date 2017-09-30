@@ -39,6 +39,7 @@ import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.platforms.Platform;
+import com.github.jakz.romlib.data.platforms.Platforms;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.ui.SearchPanel;
 import com.pixbits.lib.ui.FileTransferHandler;
@@ -197,7 +198,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	  
 	  cbRomSets.removeAllItems();
 	  
-	  List<Platform> platforms = Platform.sortedValues();
+	  List<Platform> platforms = Platforms.sortedValues();
 	  List<GameSet> sets = GlobalSettings.settings.getEnabledProviders().stream().map(setManager::byIdent).collect(Collectors.toList());
 	  
 	  platforms.forEach(s -> {

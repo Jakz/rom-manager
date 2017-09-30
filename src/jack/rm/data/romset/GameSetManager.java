@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.github.jakz.romlib.data.platforms.Platform;
+import com.github.jakz.romlib.data.platforms.Platforms;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
@@ -71,7 +72,7 @@ public class GameSetManager
 	    }
 	  }
 	  
-	  for (Platform platform : Platform.values())
+	  for (Platform platform : Platforms.values())
 	    sets.computeIfAbsent(platform, s -> new ArrayList<>());
 	}
   

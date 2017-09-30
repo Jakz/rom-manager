@@ -6,8 +6,8 @@ import java.io.InputStream;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import com.pixbits.lib.io.SkippingInputStream;
 import com.pixbits.lib.io.archive.handles.Handle;
+import com.pixbits.lib.io.stream.SkippingInputStream;
 
 public class SkipHeaderHandle extends WrapperStreamHandle
 {

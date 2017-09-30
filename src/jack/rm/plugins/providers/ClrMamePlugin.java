@@ -6,6 +6,7 @@ import com.github.jakz.romlib.data.assets.AssetManager;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.platforms.Platform;
+import com.github.jakz.romlib.data.platforms.Platforms;
 import com.github.jakz.romlib.data.set.DatFormat;
 import com.github.jakz.romlib.data.set.DataSupplier;
 import com.github.jakz.romlib.data.set.Feature;
@@ -49,7 +50,7 @@ public class ClrMamePlugin extends ProviderPlugin
       DatFormat format = parser.getFormat();
           
       sets[0] = new GameSet(
-          Platform.GG, 
+          Platforms.GG, 
           KnownProviders.NO_INTRO.derive("", "", "", null), 
           parser,
           format,
@@ -64,7 +65,7 @@ public class ClrMamePlugin extends ProviderPlugin
       DatFormat format = parser.getFormat();
       
       sets[1] = new GameSet(
-          Platform.LYNX, 
+          Platforms.LYNX, 
           KnownProviders.NO_INTRO.derive("", "", "", null),
           parser,
           format,
@@ -79,7 +80,7 @@ public class ClrMamePlugin extends ProviderPlugin
       DatFormat format = parser.getFormat();
       
       sets[1] = new GameSet(
-          Platform.PSP, 
+          Platforms.PSP, 
           KnownProviders.NO_INTRO.derive("", "", "", null),
           parser,
           format,

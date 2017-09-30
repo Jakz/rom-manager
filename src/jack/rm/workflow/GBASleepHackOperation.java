@@ -1,6 +1,7 @@
 package jack.rm.workflow;
 
 import com.github.jakz.romlib.data.platforms.Platform;
+import com.github.jakz.romlib.data.platforms.Platforms;
 import com.github.jakz.romlib.support.patches.GBASleepHack;
 
 public class GBASleepHackOperation extends DefaultGameOperation
@@ -30,7 +31,7 @@ public class GBASleepHackOperation extends DefaultGameOperation
   
   public boolean isPlatformSupported(Platform platform)
   {
-    return platform == Platform.GBA;
+    return platform == Platforms.GBA;
   }
   
 }
