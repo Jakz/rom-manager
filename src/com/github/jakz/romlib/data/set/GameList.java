@@ -19,6 +19,8 @@ public class GameList implements Iterable<Game>, GameMap
   private final GameSetStatus status;
   private final Game[] games;
   private final HashCache<Rom> cache;
+  private final SharedRomMap sharedRomMap;
+  
   private final HashMap<String, Game> nameMap;
   private final boolean hasMultipleRomsPerGame;
   private final RomSize.Set sizeSet;
@@ -34,6 +36,7 @@ public class GameList implements Iterable<Game>, GameMap
 	  status = new GameSetStatus();
 	  Arrays.sort(games);
 	  cache = new HashCache<>(Arrays.stream(games).flatMap(g -> g.stream()));
+	  sharedRomMap = new SharedRomMap(games);
 	  sizeSet = set; //new RomSize.Set();
 	  	  
 	  nameMap = stream().collect(Collectors.toMap(
@@ -52,6 +55,7 @@ public class GameList implements Iterable<Game>, GameMap
 	public GameSetStatus status() { return status; }
 	public int gameCount() { return games.length; }
 
+	public SharedRomMap sharedRomMap() { return sharedRomMap; }
 	public HashCache<Rom> cache() { return cache; }
 	public RomSize.Set sizeSet() { return sizeSet; }
 

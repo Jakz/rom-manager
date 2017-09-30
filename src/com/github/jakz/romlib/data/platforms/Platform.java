@@ -1,12 +1,7 @@
 package com.github.jakz.romlib.data.platforms;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import javax.swing.ImageIcon;
 
-import com.github.jakz.romlib.ui.Icon;
 
 public interface Platform
 {
@@ -16,4 +11,15 @@ public interface Platform
   public String[] fileExtensions();
 
   default public String defaultFileExtension() { return fileExtensions()[0]; }  
+  
+  public static Platform of(final String name)
+  {
+    return new Platform() {
+
+      @Override public String getTag() { return ""; }
+      @Override public String getName() { return name; }
+      @Override public ImageIcon getIcon() { return null; }
+      @Override public String[] fileExtensions() { return new String[] { "" }; }   
+    };
+  }
 }

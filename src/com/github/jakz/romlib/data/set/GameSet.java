@@ -141,8 +141,10 @@ public class GameSet implements Iterable<Game>, GameMap
 	public GameSetInfo info() { return info; }
 	public GameSetStatus status() { return list.status(); }
 	public HashCache<Rom> hashCache() { return list.cache(); }
+	public SharedRomMap sharedRomMap() { return list.sharedRomMap(); }
 	public RomSize.Set sizeSet() { return list.sizeSet(); }
 	public boolean hasMultipleRomsPerGame() { return list.hasMultipleRomsPerGame(); }
+	public boolean hasSharedRomsBetweenGames() { return list.sharedRomMap().hasAnySharedRom(); }
 	
 	public void checkNames() { list.checkNames(); }
 	public void resetStatus() { list.resetStatus(); }
@@ -329,6 +331,8 @@ public class GameSet implements Iterable<Game>, GameMap
   {
     if (feature == Feature.SINGLE_ROM_PER_GAME)
       return !hasMultipleRomsPerGame();
+    else if (feature == Feature.SHARED_ROM_BETWEEN_GAMES)
+      return hasSharedRomsBetweenGames();
     else if (feature == Feature.CLONES)
       return clones != null && clones.size() > 0;
     else
