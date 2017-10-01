@@ -67,6 +67,11 @@ public class RomSize implements Comparable<RomSize>
 		this.bytes = bytes;
 	}
 	
+	public int hashCode()
+	{
+	  return Long.hashCode(bytes);
+	}
+	
 	@Override public boolean equals(Object other)
 	{
 	  return (other instanceof RomSize) && bytes == ((RomSize)other).bytes;

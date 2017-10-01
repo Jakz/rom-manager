@@ -101,6 +101,7 @@ public class GameSet implements Iterable<Game>, GameMap
 	  this.loaded = true;
 	  this.assetCache = new AssetCache();
 	  this.helper = new GameSetFeatures(this);
+	  this.loaded = true;
 	}
 
 	public void setClones(CloneSet clones) { setClones(clones, true); }
@@ -191,11 +192,12 @@ public class GameSet implements Iterable<Game>, GameMap
 	      
 	      list = data.games.orElse(null);
 	      data.clones.ifPresent(this::setClones);
-	      info.computeStats(this);
 	      
 	      loaded = true;
 	    });
 	  }
+	  
+    info.computeStats(this);
 	}
 	
 	@Override

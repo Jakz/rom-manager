@@ -48,7 +48,7 @@ public class LogiqxXMLHandler extends XMLHandler<LogiqxXMLHandler.Data>
   String gameName;
   String gameDescription;
   
-  Rom rom;
+  List<Rom> roms;
   String romName;
   long size;
   long crc;
@@ -71,6 +71,7 @@ public class LogiqxXMLHandler extends XMLHandler<LogiqxXMLHandler.Data>
   {
     status = Status.NOWHERE;
     games = new ArrayList<>();
+    roms = new ArrayList<>();
     attributes = new HashMap<>();
   }
 
@@ -117,16 +118,16 @@ public class LogiqxXMLHandler extends XMLHandler<LogiqxXMLHandler.Data>
         {
           game = gameFactory.get();
           
-          game.setRom(rom);
+          game.setRom(roms.toArray(new Rom[roms.size()]));
           game.setTitle(gameName);
           game.setDescription(gameDescription);
           games.add(game); 
           
           game = null; 
-          rom = null;
+          roms.clear();;
           break;
         }
-        case "rom": rom = new Rom(romName, sizeSet.forBytes(size), crc, md5, sha1); break;
+        case "rom": roms.add(new Rom(romName, sizeSet.forBytes(size), crc, md5, sha1)); break;
         case "datafile": 
         {
           //Provider provider = new Provider(name, description, version, "", author);

@@ -48,7 +48,6 @@ public class GameSetInfo implements GameSetAttributeInterface
     this.gameCount = set.gameCount();
     this.uniqueGameCount = set.clones() != null ? set.clones().size() : set.gameCount();
     this.sizeInBytes = set.stream().parallel().map(Game::stream).map(s -> s.map(r -> r.size()).collect(Collectors.summingLong(Long::longValue))).mapToLong(Long::longValue).sum();
-
   }
   
   public Provider getProvider() { return provider; }

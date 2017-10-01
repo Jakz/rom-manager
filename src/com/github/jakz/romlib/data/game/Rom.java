@@ -71,7 +71,7 @@ public class Rom implements Verifiable
  
   public boolean isEquivalent(Rom rom)
   {
-    return size == rom.size && crc32 == rom.crc32 && (md5 == null || rom.md5 == null || Arrays.equals(md5,rom.md5)) && (sha1 == null || rom.sha1 == null || Arrays.equals(sha1,rom.sha1));
+    return size.equals(rom.size) && crc32 == rom.crc32 && (md5 == null || rom.md5 == null || Arrays.equals(md5,rom.md5)) && (sha1 == null || rom.sha1 == null || Arrays.equals(sha1,rom.sha1));
   }
   
   @SuppressWarnings("unchecked")

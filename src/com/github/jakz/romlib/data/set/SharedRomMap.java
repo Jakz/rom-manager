@@ -27,7 +27,7 @@ public class SharedRomMap
     @Override
     public int hashCode()
     {
-      return Objects.hash(rom.size, rom.crc32, Arrays.hashCode(rom.md5), Arrays.hashCode(rom.sha1));
+      return Objects.hash(rom.size, rom.crc32);
     }
     
     @Override
