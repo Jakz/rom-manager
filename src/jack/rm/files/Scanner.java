@@ -282,7 +282,7 @@ public class Scanner
           
           
           logger.i(LogTarget.romset(set), "Found %d potential matches (%d binary, %d inside archives, %d nested inside %d archives).", 
-              stats.totalHandles, stats.binaryCount, stats.archiveCount, stats.nestedArchiveInnerCount, stats.nestedArchiveCount);
+              stats.totalHandles, stats.binaryCount, stats.archivedCount, stats.nestedArchiveInnerCount, stats.nestedArchiveCount);
           
           transformedEntries.forEach(h -> logger.d(LogTarget.romset(set), "> %s", h.toString()));
           

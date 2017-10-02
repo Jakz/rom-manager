@@ -87,12 +87,14 @@ public class Game implements Comparable<Game>, Iterable<Rom>, GameAttributeInter
 
 	@Override public Iterator<Rom> iterator() { return Arrays.asList(roms).iterator(); }
 	public Stream<Rom> stream() { return Arrays.stream(roms); }
+	public Stream<Rom> foundStream() { return stream().filter(Rom::isPresent); }
 	public Rom rom()
 	{ 
 	  if (roms.length > 1)
 	    throw new UnsupportedOperationException("Can't invoke Game::rom to obtain the single rom on a game with multiple roms");
 	  return roms[0];
 	}
+	public int romCount() { return roms.length; }
 	
 	public boolean shouldSerializeState()
 	{
@@ -214,6 +216,8 @@ public class Game implements Comparable<Game>, Iterable<Rom>, GameAttributeInter
     }*/
   }
   
+  public boolean hasMultipleRoms() { return roms.length > 1; }
+  public boolean hasAnyRom() { return stream().anyMatch(Rom::isPresent); }
   public boolean isComplete() { return stream().allMatch(Rom::isPresent); }
   
   public boolean hasEquivalentRom(Rom rom)

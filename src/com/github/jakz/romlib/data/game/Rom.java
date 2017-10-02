@@ -30,6 +30,11 @@ public class Rom implements Verifiable
     this(null, null, crc, null, null);
   }
   
+  public Rom(String name, RomSize size, long crc32)
+  {
+    this(name, size, crc32, null, null);
+  }
+  
   public Rom(String name, RomSize size, long crc32, byte[] md5, byte[] sha1)
   {
     this.name = name;

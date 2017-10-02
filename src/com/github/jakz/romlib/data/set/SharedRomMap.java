@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.Rom;
@@ -70,6 +71,11 @@ public class SharedRomMap
       sharedRoms.clear();
     
     hasAnySharedRom = !sharedRoms.isEmpty();
+  }
+  
+  public Stream<Set<Pair<Rom, Game>>> stream()
+  {
+    return sharedRoms.values().stream();
   }
   
   public boolean hasAnySharedRom()

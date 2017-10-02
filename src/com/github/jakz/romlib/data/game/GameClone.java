@@ -29,6 +29,7 @@ public class GameClone implements Iterable<Game>
   
   public GameClone(Collection<Game> games, String[] names)
   {
+    if (games.isEmpty()) throw new IllegalArgumentException("a GameClone can't be empty");
     this.games = games.toArray(new Game[games.size()]);
     this.names = names;
   }
