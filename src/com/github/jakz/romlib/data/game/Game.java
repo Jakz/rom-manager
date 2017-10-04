@@ -174,7 +174,10 @@ public class Game implements Comparable<Game>, Iterable<Rom>, GameAttributeInter
   
   public String getCorrectName()
   {
-    return set.helper().renamer().getNameForGame(this);
+    //TODO
+    throw new UnsupportedOperationException("Must be reimplemented");
+
+    /*return set.helper().renamer().getNameForGame(this);*/
   }
 
   public Path getCorrectFolder()
@@ -187,7 +190,9 @@ public class Game implements Comparable<Game>, Iterable<Rom>, GameAttributeInter
   
   public boolean hasCorrectName()
   {
-    return false; /* TODO
+    throw new UnsupportedOperationException("Must be reimplemented");
+
+    /* TODO
     
     Settings settings = set.getSettings();
     
@@ -202,7 +207,8 @@ public class Game implements Comparable<Game>, Iterable<Rom>, GameAttributeInter
   
   public boolean hasCorrectFolder()
   {
-    return false;
+    throw new UnsupportedOperationException("Must be reimplemented");
+
     /* TODO
     
     try {

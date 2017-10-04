@@ -38,6 +38,8 @@ import com.pixbits.lib.workflow.Workflow;
 import com.pixbits.lib.workflow.WorkflowData;
 
 import jack.rm.data.romset.GameSetManager;
+import jack.rm.data.romset.MyGameSetFeatures;
+import jack.rm.files.MyAssetDownloader;
 import jack.rm.gui.ClonesDialog;
 import jack.rm.gui.Dialogs;
 import jack.rm.gui.GlobalSettingsView;
@@ -58,7 +60,10 @@ import net.sf.sevenzipjbinding.SevenZipNativeInitializationException;
 public class Main
 {		
 	public static final PluginManager<ActualPlugin, ActualPluginBuilder> manager = new PluginManager<>(ActualPluginBuilder.class);
-	private static GameSetManager setManager = new GameSetManager(manager);
+	
+	//TODO: should be private
+	public static GameSetManager setManager = new GameSetManager(manager);
+	public static GameSet current = null;
 	
 	public static ProgressDialog.Manager progress;
 
@@ -182,21 +187,20 @@ public class Main
 	
 	public static void loadRomSet(GameSet romSet) throws FileNotFoundException, IOException
 	{
-	  if (GameSet.current != null)
-	    GameSet.current.saveStatus();
+	  if (current != null)
+	    setManager.saveSetStatus(current);
 	  
 	  GameSet set = setManager.loadSet(romSet);
-    GameSet.current = set;
-    boolean wasInit = set.loadStatus();
+    current = set;
+    boolean wasInit = setManager.loadSetStatus(set);
     
-    set.helper().pluginStateChanged();
-
-
+    MyGameSetFeatures helper = set.helper();
+    
+    helper.pluginStateChanged();
     mainFrame.romSetLoaded(set);
     
-    set.helper().scanner().scanForRoms(!wasInit && GlobalSettings.settings.shouldScanWhenLoadingRomset());
-
-    downloader = new Downloader(set);
+    helper.scanner().scanForRoms(!wasInit && GlobalSettings.settings.shouldScanWhenLoadingRomset());
+    downloader = new MyAssetDownloader(set);
 
     /*List<Game> favourites = set.filter("is:fav");
     Fetcher<GameEntry> source = new MultipleGameSource(favourites);
@@ -394,11 +398,11 @@ public class Main
 	  GlobalSettings.settings.sanitize(setManager);
 	  
 	  romsetPanel = new SetInfoPanel();
-	  pluginsPanel = new PluginsPanel(manager);
+	  pluginsPanel = new PluginsPanel(manager, setManager);
 		gsettingsView = new GlobalSettingsView(setManager);
 		mainFrame = new MainFrame(setManager);
 		
-    clonesDialog = new ClonesDialog(mainFrame, "Rom Clones");
+    clonesDialog = new ClonesDialog(setManager, mainFrame, "Rom Clones");
     
     progress = new ProgressDialog.Manager(mainFrame);
 

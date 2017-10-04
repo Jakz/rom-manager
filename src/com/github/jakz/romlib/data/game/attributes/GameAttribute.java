@@ -11,7 +11,7 @@ import com.github.jakz.romlib.data.game.Genre;
 import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.LanguageSet;
 
-import jack.rm.i18n.Text;
+import com.github.jakz.romlib.ui.i18n.Text;
 
 public enum GameAttribute implements Attribute
 {

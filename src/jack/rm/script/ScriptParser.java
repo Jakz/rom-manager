@@ -7,6 +7,8 @@ import org.codehaus.jparsec.pattern.Patterns;
 
 import com.github.jakz.romlib.data.set.GameSet;
 
+import jack.rm.Main;
+
 /*
 
 select "is:favorite"
@@ -40,7 +42,7 @@ public class ScriptParser
     return Scanners.stringCaseInsensitive("select")
         .next(WHITESPACE)
         .next(queryExpression())
-        .map(query -> new SelectStatement(GameSet.current.helper().searcher().search(query.substring(1, query.length()-1))));
+        .map(query -> new SelectStatement(Main.current.helper().searcher().search(query.substring(1, query.length()-1))));
   }
   
   private Parser<FindStatement> findStatement()
@@ -48,7 +50,7 @@ public class ScriptParser
     return Scanners.stringCaseInsensitive("find")
         .next(WHITESPACE)
         .next(queryExpression())
-        .map(query -> new FindStatement(GameSet.current.helper().searcher().search(query.substring(1, query.length()-1))));
+        .map(query -> new FindStatement(Main.current.helper().searcher().search(query.substring(1, query.length()-1))));
   }
   
   private Parser<Statement> statement()

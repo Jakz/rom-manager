@@ -32,7 +32,7 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingUtilities;
-import com.github.jakz.romlib.data.assets.AssetPacker;
+
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
@@ -46,7 +46,10 @@ import com.pixbits.lib.ui.FileTransferHandler;
 
 import jack.rm.GlobalSettings;
 import jack.rm.Main;
+import jack.rm.Settings;
 import jack.rm.data.romset.GameSetManager;
+import jack.rm.data.romset.MyGameSetFeatures;
+import jack.rm.files.AssetPacker;
 import jack.rm.files.Organizer;
 import jack.rm.gui.gameinfo.InfoPanel;
 import jack.rm.gui.gamelist.CountPanel;
@@ -99,7 +102,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	
 	final private SearchPanel searchPanel = new SearchPanel(() -> rebuildGameList());
 	final private InfoPanel infoPanel = new InfoPanel();
-	final private OptionsFrame optionsFrame = new OptionsFrame(Main.manager);
+	final private OptionsFrame optionsFrame;
 		
 	final private TextOutputFrame textFrame = new TextOutputFrame();
 	
@@ -134,7 +137,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	{
 	  optionsFrame.pluginStateChanged();
 	  
-	  boolean hasSearcher = set.getSettings().plugins.getEnabledPlugin(PluginRealType.SEARCH) != null;
+	  boolean hasSearcher = getGameSetSettings().plugins.getEnabledPlugin(PluginRealType.SEARCH) != null;
 	  searchPanel.toggle(hasSearcher ? set.helper().searcher() : null);
 	  
     buildMenu(set);
@@ -143,7 +146,8 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	public MainFrame(GameSetManager manager)
 	{
 		this.setManager = manager;
-	    
+	   
+		this.optionsFrame = new OptionsFrame(Main.manager, setManager);
 	
 				
 		menu.add(romsMenu);
@@ -191,6 +195,12 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 		setTitle("Rom Manager v0.8 - build 161");
 	}
 	
+	public Settings getGameSetSettings()
+	{
+	  MyGameSetFeatures helper = set.helper();
+	  return helper.settings();
+	}
+	
 	public void rebuildEnabledDats()
 	{
 	  GameSet current = cbRomSets.getSelectedIndex() != -1 ? cbRomSets.getItemAt(cbRomSets.getSelectedIndex()) : null;
@@ -232,13 +242,17 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	    
 	    JMenuItem renameRoms = new JMenuItem(Text.MENU_ROMS_RENAME.text());
 	    renameRoms.addActionListener(e -> {
-	      Organizer.organize(set);
+	      MyGameSetFeatures helper = set.helper();
+	      helper.organizer().organize();
 	      rebuildGameList();
 	    });
 	    romsMenu.add(renameRoms);
 	    
 	    JMenuItem cleanupRoms = new JMenuItem(Text.MENU_ROMS_CLEANUP.text());
-	    cleanupRoms.addActionListener(e -> Organizer.cleanup(set));
+	    cleanupRoms.addActionListener(e -> {
+        MyGameSetFeatures helper = set.helper();
+        helper.organizer().cleanup();
+	    });
 	    romsMenu.add(cleanupRoms);
 	    
 	    romsMenu.addSeparator();
@@ -299,7 +313,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
          
       Map<String, List<OperationalPlugin>> plugins = new TreeMap<>();
       
-      set.getSettings().plugins.stream()
+      getGameSetSettings().plugins.stream()
       .filter(p -> p.isEnabled() && p instanceof OperationalPlugin)
       .map(p -> (OperationalPlugin)p)
       .forEach(p -> {
@@ -369,7 +383,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	  searchPanel.resetFields(set);
 	  searchPanel.activate(true);
 	  
-	  searchPanel.toggle(set.getSettings().plugins.getEnabledPlugin(PluginRealType.SEARCH) != null ? set.helper().searcher() : null);
+	  searchPanel.toggle(getGameSetSettings().plugins.getEnabledPlugin(PluginRealType.SEARCH) != null ? set.helper().searcher() : null);
 	  
     cbRomSets.removeItemListener(romSetListener);
     cbRomSets.setSelectedItem(set);
@@ -405,7 +419,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
     GlobalSettings.save();
 	  
 	  if (set != null)
-      set.saveStatus();
+	    setManager.saveSetStatus(set);
 	}
 
 	

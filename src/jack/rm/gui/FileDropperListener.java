@@ -13,6 +13,7 @@ import com.pixbits.lib.log.Logger;
 import com.pixbits.lib.ui.FileTransferHandler;
 
 import jack.rm.Main;
+import jack.rm.data.romset.MyGameSetFeatures;
 import jack.rm.files.Organizer;
 import jack.rm.files.ScanResult;
 import jack.rm.log.LogSource;
@@ -31,17 +32,17 @@ public class FileDropperListener implements FileTransferHandler.Listener
     @Override
     public void run()
     {
-      Path romsPath = GameSet.current.getSettings().romsPath;
+      final MyGameSetFeatures helper = Main.current.helper();
+      
+      Path romsPath = helper.settings().romsPath;
       
       for (Path file : files)
       {
-        
         if (Files.isRegularFile(file))
         {
           System.out.println("Processing "+file.getFileName());
-  
-          
-          List<ScanResult> results = GameSet.current.helper().scanner().singleBlockingCheck(file);
+     
+          List<ScanResult> results = helper.scanner().singleBlockingCheck(file);
         
           if (results != null)
           {
@@ -66,9 +67,9 @@ public class FileDropperListener implements FileTransferHandler.Listener
                   
                   game.updateStatus();
                   
-                  Organizer.organizeRomIfNeeded(game);
+                  helper.organizer().organizeRomIfNeeded(game);
                   
-                  GameSet.current.refreshStatus();
+                  Main.current.refreshStatus();
                   Main.mainFrame.rebuildGameList();;
                   
                   logger.i(LogTarget.rom(result.rom), "Successfully imported new rom");

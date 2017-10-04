@@ -7,6 +7,9 @@ import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
 import com.pixbits.lib.plugin.Plugin;
 
+import jack.rm.Main;
+import jack.rm.Settings;
+import jack.rm.data.romset.MyGameSetFeatures;
 import jack.rm.gui.PluginOptionsPanel;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
@@ -23,4 +26,12 @@ public abstract class ActualPlugin extends Plugin
   protected void error(String message) { logger.e(LogTarget.plugin(this), message); }
 
   public PluginOptionsPanel getGUIPanel() { return null; }
+  
+  public GameSet getGameSet() { return Main.current; }
+  public MyGameSetFeatures getHelper() { return getGameSet().helper(); }
+  public Settings getGameSetSettings()
+  {
+    MyGameSetFeatures helper = getGameSet().helper();
+    return helper.settings();
+  }
 }

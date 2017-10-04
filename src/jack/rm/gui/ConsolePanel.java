@@ -15,6 +15,7 @@ import org.codehaus.jparsec.error.ParserException;
 
 import com.github.jakz.romlib.data.set.GameSet;
 
+import jack.rm.Main;
 import jack.rm.script.Script;
 import jack.rm.script.ScriptEnvironment;
 import jack.rm.script.ScriptParser;
@@ -78,7 +79,7 @@ public class ConsolePanel extends JPanel implements KeyListener, ScriptStdout
         System.out.println("Executing \'"+command+"\'");
         
         Script script = parser.parse(command);
-        script.execute(new ScriptEnvironment(GameSet.current, this));
+        script.execute(new ScriptEnvironment(Main.current, this));
       }
       catch (ParserException e)
       {

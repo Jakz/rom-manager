@@ -30,7 +30,10 @@ import com.pixbits.lib.io.archive.VerifierEntry;
 import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
+
 import jack.rm.Main;
+import jack.rm.Settings;
+import jack.rm.data.romset.MyGameSetFeatures;
 import jack.rm.gui.Dialogs;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
@@ -45,6 +48,7 @@ public class Scanner
 	private static final Logger logger = Log.getLogger(LogSource.SCANNER);
   
   GameSet set;
+  Settings settings;
 	
 	private Set<Path> ignoredPaths = new HashSet<>();
 	private Set<Path> foundFiles = new HashSet<>();
@@ -58,11 +62,13 @@ public class Scanner
   public Scanner(GameSet set)
 	{
     this.set = set;
+    MyGameSetFeatures helper = set.helper();
+    this.settings = helper.settings();
     
-    scanner = set.getSettings().plugins.getEnabledPlugin(PluginRealType.SCANNER);
-	  verifier = set.getSettings().plugins.getEnabledPlugin(PluginRealType.VERIFIER);
+    scanner = settings.plugins.getEnabledPlugin(PluginRealType.SCANNER);
+	  verifier = settings.plugins.getEnabledPlugin(PluginRealType.VERIFIER);
 	  //TODO: sort according to priority
-	  formats = set.getSettings().plugins.getEnabledPlugins(PluginRealType.FORMAT_SUPPORT);
+	  formats = settings.plugins.getEnabledPlugins(PluginRealType.FORMAT_SUPPORT);
 	  
 	  if (verifier != null)
 	  {
@@ -95,7 +101,7 @@ public class Scanner
 	
 	private boolean canProceedWithScan()
 	{
-	  Path folder = set.getSettings().romsPath;
+	  Path folder = settings.romsPath;
  
 	  if (scanner == null)
     {
@@ -183,7 +189,7 @@ public class Scanner
 	        if (!clones.isEmpty())
 	          Main.clonesDialog.activate(set, clones);
 	        else
-	          set.saveStatus();
+	          Main.setManager.saveSetStatus(set);
 	      });
 	    };
 	    
@@ -224,9 +230,9 @@ public class Scanner
 	      .forEach(ignoredPaths::add);
 		}
 		
-		ignoredPaths.addAll(set.getSettings().getIgnoredPaths());
+		ignoredPaths.addAll(settings.getIgnoredPaths());
 
-		Path folder = set.getSettings().romsPath;
+		Path folder = settings.romsPath;
 		
 		if (!canProceedWithScan())
 		  return;

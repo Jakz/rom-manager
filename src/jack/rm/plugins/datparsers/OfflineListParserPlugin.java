@@ -5,10 +5,10 @@ import java.util.Map;
 import com.github.jakz.romlib.data.set.DatFormat;
 import com.github.jakz.romlib.data.set.DataSupplier;
 import com.github.jakz.romlib.parsers.OfflineListXMLHandler;
+import com.github.jakz.romlib.parsers.SaveParser;
 import com.pixbits.lib.functional.StreamException;
 import com.pixbits.lib.io.xml.XMLParser;
 
-import jack.rm.files.parser.SaveParser;
 import jack.rm.plugins.types.DatParserPlugin;
 
 public class OfflineListParserPlugin extends DatParserPlugin

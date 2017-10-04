@@ -6,13 +6,19 @@ import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.set.GameSet;
 
+import jack.rm.Main;
+import jack.rm.data.romset.MyGameSetFeatures;
 import jack.rm.plugins.types.RenamerPlugin;
 
 public class RenamerWorker extends RomSetWorker<RenamerPlugin>
 {
-  public RenamerWorker(GameSet romSet, RenamerPlugin plugin, Consumer<Boolean> callback)
+  final Organizer organizer;
+  
+  public RenamerWorker(GameSet set, RenamerPlugin plugin, Consumer<Boolean> callback)
   {
-    super(romSet, plugin, r -> r.getStatus() == GameStatus.UNORGANIZED, callback);
+    super(set, plugin, r -> r.getStatus() == GameStatus.UNORGANIZED, callback);
+    MyGameSetFeatures helper = set.helper();
+    organizer = helper.organizer();
   }
 
   @Override
@@ -20,10 +26,10 @@ public class RenamerWorker extends RomSetWorker<RenamerPlugin>
   {
     if (rom.getStatus() == GameStatus.UNORGANIZED)
     {        
-      Organizer.renameRom(rom);  
+      organizer.renameRom(rom);  
       
-      if (romSet.getSettings().shouldRenameInternalName)
-        Organizer.internalRenameRom(rom);
+      if (Main.setManager.settings(romSet).shouldRenameInternalName)
+        organizer.internalRenameRom(rom);
       
       rom.updateStatus();
       romSet.refreshStatus();

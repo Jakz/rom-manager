@@ -13,30 +13,39 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
-import jack.rm.Main;
-import jack.rm.gui.Dialogs;
-import jack.rm.log.LogSource;
-import jack.rm.log.LogTarget;
 
 public class Downloader
-{
-  private static final Logger logger = Log.getLogger(LogSource.DOWNLOADER);
-  
+{  
   public ThreadPoolExecutor pool;
   int totalTasks;
   int missingTasks;
   boolean started;
   
   private final GameSet set;
+  
+  protected Runnable onStart = () -> {};
+  protected BiConsumer<Long, Long> onProgress = (c,t) -> {};
+  protected Runnable onFinish = () -> {};
+  protected Runnable onWontStart = () -> {};
+  protected Consumer<Game> onAssetDownloaded = g -> {};
+  protected BiConsumer<Game, URL> onDownloadFailed = (g, u) -> {};
 
-  public Downloader(GameSet set)
+  protected Downloader(GameSet set)
   {
     this.set = set;
+  }
+  
+  public void interrupt()
+  {
+    pool.shutdownNow();
+    started = false;
   }
   
   public void start()
@@ -59,27 +68,26 @@ public class Downloader
         
     if (!pool.getQueue().isEmpty())
     {
-      Main.progress.show(Main.mainFrame, "Asset Download", () -> { pool.shutdownNow(); started = false; });
+      onStart.run();
       
       new Thread( () -> {
         try
         {
           pool.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
           if (!pool.isShutdown())
-            Main.progress.finished();
+            onFinish.run();
         }
         catch (InterruptedException e)
         {
           // cancelled by user
-        }
-        
+        }        
       }).start();
     }
     else
-      Dialogs.showMessage("Asset Downloader", "All the assets have already been downloaded.", Main.mainFrame);
+      onWontStart.run();
   }
   
-  public void downloadArt(final Game r)
+  public void downloadArt(final Game g)
   {    
     new Thread()
     {
@@ -89,11 +97,10 @@ public class Downloader
         Asset[] assets = set.getAssetManager().getSupportedAssets();
 
         for (Asset asset : assets)
-          if (!r.hasAsset(asset))
-            new ArtDownloaderTask(r, asset).call();
+          if (!g.hasAsset(asset))
+            new ArtDownloaderTask(g, asset).call();
         
-        // TODO: doesn't work if user changed the rom while it was downloading
-        Main.mainFrame.updateInfoPanel(r);
+        onAssetDownloaded.accept(g);
       }
     }.start();
   }
@@ -126,8 +133,7 @@ public class Downloader
       }
       catch (FileNotFoundException e)
       {
-        logger.e(LogTarget.game(rom), "Asset not found at "+url);
-        Main.mainFrame.updateInfoPanel(rom);
+        onDownloadFailed.accept(rom, url);
         return false;
       }
       catch (java.nio.channels.ClosedByInterruptException e)
@@ -153,8 +159,7 @@ public class Downloader
       {
         long completed = pool.getCompletedTaskCount();
         long total = pool.getTaskCount(); 
-      
-        Main.progress.update(completed/(float)total, (completed+1)+" of "+total);
+        onProgress.accept(completed, total);
       }
 
       return true;

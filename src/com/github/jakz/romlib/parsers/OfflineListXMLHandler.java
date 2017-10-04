@@ -33,8 +33,6 @@ import com.github.jakz.romlib.data.set.GameList;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.io.xml.XMLHandler;
 
-import jack.rm.files.parser.SaveParser;
-
 public class OfflineListXMLHandler extends XMLHandler<DataSupplier.Data>
 {
   static final private Map<Integer, Language> languageMap = new HashMap<>();

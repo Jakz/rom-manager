@@ -5,11 +5,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import com.github.jakz.romlib.ui.Icon;
 import com.github.jakz.romlib.ui.i18n.I18N;
-
-import jack.rm.i18n.Text;
-
+import com.github.jakz.romlib.ui.i18n.Text;
 
 public enum Location
 {
@@ -49,7 +48,7 @@ public enum Location
 	
 	WORLD(Text.LOCATION_WORLD, "W", "W", Icon.FLAG_WORLD, USA, JAPAN, EUROPE),
 	
-	NONE(Text.NONE, "NA", "N", Icon.FLAG_USA)
+	NONE(Text.LOCATION_NONE, "NA", "N", Icon.FLAG_USA)
 	
 	;
 		

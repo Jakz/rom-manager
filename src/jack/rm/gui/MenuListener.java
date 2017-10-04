@@ -10,6 +10,7 @@ import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.set.GameSet;
 
 import jack.rm.Main;
+import jack.rm.data.romset.MyGameSetFeatures;
 
 class MenuListener implements ActionListener
 {
@@ -22,17 +23,19 @@ class MenuListener implements ActionListener
 		JMenuItem item = (JMenuItem)source;
 		MenuElement tag = MenuElement.elementForItem(item);
 		
+		MyGameSetFeatures helper = Main.current.helper();
+		
 		try
 		{
   		if (tag == MenuElement.ROMS_SCAN_FOR_ROMS)
   		{
-  		  GameSet.current.helper().scanner().scanForRoms(true);
+  		  helper.scanner().scanForRoms(true);
   			Main.mainFrame.rebuildGameList();
   		}
   		else if (tag == MenuElement.ROMS_SCAN_FOR_NEW_ROMS)
   		{
-  		  GameSet.current.helper().scanner().scanForRoms(false);
-        Main.mainFrame.rebuildGameList();
+  		  helper.scanner().scanForRoms(false);
+      Main.mainFrame.rebuildGameList();
   		}
   		else
   		{

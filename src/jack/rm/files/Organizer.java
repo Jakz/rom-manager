@@ -13,7 +13,9 @@ import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
 
+import jack.rm.Main;
 import jack.rm.Settings;
+import jack.rm.data.romset.MyGameSetFeatures;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.plugins.PluginRealType;
@@ -26,29 +28,40 @@ public class Organizer
 {	
 	private static final Logger logger = Log.getLogger(LogSource.ORGANIZER);
   private static DecimalFormat format;
-	
+  
+  public static String formatNumber(int index)
+  {
+    return format.format(index);
+  }
+  
 	static
 	{
 		format = new DecimalFormat();
 		format.applyPattern("0000");
 	}
 	
-	public static String formatNumber(int index)
+	private final GameSet set;
+  private final Settings settings;
+
+	
+	public Organizer(GameSet set)
 	{
-		return format.format(index);
+	  this.set = set;
+	  MyGameSetFeatures helper = set.helper();
+	  this.settings = helper.settings();
 	}
 	
-	public static Set<Pattern> getPatterns(GameSet set)
+	public Set<Pattern> getPatterns()
 	{
 	  Set<Pattern> patterns = new TreeSet<Pattern>();
 	  
-	  Set<PatternSetPlugin> plugins = set.getSettings().plugins.getPlugins(PluginRealType.PATTERN_SET);
+	  Set<PatternSetPlugin> plugins = settings.plugins.getPlugins(PluginRealType.PATTERN_SET);
 	  plugins.forEach( p -> p.getPatterns().forEach(patterns::add) );
 	  
 	  return patterns;
 	}
 
-	public static void organizeRomIfNeeded(Game rom)
+	public void organizeRomIfNeeded(Game rom)
 	{	  
 	  if (!rom.hasCorrectName())
 	  {
@@ -62,7 +75,7 @@ public class Organizer
 	    moveRom(rom);
 	}
 	
-	public static void internalRenameRom(Game rom)
+	public void internalRenameRom(Game rom)
 	{
     throw new UnsupportedOperationException("relocate internal name is not compatible with new handles");
 
@@ -82,7 +95,7 @@ public class Organizer
 	  }*/
 	}
 	
-	public static void renameRom(Game rom)
+	public void renameRom(Game rom)
 	{
     throw new UnsupportedOperationException("relocate name is not compatible with new handles");
 
@@ -109,13 +122,13 @@ public class Organizer
     }*/
 	}
 	
-	public static void moveRom(Game game)
+	public void moveRom(Game game)
 	{
 	  if (game.getStatus().isComplete())
     {     
       try
       {      
-        Path finalPath = GameSet.current.getSettings().romsPath.resolve(game.getCorrectFolder());
+        Path finalPath = settings.romsPath.resolve(game.getCorrectFolder());
   
         if (!Files.exists(finalPath) || !Files.isDirectory(finalPath))
         {
@@ -144,24 +157,23 @@ public class Organizer
     } 
 	}
 	
-	public static void organize(GameSet set)
+	public void organize()
 	{
-    Settings settings = set.getSettings();
-	  
 	  RenamerPlugin renamer = settings.getRenamer();
-    FolderPlugin organizer = settings.getFolderOrganizer();
+    FolderPlugin organizerPlugin = settings.getFolderOrganizer();
     boolean hasCleanupPhase = settings.hasCleanupPlugins();
     
-    Consumer<Boolean> cleanupPhase = b -> { Organizer.cleanup(set); set.saveStatus(); };
-    Consumer<Boolean> moverPhase = organizer == null ? cleanupPhase : b -> new MoverWorker(set, organizer, cleanupPhase).execute();
+    Consumer<Boolean> cleanupPhase = b -> { cleanup(); Main.setManager.saveSetStatus(set); };
+    Consumer<Boolean> moverPhase = organizerPlugin == null ? cleanupPhase : b -> new MoverWorker(set, organizerPlugin, cleanupPhase).execute();
     Consumer<Boolean> renamerPhase = renamer == null ? moverPhase : b -> new RenamerWorker(set, renamer, moverPhase).execute();
 
     renamerPhase.accept(true);
 	}
 	
-  public static void cleanup(GameSet set)
+  public void cleanup()
   {
-    Settings settings = set.getSettings();
+    MyGameSetFeatures helper = set.helper();
+    Settings settings = helper.settings();
     Set<CleanupPlugin> plugins = settings.plugins.getEnabledPlugins(PluginRealType.ROMSET_CLEANUP);
     plugins.stream().forEach( p -> p.execute(set) );
   }

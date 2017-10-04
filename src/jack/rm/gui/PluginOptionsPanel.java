@@ -4,11 +4,13 @@ import javax.swing.JPanel;
 
 import com.github.jakz.romlib.data.set.GameSet;
 
+import jack.rm.Main;
+
 public abstract class PluginOptionsPanel extends JPanel
 {
-  public GameSet getRomset()
+  public GameSet getGameSet()
   {
-    return GameSet.current;
+    return Main.current;
   }
   
   public abstract String getTitle();

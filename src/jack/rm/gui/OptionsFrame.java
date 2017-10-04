@@ -19,6 +19,8 @@ import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.plugin.PluginManager;
 
 import jack.rm.Main;
+import jack.rm.data.romset.GameSetManager;
+import jack.rm.data.romset.MyGameSetFeatures;
 import jack.rm.i18n.Text;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
@@ -34,12 +36,14 @@ public class OptionsFrame extends JFrame implements ActionListener, ComponentLis
 	JButton close = new JButton(Text.TEXT_CLOSE.text());
 
 	private final PluginManager<ActualPlugin, ActualPluginBuilder> manager;
+	private final GameSetManager setManager;
 		
-	public OptionsFrame(PluginManager<ActualPlugin, ActualPluginBuilder> manager)
+	public OptionsFrame(PluginManager<ActualPlugin, ActualPluginBuilder> manager, GameSetManager setManager)
 	{
 		setTitle(Text.MENU_TOOLS_OPTIONS.text());
 		
 		this.manager = manager;
+		this.setManager = setManager;
 		
 		JPanel all = new JPanel();
 		all.setLayout(new BorderLayout());
@@ -101,9 +105,11 @@ public class OptionsFrame extends JFrame implements ActionListener, ComponentLis
 	  int tabCount = tabs.getTabCount();
 	  for (int i = 2; i < tabCount; ++i)
 	    tabs.removeTabAt(2);
+	  
+	  MyGameSetFeatures helper = set.helper();
 
     manager.stream()
-    .map(b -> set.getSettings().plugins.getPlugin(b.getID()))
+    .map(b -> helper.settings().plugins.getPlugin(b.getID()))
     .filter(p -> p.isPresent() && p.get().isEnabled())
     .forEach(p -> {
       PluginOptionsPanel panel = p.get().getGUIPanel();
@@ -138,7 +144,7 @@ public class OptionsFrame extends JFrame implements ActionListener, ComponentLis
   public void componentHidden(ComponentEvent e)
 	{
 	  set.checkNames();
-	  set.saveStatus();
+    setManager.saveSetStatus(set);
     Main.mainFrame.rebuildGameList();
 	}
 }

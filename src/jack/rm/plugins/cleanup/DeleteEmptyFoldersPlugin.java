@@ -6,6 +6,7 @@ import java.util.Queue;
 
 import com.github.jakz.romlib.data.set.GameSet;
 
+import jack.rm.data.romset.MyGameSetFeatures;
 import jack.rm.plugins.types.CleanupPlugin;
 
 public class DeleteEmptyFoldersPlugin extends CleanupPlugin
@@ -13,7 +14,9 @@ public class DeleteEmptyFoldersPlugin extends CleanupPlugin
   @Override public void execute(GameSet set)
   {
     Queue<File> files = new LinkedList<File>();
-    files.add(set.getSettings().romsPath.toFile());
+    
+    MyGameSetFeatures helper = set.helper();
+    files.add(helper.settings().romsPath.toFile());
     
     int counter = 0;
     

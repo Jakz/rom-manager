@@ -1,4 +1,4 @@
-package jack.rm.files.parser;
+package com.github.jakz.romlib.parsers;
 
 import com.github.jakz.romlib.data.game.GameSave;
 

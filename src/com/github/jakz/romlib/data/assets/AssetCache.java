@@ -36,7 +36,8 @@ public class AssetCache
     return games != null ? games.contains(game) : false;
   }
   
-  void rebuild(GameSet set, Asset asset)
+  //TODO: should be default visibility
+  public void rebuild(GameSet set, Asset asset)
   {
     assetCache.clear();
     fillCache(set, asset);

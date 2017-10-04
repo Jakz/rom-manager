@@ -1,4 +1,4 @@
-package jack.rm.json;
+package com.github.jakz.romlib.json;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -45,6 +45,9 @@ import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.ui.Icon;
 
 import jack.rm.Main;
+import jack.rm.Settings;
+import jack.rm.data.romset.GameSetManager;
+import jack.rm.data.romset.MyGameSetFeatures;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.types.RomDownloaderPlugin;
 import net.miginfocom.swing.MigLayout;
@@ -92,7 +95,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	final private JPopupMenu customPopup;
 	
 	final private JPanel buttons = new JPanel();
-	
+		
 	Game game;
 	
 	private class AssetImage
@@ -113,8 +116,8 @@ public class InfoPanel extends JPanel implements ActionListener
 	}
 		
 	public InfoPanel()
-	{
-		editButton = new JToggleButton(Icon.EDIT.getIcon());
+	{	  
+	  editButton = new JToggleButton(Icon.EDIT.getIcon());
     editButton.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
     editButton.setToolTipText("Switch between edit and normal mode");
     
@@ -198,7 +201,10 @@ public class InfoPanel extends JPanel implements ActionListener
 	    GameAttribute.EXPORT_TITLE
 	  };
 	  
-	  List<Attribute> enabledAttribs = set.getSettings().getRomAttributes();
+    MyGameSetFeatures helper = set.helper();
+	  Settings settings = helper.settings();
+	  
+	  List<Attribute> enabledAttribs = settings.getRomAttributes();
 	  
 	  Stream<Attribute> eattributes = Arrays.stream(set.getSupportedAttributes());
 	  
@@ -216,7 +222,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	    {
 	      item = new JMenuItem("Remove \'"+cattrib.getCaption()+"\'");
 	      item.addActionListener(e -> {
-	        set.getSettings().getRomAttributes().remove(cattrib);
+	        settings.getRomAttributes().remove(cattrib);
 	        set.stream().forEach(r -> r.clearCustomAttribute(cattrib));
 	        menuItemPostAction.run();
 	      });
@@ -225,7 +231,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	    {
 	      item = new JMenuItem("Add \'"+cattrib.getCaption()+"\'");
 	      item.addActionListener(e -> {
-	        set.getSettings().getRomAttributes().add(cattrib);
+	        settings.getRomAttributes().add(cattrib);
           menuItemPostAction.run();
 	      });
 	    }
@@ -239,7 +245,7 @@ public class InfoPanel extends JPanel implements ActionListener
       {
         item = new JMenuItem("Hide \'"+eattrib.getCaption()+"\'");
         item.addActionListener(e -> {
-          set.getSettings().getRomAttributes().remove(eattrib);
+          settings.getRomAttributes().remove(eattrib);
           menuItemPostAction.run();
         });
       }
@@ -264,7 +270,9 @@ public class InfoPanel extends JPanel implements ActionListener
 	
 	void buildFields()
 	{
-    List<Attribute> attributes = set.getSettings().getRomAttributes();
+    MyGameSetFeatures helper = set.helper();
+	  Settings settings = helper.settings();
+	  List<Attribute> attributes = settings.getRomAttributes();
     
     fields = attributes.stream().map( a -> buildField(a, true) ).collect(Collectors.toList());
     
@@ -403,26 +411,26 @@ public class InfoPanel extends JPanel implements ActionListener
         setImage(game, image.asset, image.image);
 		
       // TODO: missing management for INCOMPLETE
-  		if (game.getStatus() == GameStatus.MISSING)
-  		{
-  		  openFolderButton.setEnabled(false);
-  		  openArchiveButton.setEnabled(false);
-  			
-  		  downloadButton.setEnabled(GameSet.current.getSettings().hasDownloader(GameSet.current.platform()));
-  		}
-  		else
-  		{
-  	    openFolderButton.setEnabled(true);
-  	    // TODO: different management for multiple roms per game
-  	    /*if (game.getHandle().isArchive())
-  	      openArchiveButton.setEnabled(true);*/
-  	      
-  		  downloadButton.setEnabled(false);
-  		}
-  		
-  		assetsButton.setEnabled(game != null && !game.hasAllAssets());
+    		if (game.getStatus() == GameStatus.MISSING)
+    		{
+    		  openFolderButton.setEnabled(false);
+    		  openArchiveButton.setEnabled(false);
+    			
+    	    MyGameSetFeatures helper = set.helper();
+    		  downloadButton.setEnabled(helper.settings().hasDownloader(set.platform()));
+    		}
+    		else
+    		{
+    	    openFolderButton.setEnabled(true);
+    	    // TODO: different management for multiple roms per game
+    	    /*if (game.getHandle().isArchive())
+    	      openArchiveButton.setEnabled(true);*/
+    	      
+    		  downloadButton.setEnabled(false);
+    		}
+    		
+    		assetsButton.setEnabled(game != null && !game.hasAllAssets());
     }
-
 	}
 	
 	@Override
@@ -434,9 +442,10 @@ public class InfoPanel extends JPanel implements ActionListener
 		{
 			try
 			{
-				Set<RomDownloaderPlugin> downloaders = GameSet.current.getSettings().plugins.getEnabledPlugins(PluginRealType.ROM_DOWNLOADER);
+		    MyGameSetFeatures helper = set.helper();
+			  Set<RomDownloaderPlugin> downloaders = helper.settings().plugins.getEnabledPlugins(PluginRealType.ROM_DOWNLOADER);
 				
-				URL url = downloaders.stream().filter( p -> p.isPlatformSupported(GameSet.current.platform())).findFirst().get().getDownloadURL(GameSet.current.platform(), game);
+				URL url = downloaders.stream().filter( p -> p.isPlatformSupported(set.platform())).findFirst().get().getDownloadURL(set.platform(), game);
 			  
 			  Desktop.getDesktop().browse(url.toURI());
 			}

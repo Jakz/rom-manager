@@ -22,6 +22,7 @@ import javax.swing.table.AbstractTableModel;
 
 import com.github.jakz.romlib.data.set.GameSet;
 
+import jack.rm.data.romset.MyGameSetFeatures;
 import jack.rm.files.Organizer;
 import jack.rm.files.Pattern;
 import jack.rm.i18n.Text;
@@ -120,17 +121,21 @@ public class PatternRenamerPanel extends PluginOptionsPanel implements CaretList
 
 	public void updateFields()
 	{
-		patternField.setText(getRomset().getSettings().renamingPattern);
+		MyGameSetFeatures helper = getGameSet().helper();
+	  
+	  patternField.setText(helper.settings().renamingPattern);
 		patterns.clear();
-		Organizer.getPatterns(getRomset()).forEach(patterns::add);
+		helper.organizer().getPatterns().forEach(patterns::add);
 		// TODO: should be invoked even when plugins are changed
 	}
 
 	@Override
   public void caretUpdate(CaretEvent e)
 	{
-	  getRomset().getSettings().renamingPattern = patternField.getText();
-		exampleField.setText(GameSet.current.getAny().getCorrectName());
+	  MyGameSetFeatures helper = getGameSet().helper();
+ 
+	  helper.settings().renamingPattern = patternField.getText();
+		exampleField.setText(getGameSet().getAny().getCorrectName());
 	}
 	
 	@Override

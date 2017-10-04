@@ -1,4 +1,4 @@
-package com.github.jakz.romlib.data.assets;
+package jack.rm.files;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -7,11 +7,12 @@ import java.util.Arrays;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
+import com.github.jakz.romlib.data.assets.Asset;
+import com.github.jakz.romlib.data.assets.AssetData;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.concurrent.OperationDetails;
 
-import jack.rm.files.RomSetWorker;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;

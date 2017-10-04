@@ -1,8 +1,8 @@
 package com.github.jakz.romlib.data.game.attributes;
 
 import com.github.jakz.romlib.data.game.RomSize;
+import com.github.jakz.romlib.ui.i18n.Text;
 
-import jack.rm.i18n.Text;
 
 public enum RomAttribute implements Attribute
 {

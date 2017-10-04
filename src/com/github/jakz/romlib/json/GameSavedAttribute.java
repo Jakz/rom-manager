@@ -1,4 +1,4 @@
-package jack.rm.json;
+package com.github.jakz.romlib.json;
 
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 

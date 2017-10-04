@@ -1,4 +1,4 @@
-package jack.rm.json;
+package com.github.jakz.romlib.json;
 
 import com.pixbits.lib.io.archive.handles.Handle;
 

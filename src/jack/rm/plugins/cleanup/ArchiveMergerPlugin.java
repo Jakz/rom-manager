@@ -9,6 +9,7 @@ import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.concurrent.OperationDetails;
 import com.pixbits.lib.plugin.ExposedParameter;
 
+import jack.rm.Main;
 import jack.rm.files.RomSetWorker;
 import jack.rm.plugins.types.CleanupPlugin;
 import net.lingala.zip4j.core.ZipFile;
@@ -41,7 +42,7 @@ public class ArchiveMergerPlugin extends CleanupPlugin implements OperationDetai
       
       try
       {
-        zfile = new ZipFile(romSet.getSettings().romsPath.resolve("romset.zip").toFile());
+        zfile = new ZipFile(Main.setManager.settings(romSet).romsPath.resolve("romset.zip").toFile());
         zparams = new ZipParameters();
         aparams = new ZipParameters();
       

@@ -1,4 +1,4 @@
-package jack.rm.json;
+package com.github.jakz.romlib.json;
 
 import java.lang.reflect.Type;
 
@@ -11,7 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-class GameSavedAttributeAdapter implements JsonSerializer<GameSavedAttribute>, JsonDeserializer<GameSavedAttribute> {
+public class GameSavedAttributeAdapter implements JsonSerializer<GameSavedAttribute>, JsonDeserializer<GameSavedAttribute> {
   @Override
   public JsonElement serialize(GameSavedAttribute src, Type type, JsonSerializationContext context)
   {

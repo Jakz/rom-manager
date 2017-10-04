@@ -28,8 +28,9 @@ import com.github.jakz.romlib.data.set.DataSupplier;
 import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.data.set.Provider;
+import com.github.jakz.romlib.parsers.SaveParser;
 
-import jack.rm.files.parser.SaveParser;
+import jack.rm.data.romset.MyGameSetFeatures;
 import jack.rm.plugins.types.DatParserPlugin;
 import jack.rm.plugins.types.ProviderPlugin;
 
@@ -268,8 +269,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
             format,
             GBA_ATTRIBUTES, 
             new AssetManager(GBA_ASSETS, new URL("http://offlinelistgba.free.fr/imgs/")),
-            Feature.FINITE_SIZE_SET
-
+            s -> new MyGameSetFeatures(s, Feature.FINITE_SIZE_SET)
         ));
       }
       
@@ -286,7 +286,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
             format,
             GBA_ATTRIBUTES, 
             new AssetManager(GBA_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_GBA/")),
-            Feature.FINITE_SIZE_SET
+            s -> new MyGameSetFeatures(s, Feature.FINITE_SIZE_SET)
         ));
       }
       
@@ -322,7 +322,8 @@ public class OfflineListProviderPlugin extends ProviderPlugin
             datParser,
             format,
             attributes, 
-            new AssetManager(PSP_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_PSP/"))
+            new AssetManager(PSP_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_PSP/")),
+            s -> new MyGameSetFeatures(s)
         ));
       }
       
@@ -339,7 +340,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
             format,
             GBA_ATTRIBUTES, 
             new AssetManager(NDS_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_NDS/")),
-            Feature.FINITE_SIZE_SET
+            s -> new MyGameSetFeatures(s, Feature.FINITE_SIZE_SET)
         ));
       }
       
@@ -356,7 +357,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
           format,
           GB_ATTRIBUTES,
           new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20Gameboy%20Color/")),
-          Feature.FINITE_SIZE_SET
+          s -> new MyGameSetFeatures(s, Feature.FINITE_SIZE_SET)
         ));
       }
       
@@ -373,8 +374,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
             format,
             GB_ATTRIBUTES,
             new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20Gameboy/")),
-            Feature.FINITE_SIZE_SET
-
+            s -> new MyGameSetFeatures(s, Feature.FINITE_SIZE_SET)
           ));
       }
       
@@ -391,7 +391,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
           format,
           NES_ATTRIBUTES,
           new AssetManager(GB_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Nintendo%20NES%20-%20Famicom/")),
-          Feature.FINITE_SIZE_SET
+          s -> new MyGameSetFeatures(s, Feature.FINITE_SIZE_SET)
         ));
         
         sets.add(new GameSet(
@@ -401,7 +401,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
           format,
           NES_ATTRIBUTES,
           new AssetManager(NES_ASSETS, new URL("http://nesofflinelist.free.fr/imgs/")),
-          Feature.FINITE_SIZE_SET
+          s -> new MyGameSetFeatures(s, Feature.FINITE_SIZE_SET)
         ));
       }
       
@@ -419,7 +419,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
 
             NES_ATTRIBUTES,
             new AssetManager(LYNX_ASSETS, new URL("http://nointro.free.fr/imgs/Official%20No-Intro%20Atari%20Lynx/")),
-            Feature.FINITE_SIZE_SET
+            s -> new MyGameSetFeatures(s, Feature.FINITE_SIZE_SET)
           ));
         
         

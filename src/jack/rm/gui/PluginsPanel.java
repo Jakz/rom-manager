@@ -27,6 +27,8 @@ import com.pixbits.lib.plugin.PluginManager;
 import com.pixbits.lib.plugin.ui.PluginConfigTable;
 
 import jack.rm.Main;
+import jack.rm.data.romset.GameSetManager;
+import jack.rm.data.romset.MyGameSetFeatures;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
 import jack.rm.plugins.PluginRealType;
@@ -37,6 +39,8 @@ public class PluginsPanel extends JPanel
   private final JTable table;
   private final PluginTableModel model;
   private final PluginManager<ActualPlugin, ActualPluginBuilder> manager;
+  //TODO: should not be static
+  private static GameSetManager setManager;
   private GameSet romset;
   
   private class PluginCellRenderer implements TableCellRenderer
@@ -86,7 +90,7 @@ public class PluginsPanel extends JPanel
         case 1: return builder.type;
         case 2:
         {
-          Optional<ActualPlugin> plugin = romset.getSettings().plugins.getPlugin(builder.getID());
+          Optional<ActualPlugin> plugin = setManager.settings(romset).plugins.getPlugin(builder.getID());
           return plugin.isPresent() && plugin.get().isEnabled();
         }
         default: return null;
@@ -100,11 +104,12 @@ public class PluginsPanel extends JPanel
       Boolean b = (Boolean)o;
       
       if (b)
-        romset.getSettings().plugins.enable(manager, plugins.get(r).getID());
+        setManager.settings(romset).plugins.enable(manager, plugins.get(r).getID());
       else if (!plugins.get(r).type.isRequired())
-        romset.getSettings().plugins.disable(plugins.get(r).getID());
+        setManager.settings(romset).plugins.disable(plugins.get(r).getID());
       
-      GameSet.current.helper().pluginStateChanged();
+      MyGameSetFeatures helper = Main.current.helper();
+      helper.pluginStateChanged();
       Main.mainFrame.pluginStateChanged();
 
       //TODO: enabling or disabling a plugin should have an effect in multiple parts of the UI
@@ -147,7 +152,7 @@ public class PluginsPanel extends JPanel
     {
       public String toString() { return "Show Enabled"; }
       public boolean test(ActualPluginBuilder builder, GameSet romset) { 
-        Optional<ActualPlugin> plugin = romset.getSettings().plugins.getPlugin(builder.getID());
+        Optional<ActualPlugin> plugin = setManager.settings(romset).plugins.getPlugin(builder.getID());
         return plugin.isPresent() && plugin.get().isEnabled();
       }
     },
@@ -174,7 +179,7 @@ public class PluginsPanel extends JPanel
     desc.setText(builder.info.description);
   }
   
-  public PluginsPanel(PluginManager<ActualPlugin, ActualPluginBuilder> manager)
+  public PluginsPanel(PluginManager<ActualPlugin, ActualPluginBuilder> manager, GameSetManager setManager)
   {
     this.manager = manager;
     this.model = new PluginTableModel();
@@ -208,7 +213,7 @@ public class PluginsPanel extends JPanel
           if (configTable.isEditing())
             configTable.getCellEditor().stopCellEditing();
           
-          Optional<ActualPlugin> plugin = romset.getSettings().plugins.getPlugin(model.plugins.get(r).getID());
+          Optional<ActualPlugin> plugin = setManager.settings(romset).plugins.getPlugin(model.plugins.get(r).getID());
           configTable.prepare(plugin.orElse(null));    
         }
       }

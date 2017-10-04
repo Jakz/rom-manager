@@ -13,6 +13,7 @@ import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.data.set.Provider;
 
+import jack.rm.data.romset.MyGameSetFeatures;
 import jack.rm.plugins.types.DatParserPlugin;
 import jack.rm.plugins.types.ProviderPlugin;
 
@@ -56,7 +57,7 @@ public class ClrMamePlugin extends ProviderPlugin
           format,
           GG_ATTRIBUTES, 
           AssetManager.DUMMY,
-          Feature.FINITE_SIZE_SET
+          s -> new MyGameSetFeatures(s, Feature.FINITE_SIZE_SET)
       );
     }
     
@@ -71,7 +72,7 @@ public class ClrMamePlugin extends ProviderPlugin
           format,
           GG_ATTRIBUTES, 
           AssetManager.DUMMY,
-          Feature.FINITE_SIZE_SET
+          s -> new MyGameSetFeatures(s, Feature.FINITE_SIZE_SET)
       );
     }
     
@@ -85,7 +86,8 @@ public class ClrMamePlugin extends ProviderPlugin
           parser,
           format,
           GG_ATTRIBUTES, 
-          AssetManager.DUMMY
+          AssetManager.DUMMY,
+          s -> new MyGameSetFeatures(s)
       );
     }
     

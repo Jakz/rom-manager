@@ -43,6 +43,7 @@ import com.pixbits.lib.ui.color.PastelColorGenerator;
 import com.pixbits.lib.ui.table.renderers.NimbusBooleanCellRenderer;
 
 import jack.rm.Main;
+import jack.rm.data.romset.GameSetManager;
 import jack.rm.files.ScanResult;
 
 public class ClonesDialog extends JDialog
@@ -148,9 +149,13 @@ public class ClonesDialog extends JDialog
   private final JButton apply = new JButton("Apply");
   private final JButton reset = new JButton("Reset");
   
-  public ClonesDialog(Frame frame, String title)
+  private final GameSetManager setManager;
+  
+  public ClonesDialog(GameSetManager setManager, Frame frame, String title)
   {
     super(frame, title);
+    
+    this.setManager = setManager;
     
     colorGenerator = new PastelColorGenerator();
     
@@ -306,11 +311,11 @@ public class ClonesDialog extends JDialog
         results = filtered;
     }
     
-    boolean hasRenamer = set.getSettings().getRenamer() != null;
-    boolean hasMover = set.getSettings().getFolderOrganizer() != null;
+    boolean hasRenamer = setManager.settings(set).getRenamer() != null;
+    boolean hasMover = setManager.settings(set).getFolderOrganizer() != null;
     
     Predicate<ScanResult> predicateAny = e -> true;
-    Predicate<ScanResult> predicateCorrectFolder = e -> !hasMover || set.getSettings().romsPath.resolve(e.rom.game().getCorrectFolder()).equals(e.handle.path().getParent());
+    Predicate<ScanResult> predicateCorrectFolder = e -> !hasMover || setManager.settings(set).romsPath.resolve(e.rom.game().getCorrectFolder()).equals(e.handle.path().getParent());
     Predicate<ScanResult> predicateCorrectName = e -> !hasRenamer || e.rom.game().getCorrectName().equals(e.handle.path().getFileName());
     Predicate<ScanResult> predicateCorrectNameAndFolder = predicateCorrectName.and(predicateCorrectFolder);
     

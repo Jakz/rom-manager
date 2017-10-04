@@ -51,9 +51,9 @@ public class PatternRenamerPlugin extends RenamerPlugin
   {
     Pattern.RenamingOptions options = new Pattern.RenamingOptions(openBlock, closeBlock);
     
-    String temp = new String(GameSet.current.getSettings().renamingPattern);
+    String temp = new String(getGameSetSettings().renamingPattern);
     
-    Set<Pattern> patterns = Organizer.getPatterns(GameSet.current);
+    Set<Pattern> patterns = getHelper().organizer().getPatterns();
     
     for (Pattern p : patterns)
       temp = p.apply(options, temp, rom);
@@ -66,9 +66,9 @@ public class PatternRenamerPlugin extends RenamerPlugin
     Pattern.RenamingOptions options = new Pattern.RenamingOptions(openBlock, closeBlock);
 
     
-    String temp = new String(GameSet.current.getSettings().internalRenamingPattern != null ? GameSet.current.getSettings().internalRenamingPattern : GameSet.current.getSettings().renamingPattern);
+    String temp = new String(getGameSetSettings().internalRenamingPattern != null ? getGameSetSettings().internalRenamingPattern : getGameSetSettings().renamingPattern);
     
-    Set<Pattern> patterns = Organizer.getPatterns(GameSet.current);
+    Set<Pattern> patterns = getHelper().organizer().getPatterns();
     
     for (Pattern p : patterns)
       temp = p.apply(options, temp, rom);
@@ -205,11 +205,11 @@ public class PatternRenamerPlugin extends RenamerPlugin
 
     public void updateFields()
     {
-      Settings settings = getRomset().getSettings();
+      Settings settings = getGameSetSettings();
       
       patternField.setText(settings.renamingPattern);
       patterns.clear();
-      Organizer.getPatterns(getRomset()).forEach(patterns::add);
+      getHelper().organizer().getPatterns().forEach(patterns::add);
       // TODO: should be invoked even when plugins are changed
       
       if (!settings.shouldRenameInternalName)
@@ -222,9 +222,8 @@ public class PatternRenamerPlugin extends RenamerPlugin
     
     private void switchToInternalRenamerMode(ArchiveRenameMode mode)
     {
-      Settings settings = getRomset().getSettings();
+      Settings settings = getGameSetSettings();
 
-      
       internalRenameMode.setSelectedItem(mode);
       
       if (mode == ArchiveRenameMode.None)
@@ -253,16 +252,15 @@ public class PatternRenamerPlugin extends RenamerPlugin
     {
       if (e.getSource() == patternField)
       {
-        getRomset().getSettings().renamingPattern = patternField.getText();
-        exampleField.setText(GameSet.current.getAny().getCorrectName());
+        getGameSetSettings().renamingPattern = patternField.getText();
+        exampleField.setText(getGameSet().getAny().getCorrectName());
         
         if (internalRenameMode.getSelectedItem() == ArchiveRenameMode.Same)
           internalPatternField.setText(patternField.getText());
       }
       else if (e.getSource() == internalPatternField && internalRenameMode.getSelectedItem() == ArchiveRenameMode.Custom)
       {
-        getRomset().getSettings().internalRenamingPattern = internalPatternField.getText();
-
+        getGameSetSettings().internalRenamingPattern = internalPatternField.getText();
       }
     }
     

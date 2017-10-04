@@ -34,7 +34,9 @@ import com.pixbits.lib.io.archive.ArchiveFormat;
 import com.pixbits.lib.io.archive.Scanner;
 import com.pixbits.lib.ui.elements.BrowseButton;
 
+import jack.rm.Main;
 import jack.rm.Settings;
+import jack.rm.data.romset.MyGameSetFeatures;
 import jack.rm.i18n.Text;
 
 public class SetInfoPanel extends JPanel
@@ -183,7 +185,8 @@ public class SetInfoPanel extends JPanel
 		romsPathButton = new BrowseButton(30, BrowseButton.Type.FILES_AND_DIRECTORIES);
 		romsPathButton.setFilter(ArchiveFormat.getReadableMatcher(), "Romsets");
 		romsPathButton.setCallback(p -> {
-      GameSet.current.getSettings().romsPath = p;
+		  MyGameSetFeatures helper = Main.current.helper();
+		  helper.settings().romsPath = p;
 		});
 		
 		model = new InfoTableModel();
@@ -216,7 +219,8 @@ public class SetInfoPanel extends JPanel
 	public void updateFields(GameSet set)
 	{
 		this.set = set;
-	  Settings s = set.getSettings();
+		MyGameSetFeatures helper = set.helper();
+	  Settings settings = helper.settings();
 		
     /*if (RomSet.current != null)
     {
@@ -228,8 +232,8 @@ public class SetInfoPanel extends JPanel
       });
     }*/
 		
-		if (s.romsPath != null)
-		  romsPathButton.setPath(s.romsPath);
+		if (settings.romsPath != null)
+		  romsPathButton.setPath(settings.romsPath);
 		else
 		  romsPathButton.clear();
 	}

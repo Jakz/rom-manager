@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -27,24 +28,14 @@ import com.github.jakz.romlib.data.game.Rom;
 import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.platforms.Platform;
+import com.github.jakz.romlib.json.GameListAdapter;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.pixbits.lib.io.digest.HashCache;
 import com.pixbits.lib.log.Log;
 
-import jack.rm.GlobalSettings;
-import jack.rm.Main;
-import jack.rm.Settings;
-import jack.rm.data.romset.GameSetFeatures;
-import jack.rm.json.Json;
-import jack.rm.json.GameListAdapter;
-import jack.rm.log.LogSource;
-import jack.rm.log.LogTarget;
-
 public class GameSet implements Iterable<Game>, GameMap
-{
-  public static GameSet current = null;
-	
+{	
   private boolean loaded;
 
   private final Platform platform;
@@ -53,15 +44,13 @@ public class GameSet implements Iterable<Game>, GameMap
 
 	private GameList list;
 	private CloneSet clones;
-	
-	private Settings settings;
-	
+		
 	private GameSetFeatures helper;
 	
 	private final AssetCache assetCache;
 	private final Attribute[] attributes;
 
-	public GameSet(Platform platform, Provider provider, DataSupplier loader, DatFormat format, Attribute[] attributes, AssetManager assetManager, Feature... features)
+	public GameSet(Platform platform, Provider provider, DataSupplier loader, DatFormat format, Attribute[] attributes, AssetManager assetManager, Function<GameSet, GameSetFeatures> helper)
 	{
 		Objects.requireNonNull(platform);
 	  this.info = new GameSetInfo(provider, format, assetManager);
@@ -72,7 +61,7 @@ public class GameSet implements Iterable<Game>, GameMap
 		this.attributes = attributes;
 		this.loaded = false;
 		this.assetCache = new AssetCache();
-		this.helper = new GameSetFeatures(this, features);
+		this.helper = helper.apply(this);
 	}
 	
 	public GameSet(Platform platform, Provider provider, DataSupplier loader)
@@ -86,7 +75,7 @@ public class GameSet implements Iterable<Game>, GameMap
 	  this.attributes = new Attribute[0];
 	  this.loaded = false;
 	  this.assetCache = new AssetCache();
-	  this.helper = new GameSetFeatures(this);
+	  this.helper = GameSetFeatures.of(this);
   }
 	
 	public GameSet(Platform platform, Provider provider, GameList list, CloneSet clones)
@@ -100,7 +89,7 @@ public class GameSet implements Iterable<Game>, GameMap
 	  this.attributes = new Attribute[0];
 	  this.loaded = true;
 	  this.assetCache = new AssetCache();
-	  this.helper = new GameSetFeatures(this);
+	  this.helper = GameSetFeatures.of(this);
 	  this.loaded = true;
 	}
 
@@ -137,7 +126,7 @@ public class GameSet implements Iterable<Game>, GameMap
 	}
 	
 	public Platform platform() { return platform; }
-	public GameSetFeatures helper() { return helper; }
+	public <F extends GameSetFeatures> F helper() { return (F)helper; }
 	public CloneSet clones() { return clones; }
 	public GameSetInfo info() { return info; }
 	public GameSetStatus status() { return list.status(); }
@@ -155,6 +144,8 @@ public class GameSet implements Iterable<Game>, GameMap
 	public Game get(int index) { return list.get(index); }
 	@Override public Game get(String title) { return list.get(title); }
 	public int gameCount() { return list.gameCount(); }
+	//TODO: should not be present
+	public GameList list() { return list; }
 	public Stream<Game> stream() { return games(); }
 	public Stream<Game> games() { return list.stream(); }
 	public Stream<Game> orphanGames() { return games().filter(g -> !g.hasClone()); }
@@ -170,7 +161,6 @@ public class GameSet implements Iterable<Game>, GameMap
       .get(); 
   }
 	
-	public Settings getSettings() { return settings; }
 	public AssetManager getAssetManager() { return info().getAssetManager(); }
 	
 	public boolean doesSupportAttribute(Attribute attribute) { return Arrays.stream(attributes).anyMatch( a -> a == attribute); }
@@ -218,7 +208,7 @@ public class GameSet implements Iterable<Game>, GameMap
 	
 	public Path getAttachmentPath()
 	{
-	  return settings.romsPath.resolve(Paths.get("attachments"));
+	  return helper.getAttachmentPath();
 	}
 	
   public final Path getAssetPath(Asset asset, boolean asArchive)
@@ -230,105 +220,7 @@ public class GameSet implements Iterable<Game>, GameMap
     else
       return Paths.get(base.toString()+".zip");
   }
-		
-	public void saveStatus()
-	{
-	  try
-	  {
-  	  Path basePath = GlobalSettings.DATA_PATH.resolve(ident());
-  	  
-  	  Files.createDirectories(basePath);
-  	  
-  	  Path settingsPath = basePath.resolve("settings.json");
-  	  
-  	  try (BufferedWriter wrt = Files.newBufferedWriter(settingsPath))
-  	  {
-  	    wrt.write(Json.build().toJson(settings, Settings.class));
-  	  }
-  	  
-  	  Path statusPath = basePath.resolve("status.json");
-  	  
-      Gson gson = Json.prebuild().registerTypeAdapter(GameList.class, new GameListAdapter(list)).create();
-      
-      try (BufferedWriter wrt = Files.newBufferedWriter(statusPath))
-      {
-        wrt.write(gson.toJson(list));
-        Log.getLogger(LogSource.STATUS).i(LogTarget.romset(this), "Romset status saved on json");
-      }
-	  }
-	  catch (Exception e)
-	  {
-	    e.printStackTrace();
-	  }
-	}
-		
-	public boolean loadStatus()
-	{
-	  try
-	  {
-  	  Path basePath = Paths.get("data/", ident());
-  	    
-  	  Path settingsPath = basePath.resolve("settings.json");
-  	  
-  	  try
-  	  {
-  	    AssetManager assetManager = getAssetManager();
-  	    for (Asset asset : assetManager.getSupportedAssets())
-  	      Files.createDirectories(getAssetPath(asset,false));
-  	  }
-  	  catch (IOException e)
-  	  {
-  	    e.printStackTrace();
-  	    // TODO: log
-  	  }
-  	  
-  	  if (!Files.exists(settingsPath))
-  	  {
-  	    settings = new Settings(Main.manager, Arrays.asList(getSupportedAttributes()));
-  	    return false;
-  	  }
-  	  else
-  	  {
-  	    try (BufferedReader rdr = Files.newBufferedReader(settingsPath))
-  	    {
-  	      settings = Json.build().fromJson(rdr, Settings.class);
-  	    }
-  	    catch (JsonParseException e)
-  	    {
-  	      if (e.getCause() instanceof ClassNotFoundException)
-  	        Log.getLogger(LogSource.STATUS).e("Error while loading plugin state: %s", e.getCause().toString());
-  	      
-  	      e.printStackTrace();
-  	    }
-  	    
-  	    Path statusPath = basePath.resolve("status.json");
-  	    
-  	    Gson gson = Json.prebuild().registerTypeAdapter(GameList.class, new GameListAdapter(list)).create();
-  	    
-  	    
-  	    try (BufferedReader rdr = Files.newBufferedReader(statusPath))
-  	    {
-  	      gson.fromJson(rdr, GameList.class);
-  	      refreshStatus();
-  	      return true;
-  	    }
-  	    catch (NoSuchFileException e)
-  	    {
-  	      return false;
-  	    }
-  	  }
-	  }
-	  catch (FileNotFoundException e)
-	  {
-	    return false;
-	  }
-	  catch (IOException e)
-	  {
-	    e.printStackTrace();
-	    return false;
-	  }
-	}
-
+  
   public boolean hasFeature(Feature feature)
   {
     if (feature == Feature.SINGLE_ROM_PER_GAME)

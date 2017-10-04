@@ -1,4 +1,4 @@
-package jack.rm.json;
+package com.github.jakz.romlib.json;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
-import com.pixbits.lib.functional.StreamUtil;;
+import com.pixbits.lib.functional.StreamUtil;
 
 public class GameListAdapter implements JsonSerializer<GameList>, JsonDeserializer<GameList>
 {

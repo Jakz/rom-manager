@@ -19,13 +19,12 @@ import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameSet;
+import com.github.jakz.romlib.ui.i18n.Text;
 import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.Location;
 import com.github.jakz.romlib.data.game.LocationSet;
 import com.pixbits.lib.searcher.SearcherInterface;
 import com.pixbits.lib.ui.elements.JPlaceHolderTextField;
-
-import jack.rm.i18n.Text;
 
 public class SearchPanel extends JPanel
 {
@@ -251,7 +250,5 @@ public class SearchPanel extends JPanel
         })
         .forEach(locations::addItem);
 		});
-		
-
 	}
 }

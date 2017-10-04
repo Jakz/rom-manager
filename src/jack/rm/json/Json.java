@@ -10,6 +10,8 @@ import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.json.AttachmentAdapter;
 import com.github.jakz.romlib.json.GameAttributeAdapter;
+import com.github.jakz.romlib.json.GameSavedAttribute;
+import com.github.jakz.romlib.json.GameSavedAttributeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pixbits.lib.io.archive.handles.Handle;
