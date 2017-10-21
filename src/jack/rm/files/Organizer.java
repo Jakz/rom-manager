@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.set.GameSet;
+import com.github.jakz.romlib.data.set.GameSetFeatures;
 import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
@@ -41,21 +42,22 @@ public class Organizer
 	}
 	
 	private final GameSet set;
-  private final Settings settings;
+  private final MyGameSetFeatures helper;
+  //private final Settings settings;
 
+	private Settings settings() { return helper.settings(); }
 	
-	public Organizer(GameSet set)
+	public Organizer(GameSet set, MyGameSetFeatures helper)
 	{
 	  this.set = set;
-	  MyGameSetFeatures helper = set.helper();
-	  this.settings = helper.settings();
+	  this.helper = helper;
 	}
 	
 	public Set<Pattern> getPatterns()
 	{
 	  Set<Pattern> patterns = new TreeSet<Pattern>();
 	  
-	  Set<PatternSetPlugin> plugins = settings.plugins.getPlugins(PluginRealType.PATTERN_SET);
+	  Set<PatternSetPlugin> plugins = settings().plugins.getPlugins(PluginRealType.PATTERN_SET);
 	  plugins.forEach( p -> p.getPatterns().forEach(patterns::add) );
 	  
 	  return patterns;
@@ -128,7 +130,7 @@ public class Organizer
     {     
       try
       {      
-        Path finalPath = settings.romsPath.resolve(game.getCorrectFolder());
+        Path finalPath = settings().romsPath.resolve(game.getCorrectFolder());
   
         if (!Files.exists(finalPath) || !Files.isDirectory(finalPath))
         {
@@ -159,9 +161,9 @@ public class Organizer
 	
 	public void organize()
 	{
-	  RenamerPlugin renamer = settings.getRenamer();
-    FolderPlugin organizerPlugin = settings.getFolderOrganizer();
-    boolean hasCleanupPhase = settings.hasCleanupPlugins();
+	  RenamerPlugin renamer = settings().getRenamer();
+    FolderPlugin organizerPlugin = settings().getFolderOrganizer();
+    boolean hasCleanupPhase = settings().hasCleanupPlugins();
     
     Consumer<Boolean> cleanupPhase = b -> { cleanup(); Main.setManager.saveSetStatus(set); };
     Consumer<Boolean> moverPhase = organizerPlugin == null ? cleanupPhase : b -> new MoverWorker(set, organizerPlugin, cleanupPhase).execute();

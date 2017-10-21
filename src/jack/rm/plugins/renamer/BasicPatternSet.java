@@ -50,6 +50,15 @@ public class BasicPatternSet extends PatternSetPlugin
     }
   }
   
+  private static class OrdinalPattern extends Pattern {
+    OrdinalPattern() { super("%o", "Ordinal number of hte game"); }
+    @Override
+    public String apply(Pattern.RenamingOptions options, String name, Game rom) { 
+      int ordinal = rom.getAttribute(GameAttribute.ORDINAL);
+      return apply(options, name, code, Integer.toString(ordinal));
+    }
+  }
+  
   private static class MegabyteSizePattern extends Pattern {
     MegabyteSizePattern() { super("%s", "Size of the game dump in bytes (long)"); }
     @Override
@@ -110,6 +119,7 @@ public class BasicPatternSet extends PatternSetPlugin
   }
   
   private final Pattern[] patterns = {
+    new OrdinalPattern(),
     new FullLocationPattern(),
     new AttributePattern("%g", "Releaser group", GameAttribute.GROUP),
     new MegabitSizePattern(),

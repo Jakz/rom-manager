@@ -27,6 +27,7 @@ import com.pixbits.lib.plugin.PluginManager;
 import com.pixbits.lib.plugin.ui.PluginConfigTable;
 
 import jack.rm.Main;
+import jack.rm.Settings;
 import jack.rm.data.romset.GameSetManager;
 import jack.rm.data.romset.MyGameSetFeatures;
 import jack.rm.plugins.ActualPlugin;
@@ -40,7 +41,6 @@ public class PluginsPanel extends JPanel
   private final PluginTableModel model;
   private final PluginManager<ActualPlugin, ActualPluginBuilder> manager;
   //TODO: should not be static
-  private static GameSetManager setManager;
   private GameSet romset;
   
   private class PluginCellRenderer implements TableCellRenderer
@@ -90,7 +90,9 @@ public class PluginsPanel extends JPanel
         case 1: return builder.type;
         case 2:
         {
-          Optional<ActualPlugin> plugin = setManager.settings(romset).plugins.getPlugin(builder.getID());
+          MyGameSetFeatures helper = romset.helper();
+          
+          Optional<ActualPlugin> plugin = helper.settings().plugins.getPlugin(builder.getID());
           return plugin.isPresent() && plugin.get().isEnabled();
         }
         default: return null;
@@ -103,12 +105,14 @@ public class PluginsPanel extends JPanel
       
       Boolean b = (Boolean)o;
       
-      if (b)
-        setManager.settings(romset).plugins.enable(manager, plugins.get(r).getID());
-      else if (!plugins.get(r).type.isRequired())
-        setManager.settings(romset).plugins.disable(plugins.get(r).getID());
+      MyGameSetFeatures helper = romset.helper();
+      Settings settings = helper.settings();
       
-      MyGameSetFeatures helper = Main.current.helper();
+      if (b)
+        settings.plugins.enable(manager, plugins.get(r).getID());
+      else if (!plugins.get(r).type.isRequired())
+        settings.plugins.disable(plugins.get(r).getID());
+      
       helper.pluginStateChanged();
       Main.mainFrame.pluginStateChanged();
 
@@ -152,7 +156,10 @@ public class PluginsPanel extends JPanel
     {
       public String toString() { return "Show Enabled"; }
       public boolean test(ActualPluginBuilder builder, GameSet romset) { 
-        Optional<ActualPlugin> plugin = setManager.settings(romset).plugins.getPlugin(builder.getID());
+        MyGameSetFeatures helper = romset.helper();
+        Settings settings = helper.settings();
+        
+        Optional<ActualPlugin> plugin = settings.plugins.getPlugin(builder.getID());
         return plugin.isPresent() && plugin.get().isEnabled();
       }
     },

@@ -146,8 +146,7 @@ public class GameSetManager
 	{
 	  try
     {
-      Path basePath = Paths.get("data/", set.ident());
-        
+	    Path basePath = Paths.get("data/", set.ident());     
       Path settingsPath = basePath.resolve("settings.json");
       
       try
@@ -164,6 +163,7 @@ public class GameSetManager
       
       if (!Files.exists(settingsPath))
       {
+        logger.d("Unable to load game status for %s: no saved status found.", set.toString());
         settings.put(set, new Settings(manager, Arrays.asList(set.getSupportedAttributes())));
         return false;
       }
@@ -171,7 +171,13 @@ public class GameSetManager
       {
         try (BufferedReader rdr = Files.newBufferedReader(settingsPath))
         {
-          settings.put(set, Json.build().fromJson(rdr, Settings.class));
+          Settings settings = Json.build().fromJson(rdr, Settings.class);
+          
+          if (settings == null)
+            throw new JsonParseException("Unable to load settings for gameset "+set);
+          
+          this.settings.put(set, settings);
+          logger.d("Loaded gameset status for %s", set.toString());
         }
         catch (JsonParseException e)
         {
@@ -220,7 +226,8 @@ public class GameSetManager
 	      
 	      try (BufferedWriter wrt = Files.newBufferedWriter(settingsPath))
 	      {
-	        wrt.write(Json.build().toJson(settings, Settings.class));
+	        MyGameSetFeatures helper = set.helper();
+	        wrt.write(Json.build().toJson(helper.settings(), Settings.class));
 	      }
 	      
 	      Path statusPath = basePath.resolve("status.json");

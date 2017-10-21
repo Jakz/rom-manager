@@ -42,7 +42,7 @@ public class MyGameSetFeatures implements GameSetFeatures
     this.searcher = new DummySearcher<>();
     this.renamer = GameRenamer.DUMMY;
     this.features = new HashSet<>(Arrays.asList(features));
-    this.organizer = new Organizer(set);
+    this.organizer = new Organizer(set, this);
   }
   
   public void pluginStateChanged()
