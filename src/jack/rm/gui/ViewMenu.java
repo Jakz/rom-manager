@@ -28,10 +28,11 @@ import jack.rm.i18n.Text;
 
 public class ViewMenu extends JMenu
 {
-  private final Attribute[] sortAttributes = new Attribute[] { GameAttribute.TITLE, GameAttribute.SIZE, GameAttribute.NUMBER };
+  private final Attribute[] sortAttributes = new Attribute[] { GameAttribute.TITLE, GameAttribute.ORDINAL, GameAttribute.SIZE, GameAttribute.NUMBER };
   private final List<Comparator<Game>> sorters = Arrays.asList(
      null,
      (g1, g2) -> g1.getTitle().compareToIgnoreCase(g2.getTitle()),
+     (g1, g2) -> Integer.compare(g1.getAttribute(GameAttribute.ORDINAL), g2.getAttribute(GameAttribute.ORDINAL)),
      (g1, g2) -> Long.compare(g1.getSize().bytes(), g2.getSize().bytes()),
      (g1, g2) -> Integer.compare(g1.getAttribute(GameAttribute.NUMBER), g2.getAttribute(GameAttribute.NUMBER))
   );
@@ -100,7 +101,7 @@ public class ViewMenu extends JMenu
       
       sortCriteria[0].setSelected(true);
       
-      sortCriteria[2].setEnabled(set.doesSupportAttribute(GameAttribute.NUMBER));
+      sortCriteria[3].setEnabled(set.doesSupportAttribute(GameAttribute.NUMBER));
       
       reverseSortOrder = new JCheckBoxMenuItem(Text.MENU_VIEW_REVERSE_ORDER.text());
       reverseSortOrder.addActionListener(listener);

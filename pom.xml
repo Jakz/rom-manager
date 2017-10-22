@@ -49,13 +49,9 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<classpathPrefix>lib/</classpathPrefix>
 							<mainClass>jack.rm.Main</mainClass>
 						</manifest>
 					</archive>
-					<excludes>
-						<exclude>jack/rm/pluging/providers/intrinsic/ASParserMain.java</exclude>
-					</excludes>
 				</configuration>
 				<executions>
 					<execution>

@@ -30,7 +30,18 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
         "This plugins provides basic search predicates.");
   }
   
-  private final static SearchPredicate<Game> HAS_ATTACHMENT = new BasicPredicate<Game>("has-attachment", "has:attach", "filters roms with attachments included")
+  private final static SearchPredicate<Game> IS_MULTIPLE_ROM = new BasicPredicate<Game>("is-multiple", "is:multiple", "filters games with multiple roms")
+  {
+    @Override public Predicate<Game> buildPredicate(String token)
+    {
+      if (token.startsWith("is:multiple"))
+        return r -> r.romCount() > 1;
+      else
+        return null;
+    }
+  };
+  
+  private final static SearchPredicate<Game> HAS_ATTACHMENT = new BasicPredicate<Game>("has-attachment", "has:attach", "filters games with attachments included")
   {
     @Override public Predicate<Game> buildPredicate(String token)
     {
@@ -41,7 +52,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
   
-  private final static SearchPredicate<Game> HAS_ASSETS = new BasicPredicate<Game>("has-assets", "has:assets", "filters roms with assets downloaded")
+  private final static SearchPredicate<Game> HAS_ASSETS = new BasicPredicate<Game>("has-assets", "has:assets", "filters games with assets downloaded")
   {
     @Override public Predicate<Game> buildPredicate(String token)
     {
@@ -52,7 +63,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
   
-  private final static SearchPredicate<Game> IS_FAVORITE = new BasicPredicate<Game>("is-favorite", "is:favorite, is:fav", "filters roms set as favorite")
+  private final static SearchPredicate<Game> IS_FAVORITE = new BasicPredicate<Game>("is-favorite", "is:favorite, is:fav", "filters games set as favorite")
   {
     @Override public Predicate<Game> buildPredicate(String token)
     {
@@ -74,7 +85,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
   
-  private final static SearchPredicate<Game> IS_FOUND = new BasicPredicate<Game>("is-found", "is:found", "filters roms which are present")
+  private final static SearchPredicate<Game> IS_FOUND = new BasicPredicate<Game>("is-found", "is:found", "filters games which are present")
   {
     @Override public Predicate<Game> buildPredicate(String token)
     {
@@ -197,6 +208,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
   public BaseSearchPredicates()
   {
     predicates = new ArrayList<>();
+    predicates.add(IS_MULTIPLE_ROM);
     predicates.add(HAS_ATTACHMENT);
     predicates.add(HAS_ASSETS);
     predicates.add(HAS_ATTRIBUTE);
