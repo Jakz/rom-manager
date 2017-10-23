@@ -3,6 +3,7 @@ package jack.rm.plugins.datparsers;
 import java.util.Map;
 
 import com.github.jakz.romlib.data.cataloguers.NoIntroCataloguer;
+import com.github.jakz.romlib.data.cataloguers.NoIntroNormalizer;
 import com.github.jakz.romlib.data.set.DatFormat;
 import com.github.jakz.romlib.data.set.DataSupplier;
 import com.github.jakz.romlib.data.set.GameSet;
@@ -22,7 +23,7 @@ public class ClrMameParserPlugin extends DatParserPlugin
     if (format.equals("clr-mame-pro"))
       return new ClrMameProParser();
     else if (format.equals("clr-mame-pro-nointro"))
-      return DataSupplier.derive(new ClrMameProParser(), new NoIntroCataloguer());
+      return DataSupplier.derive(new ClrMameProParser(), new NoIntroCataloguer(), new NoIntroNormalizer());
     else
       return null;
   }

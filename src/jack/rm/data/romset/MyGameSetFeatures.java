@@ -92,7 +92,7 @@ public class MyGameSetFeatures implements GameSetFeatures
   
   public Organizer organizer() { return organizer; }
   public Settings settings() { return Main.setManager.settings(set); }
-  public GameRenamer renamer() { return renamer; }
+  @Override public GameRenamer renamer() { return renamer; }
   public Scanner scanner() { return scanner; }
 
 

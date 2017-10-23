@@ -17,58 +17,58 @@ import com.github.jakz.romlib.ui.Icon;
 
 public class GameCellRenderer extends JPanel implements ListCellRenderer<Game>
 {
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	private final JLabel mainLabel = new JLabel();
-	private final JLabel rightIcon = new JLabel();
-	
-	public GameCellRenderer()
-	{
-	  setOpaque(true);
+  private final JLabel mainLabel = new JLabel();
+  private final JLabel rightIcon = new JLabel();
 
-	  mainLabel.setFont(new Font("Default",Font.PLAIN,12));
-	  
-	  setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));
-	  setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-	  
-	  rightIcon.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
-	  
-	  add(mainLabel);
-	  add(rightIcon);
-	}
-	
-	private void decorate(Game game, boolean isSelected, Color bg)
-	{
-	   mainLabel.setText(game.toString());
-	    LocationSet location = game.getLocation();
+  public GameCellRenderer()
+  {
+    setOpaque(true);
 
-	    if (location != null && location.getIcon() != null)
-	      mainLabel.setIcon(location.getIcon().getIcon());
-	    else
-	      mainLabel.setIcon(null);
-	    
-	    if (game.isFavourite())
-	      rightIcon.setIcon(Icon.FAVORITE.getIcon());
-	    else
-	      rightIcon.setIcon(null);
-	    
-	    if (isSelected)
-	    {
-	      mainLabel.setForeground(Color.WHITE);
-	      setBackground(game.getStatus().color);
-	    }
-	    else
-	    {
-	      setBackground(bg);
-	      mainLabel.setForeground(game.getStatus().color);
-	    }
-	    
-	}
-	
-	@Override
+    mainLabel.setFont(new Font("Default",Font.PLAIN,12));
+
+    setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));
+    setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+
+    rightIcon.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+
+    add(mainLabel);
+    add(rightIcon);
+  }
+
+  private void decorate(Game game, boolean isSelected, Color bg)
+  {
+    mainLabel.setText(game.toString());
+    LocationSet location = game.getLocation();
+
+    if (location != null && location.getIcon() != null)
+      mainLabel.setIcon(location.getIcon().getIcon());
+    else
+      mainLabel.setIcon(null);
+
+    if (game.isFavourite())
+      rightIcon.setIcon(Icon.FAVORITE.getIcon());
+    else
+      rightIcon.setIcon(null);
+
+    if (isSelected)
+    {
+      mainLabel.setForeground(Color.WHITE);
+      setBackground(game.getStatus().color);
+    }
+    else
+    {
+      setBackground(bg);
+      mainLabel.setForeground(game.getStatus().color);
+    }
+
+  }
+
+  @Override
   public Component getListCellRendererComponent(JList<? extends Game> list, Game game, int index, boolean iss, boolean chf)
-	{
-	  decorate(game, iss, list.getBackground());
-		return this;
-	}
+  {
+    decorate(game, iss, list.getBackground());
+    return this;
+  }
 }

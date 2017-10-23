@@ -5,6 +5,7 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 import com.github.jakz.romlib.data.cataloguers.NoIntroCataloguer;
+import com.github.jakz.romlib.data.cataloguers.NoIntroNormalizer;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.set.CloneSet;
@@ -35,7 +36,7 @@ public class LogiqxXmlParserPlugin extends DatParserPlugin
   public DataSupplier buildDatLoader(String format, Map<String, Object> arguments)
   {
     if (format.equals(this.format.getLongIdentifier()))
-      return DataSupplier.derive(new LogiqxXmlSupplier(), new NoIntroCataloguer());
+      return DataSupplier.derive(new LogiqxXmlSupplier(), new NoIntroCataloguer(), new NoIntroNormalizer());
     else
       return null;
   }

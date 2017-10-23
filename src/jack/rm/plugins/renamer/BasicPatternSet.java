@@ -44,18 +44,20 @@ public class BasicPatternSet extends PatternSetPlugin
       this(code, desc, attrib, true);
     }
        
-    @Override public String apply(Pattern.RenamingOptions options, String name, Game rom)
+    @Override public String apply(Pattern.RenamingOptions options, String name, Game game)
     { 
-      return applyQuotes ? apply(options, name, code, rom.getAttribute(attribute)) : name.replace(code, rom.getAttribute(attribute));
+      Object value = game.getAttribute(attribute);
+      String svalue = value == null ? "" : value.toString();
+      return applyQuotes ? apply(options, name, code, game.getAttribute(attribute)) : name.replace(code, svalue);
     }
   }
   
   private static class OrdinalPattern extends Pattern {
     OrdinalPattern() { super("%o", "Ordinal number of hte game"); }
     @Override
-    public String apply(Pattern.RenamingOptions options, String name, Game rom) { 
-      int ordinal = rom.getAttribute(GameAttribute.ORDINAL);
-      return apply(options, name, code, Integer.toString(ordinal));
+    public String apply(Pattern.RenamingOptions options, String name, Game game) { 
+      int ordinal = game.getAttribute(GameAttribute.ORDINAL);
+      return name.replaceAll(code, Integer.toString(ordinal));
     }
   }
   
@@ -129,6 +131,7 @@ public class BasicPatternSet extends PatternSetPlugin
     new ShortLocationPattern(),
     new TinyLocationPattern(),
     new AttributePattern("%t", "Game title", GameAttribute.TITLE, false),
+    new AttributePattern("%T", "Normalized game title", GameAttribute.NORMALIZED_TITLE, false),
     new AttributePattern("%C", "Comment", GameAttribute.COMMENT, true)
   };
   

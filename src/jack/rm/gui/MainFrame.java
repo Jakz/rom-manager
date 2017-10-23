@@ -427,7 +427,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	{
     synchronized (gameListPanel)
     {
-  	  gameListPanel.backupSelection();
+  	    gameListPanel.backupSelection();
       
       List<Game> data = set.stream().collect(Collectors.toList());
       gameListPanel.setData(data);
