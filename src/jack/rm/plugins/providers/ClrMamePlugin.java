@@ -35,7 +35,7 @@ public class ClrMamePlugin extends ProviderPlugin
   {
     DatParserPlugin datParser = this.findDatParser(datParsers, "clr-mame-pro-nointro");
 
-    GameSet[] sets = new GameSet[2];
+    GameSet[] sets = new GameSet[4];
     
     Provider.Source gameGearSource = new Provider.Source("http://datomatic.no-intro.org/?page=download&fun=dat",
       "inc_unl", "1",
@@ -80,9 +80,24 @@ public class ClrMamePlugin extends ProviderPlugin
       DataSupplier parser = findDatParser(datParsers, "logiqx-xml").buildDatLoader("logiqx-xml"); 
       DatFormat format = parser.getFormat();
       
-      sets[1] = new GameSet(
+      sets[2] = new GameSet(
           Platforms.PSP, 
           KnownProviders.NO_INTRO.derive("", "", "", null),
+          parser,
+          format,
+          GG_ATTRIBUTES, 
+          AssetManager.DUMMY,
+          s -> new MyGameSetFeatures(s)
+      );
+    }
+    
+    {
+      DataSupplier parser = findDatParser(datParsers, "logiqx-xml").buildDatLoader("logiqx-xml"); 
+      DatFormat format = parser.getFormat();
+      
+      sets[3] = new GameSet(
+          Platforms.PSP, 
+          KnownProviders.NO_INTRO.derive("With Clones", "with-clones", "", null),
           parser,
           format,
           GG_ATTRIBUTES, 

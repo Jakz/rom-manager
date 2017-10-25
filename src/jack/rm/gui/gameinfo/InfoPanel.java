@@ -48,6 +48,7 @@ import jack.rm.Main;
 import jack.rm.Settings;
 import jack.rm.data.romset.GameSetManager;
 import jack.rm.data.romset.MyGameSetFeatures;
+import jack.rm.gui.Mediator;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.types.RomDownloaderPlugin;
 import net.miginfocom.swing.MigLayout;
@@ -81,6 +82,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	final private JPanel pFields = new JPanel();
 	final private JPanel pTotal = new JPanel();
 	final private AttachmentTable attachments = new AttachmentTable();
+	final private ClonesEnumPanel clonesTable;
 	
 	private AssetImage[] images;
 	
@@ -95,6 +97,9 @@ public class InfoPanel extends JPanel implements ActionListener
 	final private JPopupMenu customPopup;
 	
 	final private JPanel buttons = new JPanel();
+	
+	private boolean showAttachmentsTable;
+	private boolean showClonesTable;
 		
 	Game game;
 	
@@ -115,8 +120,11 @@ public class InfoPanel extends JPanel implements ActionListener
 	  }
 	}
 		
-	public InfoPanel()
+	public InfoPanel(Mediator mediator)
 	{	  
+	  clonesTable = new ClonesEnumPanel(mediator);
+
+	  
 	  editButton = new JToggleButton(Icon.EDIT.getIcon());
     editButton.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
     editButton.setToolTipText("Switch between edit and normal mode");
@@ -158,17 +166,12 @@ public class InfoPanel extends JPanel implements ActionListener
 		openArchiveButton.setEnabled(false);
 	  assetsButton.setEnabled(false);
 	  downloadButton.setEnabled(false);
-
-    pFields.setLayout(new BorderLayout());
-
-		pTotal.setLayout(new BoxLayout(pTotal, BoxLayout.PAGE_AXIS));
 		
     imagesPanel = new JPanel();
-    pTotal.add(imagesPanel);
 		
+    pFields.setLayout(new BorderLayout());
 		JPanel pFields2 = new JPanel(new BorderLayout());
 		pFields2.add(pFields, BorderLayout.NORTH);
-		pTotal.add(pFields2);
 		
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.LINE_AXIS));
 		buttons.add(downloadButton);
@@ -180,10 +183,31 @@ public class InfoPanel extends JPanel implements ActionListener
 		openFolderButton.addActionListener(this);
 		openArchiveButton.addActionListener(this);
 		
-		pTotal.add(buttons);
-		pTotal.add(attachments);
+    pTotal.setLayout(new BoxLayout(pTotal, BoxLayout.PAGE_AXIS));
+
 		
 		this.add(pTotal);
+	}
+	
+	public void toggleAttachmentsTable(boolean visible) { showAttachmentsTable = visible; }
+	
+	public void buildMainLayout()
+	{
+	  pTotal.removeAll();
+    pTotal.add(imagesPanel);
+    JPanel pFields2 = new JPanel(new BorderLayout());
+    pFields2.add(pFields, BorderLayout.NORTH);
+    pTotal.add(pFields2);
+    
+    if (showClonesTable)
+      pTotal.add(clonesTable);
+    
+    pTotal.add(buttons);
+   
+    if (showAttachmentsTable)
+      pTotal.add(attachments);
+    
+    revalidate();
 	}
 	
 	public void buildPopupMenu()
@@ -277,11 +301,11 @@ public class InfoPanel extends JPanel implements ActionListener
     fields = attributes.stream().map( a -> buildField(a, true) ).collect(Collectors.toList());
     
     /* add file name and path attributes only if there is a single rom per game */
-    if (set.hasFeature(Feature.SINGLE_ROM_PER_GAME))
+    //if (set.hasFeature(Feature.SINGLE_ROM_PER_GAME))
     {
       // TODO: hardcoded for now
       fields.add(buildField(RomAttribute.CRC, false));
-      
+
       fields.add(buildField(GameAttribute.PATH, false));
     }
         
@@ -316,7 +340,12 @@ public class InfoPanel extends JPanel implements ActionListener
 		AssetManager manager = set.getAssetManager();
 		Asset[] assets = manager.getSupportedAssets();
 		
+		showClonesTable = set.hasFeature(Feature.CLONES); // TODO && uiSettings.showClonesTable
+		
+		buildMainLayout();
 		buildPopupMenu();
+		
+		clonesTable.gameSetLoaded(set);
 		
 		if (assets.length == 0)
 		{
@@ -392,6 +421,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	{
 		this.game = game;
 		attachments.setRom(game);
+		clonesTable.update(game);
 		
 		this.setVisible(true);
 		
@@ -429,8 +459,9 @@ public class InfoPanel extends JPanel implements ActionListener
     		  downloadButton.setEnabled(false);
     		}
     		
-    		assetsButton.setEnabled(game != null && !game.hasAllAssets());
     }
+    
+    assetsButton.setEnabled(game != null && !game.hasAllAssets());
 	}
 	
 	@Override

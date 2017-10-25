@@ -116,6 +116,11 @@ public class GameListPanel extends JPanel
     }  
   }
   
+  public void selectGameIfVisible(Game game)
+  {
+    list.setSelectedValue(game, true);
+  }
+  
   public void sortData(Comparator<Game> sorter) { data.setSorter(sorter); }
   public void filterData(Predicate<Game> predicate) { data.setFilter(predicate); }
   public void setData(List<Game> data) { this.data.setData(data); }

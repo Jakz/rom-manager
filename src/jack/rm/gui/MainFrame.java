@@ -101,7 +101,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	final private CountPanel countPanel = new CountPanel(gameListPanel.data());
 	
 	final private SearchPanel searchPanel = new SearchPanel(() -> rebuildGameList());
-	final private InfoPanel infoPanel = new InfoPanel();
+	final private InfoPanel infoPanel = new InfoPanel(this);
 	final private OptionsFrame optionsFrame;
 		
 	final private TextOutputFrame textFrame = new TextOutputFrame();
@@ -471,5 +471,11 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
       infoPanel.resetFields();
     else
       infoPanel.updateFields(game);
+  }
+  
+  @Override
+  public void selectGameIfVisible(Game game)
+  {
+    gameListPanel.selectGameIfVisible(game);
   }
 }

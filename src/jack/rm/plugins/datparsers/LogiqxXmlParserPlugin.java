@@ -1,5 +1,6 @@
 package jack.rm.plugins.datparsers;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -57,9 +58,14 @@ public class LogiqxXmlParserPlugin extends DatParserPlugin
         LogiqxXMLHandler.Data data = parser.load(set.datPath());
         
         Path xmdbPath = Paths.get(FileUtils.trimExtension(set.datPath().toString()) + ".xmdb");  
-        CloneSet clones = XMDBHandler.loadCloneSet(data.list, xmdbPath);
         
-        return new DataSupplier.Data(data.list, clones);
+        if (Files.exists(xmdbPath))
+        {
+          CloneSet clones = XMDBHandler.loadCloneSet(data.list, xmdbPath);
+          return new DataSupplier.Data(data.list, clones);
+        }
+        else
+          return new DataSupplier.Data(data.list);
       }
       catch (Exception e)
       {

@@ -1,5 +1,6 @@
 package jack.rm.plugins.renamer;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -53,11 +54,17 @@ public class BasicPatternSet extends PatternSetPlugin
   }
   
   private static class OrdinalPattern extends Pattern {
-    OrdinalPattern() { super("%o", "Ordinal number of hte game"); }
+    private final DecimalFormat format = new DecimalFormat();
+    
+    OrdinalPattern() { 
+      super("%o", "Ordinal number of the game");
+      //TODO: should it be configurable?
+      format.applyPattern("0000");
+    }
     @Override
     public String apply(Pattern.RenamingOptions options, String name, Game game) { 
       int ordinal = game.getAttribute(GameAttribute.ORDINAL);
-      return name.replaceAll(code, Integer.toString(ordinal));
+      return name.replaceAll(code, format.format(ordinal));
     }
   }
   
