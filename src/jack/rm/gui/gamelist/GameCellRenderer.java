@@ -11,11 +11,13 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 
+import com.github.jakz.romlib.data.game.Drawable;
 import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.game.LocationSet;
 import com.github.jakz.romlib.ui.Icon;
 
-public class GameCellRenderer extends JPanel implements ListCellRenderer<Game>
+public class GameCellRenderer extends JPanel implements ListCellRenderer<Drawable>
 {
   private static final long serialVersionUID = 1L;
 
@@ -37,17 +39,18 @@ public class GameCellRenderer extends JPanel implements ListCellRenderer<Game>
     add(rightIcon);
   }
 
-  private void decorate(Game game, boolean isSelected, Color bg)
+  private void decorate(Drawable entry, boolean isSelected, Color bg)
   {
-    mainLabel.setText(game.toString());
-    LocationSet location = game.getLocation();
+    mainLabel.setText(entry.getDrawableCaption());
+    LocationSet location = entry.getDrawableLocation();
+    GameStatus status = entry.getDrawableStatus();
 
     if (location != null && location.getIcon() != null)
       mainLabel.setIcon(location.getIcon().getIcon());
     else
       mainLabel.setIcon(null);
 
-    if (game.isFavourite())
+    if (entry.getDrawableFavourite())
       rightIcon.setIcon(Icon.FAVORITE.getIcon());
     else
       rightIcon.setIcon(null);
@@ -55,20 +58,20 @@ public class GameCellRenderer extends JPanel implements ListCellRenderer<Game>
     if (isSelected)
     {
       mainLabel.setForeground(Color.WHITE);
-      setBackground(game.getStatus().color);
+      setBackground(status.color);
     }
     else
     {
       setBackground(bg);
-      mainLabel.setForeground(game.getStatus().color);
+      mainLabel.setForeground(status.color);
     }
 
   }
 
   @Override
-  public Component getListCellRendererComponent(JList<? extends Game> list, Game game, int index, boolean iss, boolean chf)
+  public Component getListCellRendererComponent(JList<? extends Drawable> list, Drawable entry, int index, boolean iss, boolean chf)
   {
-    decorate(game, iss, list.getBackground());
+    decorate(entry, iss, list.getBackground());
     return this;
   }
 }

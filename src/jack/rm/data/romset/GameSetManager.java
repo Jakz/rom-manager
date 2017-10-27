@@ -22,6 +22,7 @@ import com.github.jakz.romlib.data.assets.Asset;
 import com.github.jakz.romlib.data.assets.AssetManager;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.platforms.Platforms;
+import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameList;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.data.set.GameSetFeatures;
@@ -195,6 +196,10 @@ public class GameSetManager
         {
           gson.fromJson(rdr, GameList.class);
           set.refreshStatus();
+          
+          if (set.hasFeature(Feature.CLONES))
+            set.clones().updateStatus();
+          
           return true;
         }
         catch (NoSuchFileException e)

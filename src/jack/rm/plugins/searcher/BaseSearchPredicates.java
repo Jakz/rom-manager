@@ -96,6 +96,17 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
   
+  private final static SearchPredicate<Game> IS_BAD_DUMP = new BasicPredicate<Game>("is-bad", "is:bad", "filters games which known bad dumps")
+  {
+    @Override public Predicate<Game> buildPredicate(String token)
+    {
+      if (isSearchArg(splitWithDelimiter(token, ":"), "is", "bad"))
+        return g -> g.getBoolAttribute(GameAttribute.BAD_DUMP);
+      else
+        return null;
+    }
+  };
+  
   private final static SearchPredicate<Game> OF_GENRE = new BasicPredicate<Game>("genre", "genre:action", "filters games of a specified genre")
   {
     @Override public Predicate<Game> buildPredicate(String token)
@@ -219,6 +230,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     predicates.add(OF_GENRE);
     predicates.add(OF_SAVE_TYPE);
     predicates.add(IS_FORMAT);
+    predicates.add(IS_BAD_DUMP);
 
   }
 

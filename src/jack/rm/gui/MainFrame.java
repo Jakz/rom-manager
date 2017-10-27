@@ -34,12 +34,14 @@ import javax.swing.ListCellRenderer;
 import javax.swing.SwingUtilities;
 
 import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameClone;
 import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.platforms.Platforms;
+import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.ui.SearchPanel;
 import com.pixbits.lib.ui.FileTransferHandler;
@@ -430,7 +432,8 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
   	    gameListPanel.backupSelection();
       
       List<Game> data = set.stream().collect(Collectors.toList());
-      gameListPanel.setData(data);
+      List<GameClone> clones = set.hasFeature(Feature.CLONES) ? set.clones().stream().collect(Collectors.toList()) : Collections.emptyList();
+      gameListPanel.setData(data, clones);
   
       Predicate<Game> predicate = searchPanel.buildSearchPredicate().and(viewMenu.buildPredicate());
       

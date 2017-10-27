@@ -19,7 +19,9 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.github.jakz.romlib.data.game.Drawable;
 import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameClone;
 import com.github.jakz.romlib.data.game.GameStatus;
 import com.pixbits.lib.ui.FileTransferHandler;
 
@@ -33,13 +35,13 @@ public class GameListPanel extends JPanel
   
   private final GameListData data;
   
-  private Game lastSelectedGame;
+  private Drawable lastSelectedGame;
   private int lastSelectedIndex;
   
   final private CardLayout layout;
   
   final private GameListModel gameListModel;
-  final private JList<Game> list = new JList<>();
+  final private JList<Drawable> list = new JList<>();
   final private ListListener listListener = new ListListener();
   final private JScrollPane listPane = new JScrollPane(list);
   
@@ -68,10 +70,15 @@ public class GameListPanel extends JPanel
               
               if (r != -1)
               {
-                Game rom = list.getModel().getElementAt(r);
+                Drawable entry = list.getModel().getElementAt(r);
                 
-                rom.setFavourite(!rom.isFavourite());
-                gameListModel.fireChanges(r);   
+                //TODO: better design
+                if (entry instanceof Game)
+                {
+                  Game game = (Game)entry;
+                  game.setFavourite(!game.isFavourite());
+                  gameListModel.fireChanges(r);   
+                }
               }
             }
           }
@@ -92,7 +99,7 @@ public class GameListPanel extends JPanel
   public void clearEverything()
   {
     clearSelection();
-    setData(Collections.emptyList());
+    setData(Collections.emptyList(), Collections.emptyList());
   }
   
   public void backupSelection()
@@ -123,7 +130,7 @@ public class GameListPanel extends JPanel
   
   public void sortData(Comparator<Game> sorter) { data.setSorter(sorter); }
   public void filterData(Predicate<Game> predicate) { data.setFilter(predicate); }
-  public void setData(List<Game> data) { this.data.setData(data); }
+  public void setData(List<Game> games, List<GameClone> clones) { this.data.setData(games, clones); }
   
   public GameListData data() { return data; }
   public void clearSelection() { list.clearSelection(); }
@@ -147,9 +154,11 @@ public class GameListPanel extends JPanel
         return;
       }
 
-      Game game = gameListModel.getElementAt(lsm.getMinSelectionIndex());
+      Drawable entry = gameListModel.getElementAt(lsm.getMinSelectionIndex());
 
-      mediator.setInfoPanelContent(game);
+      //TODO: better design
+      if (entry instanceof Game)
+        mediator.setInfoPanelContent((Game)entry);
     }
   }
 }

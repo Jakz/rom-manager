@@ -2,12 +2,12 @@ package jack.rm.gui.gamelist;
 
 import javax.swing.AbstractListModel;
 
-import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.Drawable;
 
-public class GameListModel extends AbstractListModel<Game>
+public class GameListModel extends AbstractListModel<Drawable>
 {
 	private static final long serialVersionUID = 1L;
-	
+		
 	private final GameListData data;
 	
 	public GameListModel(GameListData data)
@@ -16,9 +16,10 @@ public class GameListModel extends AbstractListModel<Game>
 	}
 
 	@Override
-  public Game getElementAt(int index)
+  public Drawable getElementAt(int index)
 	{
-		return data.gameAt(index);
+		/* TODO: maybe we should use a swappable bridge interface instead that if */
+	  return data.get(index);
 	}
 	
 	@Override

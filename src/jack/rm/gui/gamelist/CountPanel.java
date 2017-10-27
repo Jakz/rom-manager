@@ -63,7 +63,7 @@ public class CountPanel extends JPanel
 	
 	public void update()
 	{	  
-	  Map<GameStatus, Long> status = data.stream().collect(Collectors.groupingBy( r -> r.getStatus(), HashMap::new, Collectors.counting()));
+	  Map<GameStatus, Long> status = data.stream().collect(Collectors.groupingBy( r -> r.getDrawableStatus(), HashMap::new, Collectors.counting()));
 	    
     counters[0].setText(""+status.getOrDefault(GameStatus.FOUND, 0L));
     counters[1].setText(""+status.getOrDefault(GameStatus.UNORGANIZED, 0L));
