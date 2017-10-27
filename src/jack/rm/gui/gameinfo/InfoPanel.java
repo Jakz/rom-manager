@@ -28,6 +28,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -83,6 +84,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	final private JPanel pTotal = new JPanel();
 	final private AttachmentTable attachments = new AttachmentTable();
 	final private ClonesEnumPanel clonesTable;
+	final private RomTable romTable;
 	
 	private AssetImage[] images;
 	
@@ -123,6 +125,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	public InfoPanel(Mediator mediator)
 	{	  
 	  clonesTable = new ClonesEnumPanel(mediator);
+	  romTable = new RomTable();
 
 	  
 	  editButton = new JToggleButton(Icon.EDIT.getIcon());
@@ -191,13 +194,16 @@ public class InfoPanel extends JPanel implements ActionListener
 	
 	public void toggleAttachmentsTable(boolean visible) { showAttachmentsTable = visible; }
 	
-	public void buildMainLayout()
+	void buildMainLayout()
 	{
 	  pTotal.removeAll();
     pTotal.add(imagesPanel);
     JPanel pFields2 = new JPanel(new BorderLayout());
     pFields2.add(pFields, BorderLayout.NORTH);
     pTotal.add(pFields2);
+    
+    if (!set.hasFeature(Feature.SINGLE_ROM_PER_GAME))
+      pTotal.add(new JScrollPane(romTable));
     
     if (showClonesTable)
       pTotal.add(clonesTable);
@@ -233,6 +239,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	  Stream<Attribute> eattributes = Arrays.stream(set.getSupportedAttributes());
 	  
 	  Runnable menuItemPostAction = () -> {
+	    buildMainLayout();
 	    buildFields();
 	    pFields.revalidate();
 	    updateFields(game);
@@ -301,7 +308,7 @@ public class InfoPanel extends JPanel implements ActionListener
     fields = attributes.stream().map( a -> buildField(a, true) ).collect(Collectors.toList());
     
     /* add file name and path attributes only if there is a single rom per game */
-    //if (set.hasFeature(Feature.SINGLE_ROM_PER_GAME))
+    if (set.hasFeature(Feature.SINGLE_ROM_PER_GAME))
     {
       // TODO: hardcoded for now
       fields.add(buildField(RomAttribute.CRC, false));
@@ -422,6 +429,7 @@ public class InfoPanel extends JPanel implements ActionListener
 		this.game = game;
 		attachments.setRom(game);
 		clonesTable.update(game);
+		romTable.update(game);
 		
 		this.setVisible(true);
 		
