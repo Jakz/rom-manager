@@ -19,7 +19,8 @@ abstract class AttributeField
    */
   protected final InfoPanel infoPanel;
   protected JLabel title;
-  protected Attribute attrib;
+  protected final Attribute attrib;
+  protected final boolean isReal;
 
   protected JButton deleteButton;
   protected JButton moveUpButton;
@@ -35,6 +36,8 @@ abstract class AttributeField
   {
     this.infoPanel = infoPanel;
     this.attrib = attrib;
+    this.isReal = isReal;
+    
     title = new JLabel();
     title.setHorizontalAlignment(SwingConstants.RIGHT);
     title.setText(attrib.getCaption());

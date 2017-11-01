@@ -25,6 +25,9 @@ public class GameListData
     mode = Mode.GAMES;
   }
   
+  public Mode getMode() { return mode; }
+  public void setMode(Mode mode) { this.mode = mode; }
+  
   private GameClone cloneAt(int index) { return clones.get(index); }
   private int cloneCount() { return clones.size(); }
   
@@ -40,7 +43,11 @@ public class GameListData
     this.clones.setData(clones);
   }
   
-  public void setSorter(Comparator<Game> comparator) { this.games.sort(comparator); }
+  public void setSorter(Comparator<? super Drawable> comparator)
+  { 
+    this.games.sort(comparator);
+    this.clones.sort(comparator);
+  }
   public void setFilter(Predicate<Game> filter) { this.games.filter(filter); }
   
   public Drawable get(int index) { return mode == Mode.GAMES ? gameAt(index) : cloneAt(index); }

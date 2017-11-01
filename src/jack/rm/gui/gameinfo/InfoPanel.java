@@ -72,7 +72,9 @@ public class InfoPanel extends JPanel implements ActionListener
 	
 	private AttributeField buildField(Attribute attribute, boolean isReal)
 	{
-	  if (attribute.getClazz() != null && attribute.getClazz().isEnum())
+	  if (attribute == GameAttribute.LANGUAGE)
+	    return new LanguageAttributeField(this, attribute, isReal);
+	  else if (attribute.getClazz() != null && attribute.getClazz().isEnum())
 	    return new EnumAttributeField(this, attribute, isReal);
 	  else
 	    return new TextAttributeField(this, attribute, isReal);

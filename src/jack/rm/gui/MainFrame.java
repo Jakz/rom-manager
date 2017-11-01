@@ -33,6 +33,7 @@ import javax.swing.JSplitPane;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingUtilities;
 
+import com.github.jakz.romlib.data.game.Drawable;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameClone;
 import com.github.jakz.romlib.data.game.RomSize;
@@ -56,6 +57,7 @@ import jack.rm.files.Organizer;
 import jack.rm.gui.gameinfo.InfoPanel;
 import jack.rm.gui.gamelist.CountPanel;
 import jack.rm.gui.gamelist.GameCellRenderer;
+import jack.rm.gui.gamelist.GameListData;
 import jack.rm.gui.gamelist.GameListModel;
 import jack.rm.gui.gamelist.GameListPanel;
 import jack.rm.i18n.Text;
@@ -283,7 +285,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
     menuExit.addActionListener(e -> java.lang.System.exit(0));
     
     viewMenu.clear();
-    viewMenu.rebuild(set);
+    viewMenu.rebuild(set, gameListPanel.data().getMode());
 
     toolsMenu.removeAll();
     
@@ -428,24 +430,29 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	@Override public void rebuildGameList()
 	{
     synchronized (gameListPanel)
-    {
-  	    gameListPanel.backupSelection();
+    {      
+      gameListPanel.backupSelection();
       
       List<Game> data = set.stream().collect(Collectors.toList());
       List<GameClone> clones = set.hasFeature(Feature.CLONES) ? set.clones().stream().collect(Collectors.toList()) : Collections.emptyList();
       gameListPanel.setData(data, clones);
-  
-      Predicate<Game> predicate = searchPanel.buildSearchPredicate().and(viewMenu.buildPredicate());
       
-      gameListPanel.filterData(predicate);
+      Predicate<Drawable> predicate = viewMenu.buildPredicate();
+      // FIXME for generic clone / games managment, not this hack
+      if (gameListPanel.data().getMode() == GameListData.Mode.GAMES)
+      {
+        Predicate<Drawable> npred = predicate.and(d -> searchPanel.buildSearchPredicate().test((Game)d));
+        gameListPanel.filterData(g -> npred.test(g));
+      }
+
       gameListPanel.sortData(viewMenu.buildSorter());
           
       gameListPanel.restoreSelection();
       
-      SwingUtilities.invokeLater( () -> {
+      //SwingUtilities.invokeLater( () -> {
         gameListPanel.refresh();
         countPanel.update();
-      });
+      //});
     }
 	}
 	

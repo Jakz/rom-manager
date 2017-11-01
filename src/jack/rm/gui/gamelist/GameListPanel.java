@@ -128,7 +128,7 @@ public class GameListPanel extends JPanel
     list.setSelectedValue(game, true);
   }
   
-  public void sortData(Comparator<Game> sorter) { data.setSorter(sorter); }
+  public void sortData(Comparator<? super Drawable> sorter) { data.setSorter(sorter); }
   public void filterData(Predicate<Game> predicate) { data.setFilter(predicate); }
   public void setData(List<Game> games, List<GameClone> clones) { this.data.setData(games, clones); }
   
@@ -161,4 +161,7 @@ public class GameListPanel extends JPanel
         mediator.setInfoPanelContent((Game)entry);
     }
   }
+  
+  public GameListData.Mode getDataMode() { return data.getMode(); }
+  public void setDataMode(GameListData.Mode mode) { data.setMode(mode); }
 }

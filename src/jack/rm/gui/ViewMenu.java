@@ -16,25 +16,28 @@ import javax.swing.JMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 
+import com.github.jakz.romlib.data.game.Drawable;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
+import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.functional.StreamUtil;
 import com.pixbits.lib.lang.Pair;
 
+import jack.rm.gui.gamelist.GameListData;
 import jack.rm.i18n.Text;
 
 public class ViewMenu extends JMenu
 {
   private final Attribute[] sortAttributes = new Attribute[] { GameAttribute.TITLE, GameAttribute.ORDINAL, GameAttribute.SIZE, GameAttribute.NUMBER };
-  private final List<Comparator<Game>> sorters = Arrays.asList(
+  private final List<Comparator<? super Drawable>> sorters = Arrays.asList(
      null,
-     (g1, g2) -> g1.getTitle().compareToIgnoreCase(g2.getTitle()),
-     (g1, g2) -> Integer.compare(g1.getAttribute(GameAttribute.ORDINAL), g2.getAttribute(GameAttribute.ORDINAL)),
-     (g1, g2) -> Long.compare(g1.getSize().bytes(), g2.getSize().bytes()),
-     (g1, g2) -> Integer.compare(g1.getAttribute(GameAttribute.NUMBER), g2.getAttribute(GameAttribute.NUMBER))
+     (g1, g2) -> g1.getDrawableCaption().compareToIgnoreCase(g2.getDrawableCaption()),
+     (g1, g2) -> Integer.compare(g1.getDrawableOrdinal(), g2.getDrawableOrdinal()),
+     (g1, g2) -> Long.compare(g1.getDrawableSize(), g2.getDrawableSize()),
+     (g1, g2) -> Integer.compare(((Game)g1).getAttribute(GameAttribute.NUMBER), ((Game)g2).getAttribute(GameAttribute.NUMBER))
   );
 
   
@@ -42,6 +45,9 @@ public class ViewMenu extends JMenu
   
   private JRadioButtonMenuItem[] sortCriteria;
   private ButtonGroup sortCriteriaRadioGroup;
+  
+  private JRadioButtonMenuItem[] viewModes;
+  private ButtonGroup viewModesRadioGroup;
   
   private JCheckBoxMenuItem reverseSortOrder;
   
@@ -66,7 +72,7 @@ public class ViewMenu extends JMenu
     this.removeAll();
   }
   
-  void rebuild(GameSet set)
+  void rebuild(GameSet set, GameListData.Mode mode)
   {
     if (set != null)
     {
@@ -81,7 +87,32 @@ public class ViewMenu extends JMenu
         add(filterByStatus[i]);
       }
       
+      if (set.hasFeature(Feature.CLONES))
+      {
+        JMenu modeMenu = new JMenu("Mode");
+        
+        viewModes = new JRadioButtonMenuItem[2];
+        viewModes[0] = new JRadioButtonMenuItem("Games");
+        viewModes[1] = new JRadioButtonMenuItem("Clones");
+        
+        viewModesRadioGroup = new ButtonGroup();
+        viewModesRadioGroup.add(viewModes[0]);
+        viewModesRadioGroup.add(viewModes[1]);
+        
+        (mode == GameListData.Mode.CLONES ? viewModes[1] : viewModes[0]).setSelected(true);
+        
+        modeMenu.add(viewModes[0]);
+        modeMenu.add(viewModes[1]);
+        
+        // TODO: add action listener
+        add(modeMenu);
+        
+      }
+      
       addSeparator();
+      
+      
+      
       
       sortCriteriaRadioGroup = new ButtonGroup();
       sortCriteria = new JRadioButtonMenuItem[sortAttributes.length+1];
@@ -111,9 +142,9 @@ public class ViewMenu extends JMenu
     }
   }
   
-  Comparator<Game> buildSorter()
+  Comparator<? super Drawable> buildSorter()
   {
-    Comparator<Game> sorter = null;
+    Comparator<? super Drawable> sorter = null;
     
     for (int i = 0; i < sortCriteria.length; ++i)
     {
@@ -126,15 +157,15 @@ public class ViewMenu extends JMenu
     return sorter != null && reverseSortOrder.isSelected() ? sorter.reversed() : sorter;
   }
   
-  Predicate<Game> buildPredicate()
+  Predicate<Drawable> buildPredicate()
   {
     final GameStatus[] statuses = GameStatus.values();
     
     /* for each status reduce to a final predicate of the form (game == STATUS && item selected) || ... */
-    final BiFunction<Predicate<Game>, Pair<GameStatus, JCheckBoxMenuItem>, Predicate<Game>> accumulator = 
-        (p, d) -> p.or(game -> d.first == game.getStatus() && d.second.isSelected());
+    final BiFunction<Predicate<Drawable>, Pair<GameStatus, JCheckBoxMenuItem>, Predicate<Drawable>> accumulator = 
+        (p, d) -> p.or(game -> d.first == game.getDrawableStatus() && d.second.isSelected());
     
-    Predicate<Game> predicate = StreamUtil.zip(statuses, filterByStatus).reduce(
+    Predicate<Drawable> predicate = StreamUtil.zip(statuses, filterByStatus).reduce(
         g -> false, 
         accumulator,
         Predicate::or
