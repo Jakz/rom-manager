@@ -1,5 +1,6 @@
 package jack.rm.plugins.providers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.github.jakz.romlib.data.assets.AssetManager;
@@ -35,7 +36,7 @@ public class ClrMamePlugin extends ProviderPlugin
   {
     DatParserPlugin datParser = this.findDatParser(datParsers, "clr-mame-pro-nointro");
 
-    GameSet[] sets = new GameSet[4];
+    List<GameSet> sets = new ArrayList<>();
     
     Provider.Source gameGearSource = new Provider.Source("http://datomatic.no-intro.org/?page=download&fun=dat",
       "inc_unl", "1",
@@ -50,7 +51,7 @@ public class ClrMamePlugin extends ProviderPlugin
       DataSupplier parser = datParser.buildDatLoader("clr-mame-pro-nointro"); 
       DatFormat format = parser.getFormat();
           
-      sets[0] = new GameSet(
+      sets.add(new GameSet(
           Platforms.GG, 
           KnownProviders.NO_INTRO.derive("", "", "", null), 
           parser,
@@ -58,14 +59,14 @@ public class ClrMamePlugin extends ProviderPlugin
           GG_ATTRIBUTES, 
           AssetManager.DUMMY,
           s -> new MyGameSetFeatures(s, Feature.FINITE_SIZE_SET)
-      );
+      ));
     }
     
     {
       DataSupplier parser = datParser.buildDatLoader("clr-mame-pro-nointro"); 
       DatFormat format = parser.getFormat();
       
-      sets[1] = new GameSet(
+      sets.add(new GameSet(
           Platforms.LYNX, 
           KnownProviders.NO_INTRO.derive("", "", "", null),
           parser,
@@ -73,14 +74,14 @@ public class ClrMamePlugin extends ProviderPlugin
           GG_ATTRIBUTES, 
           AssetManager.DUMMY,
           s -> new MyGameSetFeatures(s, Feature.FINITE_SIZE_SET)
-      );
+      ));
     }
     
     {
       DataSupplier parser = findDatParser(datParsers, "logiqx-xml").buildDatLoader("logiqx-xml"); 
       DatFormat format = parser.getFormat();
       
-      sets[2] = new GameSet(
+      sets.add(new GameSet(
           Platforms.PSP, 
           KnownProviders.NO_INTRO.derive("", "", "", null),
           parser,
@@ -88,14 +89,14 @@ public class ClrMamePlugin extends ProviderPlugin
           GG_ATTRIBUTES, 
           AssetManager.DUMMY,
           s -> new MyGameSetFeatures(s)
-      );
+      ));
     }
-    
+        
     {
       DataSupplier parser = findDatParser(datParsers, "logiqx-xml").buildDatLoader("logiqx-xml"); 
       DatFormat format = parser.getFormat();
       
-      sets[3] = new GameSet(
+      sets.add(new GameSet(
           Platforms.PSP, 
           KnownProviders.NO_INTRO.derive("With Clones", "with-clones", "", null),
           parser,
@@ -103,9 +104,24 @@ public class ClrMamePlugin extends ProviderPlugin
           GG_ATTRIBUTES, 
           AssetManager.DUMMY,
           s -> new MyGameSetFeatures(s)
-      );
+      ));
     }
     
-    return sets;
+    {
+      DataSupplier parser = findDatParser(datParsers, "logiqx-xml").buildDatLoader("logiqx-xml"); 
+      DatFormat format = parser.getFormat();
+      
+      sets.add(new GameSet(
+          Platforms.N64, 
+          KnownProviders.NO_INTRO.derive("", "", "", null),
+          parser,
+          format,
+          GG_ATTRIBUTES, 
+          AssetManager.DUMMY,
+          s -> new MyGameSetFeatures(s)
+      ));
+    }
+    
+    return sets.toArray(new GameSet[sets.size()]);
   }
 }

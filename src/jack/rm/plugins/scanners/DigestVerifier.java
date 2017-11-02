@@ -28,11 +28,7 @@ public class DigestVerifier extends VerifierPlugin
   {
     HashCache<Rom> cache = romset.hashCache();
     
-    VerifierOptions options = new VerifierOptions();
-    options.checkNestedArchives = true;
-    options.matchSize = true;
-    options.matchSHA1 = false;
-    options.matchMD5 = false;
+    VerifierOptions options = new VerifierOptions(true, false, false, true);
     
     DigestOptions doptions = new DigestOptions(options, true);
     Digester digester = new Digester(doptions);
