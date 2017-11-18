@@ -37,7 +37,7 @@ public class DigestVerifier extends VerifierPlugin
   }
   
   @Override
-  public void setEntryTransformer(Function<Handle, Handle> transformer)
+  public void setEntryTransformer(Function<VerifierEntry, ? extends VerifierEntry> transformer)
   {
     verifier.setTransformer(transformer);
   }

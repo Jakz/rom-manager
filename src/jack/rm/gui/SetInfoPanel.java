@@ -52,9 +52,7 @@ public class SetInfoPanel extends JPanel
 	private GameSet set;
 	
 	private class InfoTableModel extends AbstractTableModel
-	{
-	  private long totalSize;	  
-	  
+	{	  
 	  private class InfoRow<T>
 	  {
 	    final String label;
@@ -63,9 +61,7 @@ public class SetInfoPanel extends JPanel
 	    InfoRow(String label, Supplier<T> lambda)
 	    {
 	      this.label = label;
-	      this.lambda = lambda;
-	      
-	      totalSize = 0;
+	      this.lambda = lambda; 
 	    }
 	  };
 
@@ -75,7 +71,7 @@ public class SetInfoPanel extends JPanel
 	  {
 	    rows = new InfoRow<?>[] {
 	      new InfoRow<String>("Provider", () -> set.info().getName()),
-	      new InfoRow<Platform>("System", () -> set.platform()),
+	      new InfoRow<String>("System", () -> set.platform().getName()),
 	      new InfoRow<String>("Game Count", () -> set.info().gameCount() + " games"),
 	      new InfoRow<String>("Unique Game Count", () -> 
 	        String.format("%d games (%.2f per clone)", 
@@ -109,7 +105,13 @@ public class SetInfoPanel extends JPanel
           
 	      }),
         new InfoRow<String>("Actual Size", () -> {
-          return RomSize.toString(totalSize, PrintStyle.LONG, PrintUnit.BYTES);
+          long bytes = set.status().foundBytes();
+          long cbytes = set.status().compressedBytes();
+          return String.format("%s (%s)",
+              RomSize.toString(cbytes, PrintStyle.SHORT, PrintUnit.BYTES),
+              RomSize.toString(bytes, PrintStyle.SHORT, PrintUnit.BYTES),
+              cbytes / (float)bytes
+          );
         }),
         new InfoRow<String>("Multiple roms per game?", () -> {
           return set.hasFeature(Feature.SINGLE_ROM_PER_GAME) ? "no" : "yes";

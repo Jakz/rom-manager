@@ -20,6 +20,6 @@ public abstract class VerifierPlugin extends ActualPlugin
   
   public abstract void setup(GameSet set);
   
-  public abstract void setEntryTransformer(Function<Handle, Handle> transformer);
+  public abstract void setEntryTransformer(Function<VerifierEntry, ? extends VerifierEntry> transformer);
   public abstract List<ScanResult> verifyHandle(VerifierEntry handle) throws VerifierException;
 }

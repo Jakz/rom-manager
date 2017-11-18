@@ -131,15 +131,21 @@ public class Scanner
 	  return true;
 	}
 	
-	private Function<Handle, Handle> getTransformer()
+	private Function<VerifierEntry, ? extends VerifierEntry> getTransformer()
 	{
-    Function<Handle, Handle> transformer = formats.stream().reduce(
-        h -> h, 
-        (f,p) -> f.andThen(ff -> p.getSpecializedEntry(ff)),
-        Function::andThen
-    );
-    
-    return transformer;
+    if (formats.isEmpty())
+      return null;
+    else
+    {
+	  
+  	    Function<VerifierEntry, Handle> transformer = formats.stream().reduce(
+          h -> (Handle)h, 
+          (f,p) -> f.andThen(ff -> p.getSpecializedEntry(ff)),
+          Function::andThen
+      );
+  	  
+      return transformer;
+    }
 	}
 	
 	public List<ScanResult> singleBlockingCheck(Path path)
