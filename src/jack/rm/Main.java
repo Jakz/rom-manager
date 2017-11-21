@@ -45,6 +45,7 @@ import jack.rm.gui.Dialogs;
 import jack.rm.gui.GlobalSettingsView;
 import jack.rm.gui.MainFrame;
 import jack.rm.gui.SetInfoPanel;
+import jack.rm.log.LogSource;
 import jack.rm.gui.PluginsPanel;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;

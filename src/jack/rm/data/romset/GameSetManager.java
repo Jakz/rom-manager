@@ -197,6 +197,8 @@ public class GameSetManager
           gson.fromJson(rdr, GameList.class);
           set.refreshStatus();
           
+          logger.d("Current status: %d/%d roms in %d/%d/%d games", set.status().getFoundRomsCount(), set.info().romCount(), set.status().getCorrectCount(), set.status().getIncompleteCount(), set.info().gameCount());
+          
           if (set.hasFeature(Feature.CLONES))
             set.clones().updateStatus();
           

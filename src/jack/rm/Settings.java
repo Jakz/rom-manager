@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import com.github.jakz.romlib.data.game.BiasSet;
+import com.github.jakz.romlib.data.game.Location;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.pixbits.lib.plugin.PluginManager;
@@ -28,6 +30,7 @@ public class Settings
   public String internalRenamingPattern;
   public boolean shouldRenameInternalName;
 	public Path romsPath;	
+	public BiasSet bias;
 	
 	public PluginSet<ActualPlugin> plugins;
 	
@@ -37,6 +40,7 @@ public class Settings
   {
     plugins = new PluginSet<ActualPlugin>();
     attributes = new ArrayList<>();
+    bias = new BiasSet(Location.ITALY, Location.EUROPE, Location.USA);
   }
   
 	public Settings(PluginManager<ActualPlugin, ActualPluginBuilder> manager, List<Attribute> attributes)
@@ -46,6 +50,7 @@ public class Settings
 	  manager.setup(plugins); 
 	  renamingPattern = "%n - %t [%S]";
 	  romsPath = null;
+    bias = new BiasSet(Location.ITALY, Location.EUROPE, Location.USA);
 	}
 	
 	public RenamerPlugin getRenamer()

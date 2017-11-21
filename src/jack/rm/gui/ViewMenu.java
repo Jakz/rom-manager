@@ -104,7 +104,14 @@ public class ViewMenu extends JMenu
         modeMenu.add(viewModes[0]);
         modeMenu.add(viewModes[1]);
         
-        // TODO: add action listener
+        ActionListener switchModeListener = e -> {
+          GameListData.Mode m = e.getSource() == viewModes[0] ? GameListData.Mode.GAMES : GameListData.Mode.CLONES;
+          mediator.switchGameListMode(m);
+        };
+        
+        viewModes[0].addActionListener(switchModeListener);
+        viewModes[1].addActionListener(switchModeListener);
+                
         add(modeMenu);
         
       }

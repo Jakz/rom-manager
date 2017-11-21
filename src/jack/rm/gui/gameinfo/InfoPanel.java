@@ -368,24 +368,24 @@ public class InfoPanel extends JPanel implements ActionListener
 		{
       images = new AssetImage[] { new AssetImage(assets[0]), new AssetImage(assets[1]) };
       
-  	  SwingUtilities.invokeLater(new Runnable() {
-  			@Override
-        public void run() {
-  				imagesPanel.removeAll();
-  				
-  		    imagesPanel.add(images[0].image);
-  		    imagesPanel.add(Box.createRigidArea(new Dimension(30,0)));
-  		    imagesPanel.add(images[1].image);
-  		    
-  		    for (AssetImage image : images)
-  		    {
-  		      image.image.setPreferredSize(((Asset.Image)image.asset).getSize());
-  		      image.image.revalidate();
-  		    }
-  		    
-  		    imagesPanel.revalidate();
-  			}
-  		});
+    	  SwingUtilities.invokeLater(new Runnable() {
+    			@Override
+          public void run() {
+    				imagesPanel.removeAll();
+    				
+    		    imagesPanel.add(images[0].image);
+    		    imagesPanel.add(Box.createRigidArea(new Dimension(30,0)));
+    		    imagesPanel.add(images[1].image);
+    		    
+    		    for (AssetImage image : images)
+    		    {
+    		      image.image.setPreferredSize(((Asset.Image)image.asset).getSize());
+    		      image.image.revalidate();
+    		    }
+    		    
+    		    imagesPanel.revalidate();
+    			}
+    		});
 		}
 		
 		buildFields();

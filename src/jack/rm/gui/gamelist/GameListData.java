@@ -18,11 +18,11 @@ public class GameListData
   private FilterableListDataSource<GameClone> clones;
   private Mode mode;
 
-  public GameListData()
+  public GameListData(Mode mode)
   {
     games = new FilterableListDataSource<>();
     clones = new FilterableListDataSource<>();
-    mode = Mode.GAMES;
+    this.mode = mode;
   }
   
   public Mode getMode() { return mode; }
@@ -48,7 +48,12 @@ public class GameListData
     this.games.sort(comparator);
     this.clones.sort(comparator);
   }
-  public void setFilter(Predicate<Game> filter) { this.games.filter(filter); }
+  
+  public void setFilter(Predicate<Drawable> filter)
+  { 
+    this.games.filter(filter);
+    this.clones.filter(filter);
+  }
   
   public Drawable get(int index) { return mode == Mode.GAMES ? gameAt(index) : cloneAt(index); }
   public Stream<Drawable> stream() { return mode == Mode.GAMES ? gameStream().map(c -> (Drawable)c) : cloneStream().map(c -> (Drawable)c); }

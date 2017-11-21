@@ -72,6 +72,8 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	
 	private GameSet set = null;
 	
+  private final UIPreferences preferences = new UIPreferences();
+	
 	 //menu
   final private JMenuBar menu = new JMenuBar();
   
@@ -437,13 +439,8 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
       List<GameClone> clones = set.hasFeature(Feature.CLONES) ? set.clones().stream().collect(Collectors.toList()) : Collections.emptyList();
       gameListPanel.setData(data, clones);
       
-      Predicate<Drawable> predicate = viewMenu.buildPredicate();
-      // FIXME for generic clone / games managment, not this hack
-      if (gameListPanel.data().getMode() == GameListData.Mode.GAMES)
-      {
-        Predicate<Drawable> npred = predicate.and(d -> searchPanel.buildSearchPredicate().test((Game)d));
-        gameListPanel.filterData(g -> npred.test(g));
-      }
+      Predicate<Drawable> predicate = viewMenu.buildPredicate().and(searchPanel.buildSearchPredicate());
+      gameListPanel.filterData(predicate);
 
       gameListPanel.sortData(viewMenu.buildSorter());
           
@@ -455,6 +452,8 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
       //});
     }
 	}
+	
+	@Override public UIPreferences preferences() { return preferences; }
 	
 	@Override
   public void refreshGameList(int row)
@@ -472,6 +471,16 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	public void refreshGameListCurrentSelection()
 	{
 	  gameListPanel.refreshCurrentSelection();
+	}
+	
+	@Override
+	public void switchGameListMode(GameListData.Mode mode)
+	{
+	  preferences.gameListViewMode = mode;
+	  gameListPanel.setDataMode(mode);
+	  gameListPanel.clearSelection();
+	  refreshGameList();
+	  countPanel.update();
 	}
   
   @Override

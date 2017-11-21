@@ -26,6 +26,7 @@ import com.github.jakz.romlib.data.game.GameStatus;
 import com.pixbits.lib.ui.FileTransferHandler;
 
 import jack.rm.Main;
+import jack.rm.data.romset.MyGameSetFeatures;
 import jack.rm.gui.FileDropperListener;
 import jack.rm.gui.Mediator;
 
@@ -49,7 +50,7 @@ public class GameListPanel extends JPanel
   {
     this.mediator = mediator;
     
-    data = new GameListData();
+    data = new GameListData(mediator.preferences().gameListViewMode);
     gameListModel = new GameListModel(data);
     
     list.setModel(gameListModel);
@@ -129,7 +130,7 @@ public class GameListPanel extends JPanel
   }
   
   public void sortData(Comparator<? super Drawable> sorter) { data.setSorter(sorter); }
-  public void filterData(Predicate<Game> predicate) { data.setFilter(predicate); }
+  public void filterData(Predicate<Drawable> predicate) { data.setFilter(predicate); }
   public void setData(List<Game> games, List<GameClone> clones) { this.data.setData(games, clones); }
   
   public GameListData data() { return data; }
@@ -159,6 +160,12 @@ public class GameListPanel extends JPanel
       //TODO: better design
       if (entry instanceof Game)
         mediator.setInfoPanelContent((Game)entry);
+      else if (entry instanceof GameClone)
+      {
+        MyGameSetFeatures helper = Main.current.helper();
+        Game game = ((GameClone)entry).getBestMatchForBias(helper.settings().bias, true);
+        mediator.setInfoPanelContent(game);
+      }
     }
   }
   

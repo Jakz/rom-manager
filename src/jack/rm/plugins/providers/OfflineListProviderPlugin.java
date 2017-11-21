@@ -98,8 +98,7 @@ public class OfflineListProviderPlugin extends ProviderPlugin
     GameAttribute.PUBLISHER,
     GameAttribute.COMMENT,
   };
-  
-  
+   
   private static class AssetManager implements com.github.jakz.romlib.data.assets.AssetManager
   {
     final URL url;
@@ -340,6 +339,43 @@ public class OfflineListProviderPlugin extends ProviderPlugin
             format,
             GBA_ATTRIBUTES, 
             new AssetManager(NDS_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_NDS/")),
+            s -> new MyGameSetFeatures(s, Feature.FINITE_SIZE_SET)
+        ));
+      }
+      
+      /* Nintendo 3DS */
+      {
+        final Asset[] _3DS_ASSETS = 
+        {
+          new Asset.Image(Paths.get("title"), new Dimension(268, 480)),
+          new Asset.Image(Paths.get("gameplay"), new Dimension(400, 480))
+        };
+        
+        final Attribute[] _3DS_ATTRIBUTES = 
+          {
+            GameAttribute.TITLE,
+            GameAttribute.NUMBER,
+            GameAttribute.SIZE,
+            GameAttribute.PUBLISHER,
+            GameAttribute.GROUP,
+            GameAttribute.SAVE_TYPE,
+            GameAttribute.LOCATION,
+            GameAttribute.LANGUAGE,
+            GameAttribute.COMMENT
+          };
+        
+        Map<String, Object> args = new HashMap<>();
+        args.put("save-parser", (SaveParser)s -> null);
+        DataSupplier datParser = parser.buildDatLoader("offline-list", args);
+        DatFormat format = datParser.getFormat();
+        
+        sets.add(new GameSet(
+            Platforms._3DS, 
+            KnownProviders.ADVAN_SCENE.derive("", "", "AdvanScene", new Provider.Source("http://www.advanscene.com/offline/datas/ADVANsCEne_3DS.zip")),
+            datParser,
+            format,
+            _3DS_ATTRIBUTES, 
+            new AssetManager(_3DS_ASSETS, new URL("http://www.advanscene.com/offline/imgs/ADVANsCEne_3DS/")),
             s -> new MyGameSetFeatures(s, Feature.FINITE_SIZE_SET)
         ));
       }

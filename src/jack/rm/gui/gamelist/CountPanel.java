@@ -26,7 +26,10 @@ public class CountPanel extends JPanel
 	
 	private final GameListData data;
 	private final JLabel[] counters = new JLabel[5];
+	
 	JPanel inner;
+	private boolean showTotals;
+	
 	
 	public CountPanel(GameListData data)
 	{
@@ -42,6 +45,8 @@ public class CountPanel extends JPanel
 		
 		this.setLayout(new BorderLayout());
 		this.add(inner, BorderLayout.WEST);
+		
+		this.showTotals = false;
 	}
 	
 	public void gameSetLoaded(GameSet set)
