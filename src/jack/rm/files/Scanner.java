@@ -32,8 +32,8 @@ import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
 
 import jack.rm.Main;
-import jack.rm.Settings;
 import jack.rm.data.romset.MyGameSetFeatures;
+import jack.rm.data.romset.Settings;
 import jack.rm.gui.Dialogs;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;

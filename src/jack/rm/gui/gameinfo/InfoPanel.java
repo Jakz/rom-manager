@@ -46,9 +46,9 @@ import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.ui.Icon;
 
 import jack.rm.Main;
-import jack.rm.Settings;
 import jack.rm.data.romset.GameSetManager;
 import jack.rm.data.romset.MyGameSetFeatures;
+import jack.rm.data.romset.Settings;
 import jack.rm.gui.Mediator;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.types.RomDownloaderPlugin;

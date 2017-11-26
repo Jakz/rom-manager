@@ -10,7 +10,7 @@ import com.pixbits.lib.plugin.PluginVersion;
 public class RootOrganizer extends FolderPlugin
 {
   @Override
-  public Path getFolderForRom(Game rom)
+  public Path getFolderForGame(Game rom)
   {
     return Paths.get(".");
   }

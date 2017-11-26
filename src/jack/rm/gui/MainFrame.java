@@ -49,9 +49,9 @@ import com.pixbits.lib.ui.FileTransferHandler;
 
 import jack.rm.GlobalSettings;
 import jack.rm.Main;
-import jack.rm.Settings;
 import jack.rm.data.romset.GameSetManager;
 import jack.rm.data.romset.MyGameSetFeatures;
+import jack.rm.data.romset.Settings;
 import jack.rm.files.AssetPacker;
 import jack.rm.files.Organizer;
 import jack.rm.gui.gameinfo.InfoPanel;

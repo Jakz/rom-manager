@@ -15,8 +15,8 @@ import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
 
 import jack.rm.Main;
-import jack.rm.Settings;
 import jack.rm.data.romset.MyGameSetFeatures;
+import jack.rm.data.romset.Settings;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;
 import jack.rm.plugins.PluginRealType;
@@ -52,31 +52,21 @@ public class Organizer
 	  this.set = set;
 	  this.helper = helper;
 	}
-	
-	public Set<Pattern> getPatterns()
-	{
-	  Set<Pattern> patterns = new TreeSet<Pattern>();
-	  
-	  Set<PatternSetPlugin> plugins = settings().plugins.getPlugins(PluginRealType.PATTERN_SET);
-	  plugins.forEach( p -> p.getPatterns().forEach(patterns::add) );
-	  
-	  return patterns;
-	}
 
-	public void organizeRomIfNeeded(Game rom)
+	public void organizeRomIfNeeded(Game game)
 	{	  
-	  if (!rom.hasCorrectName())
+	  if (!game.hasCorrectName())
 	  {
-	    renameRom(rom);
-	    internalRenameRom(rom);
+	    renameRom(game);
+	    internalRenameRom(game);
 	  }
 	  
-	  if (!rom.hasCorrectName())
+	  if (!game.hasCorrectName())
 	  
-	  if (!rom.hasCorrectFolder())
-	    moveRom(rom);
+	  if (!game.hasCorrectFolder())
+	    moveRom(game);
 	}
-	
+
 	public void internalRenameRom(Game rom)
 	{
     throw new UnsupportedOperationException("relocate internal name is not compatible with new handles");

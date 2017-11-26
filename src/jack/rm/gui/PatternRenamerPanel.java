@@ -125,7 +125,7 @@ public class PatternRenamerPanel extends PluginOptionsPanel implements CaretList
 	  
 	  patternField.setText(helper.settings().renamingPattern);
 		patterns.clear();
-		helper.organizer().getPatterns().forEach(patterns::add);
+		helper.settings().getRenamingPatterns().forEach(patterns::add);
 		// TODO: should be invoked even when plugins are changed
 	}
 

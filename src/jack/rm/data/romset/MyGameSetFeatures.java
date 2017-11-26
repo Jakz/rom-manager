@@ -12,6 +12,7 @@ import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.data.set.GameSetFeatures;
+import com.github.jakz.romlib.data.set.organizers.GameMover;
 import com.github.jakz.romlib.data.set.organizers.GameRenamer;
 import com.pixbits.lib.searcher.DummySearcher;
 import com.pixbits.lib.searcher.SearchParser;
@@ -19,7 +20,6 @@ import com.pixbits.lib.searcher.SearchPredicate;
 import com.pixbits.lib.searcher.Searcher;
 
 import jack.rm.Main;
-import jack.rm.Settings;
 import jack.rm.files.Organizer;
 import jack.rm.files.Scanner;
 import jack.rm.plugins.PluginRealType;
@@ -30,7 +30,13 @@ public class MyGameSetFeatures implements GameSetFeatures
 {
   private final GameSet set;
   private Searcher<Game> searcher;
+  
+  private boolean hasRenamer;
   private GameRenamer renamer;
+  
+  private boolean hasMover;
+  private GameMover mover;
+  
   private Scanner scanner;
   private Organizer organizer;
   
@@ -68,6 +74,11 @@ public class MyGameSetFeatures implements GameSetFeatures
     else
       renamer = GameRenamer.DUMMY;
     
+    if (settings.getFolderOrganizer() != null)
+      mover = settings.getFolderOrganizer();
+    else
+      mover = GameMover.DUMMY;
+    
     scanner = new Scanner(set);
   }
   
@@ -92,7 +103,10 @@ public class MyGameSetFeatures implements GameSetFeatures
   
   public Organizer organizer() { return organizer; }
   public Settings settings() { return Main.setManager.settings(set); }
+  
   @Override public GameRenamer renamer() { return renamer; }
+  @Override public GameMover mover() { return mover; }
+  
   public Scanner scanner() { return scanner; }
 
 

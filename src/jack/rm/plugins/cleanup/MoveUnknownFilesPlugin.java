@@ -13,7 +13,7 @@ import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.io.FolderScanner;
 import com.pixbits.lib.plugin.ExposedParameter;
 
-import jack.rm.Settings;
+import jack.rm.data.romset.Settings;
 import jack.rm.plugins.PluginWithIgnorePaths;
 import jack.rm.plugins.types.CleanupPlugin;
 

@@ -35,8 +35,8 @@ import com.pixbits.lib.io.archive.Scanner;
 import com.pixbits.lib.ui.elements.BrowseButton;
 
 import jack.rm.Main;
-import jack.rm.Settings;
 import jack.rm.data.romset.MyGameSetFeatures;
+import jack.rm.data.romset.Settings;
 import jack.rm.i18n.Text;
 
 public class SetInfoPanel extends JPanel

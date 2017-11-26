@@ -28,7 +28,7 @@ import com.pixbits.lib.plugin.ExposedParameter;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
 
-import jack.rm.Settings;
+import jack.rm.data.romset.Settings;
 import jack.rm.files.Organizer;
 import jack.rm.files.Pattern;
 import jack.rm.gui.PluginOptionsPanel;
@@ -53,7 +53,7 @@ public class PatternRenamerPlugin extends RenamerPlugin
     
     String temp = new String(getGameSetSettings().renamingPattern);
     
-    Set<Pattern> patterns = getHelper().organizer().getPatterns();
+    Set<Pattern> patterns = getHelper().settings().getRenamingPatterns();
     
     for (Pattern p : patterns)
       temp = p.apply(options, temp, rom);
@@ -68,7 +68,7 @@ public class PatternRenamerPlugin extends RenamerPlugin
     
     String temp = new String(getGameSetSettings().internalRenamingPattern != null ? getGameSetSettings().internalRenamingPattern : getGameSetSettings().renamingPattern);
     
-    Set<Pattern> patterns = getHelper().organizer().getPatterns();
+    Set<Pattern> patterns = getHelper().settings().getRenamingPatterns();
     
     for (Pattern p : patterns)
       temp = p.apply(options, temp, rom);
@@ -209,7 +209,7 @@ public class PatternRenamerPlugin extends RenamerPlugin
       
       patternField.setText(settings.renamingPattern);
       patterns.clear();
-      getHelper().organizer().getPatterns().forEach(patterns::add);
+      getHelper().settings().getRenamingPatterns().forEach(patterns::add);
       // TODO: should be invoked even when plugins are changed
       
       if (!settings.shouldRenameInternalName)

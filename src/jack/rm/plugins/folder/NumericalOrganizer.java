@@ -24,7 +24,7 @@ public class NumericalOrganizer extends FolderPlugin
   }
     
   @Override 
-  public Path getFolderForRom(Game rom)
+  public Path getFolderForGame(Game rom)
   {
     int number = rom.getAttribute(GameAttribute.NUMBER);
     int which = (number - 1) / folderSize;

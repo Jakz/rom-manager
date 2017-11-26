@@ -1,4 +1,4 @@
-package jack.rm;
+package jack.rm.data.romset;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import com.github.jakz.romlib.data.game.BiasSet;
 import com.github.jakz.romlib.data.game.Location;
@@ -15,11 +17,13 @@ import com.github.jakz.romlib.data.platforms.Platform;
 import com.pixbits.lib.plugin.PluginManager;
 import com.pixbits.lib.plugin.PluginSet;
 
+import jack.rm.files.Pattern;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.PluginWithIgnorePaths;
 import jack.rm.plugins.folder.FolderPlugin;
+import jack.rm.plugins.types.PatternSetPlugin;
 import jack.rm.plugins.types.RenamerPlugin;
 import jack.rm.plugins.types.RomDownloaderPlugin;
 import jack.rm.plugins.types.SearchPlugin;
@@ -69,6 +73,15 @@ public class Settings
 	{
 	  SearchPlugin plugin = plugins.getEnabledPlugin(PluginRealType.SEARCH);
 	  return plugin != null ? plugin : null;
+	}
+	
+	public Set<Pattern> getRenamingPatterns()
+	{
+	  Set<Pattern> patterns = plugins.getPlugins(PluginRealType.PATTERN_SET).stream()
+	    .flatMap(plugin -> ((PatternSetPlugin)plugin).getPatterns().stream())
+	    .collect(Collectors.toCollection(() -> new TreeSet<>())); 
+
+	  return patterns;
 	}
 	
 	public boolean hasCleanupPlugins()

@@ -34,7 +34,6 @@ import com.pixbits.lib.log.Logger;
 import com.pixbits.lib.plugin.PluginManager;
 
 import jack.rm.GlobalSettings;
-import jack.rm.Settings;
 import jack.rm.json.Json;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;

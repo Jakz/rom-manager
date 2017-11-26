@@ -22,16 +22,16 @@ public class RenamerWorker extends RomSetWorker<RenamerPlugin>
   }
 
   @Override
-  public void execute(Game rom)
+  public void execute(Game game)
   {
-    if (rom.getStatus() == GameStatus.UNORGANIZED)
+    if (game.getStatus() == GameStatus.UNORGANIZED)
     {        
-      organizer.renameRom(rom);  
+      organizer.renameRom(game);  
       
       if (Main.setManager.settings(romSet).shouldRenameInternalName)
-        organizer.internalRenameRom(rom);
+        organizer.internalRenameRom(game);
       
-      rom.updateStatus();
+      game.updateStatus();
       romSet.refreshStatus();
     }
   }

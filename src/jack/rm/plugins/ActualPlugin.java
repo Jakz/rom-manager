@@ -8,8 +8,8 @@ import com.pixbits.lib.log.Logger;
 import com.pixbits.lib.plugin.Plugin;
 
 import jack.rm.Main;
-import jack.rm.Settings;
 import jack.rm.data.romset.MyGameSetFeatures;
+import jack.rm.data.romset.Settings;
 import jack.rm.gui.PluginOptionsPanel;
 import jack.rm.log.LogSource;
 import jack.rm.log.LogTarget;

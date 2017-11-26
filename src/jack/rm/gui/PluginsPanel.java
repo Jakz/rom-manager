@@ -27,9 +27,9 @@ import com.pixbits.lib.plugin.PluginManager;
 import com.pixbits.lib.plugin.ui.PluginConfigTable;
 
 import jack.rm.Main;
-import jack.rm.Settings;
 import jack.rm.data.romset.GameSetManager;
 import jack.rm.data.romset.MyGameSetFeatures;
+import jack.rm.data.romset.Settings;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
 import jack.rm.plugins.PluginRealType;
