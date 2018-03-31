@@ -91,18 +91,22 @@ public class SetInfoPanel extends JPanel
           return RomSize.toString(set.info().sizeInBytes(), PrintStyle.LONG, PrintUnit.BYTES);
         }),
         new InfoRow<String>("Estimate Size per bias", () -> {
-	        if (set.clones() == null)
-	          return RomSize.toString(set.info().sizeInBytes(), PrintStyle.LONG, PrintUnit.BYTES);
-	        else
-	        {
-	          /* TODO: here we're assuming that there are no orphaned games for cloneset, this should be
-	          intended behavior right? */
-	          CloneSet clones = set.clones();
-	          return RomSize.toString((clones.stream().mapToLong(clone -> {
-	            return (long)clone.stream().mapToLong(Game::getSizeInBytes).average().getAsDouble();
-	          }).sum()), PrintStyle.LONG, PrintUnit.BYTES);
-	        }
+          /* TODO: here we're assuming that there are no orphaned games for cloneset, this should be
+          intended behavior right? */
+          CloneSet clones = set.clones();
           
+          long averageSizeOfAllClones = 0;
+            
+          if (clones != null)
+          {
+  	          clones.stream().mapToLong(clone -> {
+  	            return (long)clone.stream().mapToLong(Game::getSizeInBytes).average().getAsDouble();
+  	          }).sum();
+          }
+          
+          long orphanedGamesSize = set.stream().filter(game -> game.getClone() == null).mapToLong(Game::getSizeInBytes).sum();
+          
+          return RomSize.toString(averageSizeOfAllClones + orphanedGamesSize, PrintStyle.LONG, PrintUnit.BYTES);       
 	      }),
         new InfoRow<String>("Actual Size", () -> {
           long bytes = set.status().foundBytes();
