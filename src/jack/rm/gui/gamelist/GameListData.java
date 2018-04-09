@@ -57,5 +57,8 @@ public class GameListData
   
   public Drawable get(int index) { return mode == Mode.GAMES ? gameAt(index) : cloneAt(index); }
   public Stream<Drawable> stream() { return mode == Mode.GAMES ? gameStream().map(c -> (Drawable)c) : cloneStream().map(c -> (Drawable)c); }
+  public Stream<Drawable> originalStream() { return mode == Mode.GAMES ? games.originalStream().map(c -> (Drawable)c) : clones.originalStream().map(c -> (Drawable)c); }
+
+  
   public int getSize() { return mode == Mode.GAMES ? gameCount() : cloneCount(); }
 }

@@ -33,7 +33,10 @@ public class CountPanel extends JPanel
 	
 	public CountPanel(GameListData data)
 	{
-		this.data = data;
+    this.showTotals = false;
+
+	  
+	  this.data = data;
 	  
 	  inner = new JPanel();
 		for (int i = 0; i < counters.length; ++i)
@@ -41,12 +44,13 @@ public class CountPanel extends JPanel
 			counters[i] = new JLabel("0000");
 			counters[i].setIcon(icons[i].getIcon());
 			counters[i].setPreferredSize(new Dimension(55,12));
+			
+		  if (showTotals)
+		    counters[i].setFont(counters[i].getFont().deriveFont(counters[i].getFont().getSize2D()*0.8f));
 		}
 		
 		this.setLayout(new BorderLayout());
 		this.add(inner, BorderLayout.WEST);
-		
-		this.showTotals = false;
 	}
 	
 	public void gameSetLoaded(GameSet set)
@@ -75,5 +79,16 @@ public class CountPanel extends JPanel
     counters[2].setText(""+status.getOrDefault(GameStatus.INCOMPLETE, 0L));
     counters[3].setText(""+status.getOrDefault(GameStatus.MISSING, 0L));
     counters[4].setText(""+data.getSize());
+    
+    if (showTotals)
+    {
+      Map<GameStatus, Long> totalStatus = data.originalStream().collect(Collectors.groupingBy( r -> r.getDrawableStatus(), HashMap::new, Collectors.counting()));
+
+      counters[0].setText(counters[0].getText()+ " (" + totalStatus.getOrDefault(GameStatus.FOUND, 0L) + ")");
+      counters[1].setText(counters[1].getText()+ " (" + totalStatus.getOrDefault(GameStatus.UNORGANIZED, 0L) + ")");
+      counters[2].setText(counters[2].getText()+ " (" + totalStatus.getOrDefault(GameStatus.INCOMPLETE, 0L) + ")");
+      counters[3].setText(counters[3].getText()+ " (" + totalStatus.getOrDefault(GameStatus.MISSING, 0L) + ")");
+      counters[4].setText(counters[4].getText()+ " (" + data.originalStream().count() + ")");
+    }
 	}
 }
