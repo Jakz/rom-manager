@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
@@ -94,11 +95,14 @@ class RomTable extends JTable
   @Override
   public Component prepareRenderer(TableCellRenderer renderer, int row, int column)
   {
-    Component component = super.prepareRenderer(renderer, row, column);
+    JComponent component = (JComponent)super.prepareRenderer(renderer, row, column);
     
     Rom rom = game.rom(row);
     //TODO: GameStatus.UNORGANZIED management for rom?
     component.setForeground(rom.isPresent() ? GameStatus.FOUND.color : GameStatus.MISSING.color);
+    
+    component.setToolTipText(rom.isPresent() ? rom.handle().toString() : null);
+    
     
     return component;
   }

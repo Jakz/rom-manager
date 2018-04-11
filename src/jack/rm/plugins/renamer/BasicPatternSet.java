@@ -26,21 +26,22 @@ public class BasicPatternSet extends PatternSetPlugin
   public PluginInfo getInfo()
   { 
     return new PluginInfo("Basic Pattern Set", new PluginVersion(1,0), "Jack",
-        "This plugin provides the basic renaming patterns for ROMs.");
+        "This plugin provides the basic renaming patterns for games.");
   }
   
-  private static class AttributePattern extends Pattern 
+  private static class GameAttributePattern extends Pattern<Game> 
   {
     final private Attribute attribute;
     final private boolean applyQuotes;
-    AttributePattern(String code, String desc, Attribute attrib, boolean applyQuotes)
+    
+    GameAttributePattern(String code, String desc, Attribute attrib, boolean applyQuotes)
     {
       super(code, desc);
       this.attribute = attrib;
       this.applyQuotes = applyQuotes;
     }
     
-    AttributePattern(String code, String desc, Attribute attrib)
+    GameAttributePattern(String code, String desc, Attribute attrib)
     {
       this(code, desc, attrib, true);
     }
@@ -53,7 +54,7 @@ public class BasicPatternSet extends PatternSetPlugin
     }
   }
   
-  private static class OrdinalPattern extends Pattern {
+  private static class OrdinalPattern extends Pattern<Game> {
     private final DecimalFormat format = new DecimalFormat();
     
     OrdinalPattern() { 
@@ -68,7 +69,7 @@ public class BasicPatternSet extends PatternSetPlugin
     }
   }
   
-  private static class MegabyteSizePattern extends Pattern {
+  private static class MegabyteSizePattern extends Pattern<Game> {
     MegabyteSizePattern() { super("%s", "Size of the game dump in bytes (long)"); }
     @Override
     public String apply(Pattern.RenamingOptions options, String name, Game game)
@@ -77,7 +78,7 @@ public class BasicPatternSet extends PatternSetPlugin
     }
   }
   
-  private static class MegabitSizePattern extends Pattern {
+  private static class MegabitSizePattern extends Pattern<Game> {
     MegabitSizePattern() { super("%S", "Size of the game dump in bits (short)"); }
     @Override
     public String apply(Pattern.RenamingOptions options, String name, Game game)
@@ -86,35 +87,11 @@ public class BasicPatternSet extends PatternSetPlugin
     }
   }
   
-  private static class FullLocationPattern extends Pattern {
-    FullLocationPattern() { super("%L", "Full location name"); }
-    @Override
-    public String apply(Pattern.RenamingOptions options, String name, Game rom) { 
-      Location location = rom.getLocation().getMostCompatibleLocation();
-      return apply(options, name, code, location.fullName);
-      
-    }
-  }
+  private static final Pattern<Game> FULL_LOCATION_PATTERN = Pattern.of("%L", "Full location name", game -> game.getLocation().getMostCompatibleLocation().fullName);
+  private static final Pattern<Game> SHORT_LOCATION_PATTERN = Pattern.of("%a", "Short location name", game -> game.getLocation().getMostCompatibleLocation().shortName);
+  private static final Pattern<Game> TINY_LOCATION_PATTERN = Pattern.of("%l", "Tiny location name", game -> game.getLocation().getMostCompatibleLocation().tinyName);
   
-  private static class ShortLocationPattern extends Pattern {
-    ShortLocationPattern() { super("%a", "Short location name"); }
-    @Override
-    public String apply(Pattern.RenamingOptions options, String name, Game rom) { 
-      Location location = rom.getLocation().getMostCompatibleLocation();
-      return apply(options, name, code, location.shortName);
-    }
-  }
-  
-  private static class TinyLocationPattern extends Pattern {
-    TinyLocationPattern() { super("%l", "Tiny location name"); }
-    @Override
-    public String apply(Pattern.RenamingOptions options, String name, Game rom) { 
-      Location location = rom.getLocation().getMostCompatibleLocation();
-      return apply(options, name, code, location.tinyName);
-    }
-  }
-  
-  private static class ShortLanguagePattern extends Pattern {
+  private static class ShortLanguagePattern extends Pattern<Game> {
     ShortLanguagePattern() { super("%i", "Short language"); }
     @Override
     public String apply(Pattern.RenamingOptions options, String name, Game rom) {
@@ -129,21 +106,21 @@ public class BasicPatternSet extends PatternSetPlugin
   
   private final Pattern[] patterns = {
     new OrdinalPattern(),
-    new FullLocationPattern(),
-    new AttributePattern("%g", "Releaser group", GameAttribute.GROUP),
+    FULL_LOCATION_PATTERN,
+    new GameAttributePattern("%g", "Releaser group", GameAttribute.GROUP),
     new MegabitSizePattern(),
     new MegabyteSizePattern(),
-    new AttributePattern("%c", "Publisher", GameAttribute.PUBLISHER),
+    new GameAttributePattern("%c", "Publisher", GameAttribute.PUBLISHER),
     new ShortLanguagePattern(),
-    new ShortLocationPattern(),
-    new TinyLocationPattern(),
-    new AttributePattern("%t", "Game title", GameAttribute.TITLE, false),
-    new AttributePattern("%T", "Normalized game title", GameAttribute.NORMALIZED_TITLE, false),
-    new AttributePattern("%C", "Comment", GameAttribute.COMMENT, true)
+    SHORT_LOCATION_PATTERN,
+    TINY_LOCATION_PATTERN,
+    new GameAttributePattern("%t", "Game title", GameAttribute.TITLE, false),
+    new GameAttributePattern("%T", "Normalized game title", GameAttribute.NORMALIZED_TITLE, false),
+    new GameAttributePattern("%C", "Comment", GameAttribute.COMMENT, true)
   };
   
   @Override
-  public List<Pattern> getPatterns()
+  public List<Pattern<Game>> getPatterns()
   {
     return Arrays.asList(patterns);
   }

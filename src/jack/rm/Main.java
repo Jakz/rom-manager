@@ -199,6 +199,8 @@ public class Main
     
     helper.pluginStateChanged();
     mainFrame.romSetLoaded(set);
+    MyGameSetFeatures features = set.helper();
+    features.organizer().computeStatus();
     
     helper.scanner().scanForRoms(!wasInit && GlobalSettings.settings.shouldScanWhenLoadingRomset());
     downloader = new MyAssetDownloader(set);
@@ -387,27 +389,27 @@ public class Main
 	  if (true)
 	  {
 	  
-	  initZipLibrary();
-	  initLogging();
-	  setOS();
-	  UIUtils.setNimbusLNF();
+	    initZipLibrary();
+	    initLogging();
+	    setOS();
+	    UIUtils.setNimbusLNF();
 	  
-	  GlobalSettings.load();
-	  loadPlugins();
+	    GlobalSettings.load();
+	    loadPlugins();
 	 
-	  setManager.buildRomsetList();
-	  GlobalSettings.settings.sanitize(setManager);
+	    setManager.buildRomsetList();
+	    GlobalSettings.settings.sanitize(setManager);
 	  
-	  romsetPanel = new SetInfoPanel();
-	  pluginsPanel = new PluginsPanel(manager, setManager);
-		gsettingsView = new GlobalSettingsView(setManager);
-		mainFrame = new MainFrame(setManager);
+	    romsetPanel = new SetInfoPanel();
+	    pluginsPanel = new PluginsPanel(manager, setManager);
+		  gsettingsView = new GlobalSettingsView(setManager);
+		  mainFrame = new MainFrame(setManager);
 		
-    clonesDialog = new ClonesDialog(setManager, mainFrame, "Rom Clones");
+      clonesDialog = new ClonesDialog(setManager, mainFrame, "Rom Clones");
     
-    progress = new ProgressDialog.Manager(mainFrame);
+      progress = new ProgressDialog.Manager(mainFrame);
 
-    String lastProvider = GlobalSettings.settings.getCurrentProvider();
+      String lastProvider = GlobalSettings.settings.getCurrentProvider();
  
     if (lastProvider != null)
     {

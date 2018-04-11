@@ -24,9 +24,9 @@ public class NumericalOrganizer extends FolderPlugin
   }
     
   @Override 
-  public Path getFolderForGame(Game rom)
+  public Path getFolderForGame(Game game)
   {
-    int number = rom.getAttribute(GameAttribute.NUMBER);
+    int number = game.getGameSet().doesSupportAttribute(GameAttribute.NUMBER) ? game.getAttribute(GameAttribute.NUMBER) : game.getAttribute(GameAttribute.ORDINAL);
     int which = (number - 1) / folderSize;
     String first = Organizer.formatNumber(folderSize*which+1);
     String last = Organizer.formatNumber(folderSize*(which+1));
@@ -40,7 +40,7 @@ public class NumericalOrganizer extends FolderPlugin
         "This plugin organizes ROMs which have a number by splitting them into folders of a specified size.");
   }
   
-  @Override
-  public Predicate<GameSet> compatibility() { return rs -> rs.doesSupportAttribute(GameAttribute.NUMBER); }
+  /*@Override
+  public Predicate<GameSet> compatibility() { return rs -> rs.doesSupportAttribute(GameAttribute.NUMBER); }*/
 
 }

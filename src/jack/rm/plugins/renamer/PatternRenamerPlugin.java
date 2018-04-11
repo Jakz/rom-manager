@@ -23,6 +23,7 @@ import javax.swing.event.CaretListener;
 import javax.swing.table.AbstractTableModel;
 
 import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.Rom;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.plugin.ExposedParameter;
 import com.pixbits.lib.plugin.PluginInfo;
@@ -47,31 +48,31 @@ public class PatternRenamerPlugin extends RenamerPlugin
         "This plugins enables support for renaming through pattern sets.");
   }
   
-  @Override public String getNameForGame(Game rom)
+  @Override public String getNameForGame(Game game)
   {
     Pattern.RenamingOptions options = new Pattern.RenamingOptions(openBlock, closeBlock);
     
     String temp = new String(getGameSetSettings().renamingPattern);
     
-    Set<Pattern> patterns = getHelper().settings().getRenamingPatterns();
+    Set<Pattern<Game>> patterns = getHelper().settings().getRenamingPatterns();
     
     for (Pattern p : patterns)
-      temp = p.apply(options, temp, rom);
+      temp = p.apply(options, temp, game);
     
     return temp;
   }
   
-  @Override public String getCorrectInternalName(Game rom)
+  @Override public String getNameForRom(Rom rom)
   {
     Pattern.RenamingOptions options = new Pattern.RenamingOptions(openBlock, closeBlock);
 
     
     String temp = new String(getGameSetSettings().internalRenamingPattern != null ? getGameSetSettings().internalRenamingPattern : getGameSetSettings().renamingPattern);
     
-    Set<Pattern> patterns = getHelper().settings().getRenamingPatterns();
+    Set<Pattern<Game>> patterns = (Set<Pattern<Game>>)getHelper().settings().getRenamingPatterns();
     
-    for (Pattern p : patterns)
-      temp = p.apply(options, temp, rom);
+    for (Pattern<Game> p : patterns)
+      temp = p.apply(options, temp, rom.game());
     
     return temp;
   }
@@ -102,7 +103,7 @@ public class PatternRenamerPlugin extends RenamerPlugin
     
 
     private JTable patternsTable;
-    private List<Pattern> patterns = new ArrayList<Pattern>();
+    private List<Pattern<?>> patterns = new ArrayList<Pattern<?>>();
     
     public class TableModel extends AbstractTableModel
     {
@@ -113,7 +114,7 @@ public class PatternRenamerPlugin extends RenamerPlugin
       @Override public String getColumnName(int col) { return col == 0 ? "Code" : "Description"; }
       
       @Override public Object getValueAt(int row, int col) {
-        Pattern p = patterns.get(row);
+        Pattern<?> p = patterns.get(row);
         return col == 0 ? p.code : p.desc;
       }
     };

@@ -31,7 +31,7 @@ public class NumberedRomPattern extends PatternSetPlugin
         "This plugin provides a naming pattern for ROMs that have a number.");
   }
 
-  private class NumberPattern extends Pattern
+  private class NumberPattern extends Pattern<Game>
   {
     NumberPattern()
     { 
@@ -48,7 +48,7 @@ public class NumberedRomPattern extends PatternSetPlugin
   private final Pattern[] patterns = { new NumberPattern() };
   
   @Override
-  public List<Pattern> getPatterns()
+  public List<Pattern<Game>> getPatterns()
   {
     return Arrays.asList(patterns);
   }

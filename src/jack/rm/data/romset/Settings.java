@@ -11,6 +11,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import com.github.jakz.romlib.data.game.BiasSet;
+import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.Location;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.platforms.Platform;
@@ -75,9 +76,9 @@ public class Settings
 	  return plugin != null ? plugin : null;
 	}
 	
-	public Set<Pattern> getRenamingPatterns()
+	public Set<Pattern<Game>> getRenamingPatterns()
 	{
-	  Set<Pattern> patterns = plugins.getPlugins(PluginRealType.PATTERN_SET).stream()
+	  Set<Pattern<Game>> patterns = plugins.getPlugins(PluginRealType.PATTERN_SET).stream()
 	    .flatMap(plugin -> ((PatternSetPlugin)plugin).getPatterns().stream())
 	    .collect(Collectors.toCollection(() -> new TreeSet<>())); 
 

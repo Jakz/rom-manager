@@ -12,9 +12,9 @@ import com.pixbits.lib.plugin.PluginVersion;
 public class AlphabeticalOrganizer extends FolderPlugin
 {
   @Override
-  public Path getFolderForGame(Game rom)
+  public Path getFolderForGame(Game game)
   {
-    String normalizedName = Normalizer.normalize(rom.getTitle(), Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+    String normalizedName = Normalizer.normalize(game.getTitle(), Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     return Paths.get(normalizedName.toUpperCase().charAt(0)+java.io.File.separator);
   }
     

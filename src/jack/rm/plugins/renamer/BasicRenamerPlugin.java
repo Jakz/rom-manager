@@ -1,6 +1,7 @@
 package jack.rm.plugins.renamer;
 
 import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.Rom;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
 
@@ -12,17 +13,17 @@ public class BasicRenamerPlugin extends RenamerPlugin
   public PluginInfo getInfo()
   { 
     return new PluginInfo("Basic Renamer", new PluginVersion(1,0), "Jack",
-        "This plugins renaming of roms by using rom title.");
+        "This plugins renames games and roms according to DAT titles.");
   }
   
-  @Override public String getNameForGame(Game rom)
+  @Override public String getNameForGame(Game game)
   {
-    return rom.getTitle();
+    return game.getTitle();
   }
   
-  @Override public String getCorrectInternalName(Game rom)
+  @Override public String getNameForRom(Rom rom)
   {
-    return getNameForGame(rom);
+    return rom.name;
   }
   
   @Override public boolean isNative() { return true; }

@@ -3,11 +3,18 @@ package jack.rm.files;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import static java.util.stream.Collectors.*;
 
 import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.Rom;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.data.set.GameSetFeatures;
 import com.pixbits.lib.io.archive.handles.Handle;
@@ -55,15 +62,15 @@ public class Organizer
 
 	public void organizeRomIfNeeded(Game game)
 	{	  
-	  if (!game.hasCorrectName())
+	  if (!hasCorrectName(game))
 	  {
 	    renameRom(game);
 	    internalRenameRom(game);
 	  }
 	  
-	  if (!game.hasCorrectName())
+	  //if (!hasCorrectName(game))
 	  
-	  if (!game.hasCorrectFolder())
+	  if (!hasCorrectFolder(game))
 	    moveRom(game);
 	}
 
@@ -169,4 +176,79 @@ public class Organizer
     Set<CleanupPlugin> plugins = settings.plugins.getEnabledPlugins(PluginRealType.ROMSET_CLEANUP);
     plugins.stream().forEach( p -> p.execute(set) );
   }
+  
+  private boolean hasCorrectName(Game game)
+  {
+    throw new UnsupportedOperationException("Must be reimplemented");
+
+    /* TODO
+    
+    Settings settings = set.getSettings();
+    
+    boolean hasCorrectName = getCorrectName().equals(handle.plainName());
+    
+    if (!settings.shouldRenameInternalName)
+      return hasCorrectName;
+    else
+      return hasCorrectName && hasCorrectInternalName();
+      */
+  }
+  
+  public boolean hasCorrectFolder(Game game)
+  {
+    throw new UnsupportedOperationException("Must be reimplemented");
+
+    /* TODO
+    
+    try {
+      return set.getSettings().getFolderOrganizer() == null || 
+        Files.isSameFile(handle.path().getParent(), set.getSettings().romsPath.resolve(getCorrectFolder()));
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+      return false;
+    }*/
+  }
+  
+  private boolean isOrganized(Game game)
+  {
+    //TODO: forced true because hasCorrectName and hasCorrectFolder throw exceptions forcibly
+    if (true)
+      return true;
+
+    boolean name = hasCorrectName(game), folder = hasCorrectFolder(game);
+    return true || (name && folder); 
+  }
+  
+  public void computeStatus()
+  {
+    Map<Path, Set<Rom>> files = set.stream()
+      .flatMap(Game::stream)
+      .filter(Rom::isPresent)
+      .collect(groupingBy(r -> r.handle().path(), mapping(k -> k, toSet())));
+    
+    logger.i(LogTarget.romset(set), "Computed file map for organizer: %d roms in %d files", files.values().stream().flatMap(Set::stream).count(), files.size());
+    
+    List<Map.Entry<Path, Set<Rom>>> sharedRoms = new ArrayList<>(), sharedGames = new ArrayList<>();
+    
+    for (Map.Entry<Path, Set<Rom>> entry : files.entrySet())
+    {
+      Set<Rom> roms = entry.getValue();
+      final Game game = roms.iterator().next().game();
+      
+      if (roms.size() > 1) sharedRoms.add(entry);
+      if (roms.stream().anyMatch(r -> r.game() != game)) sharedGames.add(entry);
+    }
+    
+    logger.d(LogTarget.romset(set), "Multiple roms mapped to same path: %d, multiple games mapped to same path: %d", sharedRoms.size(), sharedGames.size());
+    
+    for (Map.Entry<Path, Set<Rom>> entry : sharedGames)
+    { 
+      logger.d(LogTarget.romset(set), "Path %s is shared by multiple games:", entry.getKey().toString());
+      for (Rom rom : entry.getValue())
+        logger.d(LogTarget.romset(set), " > %s (%s)", rom.name, rom.game().getTitle());
+    }
+  }
+
 }
