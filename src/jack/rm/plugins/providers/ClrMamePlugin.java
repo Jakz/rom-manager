@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.jakz.romlib.data.assets.AssetManager;
+import com.github.jakz.romlib.data.cataloguers.impl.NormalizedTitleCloneSetCreator;
+import com.github.jakz.romlib.data.cataloguers.impl.RedumpAggregatorByDisks;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.platforms.Platform;
@@ -129,6 +131,23 @@ public class ClrMamePlugin extends ProviderPlugin
       sets.add(new GameSet(
           Platforms._3DS, 
           KnownProviders.NO_INTRO.derive("", "", "", null),
+          parser,
+          format,
+          GG_ATTRIBUTES, 
+          AssetManager.DUMMY,
+          s -> new MyGameSetFeatures(s)
+      ));
+    }
+    
+    {
+      DataSupplier parser = findDatParser(datParsers, "logiqx-xml").buildDatLoader("logiqx-xml");
+      parser = DataSupplier.derive(parser, new RedumpAggregatorByDisks());
+      parser = DataSupplier.derive(parser, new NormalizedTitleCloneSetCreator()); 
+      DatFormat format = parser.getFormat();
+      
+      sets.add(new GameSet(
+          Platforms.IBM_PC, 
+          KnownProviders.REDUMP.derive("", "", "", null),
           parser,
           format,
           GG_ATTRIBUTES, 

@@ -5,8 +5,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 
-import com.github.jakz.romlib.data.cataloguers.NoIntroCataloguer;
-import com.github.jakz.romlib.data.cataloguers.NoIntroNormalizer;
+import com.github.jakz.romlib.data.cataloguers.impl.NoIntroCataloguer;
+import com.github.jakz.romlib.data.cataloguers.impl.NoIntroNormalizer;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.set.CloneSet;

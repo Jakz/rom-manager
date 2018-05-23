@@ -2,8 +2,8 @@ package jack.rm.plugins.datparsers;
 
 import java.util.Map;
 
-import com.github.jakz.romlib.data.cataloguers.NoIntroCataloguer;
-import com.github.jakz.romlib.data.cataloguers.NoIntroNormalizer;
+import com.github.jakz.romlib.data.cataloguers.impl.NoIntroCataloguer;
+import com.github.jakz.romlib.data.cataloguers.impl.NoIntroNormalizer;
 import com.github.jakz.romlib.data.set.DatFormat;
 import com.github.jakz.romlib.data.set.DataSupplier;
 import com.github.jakz.romlib.data.set.GameSet;
