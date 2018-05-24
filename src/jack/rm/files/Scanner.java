@@ -4,9 +4,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
@@ -28,6 +32,7 @@ import com.pixbits.lib.io.FolderScanner;
 import com.pixbits.lib.io.archive.HandleSet;
 import com.pixbits.lib.io.archive.VerifierEntry;
 import com.pixbits.lib.io.archive.handles.Handle;
+import com.pixbits.lib.io.archive.handles.HandleLink;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
 
@@ -76,6 +81,27 @@ public class Scanner
       verifier.setEntryTransformer(getTransformer());
 	  }
 	}
+  
+  private Collection<Set<Rom>> computeSharedRoms(GameSet set)
+  {
+    Map<Rom.Hash, Set<Rom>> mapping = new HashMap<>();
+    
+    set.romStream().forEach(rom -> {
+      mapping.compute(rom.hash(), (h,s) -> {
+        if (s == null)
+          s = new HashSet<>();
+
+        s.add(rom);
+        return s;
+      });
+      
+    });
+    
+    return mapping.values()
+        .stream()
+        .filter(s -> s.size() > 1)
+        .collect(Collectors.toList());
+  }
 
 	private void foundRom(ScanResult result)
 	{
@@ -171,7 +197,7 @@ public class Scanner
 	{
 	  return () -> {
 	    logger.i(LogTarget.romset(set), "Verifying %s handles for romset", total ? "all" : "new");
-
+	    
 	    Operation<VerifierEntry, List<ScanResult>> operation = handle -> {
 	      logger.d(LogTarget.romset(set), "> Verifying %s", handle.toString());
 	      return verifier.verifyHandle(handle);
@@ -189,6 +215,25 @@ public class Scanner
 	    
 	    Runnable onComplete = () -> {
 	      SwingUtilities.invokeLater(() -> {
+	        Collection<Set<Rom>> sharedRoms = computeSharedRoms(set);
+	        
+	        if (!sharedRoms.isEmpty())
+	        {
+	          logger.i(LogTarget.romset(set), "Found %d ROMs which are shared between multiple entries", sharedRoms.size());
+	          for (Set<Rom> set : sharedRoms)
+	            logger.d(LogTarget.rom(set.iterator().next()), "> %s is shared between %d entries", set.iterator().next().name, set.size());
+	          
+	          for (Set<Rom> set : sharedRoms)
+	          {
+	            final Optional<Rom> assigned = set.stream().filter(Rom::isPresent).findAny();
+	            
+	            if (assigned.isPresent())
+	              set.stream()
+	                .filter(Rom::isMissing)
+	                .forEach(rom -> foundRom(new ScanResult(rom, new HandleLink(assigned.get().handle()))));
+	          }
+	        }
+  
 	        Main.progress.finished();
 	        Main.mainFrame.rebuildGameList();
 	        
