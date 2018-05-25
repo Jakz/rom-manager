@@ -27,6 +27,7 @@ import org.jsoup.select.Elements;
 
 import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.Location;
+import com.github.jakz.romlib.data.game.VersionNumber;
 import com.github.jakz.romlib.data.game.Version;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.CustomGameAttribute;
@@ -214,7 +215,7 @@ public class ASParserMain
   private static Map<String, Language> languageMap = new HashMap<>();
   private static Map<String, SaveFactory> saveMap = new HashMap<>();
   private static Map<String, Integer> sizeMap = new HashMap<>();
-  private static Map<String, Supplier<Version>> versionMap = new HashMap<>();
+  private static Map<String, Supplier<VersionNumber>> versionMap = new HashMap<>();
 
 
   private static class SaveFactory
@@ -279,12 +280,12 @@ public class ASParserMain
     sizeMap.put("64 Mbit", mbit1*64);
 
     
-    versionMap.put("1.0", () -> new Version.Numbered(1, 0));
-    versionMap.put("1.1)", () -> new Version.Numbered(1, 1));
-    versionMap.put("1.1", () -> new Version.Numbered(1, 1));
-    versionMap.put("1.16", () -> new Version.Numbered(1, 16));
-    versionMap.put("1.2", () -> new Version.Numbered(1, 2));
-    versionMap.put("n/a", () -> Version.UNSPECIFIED);
+    versionMap.put("1.0", () -> new VersionNumber(1, 0));
+    versionMap.put("1.1)", () -> new VersionNumber(1, 1));
+    versionMap.put("1.1", () -> new VersionNumber(1, 1));
+    versionMap.put("1.16", () -> new VersionNumber(1, 16));
+    versionMap.put("1.2", () -> new VersionNumber(1, 2));
+    versionMap.put("n/a", () -> VersionNumber.UNSPECIFIED);
 
   }
   
@@ -482,7 +483,7 @@ public class ASParserMain
     List<Language> languages;
     String publisher;
     String group;
-    Version version;
+    VersionNumber version;
     long romCrc;
     int romSize;
     GB.Save saveType;
@@ -497,8 +498,8 @@ public class ASParserMain
       this.put(GameAttribute.LANGUAGE, languages);
       this.put(GameAttribute.PUBLISHER, publisher);
       this.put(GameAttribute.GROUP, group);
-      if (!(version == Version.UNSPECIFIED))
-        this.put(GameAttribute.VERSION, version);
+      if (!(version == VersionNumber.UNSPECIFIED))
+        this.put(GameAttribute.VERSION_NUMBER, version);
       this.put(RomAttribute.CRC, romCrc);
       this.put(RomAttribute.SIZE, romSize);
       this.put(GameAttribute.SAVE_TYPE, saveType);

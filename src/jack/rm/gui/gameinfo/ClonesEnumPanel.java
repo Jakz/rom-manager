@@ -19,6 +19,7 @@ import javax.swing.SwingUtilities;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameClone;
 import com.github.jakz.romlib.data.set.GameSet;
+import com.github.jakz.romlib.ui.Icon;
 
 import jack.rm.gui.Mediator;
 
@@ -89,7 +90,8 @@ class ClonesEnumPanel extends JPanel
             label.setContentAreaFilled(false);
             label.setOpaque(false);
             
-            label.setIcon(clone.getLocation().getIcon().getIcon());
+            Icon icon = clone.getLocation().getIcon();
+            label.setIcon(icon != null ? icon.getIcon() : null);
             label.setText(mode == Mode.COMPACT ? clone.getVersion().toString() : clone.getCorrectName());
             label.setForeground(clone.getStatus().color);
             label.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.DARK_GRAY), BorderFactory.createEmptyBorder(5, 5, 5, 5)));

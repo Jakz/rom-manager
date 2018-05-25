@@ -145,12 +145,49 @@ public class ClrMamePlugin extends ProviderPlugin
       parser = DataSupplier.derive(parser, new NormalizedTitleCloneSetCreator()); 
       DatFormat format = parser.getFormat();
       
+      final Attribute[] PC_ATTRIBUTES = 
+        {
+          GameAttribute.TITLE,
+          GameAttribute.SIZE,
+          GameAttribute.LOCATION,
+          GameAttribute.LANGUAGE,
+          GameAttribute.VERSION,
+          GameAttribute.VERSION_NUMBER,
+        };
+      
       sets.add(new GameSet(
           Platforms.IBM_PC, 
           KnownProviders.REDUMP.derive("", "", "", null),
           parser,
           format,
-          GG_ATTRIBUTES, 
+          PC_ATTRIBUTES, 
+          AssetManager.DUMMY,
+          s -> new MyGameSetFeatures(s)
+      ));
+    }
+    
+    {
+      DataSupplier parser = findDatParser(datParsers, "logiqx-xml").buildDatLoader("logiqx-xml");
+      parser = DataSupplier.derive(parser, new RedumpAggregatorByDisks());
+      parser = DataSupplier.derive(parser, new NormalizedTitleCloneSetCreator()); 
+      DatFormat format = parser.getFormat();
+      
+      final Attribute[] PC_ATTRIBUTES = 
+        {
+          GameAttribute.TITLE,
+          GameAttribute.SIZE,
+          GameAttribute.LOCATION,
+          GameAttribute.LANGUAGE,
+          GameAttribute.VERSION,
+          GameAttribute.VERSION_NUMBER,
+        };
+      
+      sets.add(new GameSet(
+          Platforms.PS2, 
+          KnownProviders.REDUMP.derive("", "", "", null),
+          parser,
+          format,
+          PC_ATTRIBUTES, 
           AssetManager.DUMMY,
           s -> new MyGameSetFeatures(s)
       ));
