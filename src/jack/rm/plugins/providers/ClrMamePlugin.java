@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.jakz.romlib.data.assets.AssetManager;
+import com.github.jakz.romlib.data.cataloguers.impl.GoodOldDaysFixer;
 import com.github.jakz.romlib.data.cataloguers.impl.NormalizedTitleCloneSetCreator;
 import com.github.jakz.romlib.data.cataloguers.impl.RedumpAggregatorByDisks;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
@@ -190,6 +191,33 @@ public class ClrMamePlugin extends ProviderPlugin
           PC_ATTRIBUTES, 
           AssetManager.DUMMY,
           s -> new MyGameSetFeatures(s)
+      ));
+    }
+    
+    {
+      DataSupplier parser = findDatParser(datParsers, "logiqx-xml").buildDatLoader("logiqx-xml");
+      parser = DataSupplier.derive(parser, new GoodOldDaysFixer(), t -> t);
+      parser = DataSupplier.derive(parser, new GoodOldDaysFixer());
+      DatFormat format = parser.getFormat();
+
+      final Attribute[] PC_ATTRIBUTES = 
+        {
+          GameAttribute.TITLE,
+          GameAttribute.SIZE,
+          GameAttribute.LOCATION,
+          GameAttribute.LANGUAGE,
+          GameAttribute.RELEASE_DATE,
+          GameAttribute.COMMENT
+        };
+      
+      sets.add(new GameSet(
+          Platforms.IBM_PC, 
+          KnownProviders.GOOD_OLD_DAYS,
+          parser,
+          format,
+          PC_ATTRIBUTES, 
+          AssetManager.DUMMY,
+          s -> new MyGameSetFeatures(s, Feature.FINITE_SIZE_SET)
       ));
     }
     

@@ -168,6 +168,15 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
     }
   };
   
+  private final static SearchPredicate<Game> SIZE_SPEC = new BasicPredicate<Game>("size", "size>10mb", "filters games according to size")
+  {
+    @Override public Predicate<Game> buildPredicate(String token)
+    {
+      return null;
+
+    }
+  };
+  
   private final static SearchPredicate<Game> HAS_ATTRIBUTE = new BasicPredicate<Game>("has-attribute", "has:tag", "filters games with specified attribute present")
   {
     @Override public Predicate<Game> buildPredicate(String token)

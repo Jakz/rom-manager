@@ -316,7 +316,7 @@ public class ClonesDialog extends JDialog
     
     Predicate<ScanResult> predicateAny = e -> true;
     Predicate<ScanResult> predicateCorrectFolder = e -> !hasMover || setManager.settings(set).romsPath.resolve(e.rom.game().getCorrectFolder()).equals(e.handle.path().getParent());
-    Predicate<ScanResult> predicateCorrectName = e -> !hasRenamer || e.rom.game().getCorrectName().equals(e.handle.path().getFileName());
+    Predicate<ScanResult> predicateCorrectName = e -> !hasRenamer || e.rom.game().getCorrectName().equals(e.handle.path().getFileName().toString());
     Predicate<ScanResult> predicateCorrectNameAndFolder = predicateCorrectName.and(predicateCorrectFolder);
     
     List<Predicate<ScanResult>> predicates = Arrays.asList(

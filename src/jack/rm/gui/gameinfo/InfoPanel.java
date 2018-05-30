@@ -76,7 +76,7 @@ public class InfoPanel extends JPanel implements ActionListener
 	    return new LanguageAttributeField(this, attribute, isReal);
 	  else if (attribute == GameAttribute.LOCATION)
       return new LocationAttributeField(this, attribute, isReal);
-	  else if (attribute.getClazz() != null && attribute.getClazz().isEnum())
+	  else if (attribute.getType() != null && attribute.getType().isEnum())
 	    return new EnumAttributeField(this, attribute, isReal);
 	  else
 	    return new TextAttributeField(this, attribute, isReal);

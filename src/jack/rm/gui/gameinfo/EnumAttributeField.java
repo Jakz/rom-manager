@@ -66,7 +66,7 @@ class EnumAttributeField extends AttributeField
     
     try
     {
-      Enum<?>[] values = (Enum<?>[])attrib.getClazz().getMethod("values").invoke(null);
+      Enum<?>[] values = (Enum<?>[])attrib.getType().getMethod("values").invoke(null);
       Arrays.sort(values, (o1, o2) -> o1.toString().compareTo(o2.toString()));
       value.addItem(null);
       for (Enum<?> v : values)

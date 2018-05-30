@@ -35,9 +35,9 @@ class TextAttributeField extends AttributeField implements CaretListener, Action
   
   Object parseValue()
   {
-     if (attrib.getClazz() == String.class)
+     if (attrib.getType() == String.class)
         return value.getText();
-      else if (attrib.getClazz() == Integer.class)
+      else if (attrib.getType() == Integer.class)
       {
         try {
           return Integer.parseInt(value.getText());
@@ -71,7 +71,7 @@ class TextAttributeField extends AttributeField implements CaretListener, Action
   
   void enableEdit()
   {
-    if (attrib.getClazz() != null)
+    if (attrib.getType() != null)
     {
       value.setEditable(true);
       value.setBorder(defaultBorder);
@@ -85,7 +85,7 @@ class TextAttributeField extends AttributeField implements CaretListener, Action
   
   void finishEdit()
   {
-    if (attrib.getClazz() != null)
+    if (attrib.getType() != null)
     {
       Insets insets = defaultBorder.getBorderInsets(value);
       value.setBorder(BorderFactory.createEmptyBorder(insets.top, insets.left, insets.bottom, insets.right));

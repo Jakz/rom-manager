@@ -29,10 +29,13 @@ import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
 
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.platforms.Platforms;
 import com.github.jakz.romlib.data.set.GameSet;
+import com.pixbits.lib.ui.UIUtils;
+import com.pixbits.lib.ui.table.SimpleListSelectionListener;
 import com.pixbits.lib.ui.table.renderers.AlternateColorTableCellRenderer;
 
 import jack.rm.GlobalSettings;
@@ -107,7 +110,7 @@ public class RomSetManagerView extends JPanel
       }
     }
     
-    @Override public boolean isCellEditable(int r, int c) { return c == 0; }
+    @Override public boolean isCellEditable(int r, int c) { return c == 0 && data.get(r).isPresentOnDisk(); }
     
     @Override public void setValueAt(Object value, int r, int c)
     {
@@ -129,6 +132,22 @@ public class RomSetManagerView extends JPanel
       this.fireTableDataChanged();
     }
   };
+  
+  class DatTable extends JTable
+  {
+    DatTable(TableModel model) { super(model); }
+    
+    @Override
+    public Component prepareRenderer(TableCellRenderer renderer, int row, int column)
+    {
+      Component comp = super.prepareRenderer(renderer, row, column);
+     
+      if (column == 0)
+        comp.setEnabled(((DatTableModel)getModel()).data.get(row).isPresentOnDisk());
+
+      return comp;
+    }
+  }
   
   RomSetManagerView(GameSetManager manager)
   {
@@ -162,24 +181,23 @@ public class RomSetManagerView extends JPanel
   {
     private final JLabel countLabel;
     
-    private final JTable datTable;
+    private final DatTable datTable;
     private final DatTableModel datModel;
     
     private final SingleProviderInfo info;
     
     SystemRomSetInfo()
     {
-      info = new SingleProviderInfo();
-
       datModel = new DatTableModel();
-      datTable = new JTable(datModel);
+      datTable = new DatTable(datModel);
       datTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+      UIUtils.resizeTableColumn(datTable.getColumnModel().getColumn(0), 30);
+
       
-      datTable.getSelectionModel().addListSelectionListener(e -> {
-        if (!e.getValueIsAdjusting() && e.getFirstIndex() < datModel.data.size())
-          info.updateFields(datModel.data.get(e.getFirstIndex()));
-      });
-      
+      info = new SingleProviderInfo(datModel);
+
+      datTable.getSelectionModel().addListSelectionListener(SimpleListSelectionListener.of(index -> info.updateFields(datModel.data.get(index))));
+
       JScrollPane datScrollPane = new JScrollPane(datTable);
       
       TableCellRenderer renderer = datTable.getDefaultRenderer(Boolean.class);
@@ -228,20 +246,21 @@ public class RomSetManagerView extends JPanel
   
   class SingleProviderInfo extends JPanel
   {
+    private final DatTableModel model;
+    
     private final JLabel name;
     private final JLabel status;
     private final JLabel type;
     private final JButton update;
-    
-    
-    private final MigLayout layout;
-    
+        
     private final DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
     
     private GameSet set;
     
-    SingleProviderInfo()
+    SingleProviderInfo(DatTableModel model)
     {
+      this.model = model;
+      
       name = new JLabel(" ");
       status = new JLabel(" ");
       type = new JLabel(" ");
@@ -249,7 +268,6 @@ public class RomSetManagerView extends JPanel
       
       name.setFont(name.getFont().deriveFont(Font.BOLD));
       
-      layout = new MigLayout();
       this.setLayout(new MigLayout("wrap 8, fill"));
       this.add(name, "spanx 6");
       this.add(type, "spanx 2, wrap");
@@ -262,7 +280,13 @@ public class RomSetManagerView extends JPanel
         {
           try
           {
-            Consumer<Boolean> postStep = r -> { if (r) updateFields(set); };
+            Consumer<Boolean> postStep = r -> { 
+              if (r) 
+              {
+                updateFields(set);
+                model.fireTableDataChanged();
+              }
+            };
             
             DatUpdater.updateDat(set, postStep);
           }
@@ -286,7 +310,7 @@ public class RomSetManagerView extends JPanel
         
         try
         {
-          boolean isPresent = Files.exists(set.datPath());
+          boolean isPresent = set.isPresentOnDisk();
           
           update.setVisible(true);
           update.setEnabled(set.info().getProvider().canBeUpdated());

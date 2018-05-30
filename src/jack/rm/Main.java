@@ -4,6 +4,8 @@ import java.awt.Desktop;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
@@ -187,7 +189,7 @@ public class Main
 	}
 	
 	public static void loadRomSet(GameSet romSet) throws FileNotFoundException, IOException
-	{
+	{ 
 	  if (current != null)
 	    setManager.saveSetStatus(current);
 	  

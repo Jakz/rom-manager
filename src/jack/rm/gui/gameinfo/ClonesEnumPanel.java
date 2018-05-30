@@ -61,7 +61,6 @@ class ClonesEnumPanel extends JPanel
   void gameSetLoaded(GameSet set)
   {
     inner.removeAll();
-    inner.setLayout(mode == Mode.COMPACT ? new FlowLayout() : new BoxLayout(inner, BoxLayout.PAGE_AXIS));
     this.set = set;
   }
   
@@ -69,6 +68,9 @@ class ClonesEnumPanel extends JPanel
   {
     Runnable updater = () -> { 
       inner.removeAll();     
+      //inner.setLayout(mode == Mode.COMPACT ? new FlowLayout() : new BoxLayout(inner, BoxLayout.PAGE_AXIS));
+      inner.setLayout(new WrapLayout());
+
       this.game = game;
       
       if (game != null)
