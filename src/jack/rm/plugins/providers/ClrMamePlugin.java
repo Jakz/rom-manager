@@ -7,6 +7,7 @@ import com.github.jakz.romlib.data.assets.AssetManager;
 import com.github.jakz.romlib.data.cataloguers.impl.GoodOldDaysFixer;
 import com.github.jakz.romlib.data.cataloguers.impl.NormalizedTitleCloneSetCreator;
 import com.github.jakz.romlib.data.cataloguers.impl.RedumpAggregatorByDisks;
+import com.github.jakz.romlib.data.game.GameID;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.platforms.Platform;
@@ -217,7 +218,7 @@ public class ClrMamePlugin extends ProviderPlugin
           format,
           PC_ATTRIBUTES, 
           AssetManager.DUMMY,
-          s -> new MyGameSetFeatures(s, Feature.FINITE_SIZE_SET)
+          s -> new MyGameSetFeatures(s, GameID.Generator.BY_RELEASE_NUMBER, Feature.FINITE_SIZE_SET)
       ));
     }
     

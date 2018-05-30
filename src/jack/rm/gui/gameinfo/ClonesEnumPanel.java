@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -95,8 +96,18 @@ class ClonesEnumPanel extends JPanel
             Icon icon = clone.getLocation().getIcon();
             label.setIcon(icon != null ? icon.getIcon() : null);
             label.setText(mode == Mode.COMPACT ? clone.getVersion().toString() : clone.getCorrectName());
+            
+            //if (game == clone)
+            //  label.setFont(label.getFont().deriveFont(Font.BOLD));
+            
+            
             label.setForeground(clone.getStatus().color);
-            label.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.DARK_GRAY), BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+            
+            if (game == clone)
+              label.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2), BorderFactory.createEmptyBorder(4, 4, 4, 4)));
+            else
+              label.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.GRAY), BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+            
             label.setToolTipText(clone.getCorrectName());
             label.addActionListener(e -> { if (game != clone) mediator.selectGameIfVisible(clone); });
 

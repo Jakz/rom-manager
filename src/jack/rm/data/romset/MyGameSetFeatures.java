@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameID;
 import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.data.set.GameSetFeatures;
@@ -39,16 +40,23 @@ public class MyGameSetFeatures implements GameSetFeatures
   
   private Scanner scanner;
   private Organizer organizer;
+  private GameID.Generator gameIdGenerator;
   
   private Set<Feature> features;
     
   public MyGameSetFeatures(GameSet set, Feature... features)
+  {
+    this(set, null, features);
+  }
+  
+  public MyGameSetFeatures(GameSet set, GameID.Generator gameIdGenerator, Feature... features)
   {
     this.set = set;
     this.searcher = new DummySearcher<>();
     this.renamer = GameRenamer.DUMMY;
     this.features = new HashSet<>(Arrays.asList(features));
     this.organizer = new Organizer(set, this);
+    this.gameIdGenerator = gameIdGenerator != null ? gameIdGenerator : GameID.Generator.DEFAULT;
   }
   
   public void pluginStateChanged()
@@ -106,8 +114,7 @@ public class MyGameSetFeatures implements GameSetFeatures
   
   @Override public GameRenamer renamer() { return renamer; }
   @Override public GameMover mover() { return mover; }
+  @Override public GameID.Generator gameIdGenerator() { return gameIdGenerator; }
   
   public Scanner scanner() { return scanner; }
-
-
 }
