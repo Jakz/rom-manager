@@ -41,14 +41,9 @@ public class GameCellRenderer extends JPanel implements ListCellRenderer<Drawabl
 
   private void decorate(Drawable entry, boolean isSelected, Color bg)
   {
-    mainLabel.setText(entry.getDrawableCaption());
-    LocationSet location = entry.getDrawableLocation();
-    GameStatus status = entry.getDrawableStatus();
+    decorateLabel(mainLabel, entry);
 
-    if (location != null && location.getIcon() != null)
-      mainLabel.setIcon(location.getIcon().getIcon());
-    else
-      mainLabel.setIcon(null);
+    GameStatus status = entry.getDrawableStatus();
 
     if (entry.getDrawableFavourite())
       rightIcon.setIcon(Icon.FAVORITE.getIcon());
@@ -74,4 +69,15 @@ public class GameCellRenderer extends JPanel implements ListCellRenderer<Drawabl
     decorate(entry, iss, list.getBackground());
     return this;
   }
+  
+  public static void decorateLabel(JLabel label, Drawable entry)
+  {
+    label.setText(entry.getDrawableCaption());
+    LocationSet location = entry.getDrawableLocation();
+
+    if (location != null && location.getIcon() != null)
+      label.setIcon(location.getIcon().getIcon());
+    else
+      label.setIcon(null);
+  }  
 }

@@ -72,7 +72,7 @@ public class ViewMenu extends JMenu
     this.removeAll();
   }
   
-  void rebuild(GameSet set, GameListData.Mode mode)
+  void rebuild(GameSet set, GameListData.Mode mode, boolean isTreeMode)
   {
     if (set != null)
     {
@@ -91,27 +91,38 @@ public class ViewMenu extends JMenu
       {
         JMenu modeMenu = new JMenu("Mode");
         
-        viewModes = new JRadioButtonMenuItem[2];
+        viewModes = new JRadioButtonMenuItem[3];
         viewModes[0] = new JRadioButtonMenuItem("Games");
         viewModes[1] = new JRadioButtonMenuItem("Clones");
+        viewModes[2] = new JRadioButtonMenuItem("Clones Tree");
         
         viewModesRadioGroup = new ButtonGroup();
         viewModesRadioGroup.add(viewModes[0]);
         viewModesRadioGroup.add(viewModes[1]);
+        viewModesRadioGroup.add(viewModes[2]);
         
-        (mode == GameListData.Mode.CLONES ? viewModes[1] : viewModes[0]).setSelected(true);
-        
+        if (isTreeMode)
+          viewModes[2].setSelected(true);
+        else if (mode == GameListData.Mode.CLONES)
+          viewModes[1].setSelected(true);
+        else
+          viewModes[0].setSelected(true);;
+
         modeMenu.add(viewModes[0]);
         modeMenu.add(viewModes[1]);
+        modeMenu.add(viewModes[2]);
         
         ActionListener switchModeListener = e -> {
           GameListData.Mode m = e.getSource() == viewModes[0] ? GameListData.Mode.GAMES : GameListData.Mode.CLONES;
-          mediator.switchGameListMode(m);
+          boolean treeMode = e.getSource() == viewModes[2];
+          mediator.switchGameListMode(m, treeMode);
         };
         
         viewModes[0].addActionListener(switchModeListener);
         viewModes[1].addActionListener(switchModeListener);
-                
+        viewModes[2].addActionListener(switchModeListener);
+        
+        
         add(modeMenu);
         
       }

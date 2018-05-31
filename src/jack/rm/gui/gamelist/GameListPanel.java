@@ -42,9 +42,14 @@ public class GameListPanel extends JPanel
   final private CardLayout layout;
   
   final private GameListModel gameListModel;
+  
   final private JList<Drawable> list = new JList<>();
   final private ListListener listListener = new ListListener();
   final private JScrollPane listPane = new JScrollPane(list);
+  
+  private boolean isTreeMode = false;
+  final private GameTree tree;
+  final private JScrollPane treePane;
   
   public GameListPanel(Mediator mediator)
   {
@@ -52,6 +57,8 @@ public class GameListPanel extends JPanel
     
     data = new GameListData(mediator.preferences().gameListViewMode);
     gameListModel = new GameListModel(data);
+    tree = new GameTree(mediator, data);
+    treePane = new JScrollPane(tree);
     
     list.setModel(gameListModel);
     list.setCellRenderer(new GameCellRenderer());
@@ -94,7 +101,7 @@ public class GameListPanel extends JPanel
     
     this.setLayout(layout);
     this.add(listPane, "list");
-    this.add(new GameTree(), "tree");
+    this.add(treePane, "tree");
   }
   
   public void clearEverything()
@@ -134,8 +141,19 @@ public class GameListPanel extends JPanel
   public void setData(List<Game> games, List<GameClone> clones) { this.data.setData(games, clones); }
   
   public GameListData data() { return data; }
-  public void clearSelection() { list.clearSelection(); }
-  public void refresh() { gameListModel.fireChanges(); }
+  
+  public void clearSelection() 
+  {
+    tree.clearSelection();
+    list.clearSelection(); 
+  }
+  
+  public void refresh()
+  { 
+    gameListModel.fireChanges();
+    tree.fireChanges();
+  }
+  
   public void refresh(int row) { gameListModel.fireChanges(row); }
   public void refreshCurrentSelection() { gameListModel.fireChanges(list.getSelectedIndex()); }
 
@@ -171,4 +189,11 @@ public class GameListPanel extends JPanel
   
   public GameListData.Mode getDataMode() { return data.getMode(); }
   public void setDataMode(GameListData.Mode mode) { data.setMode(mode); }
+  
+  public boolean isTreeMode() { return isTreeMode; }
+  public void setTreeMode(boolean isTreeMode)
+  { 
+    layout.show(this, isTreeMode ? "tree" : "list");
+    this.isTreeMode = isTreeMode;
+  }
 }

@@ -292,7 +292,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
     menuExit.addActionListener(e -> java.lang.System.exit(0));
     
     viewMenu.clear();
-    viewMenu.rebuild(set, gameListPanel.data().getMode());
+    viewMenu.rebuild(set, gameListPanel.data().getMode(), gameListPanel.isTreeMode());
 
     toolsMenu.removeAll();
     
@@ -479,10 +479,14 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	}
 	
 	@Override
-	public void switchGameListMode(GameListData.Mode mode)
+	public void switchGameListMode(GameListData.Mode mode, boolean treeMode)
 	{
 	  preferences.gameListViewMode = mode;
+	  preferences.gameListTreeMode = treeMode;
+	  
 	  gameListPanel.setDataMode(mode);
+	  gameListPanel.setTreeMode(treeMode);
+	  
 	  gameListPanel.clearSelection();
 	  refreshGameList();
 	  countPanel.update();
