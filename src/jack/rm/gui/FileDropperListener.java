@@ -62,7 +62,7 @@ public class FileDropperListener implements FileTransferHandler.Listener
                   if (!romFile.getParent().equals(romsPath))
                   {
                     Path destFile = romsPath.resolve(romFile.getFileName());
-                    game.move(destFile);                
+                    //game.move(destFile);       //TODO: relocate          
                   }
                   
                   game.updateStatus();

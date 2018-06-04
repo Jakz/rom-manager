@@ -157,7 +157,7 @@ public class BaseSearchPredicates extends SearchPredicatesPlugin
         if (tokens[0].equals("loc") || tokens[0].equals("location"))
         {
           return r -> {
-            LocationSet location = r.getLocation();
+            LocationSet location = r.getDrawableLocation();
             Location slocation = Location.forName(tokens[1]);
             return slocation == null || location.is(slocation);
           };

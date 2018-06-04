@@ -13,11 +13,16 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import static java.util.stream.Collectors.*;
 
+import java.io.File;
+import java.io.IOException;
+
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.Rom;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.data.set.GameSetFeatures;
+import com.pixbits.lib.io.FileUtils;
 import com.pixbits.lib.io.archive.handles.Handle;
+import com.pixbits.lib.io.archive.handles.HandleLink;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.Logger;
 
@@ -94,9 +99,33 @@ public class Organizer
 	  }*/
 	}
 	
-	public void renameRom(Game rom)
+	public void renameRom(Game game) 
 	{
-    throw new UnsupportedOperationException("relocate name is not compatible with new handles");
+    /* special case: all roms of the game are inside same archive, just rename the archive */
+	  Set<Path> filesForGame = game.stream().map(Rom::handle).map(Handle::path).collect(Collectors.toSet());
+	  if (filesForGame.size() == 1 && !game.stream().map(Rom::handle).anyMatch(h -> h instanceof HandleLink))
+	  {
+	    Path path = filesForGame.iterator().next();
+	    String correctName = game.getCorrectName() + '.' + FileUtils.pathExtension(path);
+	    Path correctPath = path.getParent().resolve(correctName);
+	    
+	    if (!path.equals(correctPath))
+	    {	    
+  	    //TODO: forward exception to caller
+  	    try
+  	    {
+  	      Files.move(path, correctPath);
+  	      game.stream().map(Rom::handle).forEach(handle -> handle.relocate(correctPath));
+  	    }
+  	    catch (IOException exception)
+  	    {
+  	      exception.printStackTrace();
+  	    }
+	    }
+	  }
+	  
+	  
+	  //throw new UnsupportedOperationException("relocate name is not compatible with new handles");
 
 	  /* TODO
 
@@ -144,7 +173,7 @@ public class Organizer
         }
         else if (!newFile.equals(romPath.path()))
         {  
-          game.move(newFile);
+          //game.move(newFile); TODO
           logger.e(LogTarget.game(game), "Moved rom to "+finalPath);
         }    
       }

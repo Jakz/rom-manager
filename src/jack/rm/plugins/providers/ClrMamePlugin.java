@@ -208,6 +208,7 @@ public class ClrMamePlugin extends ProviderPlugin
           GameAttribute.LOCATION,
           GameAttribute.LANGUAGE,
           GameAttribute.RELEASE_DATE,
+          GameAttribute.DESCRIPTION,
           GameAttribute.COMMENT
         };
       

@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -101,6 +102,47 @@ public class Scanner
         .stream()
         .filter(s -> s.size() > 1)
         .collect(Collectors.toList());
+  }
+  
+  class DuplicateEntry
+  {
+    final Set<Rom> roms;
+    final Set<Handle> handles;
+    DuplicateEntry() { roms = new HashSet<>(); handles = new HashSet<>(); }
+  }
+  
+  //TODO: finish
+  private void tryToAssignClonesToSharedRoms(Collection<Set<Rom>> shared, Set<ScanResult> clones)
+  {
+    Iterator<ScanResult> it = clones.iterator();
+    
+    while (it.hasNext())
+    {
+      ScanResult clone = it.next();
+      
+      Optional<Set<Rom>> group = shared.stream().filter(s -> s.contains(clone.rom)).findAny();
+      
+      /* we found a shared rom group for the clone */
+      if (group.isPresent())
+      {
+        Game game = clone.rom.game();
+        
+        Set<Path> handles = game.stream()
+          .map(Rom::handle)
+          .map(Handle::path)
+          .collect(Collectors.toSet());
+        
+        handles.add(clone.handle.path());
+        
+        if (handles.size() == 1)
+        {
+          
+          it.remove();
+        }
+      }
+      
+      it.next();
+    }
   }
 
 	private void foundRom(ScanResult result)

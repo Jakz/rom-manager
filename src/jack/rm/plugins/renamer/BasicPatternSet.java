@@ -116,7 +116,8 @@ public class BasicPatternSet extends PatternSetPlugin
     TINY_LOCATION_PATTERN,
     new GameAttributePattern("%t", "Game title", GameAttribute.TITLE, false),
     new GameAttributePattern("%T", "Normalized game title", GameAttribute.NORMALIZED_TITLE, false),
-    new GameAttributePattern("%C", "Comment", GameAttribute.COMMENT, true)
+    new GameAttributePattern("%C", "Comment", GameAttribute.COMMENT, true),
+    new GameAttributePattern("%D", "Description", GameAttribute.DESCRIPTION, false)
   };
   
   @Override
