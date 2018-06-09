@@ -3,7 +3,7 @@
 	<header>
 		<name>The Good Old Days</name>
 		<description>IBM PC Floppy Images</description>
-		<version>2018-05-28 01:00:01</version>
+		<version>2018-06-04 01:00:01</version>
 		<author>TGOD Contributors</author>
 		<url>http://www.goodolddays.net/</url>
 	</header>
@@ -4787,6 +4787,15 @@
 		<rom name="000612_tie_fighter_defender_of_the_empire/disk1.img" sha1="0ae3d2abe80b2d955a39c1045dbf57206be6cccf" crc="E5A0CA65"  size="1474560" status="good" />
 		<rom name="000612_tie_fighter_defender_of_the_empire/disk2.img" sha1="924963fef0016cc9cec57a28336241759847dc20" crc="6453B2D9"  size="1474560" status="good" />
 	</game>
+	<game name="000613_the_secret_of_monkey_island">
+		<description>The Secret of Monkey Island [613]</description>
+		<comment>3 x 3.5" HD (1440kB), Deutsch</comment>
+		<year>1991</year>
+		<rom name="000613_the_secret_of_monkey_island/disk1.img" sha1="6f04374ec9dfbfd2ead1559833fee7952136158d" crc="EE632892"  size="1474560" status="verified" />
+		<rom name="000613_the_secret_of_monkey_island/disk2.img" sha1="f62fadeabfac36f7ae00879e5f739278bfebccca" crc="36CD209F"  size="1474560" status="verified" />
+		<rom name="000613_the_secret_of_monkey_island/disk3.img" sha1="31d5cda6451d75e649d256b6d282318e85f8b9c1" crc="BEFFB663"  size="1474560" status="verified" />
+		<rom name="000613_the_secret_of_monkey_island/disk4.img" sha1="734a928c4b52173fe3bb8e0b234acc91c7119fa8" crc="22C6965B"  size="1474560" status="verified" />
+	</game>
 	<game name="000614_the_secret_of_monkey_island">
 		<description>The Secret of Monkey Island [614]</description>
 		<comment>8 x 5.25" DS DD (360kB), Deutsch</comment>
@@ -6412,6 +6421,12 @@
 		<comment>1 x Booter (360kB), English</comment>
 		<year>1985</year>
 		<rom name="000812_i_damiano/disk1.img" sha1="67099c1678cd22786ce078d2802d040e9847f800" crc="AEC8C0D7"  size="368640" status="good" />
+	</game>
+	<game name="000813_the_manager">
+		<description>The Manager [813]</description>
+		<comment>1 x 3.5" HD (1440kB), English</comment>
+		<year>1992</year>
+		<rom name="000813_the_manager/disk1.img" sha1="991964232cf600d10249896add6964279450074f" crc="8E02C7D7"  size="1474560" status="good" />
 	</game>
 	<game name="000814_beyond_zork">
 		<description>Beyond Zork: The Coconut of Quendor [814]</description>
@@ -13275,6 +13290,16 @@
 		<rom name="001662_tie_fighter/disk3.img" sha1="fb652958b4a130a29a2aef09d1fe553c54a75702" crc="B711AF6D"  size="1474560" status="baddump" />
 		<rom name="001662_tie_fighter/disk4.img" sha1="f7e57b284a140a16b60e4688250fb6be2ca477c5" crc="8DBDD43B"  size="1474560" status="baddump" />
 		<rom name="001662_tie_fighter/disk5.img" sha1="ad96ddf5ce90851a383daa2c33d5711ca2d629ec" crc="32954739"  size="1474560" status="baddump" />
+	</game>
+	<game name="001663_tie_fighter">
+		<description>Tie Fighter [1663]</description>
+		<comment>5 x 3.5" HD (1440kB), English</comment>
+		<year>1993</year>
+		<rom name="001663_tie_fighter/disk1.img" sha1="05a42ffcc715cc93ab5d57116096d45785827e9a" crc="4E5FF67C"  size="1474560" status="baddump" />
+		<rom name="001663_tie_fighter/disk2.img" sha1="d17c0f18adb4b35450903845a256a1c1df1e0943" crc="F54A2212"  size="1474560" status="baddump" />
+		<rom name="001663_tie_fighter/disk3.img" sha1="fb652958b4a130a29a2aef09d1fe553c54a75702" crc="B711AF6D"  size="1474560" status="baddump" />
+		<rom name="001663_tie_fighter/disk4.img" sha1="f7e57b284a140a16b60e4688250fb6be2ca477c5" crc="8DBDD43B"  size="1474560" status="baddump" />
+		<rom name="001663_tie_fighter/disk5.img" sha1="ad96ddf5ce90851a383daa2c33d5711ca2d629ec" crc="32954739"  size="1474560" status="baddump" />
 	</game>
 	<game name="001664_sim_city">
 		<description>Sim City [1664]</description>
@@ -20391,5 +20416,17 @@
 		<comment>1 x 3.5" DD (720kB), English</comment>
 		<year>1992</year>
 		<rom name="002631_rath_tha/disk1.img" sha1="efec0e16048bae1df4c5265b1d99efcc1c661056" crc="8BAD506D"  size="737280" status="good" />
+	</game>
+	<game name="002632_charlie_de_eend">
+		<description>Charlie de Eend [2632]</description>
+		<comment>1 x 3.5" HD (1440kB), Nederlands</comment>
+		<year>1996</year>
+		<rom name="002632_charlie_de_eend/disk1.img" sha1="7bb94f81453e233efc54fc3470bb0548187d29eb" crc="9747947F"  size="1474560" status="good" />
+	</game>
+	<game name="002633_the_even_more_incredible_machine">
+		<description>The Even More! Incredible Machine [2633]</description>
+		<comment>1 x 3.5" HD (1440kB), Français</comment>
+		<year>1993</year>
+		<rom name="002633_the_even_more_incredible_machine/disk1.img" sha1="4030a4aacb11d2afacefcfbf66b48dad67c82e58" crc="B201C593"  size="1474560" status="baddump" />
 	</game>
 </datafile>

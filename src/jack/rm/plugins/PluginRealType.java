@@ -15,8 +15,9 @@ public enum PluginRealType implements PluginType<PluginRealType>
   SEARCH_PREDICATES("Search Predicates", false, false),
   SCANNER("Scanner", true, true),
   VERIFIER("Verifier", false, true),
+  CATALOGUER("Cataloguer", false, false),
   FORMAT_SUPPORT("Format Support", false, false), // TODO: better name?
-  MISC("Misc", false, false)
+  MISC("Misc", false, false),
   ;
   
   public final String caption;

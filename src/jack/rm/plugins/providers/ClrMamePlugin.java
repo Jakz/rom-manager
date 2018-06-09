@@ -41,15 +41,6 @@ public class ClrMamePlugin extends ProviderPlugin
     DatParserPlugin datParser = this.findDatParser(datParsers, "clr-mame-pro-nointro");
 
     List<GameSet> sets = new ArrayList<>();
-    
-    Provider.Source gameGearSource = new Provider.Source("http://datomatic.no-intro.org/?page=download&fun=dat",
-      "inc_unl", "1",
-      "format", "clrmamepro",
-      "language_filter", "all_languages",
-      "region_filter", "all_regions",
-      "dbutton", "Download",
-      "Download27", ""
-    );
 
     {
       DataSupplier parser = datParser.buildDatLoader("clr-mame-pro-nointro"); 
@@ -143,8 +134,8 @@ public class ClrMamePlugin extends ProviderPlugin
     
     {
       DataSupplier parser = findDatParser(datParsers, "logiqx-xml").buildDatLoader("logiqx-xml");
-      parser = DataSupplier.derive(parser, new RedumpAggregatorByDisks());
-      parser = DataSupplier.derive(parser, new NormalizedTitleCloneSetCreator()); 
+      parser = parser.apply(new RedumpAggregatorByDisks());
+      parser = parser.apply(new NormalizedTitleCloneSetCreator()); 
       DatFormat format = parser.getFormat();
       
       final Attribute[] PC_ATTRIBUTES = 
@@ -159,7 +150,7 @@ public class ClrMamePlugin extends ProviderPlugin
       
       sets.add(new GameSet(
           Platforms.IBM_PC, 
-          KnownProviders.REDUMP.derive("", "", "", null),
+          KnownProviders.REDUMP.derive("", "", "", new Provider.Source("http://redump.org/datfile/pc/")),
           parser,
           format,
           PC_ATTRIBUTES, 
@@ -170,8 +161,8 @@ public class ClrMamePlugin extends ProviderPlugin
     
     {
       DataSupplier parser = findDatParser(datParsers, "logiqx-xml").buildDatLoader("logiqx-xml");
-      parser = DataSupplier.derive(parser, new RedumpAggregatorByDisks());
-      parser = DataSupplier.derive(parser, new NormalizedTitleCloneSetCreator()); 
+      parser = parser.apply(new RedumpAggregatorByDisks());
+      parser = parser.apply(new NormalizedTitleCloneSetCreator()); 
       DatFormat format = parser.getFormat();
       
       final Attribute[] PC_ATTRIBUTES = 
@@ -197,8 +188,8 @@ public class ClrMamePlugin extends ProviderPlugin
     
     {
       DataSupplier parser = findDatParser(datParsers, "logiqx-xml").buildDatLoader("logiqx-xml");
-      parser = DataSupplier.derive(parser, new GoodOldDaysFixer(), t -> t);
-      parser = DataSupplier.derive(parser, new GoodOldDaysFixer());
+      parser = parser.apply(new GoodOldDaysFixer());
+      parser = parser.apply(new GoodOldDaysFixer.CloneCreator());
       DatFormat format = parser.getFormat();
 
       final Attribute[] PC_ATTRIBUTES = 

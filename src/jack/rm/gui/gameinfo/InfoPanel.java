@@ -54,10 +54,11 @@ import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.types.RomDownloaderPlugin;
 import net.miginfocom.swing.MigLayout;
 
-public class InfoPanel extends JPanel implements ActionListener
+public class InfoPanel extends JPanel
 {
 	private static final long serialVersionUID = 1L;
 	
+	private final Mediator mediator;
 	private GameSet set = null;
 	
 	private final JPanel imagesPanel;
@@ -91,18 +92,16 @@ public class InfoPanel extends JPanel implements ActionListener
 	final private RomTable romTable;
 	
 	private AssetImage[] images;
-	
-	final private JButton downloadButton = new JButton("Download ROM");
-	final private JButton assetsButton = new JButton("Download Assets");
-	final private JButton openFolderButton = new JButton("Open Folder");
-	final private JButton openArchiveButton = new JButton("Open Archive");
+		
+	final private String[] buttonLabels = new String[] { "Download ROM", "Download Assets", "Open Folder", "Open Archive", "Forget Status" };
+	final private JButton[] buttons;
+  final private JPanel buttonsPanel = new JPanel();
 	
 	final private JToggleButton editButton;
 	final private JButton resetCustomFieldsButton;
 	final private JButton addCustomFieldButton;
 	final private JPopupMenu customPopup;
 	
-	final private JPanel buttons = new JPanel();
 	
 	private boolean showAttachmentsTable;
 	private boolean showClonesTable;
@@ -128,6 +127,8 @@ public class InfoPanel extends JPanel implements ActionListener
 		
 	public InfoPanel(Mediator mediator)
 	{	  
+	  this.mediator = mediator;
+	  
 	  clonesTable = new ClonesEnumPanel(mediator);
 	  romTable = new RomTable();
 
@@ -168,28 +169,16 @@ public class InfoPanel extends JPanel implements ActionListener
         customPopup.show(e.getComponent(), e.getX(), e.getY());
       }
     });
-
-	  openFolderButton.setEnabled(false);
-		openArchiveButton.setEnabled(false);
-	  assetsButton.setEnabled(false);
-	  downloadButton.setEnabled(false);
-		
+       
+    buttons = new JButton[buttonLabels.length];
+    buildButtons();
+    
     imagesPanel = new JPanel();
 		
     pFields.setLayout(new BorderLayout());
 		JPanel pFields2 = new JPanel(new BorderLayout());
 		pFields2.add(pFields, BorderLayout.NORTH);
-		
-		buttons.setLayout(new BoxLayout(buttons, BoxLayout.LINE_AXIS));
-		buttons.add(downloadButton);
-		buttons.add(assetsButton);
-		buttons.add(openFolderButton);
-		buttons.add(openArchiveButton);
-		downloadButton.addActionListener(this);
-		assetsButton.addActionListener(this);
-		openFolderButton.addActionListener(this);
-		openArchiveButton.addActionListener(this);
-		
+
     pTotal.setLayout(new BoxLayout(pTotal, BoxLayout.PAGE_AXIS));
 
 		
@@ -212,12 +201,61 @@ public class InfoPanel extends JPanel implements ActionListener
     if (showClonesTable)
       pTotal.add(clonesTable);
     
-    pTotal.add(buttons);
+    pTotal.add(buttonsPanel);
    
     if (showAttachmentsTable)
       pTotal.add(attachments);
     
     revalidate();
+	}
+	
+	public void buildButtons()
+	{
+    buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.LINE_AXIS));
+    for (int i = 0; i < buttonLabels.length; ++i)
+    {
+      buttons[i] = new JButton(buttonLabels[i]);
+      buttonsPanel.add(buttons[i]);
+      buttons[i].setEnabled(false);
+    }
+    
+    buttons[0].addActionListener(e -> {
+      try
+      {
+        MyGameSetFeatures helper = set.helper();
+        Set<RomDownloaderPlugin> downloaders = helper.settings().plugins.getEnabledPlugins(PluginRealType.ROM_DOWNLOADER);
+        
+        URL url = downloaders.stream().filter( p -> p.isPlatformSupported(set.platform())).findFirst().get().getDownloadURL(set.platform(), game);
+        
+        Desktop.getDesktop().browse(url.toURI());
+      }
+      catch (Exception ee)
+      {
+        ee.printStackTrace();
+      }
+    });
+    
+    buttons[1].addActionListener(e -> {
+      if (game != null)
+        Main.downloader.downloadArt(game);
+    });
+    
+    buttons[2].addActionListener(e -> {
+      Main.openFolder(game.rom().handle().path().getParent().toFile());
+      //TODO: Main.openFolder(rom.getHandle().path().getParent().toFile());
+    });
+    
+    buttons[3].addActionListener(e -> {
+      //TODO: Main.openFolder(rom.getHandle().path().toFile());
+    });
+    
+    buttons[4].addActionListener(e -> {
+      if (game != null)
+      {
+        game.forgetStatus();
+        SwingUtilities.invokeLater(() -> mediator.repaint());
+      }
+    });
 	}
 	
 	public void buildPopupMenu()
@@ -451,65 +489,32 @@ public class InfoPanel extends JPanel implements ActionListener
     {
       for (AssetImage image : images)
         setImage(game, image.asset, image.image);
+      
+      buttons[4].setEnabled(game.getStatus() != GameStatus.MISSING);
 		
       // TODO: missing management for INCOMPLETE
     		if (game.getStatus() == GameStatus.MISSING)
     		{
-    		  openFolderButton.setEnabled(false);
-    		  openArchiveButton.setEnabled(false);
+    		  buttons[2].setEnabled(false);
+    		  buttons[3].setEnabled(false);
     			
     	    MyGameSetFeatures helper = set.helper();
-    		  downloadButton.setEnabled(helper.settings().hasDownloader(set.platform()));
+    		  buttons[0].setEnabled(helper.settings().hasDownloader(set.platform()));
     		}
     		else
     		{
-    	    openFolderButton.setEnabled(true);
+    		  buttons[3].setEnabled(true);
     	    // TODO: different management for multiple roms per game
     	    /*if (game.getHandle().isArchive())
     	      openArchiveButton.setEnabled(true);*/
     	      
-    		  downloadButton.setEnabled(false);
+    	    buttons[0].setEnabled(false);
+    	    
+    	    
     		}
     		
     }
     
-    assetsButton.setEnabled(game != null && !game.hasAllAssets());
-	}
-	
-	@Override
-  public void actionPerformed(ActionEvent e)
-	{
-		Object src = e.getSource();
-	  
-	  if (src == downloadButton)
-		{
-			try
-			{
-		    MyGameSetFeatures helper = set.helper();
-			  Set<RomDownloaderPlugin> downloaders = helper.settings().plugins.getEnabledPlugins(PluginRealType.ROM_DOWNLOADER);
-				
-				URL url = downloaders.stream().filter( p -> p.isPlatformSupported(set.platform())).findFirst().get().getDownloadURL(set.platform(), game);
-			  
-			  Desktop.getDesktop().browse(url.toURI());
-			}
-			catch (Exception ee)
-			{
-				ee.printStackTrace();
-			}
-		}
-	  else if (src == openFolderButton)
-	  {
-	    Main.openFolder(game.rom().handle().path().getParent().toFile());
-	    //TODO: Main.openFolder(rom.getHandle().path().getParent().toFile());
-	  }
-	  else if (src == openArchiveButton)
-	  {
-	    //TODO: Main.openFolder(rom.getHandle().path().toFile());
-	  }
-		else if (src == assetsButton)
-		{
-			if (game != null)
-			  Main.downloader.downloadArt(game);
-		}
+    buttons[1].setEnabled(game != null && !game.hasAllAssets());
 	}
 }

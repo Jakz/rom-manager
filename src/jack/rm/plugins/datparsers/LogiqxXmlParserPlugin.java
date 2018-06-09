@@ -37,7 +37,7 @@ public class LogiqxXmlParserPlugin extends DatParserPlugin
   public DataSupplier buildDatLoader(String format, Map<String, Object> arguments)
   {
     if (format.equals(this.format.getLongIdentifier()))
-      return DataSupplier.derive(new LogiqxXmlSupplier(), new NoIntroCataloguer(), new NoIntroNormalizer());
+      return new LogiqxXmlSupplier().apply(new NoIntroCataloguer()).apply(new NoIntroNormalizer());
     else
       return null;
   }

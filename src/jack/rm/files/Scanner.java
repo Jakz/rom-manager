@@ -279,9 +279,10 @@ public class Scanner
 	        Main.progress.finished();
 	        Main.mainFrame.rebuildGameList();
 	        
-	        if (!clones.isEmpty())
+	        //TODO: reenable
+	        /*if (!clones.isEmpty())
 	          Main.clonesDialog.activate(set, clones);
-	        else
+	        else*/
 	          Main.setManager.saveSetStatus(set);
 	      });
 	    };

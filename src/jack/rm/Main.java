@@ -78,45 +78,8 @@ public class Main
 	public static PluginsPanel pluginsPanel;
 	
 	public static ClonesDialog clonesDialog;
-	
-	
+
 	public static Downloader downloader;
-		
-	static class IntHolder implements WorkflowData
-	{
-	  public int value;
-	  
-	  IntHolder(int value) { this.value = value; }
-	  
-	  int get() { return value; }
-	}
-	
-	static class IntFetcher extends Fetcher<IntHolder>
-	{
-	  int size = 20;
-	  int counter = 0;
-	  
-	  IntFetcher()
-	  {
-	    super(20);
-	  }
-	  
-	  @Override public boolean tryAdvance(Consumer<? super IntHolder> action)
-	  {
-	    if (counter < size)
-	    {
-	      action.accept(new IntHolder(counter));
-	      ++counter;
-	      return true;
-	    }
-	    return false;
-	  } 
-	}
-	
-	static class IntDumper extends Dumper<IntHolder>
-	{
-	  @Override public void accept(IntHolder holder) { /*System.out.println(holder.get());*/ }
-	}
 
 	public static void initZipLibrary()
 	{
@@ -390,7 +353,7 @@ public class Main
 	  
 	  if (true)
 	  {
-	  
+	    Log.setLevel(Log.INFO1, true);
 	    initZipLibrary();
 	    initLogging();
 	    setOS();

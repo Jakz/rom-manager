@@ -6,6 +6,8 @@ import jack.rm.gui.gamelist.GameListData;
 
 public interface Mediator
 {
+  public void repaint();
+  
   public void refreshGameList();
   public void refreshGameList(int row);
   public void refreshGameListCurrentSelection();

@@ -245,9 +245,13 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	    romsMenu.add(MenuElement.ROMS_SCAN_FOR_ROMS.item);
 	    romsMenu.add(MenuElement.ROMS_SCAN_FOR_NEW_ROMS.item);
 	    
-	    /*JMenuItem refreshStatus = new JMenuItem("Refresh status");
+	    JMenuItem refreshStatus = new JMenuItem("Refresh status");
 	    refreshStatus.addActionListener(e ->  {
-	    });*/
+	      for (Game game : set)
+	        game.updateStatus();
+	      SwingUtilities.invokeLater(() -> repaint());
+	    });
+	    romsMenu.add(refreshStatus);
 	    
 	    romsMenu.addSeparator();
 	    

@@ -23,7 +23,7 @@ public class ClrMameParserPlugin extends DatParserPlugin
     if (format.equals("clr-mame-pro"))
       return new ClrMameProParser();
     else if (format.equals("clr-mame-pro-nointro"))
-      return DataSupplier.derive(new ClrMameProParser(), new NoIntroCataloguer(), new NoIntroNormalizer());
+      return new ClrMameProParser().apply(new NoIntroCataloguer()).apply(new NoIntroNormalizer());
     else
       return null;
   }
