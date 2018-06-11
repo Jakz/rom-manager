@@ -9,8 +9,14 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -23,6 +29,8 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 
 import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.Rom;
+import com.github.jakz.romlib.data.game.Rom.Hash;
 import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.game.RomSize.PrintStyle;
 import com.github.jakz.romlib.data.game.RomSize.PrintUnit;
@@ -58,6 +66,7 @@ public class SetInfoPanel extends JPanel
 	    final String label;
 	    final Supplier<T> lambda;
 	    
+	    
 	    InfoRow(String label, Supplier<T> lambda)
 	    {
 	      this.label = label;
@@ -66,9 +75,14 @@ public class SetInfoPanel extends JPanel
 	  };
 
 	  private final InfoRow<?>[] rows;
+	  private final Map<Integer, Object> cache;
+	  
+	  public void purgeCache() { cache.clear(); }
 	  
 	  InfoTableModel()
 	  {
+	    cache = new HashMap<>();
+	    
 	    rows = new InfoRow<?>[] {
 	      new InfoRow<String>("Provider", () -> set.info().getName()),
 	      new InfoRow<String>("System", () -> set.platform().getName()),
@@ -80,6 +94,11 @@ public class SetInfoPanel extends JPanel
 	        )
 	      ),
 	      new InfoRow<String>("Rom Count", () -> set.info().romCount() + " roms"),
+	      new InfoRow<String>("Shared Rom Count", () -> {
+	        Map<Hash, List<Rom>> unique = set.romStream().collect(Collectors.groupingBy(rom -> rom.hash()));
+	        
+	        return Long.toString(unique.entrySet().stream().filter(e -> e.getValue().size() > 1).count()) + " roms";
+	      }),
 	      new InfoRow<String>("Owned", () -> set.status().getFoundCount() + " roms"),
         new InfoRow<String>("% Complete", () -> { 
           int total = set.gameCount();
@@ -89,6 +108,11 @@ public class SetInfoPanel extends JPanel
         }),
         new InfoRow<String>("Total Size", () -> {
           return RomSize.toString(set.info().sizeInBytes(), PrintStyle.LONG, PrintUnit.BYTES);
+        }),
+        new InfoRow<String>("Total Unique Size", () -> {
+          Map<Hash, List<Rom>> unique = set.romStream().collect(Collectors.groupingBy(rom -> rom.hash()));
+          long size = unique.keySet().stream().mapToLong(h -> h.size()).sum();         
+          return RomSize.toString(size, PrintStyle.LONG, PrintUnit.BYTES);
         }),
         new InfoRow<String>("Estimate Size per bias", () -> {
           /* TODO: here we're assuming that there are no orphaned games for cloneset, this should be
@@ -135,7 +159,7 @@ public class SetInfoPanel extends JPanel
         return rows[r].label;
       else
       {
-        Object object = rows[r].lambda.get();
+        Object object = cache.computeIfAbsent(r, row -> rows[row].lambda.get());
         return object != null ? object.toString() : null;
       }
     }
@@ -215,6 +239,12 @@ public class SetInfoPanel extends JPanel
 		panel.add(tablePane, c);
 		
 		this.add(panel);
+		
+		this.addComponentListener(new ComponentAdapter() {
+		  @Override public void componentShown(ComponentEvent event) {
+		    model.purgeCache();
+		  }
+		});
 	}
 	
 	public void u(GridBagConstraints c, int x, int y, int w, int h)
@@ -227,16 +257,9 @@ public class SetInfoPanel extends JPanel
 		this.set = set;
 		MyGameSetFeatures helper = set.helper();
 	  Settings settings = helper.settings();
-		
-    /*if (RomSet.current != null)
-    {
-      model.totalSize = 0;
-      model.totalUncompressedSize = 0;
-      RomSet.current.list.stream().filter(r -> r.status != RomStatus.MISSING).map(r -> r.getPath()).forEach(p -> {
-        model.totalSize += p.size();
-        model.totalUncompressedSize += p.uncompressedSize();
-      });
-    }*/
+	  
+	  model.purgeCache();
+	  model.fireTableDataChanged();
 		
 		if (settings.romsPath != null)
 		  romsPathButton.setPath(settings.romsPath);
