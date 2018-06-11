@@ -285,6 +285,16 @@ public class RomSetManagerView extends JPanel
               {
                 updateFields(set);
                 model.fireTableDataChanged();
+
+                try
+                {
+                  if (Main.current == set) //TODO: ugly design
+                    Main.loadRomSet(set);
+                } 
+                catch (IOException e1)
+                {
+                  e1.printStackTrace();
+                }
               }
             };
             

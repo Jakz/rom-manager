@@ -184,6 +184,16 @@ public class ClrMamePlugin extends ProviderPlugin
           AssetManager.DUMMY,
           s -> new MyGameSetFeatures(s)
       ));
+      
+      sets.add(new GameSet(
+          Platforms.GC, 
+          KnownProviders.REDUMP.derive("", "", "", new Provider.Source("http://redump.org/datfile/gc/")),
+          parser,
+          format,
+          PC_ATTRIBUTES, 
+          AssetManager.DUMMY,
+          s -> new MyGameSetFeatures(s)
+      ));
     }
     
     {
