@@ -21,6 +21,7 @@ import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameClone;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.ui.Icon;
+import com.pixbits.lib.ui.WrapLayout;
 
 import jack.rm.gui.Mediator;
 
