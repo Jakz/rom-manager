@@ -32,6 +32,7 @@ import com.pixbits.lib.log.LogBuffer;
 import com.pixbits.lib.log.LoggerFactory;
 import com.pixbits.lib.plugin.PluginManager;
 import com.pixbits.lib.ui.UIUtils;
+import com.pixbits.lib.ui.UIUtils.OperatingSystem;
 import com.pixbits.lib.ui.elements.ProgressDialog;
 import com.pixbits.lib.workflow.Dumper;
 import com.pixbits.lib.workflow.Fetcher;
@@ -356,7 +357,7 @@ public class Main
 	    Log.setLevel(Log.INFO1, true);
 	    initZipLibrary();
 	    initLogging();
-	    setOS();
+	    os = UIUtils.getOperatingSystem();
 	    UIUtils.setNimbusLNF();
 	  
 	    GlobalSettings.load();
@@ -427,27 +428,8 @@ public class Main
   		}*/
 	  }
 	}
-
-	enum OS
-	{
-	  WIN,
-	  OSX,
-	  LINUX
-	}
 	
-	private static void setOS()
-	{
-	  String system = java.lang.System.getProperty("os.name").toLowerCase();
-	  
-	  if (system.indexOf("win") >= 0)
-	    os = OS.WIN;
-	  else if (system.indexOf("mac") >= 0)
-	    os = OS.OSX;
-	  else
-	    os = OS.OSX;
-	}
-	
-	private static OS os;
+	private static OperatingSystem os;
 	public static void openFolder(java.io.File folder)
 	{
 	  try {
