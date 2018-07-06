@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.TransferHandler;
 import javax.swing.table.AbstractTableModel;
 
 import com.pixbits.lib.ui.FileTransferHandler;
@@ -72,7 +73,7 @@ public class AttachmentTable extends JPanel implements FileTransferHandler.Liste
   private JTable table;
   private AttachmentTableModel model;
   
-  public void filesDropped(Path[] files)
+  public void filesDropped(TransferHandler.TransferSupport info, Path[] files)
   {
     if (rom == null)
       return;

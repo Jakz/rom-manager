@@ -4,6 +4,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import javax.swing.TransferHandler;
+
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.game.Rom;
@@ -24,7 +26,7 @@ public class FileDropperListener implements FileTransferHandler.Listener
   private static final Logger logger = Log.getLogger(LogSource.IMPORTER);
   
   @Override
-  public void filesDropped(Path[] files)
+  public void filesDropped(TransferHandler.TransferSupport info, Path[] files)
   {
     new Thread()
     {
