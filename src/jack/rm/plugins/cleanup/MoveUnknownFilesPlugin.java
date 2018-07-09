@@ -42,8 +42,8 @@ public class MoveUnknownFilesPlugin extends CleanupPlugin implements PluginWithI
       total.removeAll(existing);
       
       total.stream()
-        .filter( f -> !f.getParent().equals(path) )
-        .forEach( f -> {
+        .filter(f -> !f.getParent().equals(path))
+        .forEach(f -> {
           Path dest = path.resolve(f.getFileName());
           int i = 1;
           
