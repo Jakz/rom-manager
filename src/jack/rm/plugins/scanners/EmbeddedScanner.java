@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.pixbits.lib.io.archive.ArchiveFormat;
-import com.pixbits.lib.io.archive.HandleSet;
 import com.pixbits.lib.io.archive.Scanner;
 import com.pixbits.lib.io.archive.ScannerOptions;
 import com.pixbits.lib.io.archive.VerifierEntry;

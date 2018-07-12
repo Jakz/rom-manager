@@ -6,9 +6,6 @@ import java.io.IOException;
 
 import javax.swing.JMenuItem;
 
-import com.github.jakz.romlib.data.game.GameStatus;
-import com.github.jakz.romlib.data.set.GameSet;
-
 import jack.rm.Main;
 import jack.rm.data.romset.MyGameSetFeatures;
 

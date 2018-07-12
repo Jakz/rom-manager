@@ -4,7 +4,6 @@ import java.nio.file.Path;
 import java.util.function.Consumer;
 
 import com.github.jakz.romlib.data.game.Game;
-import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.concurrent.OperationDetails;
 import com.pixbits.lib.plugin.ExposedParameter;

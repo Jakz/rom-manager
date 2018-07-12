@@ -12,7 +12,6 @@ import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 
 import com.github.jakz.romlib.data.game.Drawable;
-import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.game.LocationSet;
 import com.github.jakz.romlib.ui.Icon;

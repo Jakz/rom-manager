@@ -24,7 +24,6 @@ import javax.swing.table.AbstractTableModel;
 
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.Rom;
-import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.plugin.ExposedParameter;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;

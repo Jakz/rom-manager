@@ -9,8 +9,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.github.jakz.romlib.data.game.Game;
-import com.github.jakz.romlib.data.game.Language;
-import com.github.jakz.romlib.data.game.LanguageSet;
 import com.github.jakz.romlib.data.game.LocationSet;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 

@@ -5,7 +5,6 @@ import java.util.function.Function;
 
 import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.io.archive.VerifierEntry;
-import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.lib.plugin.PluginType;
 
 import jack.rm.files.ScanResult;

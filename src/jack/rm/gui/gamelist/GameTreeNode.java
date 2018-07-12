@@ -16,11 +16,6 @@ import javax.swing.tree.TreeNode;
 import com.github.jakz.romlib.data.game.Drawable;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameClone;
-import com.github.jakz.romlib.data.game.Location;
-import com.github.jakz.romlib.data.game.LocationSet;
-import com.github.jakz.romlib.data.game.Rom;
-import com.github.jakz.romlib.ui.Icon;
-import com.pixbits.lib.lang.StringUtils;
 
 public class GameTreeNode
 {

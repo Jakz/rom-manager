@@ -12,7 +12,6 @@ import com.pixbits.lib.io.archive.Verifier;
 import com.pixbits.lib.io.archive.VerifierEntry;
 import com.pixbits.lib.io.archive.VerifierOptions;
 import com.pixbits.lib.io.archive.VerifierResult;
-import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.lib.io.digest.DigestOptions;
 import com.pixbits.lib.io.digest.Digester;
 import com.pixbits.lib.io.digest.HashCache;

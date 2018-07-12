@@ -6,7 +6,6 @@ import java.util.Arrays;
 
 import com.github.jakz.romlib.support.cso.CSOBinaryHandle;
 import com.github.jakz.romlib.support.cso.CSOInfo;
-import com.pixbits.lib.io.archive.VerifierEntry;
 import com.pixbits.lib.io.archive.handles.BinaryHandle;
 import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.lib.log.Log;

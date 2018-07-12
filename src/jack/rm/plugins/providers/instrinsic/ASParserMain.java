@@ -28,7 +28,6 @@ import org.jsoup.select.Elements;
 import com.github.jakz.romlib.data.game.Language;
 import com.github.jakz.romlib.data.game.Location;
 import com.github.jakz.romlib.data.game.VersionNumber;
-import com.github.jakz.romlib.data.game.Version;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.CustomGameAttribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;

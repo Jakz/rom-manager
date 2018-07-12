@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import com.github.jakz.romlib.data.set.GameSet;
-import com.pixbits.lib.io.archive.HandleSet;
 import com.pixbits.lib.io.archive.VerifierEntry;
 import com.pixbits.lib.plugin.PluginType;
 

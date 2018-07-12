@@ -8,7 +8,6 @@ import com.github.jakz.romlib.support.header.Rule;
 import com.github.jakz.romlib.support.header.Signature;
 import com.github.jakz.romlib.support.header.SkipHeaderHandle;
 import com.pixbits.lib.functional.StreamException;
-import com.pixbits.lib.io.archive.VerifierEntry;
 import com.pixbits.lib.io.archive.handles.Handle;
 
 import jack.rm.plugins.types.FormatSupportPlugin;

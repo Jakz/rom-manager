@@ -20,8 +20,6 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.table.AbstractTableModel;
 
-import com.github.jakz.romlib.data.set.GameSet;
-
 import jack.rm.data.romset.MyGameSetFeatures;
 import jack.rm.files.Organizer;
 import jack.rm.files.Pattern;

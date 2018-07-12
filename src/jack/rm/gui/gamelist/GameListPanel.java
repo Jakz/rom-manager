@@ -22,7 +22,6 @@ import javax.swing.event.ListSelectionListener;
 import com.github.jakz.romlib.data.game.Drawable;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameClone;
-import com.github.jakz.romlib.data.game.GameStatus;
 import com.pixbits.lib.ui.FileTransferHandler;
 
 import jack.rm.Main;

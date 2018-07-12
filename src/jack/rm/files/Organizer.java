@@ -19,7 +19,6 @@ import java.io.IOException;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.Rom;
 import com.github.jakz.romlib.data.set.GameSet;
-import com.github.jakz.romlib.data.set.GameSetFeatures;
 import com.pixbits.lib.io.FileUtils;
 import com.pixbits.lib.io.archive.handles.Handle;
 import com.pixbits.lib.io.archive.handles.HandleLink;

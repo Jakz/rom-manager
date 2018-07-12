@@ -7,7 +7,6 @@ import java.util.Map;
 import com.github.jakz.romlib.data.attachments.Attachment;
 import com.github.jakz.romlib.data.game.GameID;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
-import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.json.AttachmentAdapter;
 import com.github.jakz.romlib.json.GameAttributeAdapter;
 import com.github.jakz.romlib.json.GameIdAdapter;

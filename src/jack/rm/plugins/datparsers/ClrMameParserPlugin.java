@@ -4,9 +4,7 @@ import java.util.Map;
 
 import com.github.jakz.romlib.data.cataloguers.impl.NoIntroCataloguer;
 import com.github.jakz.romlib.data.cataloguers.impl.NoIntroNormalizer;
-import com.github.jakz.romlib.data.set.DatFormat;
 import com.github.jakz.romlib.data.set.DataSupplier;
-import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.parsers.ClrMameProParser;
 
 import jack.rm.plugins.types.DatParserPlugin;

@@ -23,12 +23,10 @@ import java.util.stream.IntStream;
 
 import javax.swing.SwingUtilities;
 import com.github.jakz.romlib.data.game.Game;
-import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.game.Rom;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.concurrent.AsyncGuiPoolWorker;
 import com.pixbits.lib.concurrent.Operation;
-import com.pixbits.lib.functional.StreamException;
 import com.pixbits.lib.io.FolderScanner;
 import com.pixbits.lib.io.archive.HandleSet;
 import com.pixbits.lib.io.archive.VerifierEntry;

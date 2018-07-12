@@ -13,8 +13,6 @@ import javax.swing.JTextArea;
 import org.codehaus.jparsec.Parser;
 import org.codehaus.jparsec.error.ParserException;
 
-import com.github.jakz.romlib.data.set.GameSet;
-
 import jack.rm.Main;
 import jack.rm.script.Script;
 import jack.rm.script.ScriptEnvironment;

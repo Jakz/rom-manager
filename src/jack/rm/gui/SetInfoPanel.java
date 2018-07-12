@@ -34,12 +34,10 @@ import com.github.jakz.romlib.data.game.Rom.Hash;
 import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.game.RomSize.PrintStyle;
 import com.github.jakz.romlib.data.game.RomSize.PrintUnit;
-import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.set.CloneSet;
 import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.io.archive.ArchiveFormat;
-import com.pixbits.lib.io.archive.Scanner;
 import com.pixbits.lib.ui.elements.BrowseButton;
 
 import jack.rm.Main;

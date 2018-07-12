@@ -36,17 +36,11 @@ import javax.swing.SwingUtilities;
 import com.github.jakz.romlib.data.game.Drawable;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameClone;
-import com.github.jakz.romlib.data.game.RomSize;
-import com.github.jakz.romlib.data.game.attributes.Attribute;
-import com.github.jakz.romlib.data.game.attributes.GameAttribute;
-import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.platforms.Platforms;
 import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.ui.SearchPanel;
-import com.pixbits.lib.ui.FileTransferHandler;
-
 import jack.rm.GlobalSettings;
 import jack.rm.Main;
 import jack.rm.data.romset.GameSetManager;
