@@ -67,7 +67,7 @@ public class FileDropperListener implements FileTransferHandler.Listener
                   
                   game.updateStatus();
                   
-                  helper.organizer().organizeRomIfNeeded(game);
+                  helper.organizer().organizeRomIfNeeded(rom);
                   
                   Main.current.refreshStatus();
                   Main.mainFrame.rebuildGameList();

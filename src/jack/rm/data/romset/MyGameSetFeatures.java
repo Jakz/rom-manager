@@ -32,10 +32,8 @@ public class MyGameSetFeatures implements GameSetFeatures
   private final GameSet set;
   private Searcher<Game> searcher;
   
-  private boolean hasRenamer;
   private GameRenamer renamer;
   
-  private boolean hasMover;
   private GameMover mover;
   
   private Scanner scanner;

@@ -117,6 +117,8 @@ public class Main
     
     manager.register(jack.rm.plugins.downloader.EmuParadiseDownloader.class);
     
+    manager.register(jack.rm.plugins.fetchers.MobyGamesFetcher.class);
+    
     manager.register(jack.rm.plugins.providers.OfflineListProviderPlugin.class);
     manager.register(jack.rm.plugins.providers.ClrMamePlugin.class);
     

@@ -268,6 +268,8 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
     
 	    romsMenu.add(romsExportSubmenu);
     
+	    romsExportSubmenu.removeAll();
+	    
       JMenuItem exportFavorites = new JMenuItem("Export favourites");
       exportFavorites.addActionListener( e -> { exportList(r -> r.isFavourite()); });
       romsExportSubmenu.add(exportFavorites);

@@ -17,6 +17,7 @@ public enum PluginRealType implements PluginType<PluginRealType>
   VERIFIER("Verifier", false, true),
   CATALOGUER("Cataloguer", false, false),
   FORMAT_SUPPORT("Format Support", false, false), // TODO: better name?
+  DATA_FETCHER("Data Fetcher", false, false), // TODO: better name?
   MISC("Misc", false, false),
   ;
   

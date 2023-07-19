@@ -64,9 +64,9 @@ public class Organizer
 	  this.helper = helper;
 	}
 
-	public void organizeRomIfNeeded(Game game)
+	public void organizeRomIfNeeded(Rom rom)
 	{	  
-	  if (!hasCorrectName(game))
+	  /* TODO reimplement
 	  {
 	    renameRom(game);
 	    internalRenameRom(game);
@@ -76,6 +76,24 @@ public class Organizer
 	  
 	  if (!hasCorrectFolder(game))
 	    moveRom(game);
+	  */
+	  
+	  // quick fix
+	  if (rom.handle().path().getParent() != settings().romsPath)
+	  {
+      try
+      {
+        Handle romPath = rom.handle();
+        Path newFile = settings().romsPath.resolve(romPath.path().getFileName());
+        Files.move(rom.handle().path(), newFile);
+        rom.handle().relocate(newFile);
+      }
+      catch (IOException e)
+      {
+        
+      }
+	  }
+	    
 	}
 
 	public void internalRenameRom(Game rom)
@@ -205,38 +223,38 @@ public class Organizer
     plugins.stream().forEach( p -> p.execute(set) );
   }
   
-  private boolean hasCorrectName(Game game)
+  private boolean hasCorrectName(Rom rom)
   {
     throw new UnsupportedOperationException("Must be reimplemented");
 
-    /* TODO
+    /* TODO */
     
-    Settings settings = set.getSettings();
-    
-    boolean hasCorrectName = getCorrectName().equals(handle.plainName());
+    /*Settings settings = settings();
+
+    boolean hasCorrectName = settings.getRenamer().getNameForRom(rom).equals(rom.handle().plainName());
     
     if (!settings.shouldRenameInternalName)
       return hasCorrectName;
     else
-      return hasCorrectName && hasCorrectInternalName();
-      */
+      return hasCorrectName; //&& hasCorrectInternalName();
+     */ 
   }
   
-  public boolean hasCorrectFolder(Game game)
+  public boolean hasCorrectFolder(Rom rom)
   {
-    throw new UnsupportedOperationException("Must be reimplemented");
-
-    /* TODO
+    /* TODO reimplement
     
     try {
-      return set.getSettings().getFolderOrganizer() == null || 
-        Files.isSameFile(handle.path().getParent(), set.getSettings().romsPath.resolve(getCorrectFolder()));
+      return settings().getFolderOrganizer() == null || 
+        Files.isSameFile(rom.handle().path().getParent(), settings().romsPath.resolve(getCorrectFolder()));
     }
     catch (IOException e)
     {
       e.printStackTrace();
       return false;
-    }*/
+    } */
+    
+    return true;
   }
   
   private boolean isOrganized(Game game)
@@ -245,7 +263,7 @@ public class Organizer
     if (true)
       return true;
 
-    boolean name = hasCorrectName(game), folder = hasCorrectFolder(game);
+    boolean name = hasCorrectName(game.rom()), folder = hasCorrectFolder(game.rom());
     return true || (name && folder); 
   }
   
