@@ -223,7 +223,7 @@ public class InfoPanel extends JPanel
       try
       {
         MyGameSetFeatures helper = set.helper();
-        Set<RomDownloaderPlugin> downloaders = helper.settings().plugins.getEnabledPlugins(PluginRealType.ROM_DOWNLOADER);
+        Set<RomDownloaderPlugin> downloaders = helper.settings().getEnabledPluginsOfType(PluginRealType.ROM_DOWNLOADER);
         
         URL url = downloaders.stream().filter( p -> p.isPlatformSupported(set.platform())).findFirst().get().getDownloadURL(set.platform(), game);
         

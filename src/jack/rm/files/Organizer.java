@@ -219,7 +219,7 @@ public class Organizer
   {
     MyGameSetFeatures helper = set.helper();
     Settings settings = helper.settings();
-    Set<CleanupPlugin> plugins = settings.plugins.getEnabledPlugins(PluginRealType.ROMSET_CLEANUP);
+    Set<CleanupPlugin> plugins = settings.getEnabledPluginsOfType(PluginRealType.ROMSET_CLEANUP);
     plugins.stream().forEach( p -> p.execute(set) );
   }
   

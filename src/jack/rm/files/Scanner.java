@@ -69,10 +69,10 @@ public class Scanner
     MyGameSetFeatures helper = set.helper();
     this.settings = helper.settings();
     
-    scanner = settings.plugins.getEnabledPlugin(PluginRealType.SCANNER);
-	  verifier = settings.plugins.getEnabledPlugin(PluginRealType.VERIFIER);
+    scanner = settings.getEnabledPluginOfType(PluginRealType.SCANNER);
+	  verifier = settings.getEnabledPluginOfType(PluginRealType.VERIFIER);
 	  //TODO: sort according to priority
-	  formats = settings.plugins.getEnabledPlugins(PluginRealType.FORMAT_SUPPORT);
+	  formats = settings.getEnabledPluginsOfType(PluginRealType.FORMAT_SUPPORT);
 	  
 	  if (verifier != null)
 	  {

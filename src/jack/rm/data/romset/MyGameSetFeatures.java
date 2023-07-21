@@ -61,14 +61,15 @@ public class MyGameSetFeatures implements GameSetFeatures
   {
     Settings settings = Main.setManager.settings(set);
     
-    if (settings.getSearchPlugin() != null)
+    SearchPlugin plugin = settings.getSearchPlugin();
+    
+    if (plugin != null)
     {
       List<SearchPredicate<Game>> predicates = new ArrayList<>();
       
-      SearchPlugin plugin = settings.plugins.getEnabledPlugin(PluginRealType.SEARCH);
       SearchParser<Game> parser = plugin.getSearcher();
       
-      Set<SearchPredicatesPlugin> predicatePlugins = settings.plugins.getEnabledPlugins(PluginRealType.SEARCH_PREDICATES);
+      Set<SearchPredicatesPlugin> predicatePlugins = settings.getEnabledPluginsOfType(PluginRealType.SEARCH_PREDICATES);
       predicatePlugins.stream().flatMap(p -> p.getPredicates().stream()).forEach(predicates::add);    
       searcher = new Searcher<>(parser, predicates);
     }

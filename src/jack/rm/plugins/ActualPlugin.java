@@ -34,4 +34,9 @@ public abstract class ActualPlugin extends Plugin
     MyGameSetFeatures helper = getGameSet().helper();
     return helper.settings();
   }
+  
+  void saveData(String key, String value)
+  {
+    
+  }
 }

@@ -92,7 +92,7 @@ public class PluginsPanel extends JPanel
         {
           MyGameSetFeatures helper = romset.helper();
           
-          Optional<ActualPlugin> plugin = helper.settings().plugins.getPlugin(builder.getID());
+          Optional<ActualPlugin> plugin = helper.settings().getPlugin(builder.getID());
           return plugin.isPresent() && plugin.get().isEnabled();
         }
         default: return null;

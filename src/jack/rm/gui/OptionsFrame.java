@@ -109,7 +109,7 @@ public class OptionsFrame extends JFrame implements ActionListener, ComponentLis
 	  MyGameSetFeatures helper = set.helper();
 
     manager.stream()
-    .map(b -> helper.settings().plugins.getPlugin(b.getID()))
+    .map(b -> helper.settings().getPlugin(b.getID()))
     .filter(p -> p.isPresent() && p.get().isEnabled())
     .forEach(p -> {
       PluginOptionsPanel panel = p.get().getGUIPanel();

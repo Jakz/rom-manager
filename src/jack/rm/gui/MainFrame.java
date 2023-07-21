@@ -137,7 +137,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	{
 	  optionsFrame.pluginStateChanged();
 	  
-	  boolean hasSearcher = getGameSetSettings().plugins.getEnabledPlugin(PluginRealType.SEARCH) != null;
+	  boolean hasSearcher = getGameSetSettings().getSearchPlugin() != null;
 	  searchPanel.toggle(hasSearcher ? set.helper().searcher() : null);
 	  
     buildMenu(set);
@@ -394,7 +394,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	  searchPanel.resetFields(set);
 	  searchPanel.activate(true);
 	  
-	  searchPanel.toggle(getGameSetSettings().plugins.getEnabledPlugin(PluginRealType.SEARCH) != null ? set.helper().searcher() : null);
+	  searchPanel.toggle(getGameSetSettings().hasSearcher() ? set.helper().searcher() : null);
 	  
     cbRomSets.removeItemListener(romSetListener);
     cbRomSets.setSelectedItem(set);
@@ -455,6 +455,8 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
         gameListPanel.refresh();
         countPanel.update();
       //});
+        
+      set.refreshStatus();
     }
 	}
 	
