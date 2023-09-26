@@ -12,7 +12,7 @@ public class DatHeader
     String name;
     String className;
   }
-  
+
   String name;
   Provider provider;
   Platform system;

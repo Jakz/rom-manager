@@ -9,12 +9,17 @@ import java.nio.ByteOrder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.github.jakz.romlib.data.assets.Downloader;
+import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.pixbits.lib.log.Log;
 import com.pixbits.lib.log.LogBuffer;
@@ -37,6 +42,7 @@ import jack.rm.gui.GlobalSettingsView;
 import jack.rm.gui.MainFrame;
 import jack.rm.gui.SetInfoPanel;
 import jack.rm.log.LogSource;
+import jack.rm.log.LogTarget;
 import jack.rm.gui.PluginsPanel;
 import jack.rm.plugins.ActualPlugin;
 import jack.rm.plugins.ActualPluginBuilder;
@@ -296,6 +302,29 @@ public class Main
 	    e.printStackTrace();
 	  }
 	}*/
+	
+	public static void generateUniverse()
+	{
+	  List<GameSet> sets = new ArrayList<>();
+	  	  
+	  /* load all loadable sets */
+	  for (GameSet set : setManager.allSets())
+	  {
+	    if (set.canBeLoaded())
+	    {
+	      set.load();
+	      sets.add(set);
+	    }
+	  }
+	  
+    Log.getLogger(LogSource.STATUS).i(LogTarget.none(), "Loaded %d sets", sets.size()); 
+
+	  
+	  /* split all games by platform */
+	  Map<Platform, List<Game>> gamesByPlatform = sets.stream().flatMap(GameSet::stream).collect(Collectors.groupingBy(Game::getPlatform));
+	  
+    Log.getLogger(LogSource.STATUS).i(LogTarget.none(), "Loaded %d games in %d platforms", gamesByPlatform.values().stream().map(List::size).mapToLong(i -> i).sum(), gamesByPlatform.size());  
+	}
 
 	
 	public static void main(String[] args)
@@ -354,6 +383,13 @@ public class Main
 	    loadPlugins();
 	 
 	    setManager.buildRomsetList();
+	    
+	    /*
+	    generateUniverse();
+	    if (true)
+	      return;
+	    */
+	    
 	    GlobalSettings.settings.sanitize(setManager);
 	  
 	    romsetPanel = new SetInfoPanel();

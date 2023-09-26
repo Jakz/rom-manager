@@ -3,11 +3,16 @@ package jack.rm.plugins.datparsers;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.github.jakz.romlib.data.cataloguers.impl.NoIntroCataloguer;
 import com.github.jakz.romlib.data.cataloguers.impl.NoIntroNormalizer;
 import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameClone;
 import com.github.jakz.romlib.data.set.CloneSet;
 import com.github.jakz.romlib.data.set.DatFormat;
 import com.github.jakz.romlib.data.set.DataSupplier;
@@ -55,15 +60,55 @@ public class LogiqxXmlParserPlugin extends DatParserPlugin
         XMLParser<LogiqxXMLHandler.Data> parser = new XMLParser<>(xmlParser);
         LogiqxXMLHandler.Data data = parser.load(set.datPath());
         
-        Path xmdbPath = Paths.get(FileUtils.trimExtension(set.datPath().toString()) + ".xmdb");  
+        CloneSet clones = null;
         
+        /* if data has clone information use it */
+        if (data.hasClones())
+        {
+          HashMap<Game, List<Game>> cloneMap = new HashMap<>();
+          
+          for (Map.Entry<String, String> info : data.childToParentCloneMap.entrySet())
+          {
+            Game parent = data.list.get(info.getValue());
+            Game child = data.list.get(info.getKey());
+            
+            if (child != null && parent != null)
+            {
+              cloneMap.compute(parent, (k, v) -> {
+                if (v != null)
+                {
+                  v.add(child);
+                  return v;
+                }
+                else
+                {
+                  v = new ArrayList<>();
+                  v.add(parent);
+                  v.add(child);
+                  return v;
+                }
+              });
+            }
+            
+            GameClone[] cloneList = cloneMap.entrySet().stream()
+            .map(e ->  new GameClone(e.getValue()))
+            .collect(Collectors.toList())
+            .toArray(new GameClone[cloneMap.size()]);
+            
+            clones = new CloneSet(cloneList);
+          }
+        }
+        
+        /* if clone file is present override information */
+        //TODO: maybe it should merge with previous?
+        Path xmdbPath = Paths.get(FileUtils.trimExtension(set.datPath().toString()) + ".xmdb");  
         if (Files.exists(xmdbPath))
         {
-          CloneSet clones = XMDBHandler.loadCloneSet(data.list, xmdbPath);
-          return new DataSupplier.Data(data.list, clones);
+          clones = XMDBHandler.loadCloneSet(data.list, xmdbPath);
         }
-        else
-          return new DataSupplier.Data(data.list);
+
+        return new DataSupplier.Data(data.list, clones);
+
       }
       catch (Exception e)
       {

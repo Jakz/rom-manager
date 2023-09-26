@@ -84,6 +84,7 @@ public class SetInfoPanel extends JPanel
 	    rows = new InfoRow<?>[] {
 	      new InfoRow<String>("Provider", () -> set.info().getName()),
 	      new InfoRow<String>("System", () -> set.platform().getName()),
+	      new InfoRow<String>("Identifier", () -> set.ident()),
 	      new InfoRow<String>("Game Count", () -> set.info().gameCount() + " games"),
 	      new InfoRow<String>("Unique Game Count", () -> 
 	        String.format("%d games (%.2f per clone)", 
@@ -142,8 +143,9 @@ public class SetInfoPanel extends JPanel
         new InfoRow<String>("Multiple roms per game?", () -> {
           return set.hasFeature(Feature.SINGLE_ROM_PER_GAME) ? "no" : "yes";
         }),
-        new InfoRow<String>("Has finite size set?", () -> set.hasFeature(Feature.FINITE_SIZE_SET) ? "yes" : "no")
+        new InfoRow<String>("Has finite size set?", () -> set.hasFeature(Feature.FINITE_SIZE_SET) ? "yes" : "no"),
 
+        //new InfoRow<String>("Dat Format", () -> set.info().getFormat().getIdent())
 	    };
 	  }
 	  
