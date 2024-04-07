@@ -8,19 +8,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameSet;
-import com.github.jakz.romlib.ui.Icon;
+
+import jack.rm.gui.resources.Resources;
 
 public class CountPanel extends JPanel
 {
 	private static final long serialVersionUID = 1L;
 	private final static Icon[] icons = new Icon[] {
-	  Icon.STATUS_CORRECT, Icon.STATUS_BADLY_NAMED, Icon.STATUS_INCOMPLETE, Icon.STATUS_NOT_FOUND, Icon.STATUS_ALL
+	  Resources.statusIcons.get(GameStatus.FOUND), 
+	  Resources.statusIcons.get(GameStatus.UNORGANIZED),
+	  Resources.statusIcons.get(GameStatus.INCOMPLETE),
+	  Resources.statusIcons.get(GameStatus.MISSING),
+	  Resources.ICON_STATUS_ALL
 	};
 	
 	private final GameListData data;
@@ -41,7 +47,7 @@ public class CountPanel extends JPanel
 		for (int i = 0; i < counters.length; ++i)
 		{
 			counters[i] = new JLabel("0000");
-			counters[i].setIcon(icons[i].getIcon());
+			counters[i].setIcon(icons[i]);
 			counters[i].setPreferredSize(new Dimension(55,12));
 			
 		  if (showTotals)

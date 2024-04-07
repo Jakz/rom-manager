@@ -5,6 +5,7 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
@@ -12,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,6 +24,7 @@ import java.util.TreeMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -54,6 +57,7 @@ import jack.rm.gui.gamelist.GameCellRenderer;
 import jack.rm.gui.gamelist.GameListData;
 import jack.rm.gui.gamelist.GameListModel;
 import jack.rm.gui.gamelist.GameListPanel;
+import jack.rm.gui.resources.Resources;
 import jack.rm.i18n.Text;
 import jack.rm.plugins.OperationalPlugin;
 import jack.rm.plugins.PluginRealType;
@@ -143,13 +147,28 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
     buildMenu(set);
 	}
 
+	private void setFrameIcon()
+	{
+	  try
+    {
+      URL iconURL = Resources.class.getResource("app_icon.png");
+      Image image = ImageIO.read(iconURL);
+      this.setIconImage(image);
+    }
+	  catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+	}
+	
 	public MainFrame(GameSetManager manager)
 	{
 		this.setManager = manager;
 	   
 		this.optionsFrame = new OptionsFrame(Main.manager, setManager);
-	
-				
+			
+		setFrameIcon();
+		
 		menu.add(romsMenu);
 		menu.add(viewMenu);
 		menu.add(toolsMenu);

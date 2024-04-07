@@ -27,6 +27,7 @@ import com.pixbits.lib.functional.StreamUtil;
 import com.pixbits.lib.lang.Pair;
 
 import jack.rm.gui.gamelist.GameListData;
+import jack.rm.gui.resources.Resources;
 import jack.rm.i18n.Text;
 
 public class ViewMenu extends JMenu
@@ -81,7 +82,7 @@ public class ViewMenu extends JMenu
       
       for (int i = 0; i < filterByStatus.length; ++i)
       {
-        filterByStatus[i] = new JCheckBoxMenuItem("Show "+statuses[i].name.toLowerCase(), true);
+        filterByStatus[i] = new JCheckBoxMenuItem("Show "+statuses[i].name.toLowerCase(), Resources.statusIcons.get(statuses[i]), true);
         filterByStatus[i].setAccelerator(KeyStroke.getKeyStroke(firstStroke + i, 0));
         filterByStatus[i].addActionListener(listener);
         add(filterByStatus[i]);

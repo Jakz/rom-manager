@@ -1,6 +1,7 @@
 package jack.rm;
 
 import java.awt.Desktop;
+import java.awt.Font;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -17,6 +18,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import com.github.jakz.romlib.data.assets.Downloader;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.platforms.Platform;
@@ -373,11 +375,15 @@ public class Main
 	  
 	  if (true)
 	  {
-	    Log.setLevel(Log.INFO1, true);
+	    Log.setLevel(Log.DEBUG, true);
 	    initZipLibrary();
 	    initLogging();
 	    os = UIUtils.getOperatingSystem();
-	    UIUtils.setNimbusLNF();
+	    //UIUtils.setNimbusLNF();
+	    //FlatLightLaf.setup(new com.formdev.flatlaf.themes.FlatMacDarkLaf());
+	    FlatLightLaf.setup();
+	    //UIUtils.setUIFont(new javax.swing.plaf.FontUIResource("Segoe UI", Font.PLAIN, 12));
+
 	  
 	    GlobalSettings.load();
 	    loadPlugins();

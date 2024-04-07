@@ -16,6 +16,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -64,7 +65,7 @@ public class GameListPanel extends JPanel
     list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     list.setLayoutOrientation(JList.VERTICAL);
     list.setFixedCellHeight(16);
-    list.setBackground(Color.WHITE);
+    list.setBackground(UIManager.getColor("List.background"));
     list.getSelectionModel().addListSelectionListener(listListener);
     list.setSelectedIndex(0);
         

@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
+import javax.swing.UIManager;
 
 import com.github.jakz.romlib.data.game.Drawable;
 import com.github.jakz.romlib.data.game.GameStatus;
@@ -27,7 +28,7 @@ public class GameCellRenderer extends JPanel implements ListCellRenderer<Drawabl
   {
     setOpaque(true);
 
-    mainLabel.setFont(new Font("Default",Font.PLAIN,12));
+    mainLabel.setFont(UIManager.getFont("List.font").deriveFont(Font.PLAIN,12));
 
     setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));
     setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
@@ -51,7 +52,7 @@ public class GameCellRenderer extends JPanel implements ListCellRenderer<Drawabl
 
     if (isSelected)
     {
-      mainLabel.setForeground(Color.WHITE);
+      mainLabel.setForeground(UIManager.getColor("List.background"));
       setBackground(status.color);
     }
     else
