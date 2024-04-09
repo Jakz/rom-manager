@@ -15,6 +15,8 @@ public interface Mediator
   public void rebuildGameList();
   public void switchGameListMode(GameListData.Mode mode, boolean treeMode);
   
+  public void refreshGameStatusCheckboxesInViewMenu();
+  
   public void setInfoPanelContent(Game game);
   public void selectGameIfVisible(Game game);
   

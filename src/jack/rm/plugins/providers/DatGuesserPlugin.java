@@ -14,6 +14,7 @@ import org.xml.sax.SAXException;
 
 import com.github.jakz.romlib.data.assets.AssetManager;
 import com.github.jakz.romlib.data.game.Game;
+import com.github.jakz.romlib.data.game.GameID;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.platforms.Platform;
@@ -149,6 +150,8 @@ public class DatGuesserPlugin extends ProviderPlugin
       keywords.put("2600", Platforms.A2600);
 
       keywords.put("ds", Platforms.NDS);
+      
+      keywords.put("mame", Platforms.MAME);
 
       //TODO: color
     }
@@ -218,6 +221,8 @@ public class DatGuesserPlugin extends ProviderPlugin
         provider = KnownProviders.NO_INTRO;
       else if (hasAttribute("header:name", "The Good Old Days"))
         provider = KnownProviders.GOOD_OLD_DAYS;
+      else if (hasAttribute("header:name", "MAME"))
+        provider = KnownProviders.MAME;
       else if (attribute("configuration:datName").contains("advanscene"))
         provider = KnownProviders.ADVAN_SCENE;
       else if (attribute("configuration:datName").contains("no-intro"))
@@ -283,7 +288,9 @@ public class DatGuesserPlugin extends ProviderPlugin
               GameAttribute.COMMENT
                 
             ));
-
+            
+            GameID.Generator idGenerator = data.provider == KnownProviders.MAME ? GameID.Generator.BY_NAME : GameID.Generator.DEFAULT;
+            
             GameSet set = new GameSet(
                 data.platform,
                 data.provider,
@@ -291,7 +298,11 @@ public class DatGuesserPlugin extends ProviderPlugin
                 format,
                 attributes.toArray(new Attribute[attributes.size()]),
                 AssetManager.DUMMY, // AssetManager assetManager,
-                s -> new MyGameSetFeatures(s, Feature.FINITE_SIZE_SET) // Function<GameSet, GameSetFeatures> helper
+                s -> {
+                  GameSetFeatures features = new MyGameSetFeatures(s, idGenerator, Feature.FINITE_SIZE_SET);
+                  
+                  return features;
+                }
             );
             
             set.setUUID(new GameSetUUID(String.format("%08X", path.toString().hashCode())));

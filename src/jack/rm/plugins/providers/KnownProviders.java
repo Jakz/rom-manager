@@ -10,4 +10,6 @@ public class KnownProviders
   
   public static Provider REDUMP = new Provider("Redump", "redump", null);
   public static Provider GOOD_OLD_DAYS = new Provider("Good Old Days", "god", new Provider.Source("http://www.goodolddays.net/tgod_floppy_images.dat"));
+  public static Provider MAME = new Provider("MAME", "mame", null);
+
 }

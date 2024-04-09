@@ -89,9 +89,14 @@ public class ViewMenu extends JMenu
       
       for (int i = 0; i < filterByStatus.length; ++i)
       {
-        filterByStatus[i] = new JCheckBoxMenuItem("Show "+statuses[i].name.toLowerCase(), Resources.statusIcons.get(statuses[i]), true);
+        GameStatus status = statuses[i];
+        
+        filterByStatus[i] = new JCheckBoxMenuItem("Show "+status.name.toLowerCase(), Resources.statusIcons.get(status), true);
         filterByStatus[i].setAccelerator(KeyStroke.getKeyStroke(firstStroke + i, 0));
-        filterByStatus[i].addActionListener(listener);
+        filterByStatus[i].addActionListener(e -> {
+          mediator.preferences().setStatusVisibility(status, ((JCheckBoxMenuItem)e.getSource()).isSelected());
+          mediator.rebuildGameList();
+        });
         add(filterByStatus[i]);
       }
       
@@ -167,6 +172,16 @@ public class ViewMenu extends JMenu
       add(reverseSortOrder); 
       addSeparator();
       add(showTotalsInCount);
+    }
+  }
+  
+  void refreshGameStatusCheckboxes()
+  {
+    final GameStatus[] statuses = GameStatus.values();
+
+    for (int i = 0; i < statuses.length; ++i)
+    {
+      filterByStatus[i].setSelected(mediator.preferences().isStatusVisibile(statuses[i]));
     }
   }
   

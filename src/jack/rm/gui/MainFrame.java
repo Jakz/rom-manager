@@ -452,6 +452,11 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	    setManager.saveSetStatus(set);
 	}
 
+	@Override
+	public void refreshGameStatusCheckboxesInViewMenu()
+	{
+	  viewMenu.refreshGameStatusCheckboxes();
+	}
 	
 	@Override public void rebuildGameList()
 	{
@@ -463,6 +468,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
       List<GameClone> clones = set.hasFeature(Feature.CLONES) ? set.clones().stream().collect(Collectors.toList()) : Collections.emptyList();
       gameListPanel.setData(data, clones);
       
+      //TODO: it is using viewMenu checkbox buttons instead that UIPreferences assuming that they're refreshed before
       Predicate<Game> predicate = viewMenu.buildPredicate().and(searchPanel.buildSearchPredicate());
       gameListPanel.filterData(predicate);
 

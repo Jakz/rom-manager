@@ -8,9 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.swing.AbstractButton;
 import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 
 import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.set.Feature;
@@ -22,18 +26,15 @@ import jack.rm.gui.resources.Resources;
 public class CountPanel extends JPanel
 {
 	private static final long serialVersionUID = 1L;
-	private final static Icon[] icons = new Icon[] {
-	  Resources.statusIcons.get(GameStatus.FOUND), 
-	  Resources.statusIcons.get(GameStatus.UNORGANIZED),
-	  Resources.statusIcons.get(GameStatus.INCOMPLETE),
-	  Resources.statusIcons.get(GameStatus.MISSING),
-	  Resources.ICON_STATUS_ALL
-	};
-	
+
+  private static GameStatus[] statuses = new GameStatus[] {
+    GameStatus.FOUND, GameStatus.UNORGANIZED, GameStatus.INCOMPLETE, GameStatus.MISSING
+  };
+ 
 	private final Mediator mediator;
 	
 	private final GameListData data;
-	private final JLabel[] counters = new JLabel[5];
+	private final JToggleButton[] counters = new JToggleButton[5];
 	
 	JPanel inner;
 	
@@ -47,14 +48,25 @@ public class CountPanel extends JPanel
 	  inner = new JPanel();
 		for (int i = 0; i < counters.length; ++i)
 		{
-			counters[i] = new JLabel("0000");
-			counters[i].setIcon(icons[i]);
-			counters[i].setPreferredSize(new Dimension(55,12));
+		  counters[i] = new JToggleButton("0000");
+			counters[i].setBorderPainted(false);
+			counters[i].setPreferredSize(new Dimension(70, 14));
 			
-		  //if (showTotals)
-		  //  counters[i].setFont(counters[i].getFont().deriveFont(counters[i].getFont().getSize2D()*0.8f));
+			if (i < counters.length - 1)
+			{
+			  GameStatus status = statuses[i];
+			  
+			  counters[i].setIcon(Resources.statusIcons.get(status));
+			  counters[i].addActionListener(e -> {
+			    mediator.preferences().setStatusVisibility(status, !((JToggleButton)e.getSource()).isSelected());
+			    mediator.refreshGameStatusCheckboxesInViewMenu();
+			    mediator.rebuildGameList();
+			  });
+			}
+			else
+		    counters[i].setIcon(Resources.ICON_STATUS_ALL);
 		}
-		
+
 		this.setLayout(new BorderLayout());
 		this.add(inner, BorderLayout.WEST);
 	}
@@ -68,8 +80,9 @@ public class CountPanel extends JPanel
 	  
     for (int i = 0; i < counters.length; ++i)
     {
-      if (singleRomPerGame && i == 2)
-        continue;
+      //TODO: this should be visible when clones are enabled
+      //if (singleRomPerGame && i == 2)
+      //  continue;
       inner.add(counters[i]);
     } 
     
@@ -79,17 +92,20 @@ public class CountPanel extends JPanel
 	public void update()
 	{	  
 	  Map<GameStatus, Long> status = data.stream().collect(Collectors.groupingBy( r -> r.getDrawableStatus(), HashMap::new, Collectors.counting()));
-	    
-    counters[0].setText(""+status.getOrDefault(GameStatus.FOUND, 0L));
-    counters[1].setText(""+status.getOrDefault(GameStatus.UNORGANIZED, 0L));
-    counters[2].setText(""+status.getOrDefault(GameStatus.INCOMPLETE, 0L));
-    counters[3].setText(""+status.getOrDefault(GameStatus.MISSING, 0L));
+
+	  
+    for (int i = 0; i < statuses.length; ++i)
+    {
+      counters[i].setText(""+status.getOrDefault(statuses[i], 0L));
+      counters[i].setSelected(!mediator.preferences().isStatusVisibile(statuses[i]));
+    }
+	  
     counters[4].setText(""+data.getSize());
     
     boolean showTotals = mediator.preferences().showTotalsInCountPanel;
     
-    for (JLabel label : counters)
-      label.setPreferredSize(new Dimension(showTotals ? 90 : 55, 12));
+    for (JComponent label : counters)
+      label.setPreferredSize(new Dimension(showTotals ? 110 : 70, 14));
     
     if (showTotals)
     {
