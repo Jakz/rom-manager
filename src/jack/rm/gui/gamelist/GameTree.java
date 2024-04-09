@@ -57,12 +57,15 @@ public class GameTree extends JTree
     public void valueChanged(TreeSelectionEvent e)
     {
       TreeNode node = (TreeNode)GameTree.this.getLastSelectedPathComponent();
-      
+            
       //TODO: better design
       if (node instanceof GameNode)
         mediator.setInfoPanelContent(((GameNode)node).game);
-      else if (node instanceof GameClone)
+      else if (node instanceof CloneNode)
       {
+        System.out.println(((CloneNode)node).clone.getDrawableLocation().getMask());
+        
+        
         MyGameSetFeatures helper = Main.current.helper();
         Game game = ((CloneNode)node).clone.getBestMatchForBias(helper.settings().bias, true);
         mediator.setInfoPanelContent(game);

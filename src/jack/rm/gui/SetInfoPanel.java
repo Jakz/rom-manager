@@ -83,7 +83,7 @@ public class SetInfoPanel extends JPanel
 	    
 	    rows = new InfoRow<?>[] {
 	      new InfoRow<String>("Provider", () -> set.info().getName()),
-	      new InfoRow<String>("System", () -> set.platform().getName()),
+	      new InfoRow<String>("System", () -> set.platform().fullName()),
 	      new InfoRow<String>("Identifier", () -> set.ident()),
 	      new InfoRow<String>("Game Count", () -> set.info().gameCount() + " games"),
 	      new InfoRow<String>("Unique Game Count", () -> 

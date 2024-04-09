@@ -11,14 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.github.jakz.romlib.data.set.GameSetUUID;
+
 import jack.rm.data.romset.GameSetManager;
 import jack.rm.json.Json;
 
 public class GlobalSettings
 {  
   public static final Path DATA_PATH = Paths.get("data/");
+  public static final Path DAT_PATH = Paths.get("dat/");
   
-  private List<String> enabledProviders;
+  private List<GameSetUUID> enabledProviders;
   private String currentProvider;
   private boolean alwaysScanWhenLoadingRomset;
   
@@ -30,9 +33,9 @@ public class GlobalSettings
   
   public void markCurrentProvider(String ident) { currentProvider = ident; }
   public String getCurrentProvider() { return currentProvider; }
-  public List<String> getEnabledProviders() { return enabledProviders; }
-  public void enableProvider(String ident) { enabledProviders.add(ident); }
-  public void disableProvider(String ident) { enabledProviders.remove(ident); }
+  public List<GameSetUUID> getEnabledProviders() { return enabledProviders; }
+  public void enableProvider(GameSetUUID ident) { enabledProviders.add(ident); }
+  public void disableProvider(GameSetUUID ident) { enabledProviders.remove(ident); }
   
   public boolean shouldScanWhenLoadingRomset() { return alwaysScanWhenLoadingRomset; }
   
@@ -44,7 +47,7 @@ public class GlobalSettings
   public void sanitize(GameSetManager manager)
   {
     enabledProviders = enabledProviders.stream()
-      .filter(i -> manager.byIdent(i) != null)
+      .filter(i -> manager.byUUID(i) != null)
       .collect(Collectors.toList());
     
     currentProvider = manager.byIdent(currentProvider) != null ? currentProvider : null;

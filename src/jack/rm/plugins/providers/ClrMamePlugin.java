@@ -57,6 +57,21 @@ public class ClrMamePlugin extends ProviderPlugin
     }
     
     {
+      DataSupplier parser = findDatParser(datParsers, "logiqx-xml").buildDatLoader("logiqx-xml"); 
+      DatFormat format = parser.getFormat();
+          
+      sets.add(new GameSet(
+          Platforms.GB, 
+          KnownProviders.NO_INTRO.derive("", "", "", null), 
+          parser,
+          format,
+          GG_ATTRIBUTES, 
+          AssetManager.DUMMY,
+          s -> new MyGameSetFeatures(s, Feature.FINITE_SIZE_SET)
+      ));
+    }
+    
+    {
       DataSupplier parser = datParser.buildDatLoader("clr-mame-pro-nointro"); 
       DatFormat format = parser.getFormat();
       

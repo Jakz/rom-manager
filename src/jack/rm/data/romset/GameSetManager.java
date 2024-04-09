@@ -26,6 +26,7 @@ import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameList;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.data.set.GameSetFeatures;
+import com.github.jakz.romlib.data.set.GameSetUUID;
 import com.github.jakz.romlib.json.GameListAdapter;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
@@ -76,10 +77,9 @@ public class GameSetManager
 	  {
 	    ProviderPlugin plugin = (ProviderPlugin)manager.build((Class<ProviderPlugin>)builder.getID().getType());
 	    
-	    logger.d("Found ProviderPlugin: %s", plugin.getClass().getName());
-
-	    
 	    GameSet[] rsets = plugin.buildRomSets(datParsers);
+	    
+	    logger.d("Found ProviderPlugin: %s which is providing %d sets", plugin.getClass().getName(), rsets.length);
 	    
 	    for (GameSet set : rsets)
 	    {
@@ -112,6 +112,19 @@ public class GameSetManager
 		
 		return null;
 	}
+	
+	 public GameSet byUUID(GameSetUUID uuid)
+	  {
+	    for (List<GameSet> sets : sets.values())
+	    {
+	      Optional<GameSet> rs = sets.stream().filter(set -> set.uuid().equals(uuid)).findFirst();
+	      
+	      if (rs.isPresent())
+	        return rs.get();
+	    }
+	    
+	    return null;
+	  }
 	
 	public Settings settings(GameSet set) { return settings.get(set); }
 	public GameSetFeatures helpers(GameSet set) { return helpers.get(set); }
@@ -146,7 +159,7 @@ public class GameSetManager
 	{
 	  try
     {
-	    Path basePath = Paths.get("data/", set.ident());     
+	    Path basePath = Paths.get("data/", set.uuid().asPath());     
       Path settingsPath = basePath.resolve("settings.json");
       
       try
@@ -224,7 +237,7 @@ public class GameSetManager
 	  {
 	    try
 	    {
-	      Path basePath = GlobalSettings.DATA_PATH.resolve(set.ident());
+	      Path basePath = GlobalSettings.DATA_PATH.resolve(set.uuid().asPath());
 	      
 	      Files.createDirectories(basePath);
 	      

@@ -16,6 +16,7 @@ import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameSet;
 
+import jack.rm.gui.Mediator;
 import jack.rm.gui.resources.Resources;
 
 public class CountPanel extends JPanel
@@ -29,17 +30,17 @@ public class CountPanel extends JPanel
 	  Resources.ICON_STATUS_ALL
 	};
 	
+	private final Mediator mediator;
+	
 	private final GameListData data;
 	private final JLabel[] counters = new JLabel[5];
 	
 	JPanel inner;
-	private boolean showTotals;
 	
 	
-	public CountPanel(GameListData data)
+	public CountPanel(Mediator mediator, GameListData data)
 	{
-    this.showTotals = false;
-
+    this.mediator = mediator;
 	  
 	  this.data = data;
 	  
@@ -50,8 +51,8 @@ public class CountPanel extends JPanel
 			counters[i].setIcon(icons[i]);
 			counters[i].setPreferredSize(new Dimension(55,12));
 			
-		  if (showTotals)
-		    counters[i].setFont(counters[i].getFont().deriveFont(counters[i].getFont().getSize2D()*0.8f));
+		  //if (showTotals)
+		  //  counters[i].setFont(counters[i].getFont().deriveFont(counters[i].getFont().getSize2D()*0.8f));
 		}
 		
 		this.setLayout(new BorderLayout());
@@ -84,6 +85,11 @@ public class CountPanel extends JPanel
     counters[2].setText(""+status.getOrDefault(GameStatus.INCOMPLETE, 0L));
     counters[3].setText(""+status.getOrDefault(GameStatus.MISSING, 0L));
     counters[4].setText(""+data.getSize());
+    
+    boolean showTotals = mediator.preferences().showTotalsInCountPanel;
+    
+    for (JLabel label : counters)
+      label.setPreferredSize(new Dimension(showTotals ? 90 : 55, 12));
     
     if (showTotals)
     {

@@ -66,6 +66,6 @@ public class RomSetOrderView extends JPanel
   {
     model.clear();
     
-    GlobalSettings.settings.getEnabledProviders().stream().map(manager::byIdent).forEach(model::addElement); 
+    GlobalSettings.settings.getEnabledProviders().stream().map(manager::byUUID).forEach(model::addElement); 
   }
 }

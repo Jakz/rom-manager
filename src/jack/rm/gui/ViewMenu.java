@@ -51,6 +51,7 @@ public class ViewMenu extends JMenu
   private ButtonGroup viewModesRadioGroup;
   
   private JCheckBoxMenuItem reverseSortOrder;
+  private JCheckBoxMenuItem showTotalsInCount;
   
   private final ActionListener listener;
   
@@ -62,6 +63,12 @@ public class ViewMenu extends JMenu
     this.mediator = mediator;
     this.filterByStatus = new JCheckBoxMenuItem[GameStatus.values().length];
     this.sortCriteria = new JRadioButtonMenuItem[0];
+    
+    this.showTotalsInCount = new JCheckBoxMenuItem("Show totals in count", mediator.preferences().showTotalsInCountPanel);
+    this.showTotalsInCount.addActionListener(e -> {
+      mediator.preferences().showTotalsInCountPanel = showTotalsInCount.getState();
+      mediator.refreshGameListCounters();
+    });
     
     listener = e -> {
       this.mediator.rebuildGameList();
@@ -158,6 +165,8 @@ public class ViewMenu extends JMenu
       
       add(sortMenu);
       add(reverseSortOrder); 
+      addSeparator();
+      add(showTotalsInCount);
     }
   }
   
@@ -176,15 +185,15 @@ public class ViewMenu extends JMenu
     return sorter != null && reverseSortOrder.isSelected() ? sorter.reversed() : sorter;
   }
   
-  Predicate<Drawable> buildPredicate()
+  Predicate<Game> buildPredicate()
   {
     final GameStatus[] statuses = GameStatus.values();
     
     /* for each status reduce to a final predicate of the form (game == STATUS && item selected) || ... */
-    final BiFunction<Predicate<Drawable>, Pair<GameStatus, JCheckBoxMenuItem>, Predicate<Drawable>> accumulator = 
+    final BiFunction<Predicate<Game>, Pair<GameStatus, JCheckBoxMenuItem>, Predicate<Game>> accumulator = 
         (p, d) -> p.or(game -> d.first == game.getDrawableStatus() && d.second.isSelected());
     
-    Predicate<Drawable> predicate = StreamUtil.zip(statuses, filterByStatus).reduce(
+    Predicate<Game> predicate = StreamUtil.zip(statuses, filterByStatus).reduce(
         g -> false, 
         accumulator,
         Predicate::or

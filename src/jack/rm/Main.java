@@ -127,9 +127,10 @@ public class Main
     
     manager.register(jack.rm.plugins.fetchers.MobyGamesFetcher.class);
     
-    manager.register(jack.rm.plugins.providers.OfflineListProviderPlugin.class);
-    manager.register(jack.rm.plugins.providers.ClrMamePlugin.class);
-    
+    //manager.register(jack.rm.plugins.providers.OfflineListProviderPlugin.class);
+    //manager.register(jack.rm.plugins.providers.ClrMamePlugin.class);
+    manager.register(jack.rm.plugins.providers.DatGuesserPlugin.class);
+
     manager.register(jack.rm.plugins.datparsers.ClrMameParserPlugin.class);
     manager.register(jack.rm.plugins.datparsers.OfflineListParserPlugin.class);
     manager.register(jack.rm.plugins.datparsers.LogiqxXmlParserPlugin.class);

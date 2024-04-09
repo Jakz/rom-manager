@@ -117,7 +117,7 @@ public class GameListPanel extends JPanel
   }
   
   public void restoreSelection()
-  {
+  {   
     if (lastSelectedGame != null)     
     {      
       list.clearSelection();
@@ -137,7 +137,7 @@ public class GameListPanel extends JPanel
   }
   
   public void sortData(Comparator<? super Drawable> sorter) { data.setSorter(sorter); }
-  public void filterData(Predicate<Drawable> predicate) { data.setFilter(predicate); }
+  public void filterData(Predicate<Game> predicate) { data.setFilter(predicate); }
   public void setData(List<Game> games, List<GameClone> clones) { this.data.setData(games, clones); }
   
   public GameListData data() { return data; }

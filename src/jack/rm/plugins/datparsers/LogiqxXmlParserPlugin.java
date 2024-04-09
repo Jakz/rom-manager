@@ -13,6 +13,9 @@ import com.github.jakz.romlib.data.cataloguers.impl.NoIntroCataloguer;
 import com.github.jakz.romlib.data.cataloguers.impl.NoIntroNormalizer;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameClone;
+import com.github.jakz.romlib.data.game.GameRef;
+import com.github.jakz.romlib.data.game.GameSorter;
+import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.set.CloneSet;
 import com.github.jakz.romlib.data.set.DatFormat;
 import com.github.jakz.romlib.data.set.DataSupplier;
@@ -40,7 +43,7 @@ public class LogiqxXmlParserPlugin extends DatParserPlugin
   public DataSupplier buildDatLoader(String format, Map<String, Object> arguments)
   {
     if (format.equals(this.format.getLongIdentifier()))
-      return new LogiqxXmlSupplier().apply(new NoIntroCataloguer()).apply(new NoIntroNormalizer());
+      return new LogiqxXmlSupplier().apply(new NoIntroCataloguer()).apply(new NoIntroNormalizer()).solve();
     else
       return null;
   }
@@ -67,13 +70,14 @@ public class LogiqxXmlParserPlugin extends DatParserPlugin
         {
           HashMap<Game, List<Game>> cloneMap = new HashMap<>();
           
-          for (Map.Entry<String, String> info : data.childToParentCloneMap.entrySet())
+          for (Map.Entry<GameRef, GameRef> info : data.childToParentCloneMap.entrySet())
           {
-            Game parent = data.list.get(info.getValue());
-            Game child = data.list.get(info.getKey());
-            
+            //TODO FIXME: not efficient
+            Game parent = data.gameRefMapping.get(info.getValue());
+            Game child = data.gameRefMapping.get(info.getKey());
+
             if (child != null && parent != null)
-            {
+            {               
               cloneMap.compute(parent, (k, v) -> {
                 if (v != null)
                 {
@@ -89,14 +93,17 @@ public class LogiqxXmlParserPlugin extends DatParserPlugin
                 }
               });
             }
-            
-            GameClone[] cloneList = cloneMap.entrySet().stream()
-            .map(e ->  new GameClone(e.getValue()))
+          }
+          
+          GameClone[] cloneList = cloneMap.entrySet().stream()
+            .map(e -> { 
+              e.getValue().sort(GameSorter.byCaption());
+              return new GameClone(e.getValue());
+            })
             .collect(Collectors.toList())
             .toArray(new GameClone[cloneMap.size()]);
             
             clones = new CloneSet(cloneList);
-          }
         }
         
         /* if clone file is present override information */

@@ -107,21 +107,21 @@ public class MobyGamesFetcher extends DataFetcherPlugin
     {
       boolean found = false;
       set1.clear();
-      String[] tokens = platform.getName().toLowerCase().split(" ");
+      String[] tokens = platform.fullName().toLowerCase().split(" ");
       //set1.addAll(tokens);
 
       for (MobyGames.Platform mplatform : platforms)
       {
-        if (platform.getName().toLowerCase().equals(mplatform.platform_name.toLowerCase()))
+        if (platform.fullName().toLowerCase().equals(mplatform.platform_name.toLowerCase()))
         {
-          message("Found match for " + platform.getName());
+          message("Found match for " + platform.fullName());
           found = true;
           break;
         }
       }
       
       if (!found)
-        warning("Didn't found a match for " + platform.getName());
+        warning("Didn't found a match for " + platform.fullName());
     }
     
   }

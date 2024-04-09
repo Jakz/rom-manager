@@ -73,7 +73,7 @@ public class RomSetManagerView extends JPanel
       int count = manager.bySystem(value).size();
 
       label.setIcon(value.getIcon());
-      label.setText(value.getName() + " (" + count + ")");
+      label.setText(value.fullName() + " (" + count + ")");
       label.setForeground(count == 0 ? Color.GRAY : Color.BLACK);
 
       return label;
@@ -124,7 +124,7 @@ public class RomSetManagerView extends JPanel
       switch (c)
       {
       case 0:
-        return GlobalSettings.settings.getEnabledProviders().contains(rs.ident());
+        return GlobalSettings.settings.getEnabledProviders().contains(rs.uuid());
       case 1:
         return rs.info().getName();
       case 2:
@@ -148,9 +148,9 @@ public class RomSetManagerView extends JPanel
       boolean f = (boolean) value;
 
       if (f)
-        GlobalSettings.settings.enableProvider(data.get(r).ident());
+        GlobalSettings.settings.enableProvider(data.get(r).uuid());
       else
-        GlobalSettings.settings.disableProvider(data.get(r).ident());
+        GlobalSettings.settings.disableProvider(data.get(r).uuid());
 
       Main.mainFrame.rebuildEnabledDats();
       this.fireTableDataChanged();
@@ -190,7 +190,7 @@ public class RomSetManagerView extends JPanel
     systemSetInfo = new SystemRomSetInfo();
 
     systemModel = new DefaultListModel<>();
-    Arrays.stream(Platforms.values()).sorted((o1, o2) -> o1.name.compareTo(o2.name))
+    Arrays.stream(Platforms.values()).sorted(Platform.defaultSorter())
         .forEach(s -> systemModel.addElement(s));
 
     systemList = new JList<>();
@@ -270,9 +270,9 @@ public class RomSetManagerView extends JPanel
       countLabel.setIcon(platform.getIcon());
 
       if (count > 0)
-        countLabel.setText(count + " available DATs for " + platform.getName());
+        countLabel.setText(count + " available DATs for " + platform.fullName());
       else
-        countLabel.setText("No available DATs for " + platform.getName());
+        countLabel.setText("No available DATs for " + platform.fullName());
 
       datTable.clearSelection();
       datModel.setData(sets);

@@ -102,7 +102,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	final private ConsolePanel consolePanel = new ConsolePanel();
 	
 	final private GameListPanel gameListPanel = new GameListPanel(this);
-	final private CountPanel countPanel = new CountPanel(gameListPanel.data());
+	final private CountPanel countPanel = new CountPanel(this, gameListPanel.data());
 	
 	final private SearchPanel searchPanel = new SearchPanel(() -> rebuildGameList());
 	final private InfoPanel infoPanel = new InfoPanel(this);
@@ -211,7 +211,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 		buildMenu(null);
 			
 		pack();
-		setTitle("Rom Manager v0.8 - build 161");
+		setTitle("Retro Rom Manager");
 	}
 	
 	public Settings getGameSetSettings()
@@ -228,7 +228,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	  cbRomSets.removeAllItems();
 	  
 	  List<Platform> platforms = Platforms.sortedValues();
-	  List<GameSet> sets = GlobalSettings.settings.getEnabledProviders().stream().map(setManager::byIdent).collect(Collectors.toList());
+	  List<GameSet> sets = GlobalSettings.settings.getEnabledProviders().stream().map(setManager::byUUID).collect(Collectors.toList());
 	  
 	  platforms.forEach(s -> {
 	    sets.stream().filter(rs -> rs.platform().equals(s)).forEach(cbRomSets::addItem);
@@ -463,7 +463,7 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
       List<GameClone> clones = set.hasFeature(Feature.CLONES) ? set.clones().stream().collect(Collectors.toList()) : Collections.emptyList();
       gameListPanel.setData(data, clones);
       
-      Predicate<Drawable> predicate = viewMenu.buildPredicate().and(searchPanel.buildSearchPredicate());
+      Predicate<Game> predicate = viewMenu.buildPredicate().and(searchPanel.buildSearchPredicate());
       gameListPanel.filterData(predicate);
 
       gameListPanel.sortData(viewMenu.buildSorter());
@@ -526,5 +526,11 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
   public void selectGameIfVisible(Game game)
   {
     gameListPanel.selectGameIfVisible(game);
+  }
+  
+  @Override
+  public void refreshGameListCounters()
+  {
+    countPanel.update();
   }
 }
