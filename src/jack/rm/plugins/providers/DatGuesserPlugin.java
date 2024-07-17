@@ -263,7 +263,8 @@ public class DatGuesserPlugin extends ProviderPlugin
       if (!Files.exists(GlobalSettings.DAT_PATH))
         return new GameSet[0];
       
-      Files.newDirectoryStream(GlobalSettings.DAT_PATH).forEach(StreamException.rethrowConsumer(path -> {
+      Files.newDirectoryStream(GlobalSettings.DAT_PATH).forEach(StreamException.rethrowConsumer(path ->
+      {
         logger().d("found dat file %s", path.toString());
         
         try
@@ -289,7 +290,7 @@ public class DatGuesserPlugin extends ProviderPlugin
                 
             ));
             
-            GameID.Generator idGenerator = data.provider == KnownProviders.MAME ? GameID.Generator.BY_NAME : GameID.Generator.DEFAULT;
+            GameID.Generator idGenerator = data.provider == KnownProviders.MAME || data.provider == KnownProviders.GOOD_OLD_DAYS ? GameID.Generator.BY_NAME : GameID.Generator.DEFAULT;
             
             GameSet set = new GameSet(
                 data.platform,

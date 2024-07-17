@@ -51,6 +51,7 @@ import jack.rm.data.romset.MyGameSetFeatures;
 import jack.rm.data.romset.Settings;
 import jack.rm.gui.Mediator;
 import jack.rm.plugins.PluginRealType;
+import jack.rm.plugins.types.DataFetcherPlugin;
 import jack.rm.plugins.types.RomDownloaderPlugin;
 import net.miginfocom.swing.MigLayout;
 
@@ -237,7 +238,18 @@ public class InfoPanel extends JPanel
     
     buttons[1].addActionListener(e -> {
       if (game != null)
-        Main.downloader.downloadArt(game);
+      {
+        MyGameSetFeatures helper = set.helper();        
+        DataFetcherPlugin plugin = helper.settings().getEnabledPluginOfType(PluginRealType.DATA_FETCHER);
+        
+        if (plugin != null && plugin.supportsAssetDownload())
+        {
+          plugin.searchAssetsForGame(game);
+        }
+      }
+  
+      //if (game != null)
+      //  Main.downloader.downloadArt(game);
     });
     
     buttons[2].addActionListener(e -> {
@@ -515,6 +527,7 @@ public class InfoPanel extends JPanel
     		
     }
     
-    buttons[1].setEnabled(game != null && !game.hasAllAssets());
+    buttons[1].setEnabled(game != null);
+    //buttons[1].setEnabled(game != null && !game.hasAllAssets());
 	}
 }

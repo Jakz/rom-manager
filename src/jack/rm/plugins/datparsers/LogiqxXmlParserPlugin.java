@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import com.github.jakz.romlib.data.cataloguers.impl.NoIntroCataloguer;
 import com.github.jakz.romlib.data.cataloguers.impl.NoIntroNormalizer;
+import com.github.jakz.romlib.data.cataloguers.impl.NormalizedTitleCloneSetCreator;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameClone;
 import com.github.jakz.romlib.data.game.GameRef;

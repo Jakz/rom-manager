@@ -3,6 +3,7 @@ package jack.rm.plugins.fetchers;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -11,11 +12,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.JPanel;
+
+import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.platforms.Platforms;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.pixbits.lib.plugin.PluginInfo;
@@ -30,7 +36,9 @@ public class MobyGamesFetcher extends DataFetcherPlugin
   
   static Map<Platform, Integer> platformMapping = Map.of(
       Platforms.AMIGA,     19,
-      Platforms.GB,        10
+      Platforms.GB,        10,
+      Platforms.IBM_PC,     2
+      
   );
   
   // https://api.mobygames.com/v1/games?title=mario%20advance&platform=12&format=brief
@@ -147,4 +155,54 @@ public class MobyGamesFetcher extends DataFetcherPlugin
     return null;
   }
   
+  @Override
+  public boolean supportsAssetDownload()
+  {
+    return true;
+  }
+
+  @Override
+  public void searchAssetsForGame(Game game)
+  {
+    if (game.getPlatform() == Platforms.IBM_PC)
+    {
+      String title = game.getNormalizedTitle();
+      StringBuilder query = new StringBuilder();
+      
+      for (int i = 0; i < title.length(); ++i)
+      {
+        char c = title.charAt(i);
+        
+        if (Character.isAlphabetic(c))
+          query.append(c);
+        else
+          query.append(' ');
+      }
+      
+      /* generate url */
+      var data = httpRequestToJson("https://api.mobygames.com/v1/games", "api_key", API_KEY, "platform", "2", "title", query.toString().trim());
+            
+      Gson gson = new Gson();
+      JsonObject root = gson.fromJson(data, JsonObject.class);
+      List<MobyGames.Game> array = gson.fromJson(root.get("games"), new TypeToken<List<MobyGames.Game>>(){}.getType());
+      
+     
+      for (int i = 0; i < array.size(); ++i)
+      {        
+        System.out.println(array.get(i).title);
+      }
+      
+      MobyGames.Game result = array.get(0);
+      
+      {
+        String imageURL = result.sample_cover.thumbnail_image;
+        System.out.println(imageURL);
+      }
+    }
+  }
+  
+  public class ResultChoosePanel extends JPanel
+  {
+    
+  }
 }

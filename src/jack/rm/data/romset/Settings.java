@@ -28,6 +28,7 @@ import jack.rm.plugins.ActualPluginBuilder;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.PluginWithIgnorePaths;
 import jack.rm.plugins.folder.FolderPlugin;
+import jack.rm.plugins.types.DataFetcherPlugin;
 import jack.rm.plugins.types.PatternSetPlugin;
 import jack.rm.plugins.types.RenamerPlugin;
 import jack.rm.plugins.types.RomDownloaderPlugin;
@@ -105,6 +106,12 @@ public class Settings
 	  Set<RomDownloaderPlugin> downloaders = plugins.getEnabledPlugins(PluginRealType.ROM_DOWNLOADER);
 	  
 	  return downloaders.stream().filter( p -> p.isPlatformSupported(platform)).findFirst().isPresent();
+	}
+	
+	public boolean hasAssetDownloader(Platform platform)
+	{
+	   Set<DataFetcherPlugin> downloaders = plugins.getEnabledPlugins(PluginRealType.DATA_FETCHER);
+	   return downloaders.stream().filter( p -> p.supportsAssetDownload()).findFirst().isPresent();
 	}
 		
 	public Set<Path> getIgnoredPaths()
