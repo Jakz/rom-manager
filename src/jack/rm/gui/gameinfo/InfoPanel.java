@@ -96,7 +96,7 @@ public class InfoPanel extends JPanel
 		
 	final private String[] buttonLabels = new String[] { "Download ROM", "Download Assets", "Open Folder", "Open Archive", "Forget Status" };
 	final private JButton[] buttons;
-  final private JPanel buttonsPanel = new JPanel();
+    final private JPanel buttonsPanel = new JPanel();
 	
 	final private JToggleButton editButton;
 	final private JButton resetCustomFieldsButton;
@@ -191,21 +191,25 @@ public class InfoPanel extends JPanel
 	void buildMainLayout()
 	{
 	  pTotal.removeAll();
-    pTotal.add(imagesPanel);
-    JPanel pFields2 = new JPanel(new BorderLayout());
-    pFields2.add(pFields, BorderLayout.NORTH);
-    pTotal.add(pFields2);
-    
-    if (!set.hasFeature(Feature.SINGLE_ROM_PER_GAME))
-      pTotal.add(new JScrollPane(romTable));
-    
-    if (showClonesTable)
-      pTotal.add(clonesTable);
-    
-    pTotal.add(buttonsPanel);
-   
-    if (showAttachmentsTable)
-      pTotal.add(attachments);
+      pTotal.add(imagesPanel);
+      JPanel pFields2 = new JPanel(new BorderLayout());
+      pFields2.add(pFields, BorderLayout.NORTH);
+      pTotal.add(pFields2);
+      
+      if (!set.hasFeature(Feature.SINGLE_ROM_PER_GAME))
+      {
+        JScrollPane pane = new JScrollPane(romTable);
+        pane.setPreferredSize(new Dimension(400, 200));
+        pTotal.add(pane);
+      }
+      
+      if (showClonesTable)
+        pTotal.add(clonesTable);
+      
+      pTotal.add(buttonsPanel);
+     
+      if (showAttachmentsTable)
+        pTotal.add(attachments);
     
     revalidate();
 	}

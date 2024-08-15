@@ -14,6 +14,7 @@ import java.util.Set;
 
 import javax.swing.JPanel;
 
+import com.github.jakz.romlib.data.assets.Asset;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.platforms.Platform;
@@ -37,7 +38,8 @@ public class MobyGamesFetcher extends DataFetcherPlugin
   static Map<Platform, Integer> platformMapping = Map.of(
       Platforms.AMIGA,     19,
       Platforms.GB,        10,
-      Platforms.IBM_PC,     2
+      Platforms.IBM_PC,     2,
+      Platforms.NES,       22
       
   );
   
@@ -92,6 +94,41 @@ public class MobyGamesFetcher extends DataFetcherPlugin
     JsonParser parser = new JsonParser();
     JsonElement element = parser.parse(response);
     return element;
+  }
+  
+  private String buildTitleQuery(Game game)
+  {
+    String title = game.getNormalizedTitle();
+    StringBuilder query = new StringBuilder();
+    
+    for (int i = 0; i < title.length(); ++i)
+    {
+      char c = title.charAt(i);
+      
+      if (Character.isAlphabetic(c))
+        query.append(c);
+      else
+        query.append(' ');
+    }
+    
+    return query.toString();
+  }
+  
+  private int findGameID(Game game)
+  {
+    /* generate url */
+    var data = httpRequestToJson("https://api.mobygames.com/v1/games",
+        "api_key", API_KEY, 
+        "platform", Integer.toString(platformMapping.get(game.getPlatform())),
+        "format", "id",
+        "title", buildTitleQuery(game)
+    );
+    
+    Gson gson = new Gson();
+    JsonObject root = gson.fromJson(data, JsonObject.class);
+    MobyGames.GameIDs ids = gson.fromJson(root, MobyGames.GameIDs.class);
+    
+    return ids.games.size() == 1 ? ids.games.get(0) : -1;        
   }
   
   /* fetch platforms from MobyGames API */
@@ -164,8 +201,38 @@ public class MobyGamesFetcher extends DataFetcherPlugin
   @Override
   public void searchAssetsForGame(Game game)
   {
-    if (game.getPlatform() == Platforms.IBM_PC)
+    if (platformMapping.containsKey(game.getPlatform()))
     {
+      int id = findGameID(game);
+      System.out.println("game id: "+id);
+
+      if (id != -1)
+      {
+        try
+        {
+          Thread.sleep(1000);
+        
+          var data = httpRequestToJson("https://api.mobygames.com/v1/games/"+id+"/platforms/"+platformMapping.get(game.getPlatform())+"/screenshots",
+            "api_key", API_KEY
+          );
+                  
+          Gson gson = new Gson();
+          JsonObject root = gson.fromJson(data, JsonObject.class);
+          List<MobyGames.Sample> array = gson.fromJson(root.get("screenshots"), new TypeToken<List<MobyGames.Sample>>(){}.getType());
+          
+          for (MobyGames.Sample sample : array)
+            System.out.println(sample.thumbnail_image);
+        }
+        catch (InterruptedException e)
+        {
+          e.printStackTrace();
+        }
+      }
+      
+      if (true)
+        return;
+      
+      
       String title = game.getNormalizedTitle();
       StringBuilder query = new StringBuilder();
       
@@ -180,7 +247,11 @@ public class MobyGamesFetcher extends DataFetcherPlugin
       }
       
       /* generate url */
-      var data = httpRequestToJson("https://api.mobygames.com/v1/games", "api_key", API_KEY, "platform", "2", "title", query.toString().trim());
+      var data = httpRequestToJson("https://api.mobygames.com/v1/games",
+          "api_key", API_KEY, 
+          "platform", Integer.toString(platformMapping.get(game.getPlatform())), 
+          "title", query.toString().trim()
+      );
             
       Gson gson = new Gson();
       JsonObject root = gson.fromJson(data, JsonObject.class);
@@ -197,6 +268,12 @@ public class MobyGamesFetcher extends DataFetcherPlugin
       {
         String imageURL = result.sample_cover.thumbnail_image;
         System.out.println(imageURL);
+        
+        if (!result.sample_screenshots.isEmpty())
+        {
+          System.out.println(result.sample_screenshots.get(0).thumbnail_image);
+
+        }
       }
     }
   }

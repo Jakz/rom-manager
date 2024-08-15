@@ -90,6 +90,10 @@
       <id>jitpack.io</id>
       <url>https://jitpack.io</url>
     </repository>
+      <repository>
+    <id>gitlab-maven</id>
+    <url>https://gitlab.com/api/v4/projects/59936705/packages/maven</url>
+  </repository>
   </repositories>
 	<dependencies>
     <!-- pixlib related -->
@@ -136,9 +140,12 @@
 		    <version>${zip7.version}</version>
 		</dependency>
 		<dependency>
-		    <groupId>net.sf.sevenzipjbinding</groupId>
+		 <!--    <groupId>net.sf.sevenzipjbinding</groupId>
 		    <artifactId>sevenzipjbinding-all-platforms</artifactId>
-		    <version>${zip7.version}</version>
+		    <version>${zip7.version}</version>-->
+		  <groupId>com.github.shayartzi.sevenzipjbinding</groupId>
+          <artifactId>sevenzipjbinding-all-platforms</artifactId>
+  		  <version>16.02-2.01</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jsoup</groupId>

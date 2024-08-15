@@ -25,4 +25,9 @@ public class MobyGames
     String image;
     String thumbnail_image;
   }
+  
+  public class GameIDs
+  {
+    List<Integer> games;
+  }
 }
