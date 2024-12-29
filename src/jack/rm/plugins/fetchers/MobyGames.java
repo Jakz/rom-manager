@@ -24,10 +24,16 @@ public class MobyGames
     int height;
     String image;
     String thumbnail_image;
+    String caption;
   }
   
   public class GameIDs
   {
     List<Integer> games;
+  } 
+  
+  public class Games
+  {
+    List<Game> games;
   }
 }

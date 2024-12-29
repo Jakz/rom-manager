@@ -12,6 +12,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -36,11 +37,13 @@ import javax.swing.SwingUtilities;
 import com.github.jakz.romlib.data.assets.Asset;
 import com.github.jakz.romlib.data.assets.AssetData;
 import com.github.jakz.romlib.data.assets.AssetManager;
+import com.github.jakz.romlib.data.assets.AssetType;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.game.attributes.RomAttribute;
+import com.github.jakz.romlib.data.platforms.PlatformDetails;
 import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.ui.Icon;
@@ -412,34 +415,52 @@ public class InfoPanel extends JPanel
 		
 		clonesTable.gameSetLoaded(set);
 		
-		if (assets.length == 0)
+		images = new AssetImage[0];
+		
+		
+    PlatformDetails details = set.platform().details();
+
+		
+		if (details.screenSizes() != null)
 		{
-		  images = new AssetImage[0];
-		  imagesPanel.removeAll();
-		  imagesPanel.revalidate();
+		  /* check if there are specifics for the platform */
+		  Asset asset = new Asset.Image(Paths.get("."), details.screenSizes());
+		  images = new AssetImage[] { new AssetImage(asset) };
+		}
+		else if (assets.length != 0)
+		{
+      images = new AssetImage[] { new AssetImage(assets[0]), new AssetImage(assets[1]) };  	 
+		}
+		
+		if (images.length == 0)
+		{
+      imagesPanel.removeAll();
+      imagesPanel.revalidate();
 		}
 		else
 		{
-      images = new AssetImage[] { new AssetImage(assets[0]), new AssetImage(assets[1]) };
-      
-    	  SwingUtilities.invokeLater(new Runnable() {
-    			@Override
-          public void run() {
-    				imagesPanel.removeAll();
-    				
-    		    imagesPanel.add(images[0].image);
-    		    imagesPanel.add(Box.createRigidArea(new Dimension(30,0)));
-    		    imagesPanel.add(images[1].image);
-    		    
-    		    for (AssetImage image : images)
-    		    {
-    		      image.image.setPreferredSize(((Asset.Image)image.asset).getSize());
-    		      image.image.revalidate();
-    		    }
-    		    
-    		    imagesPanel.revalidate();
-    			}
-    		});
+		  SwingUtilities.invokeLater(new Runnable() {
+        @Override
+        public void run() {
+          imagesPanel.removeAll();
+          
+          for (int i = 0; i < images.length; ++i)
+          {
+            if (i > 0)
+              imagesPanel.add(Box.createRigidArea(new Dimension(30,0)));
+            
+            imagesPanel.add(images[i].image);
+          }
+
+          for (AssetImage image : images)
+          {
+            image.image.setPreferredSize(((Asset.Image)image.asset).getSize());
+            image.image.revalidate();
+          }
+          
+          imagesPanel.revalidate();
+        }
+      });
 		}
 		
 		buildFields();
