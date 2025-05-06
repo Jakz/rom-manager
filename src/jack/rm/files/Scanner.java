@@ -260,18 +260,25 @@ public class Scanner
 	        if (!sharedRoms.isEmpty())
 	        {
 	          logger.i(LogTarget.romset(set), "Found %d ROMs which are shared between multiple entries", sharedRoms.size());
-	          for (Set<Rom> set : sharedRoms)
-	            logger.d(LogTarget.rom(set.iterator().next()), "> %s is shared between %d entries", set.iterator().next().name, set.size());
+
+	          Collection<Set<Rom>> sharedPresentRoms = new HashSet<Set<Rom>>();
 	          
 	          for (Set<Rom> set : sharedRoms)
 	          {
 	            final Optional<Rom> assigned = set.stream().filter(Rom::isPresent).findAny();
 	            
 	            if (assigned.isPresent())
+	            {
 	              set.stream()
 	                .filter(Rom::isMissing)
 	                .forEach(rom -> foundRom(new ScanResult(rom, new HandleLink(assigned.get().handle()))));
+	              sharedPresentRoms.add(set);
+	            }
 	          }
+	          
+	           for (Set<Rom> set : sharedPresentRoms)
+	              logger.d(LogTarget.rom(set.iterator().next()), "> %s is shared between %d entries", set.iterator().next().name, set.size());
+	            
 	        }
   
 	        Main.progress.finished();

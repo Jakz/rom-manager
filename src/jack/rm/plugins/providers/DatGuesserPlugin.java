@@ -117,6 +117,7 @@ public class DatGuesserPlugin extends ProviderPlugin
       keywords.put("playstation", Platforms.PS1);
       keywords.put("psx", Platforms.PS1);
 
+      keywords.put("nintendo switch", Platforms.SWITCH);
       keywords.put("n64", Platforms.N64);
       keywords.put("nintendo 64", Platforms.N64);
       keywords.put("3ds", Platforms._3DS);
@@ -237,6 +238,20 @@ public class DatGuesserPlugin extends ProviderPlugin
       
       return provider;
     }
+    
+    private Provider guessFlavour(Provider provider)
+    {
+      String name = attribute("header:name");
+      
+      if (name.isEmpty())
+        name = attribute("configuration:system");
+      
+      
+      if (name.contains("dlc"))
+        provider = provider.withFlavourAndSuffix("dlc", "dlc");
+
+      return provider;
+    }
 
     @Override
     public GuessedInfo get()
@@ -244,8 +259,8 @@ public class DatGuesserPlugin extends ProviderPlugin
       GuessedInfo info = new GuessedInfo();
       
       info.provider = guessProvider();
-      info.platform = guessPlatform();
-      
+      info.platform = guessPlatform();   
+      info.provider = guessFlavour(info.provider);
       
       return info;     
     }
