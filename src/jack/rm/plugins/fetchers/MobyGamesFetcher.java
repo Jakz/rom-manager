@@ -21,6 +21,8 @@ import java.util.Set;
 import javax.swing.JPanel;
 
 import com.github.jakz.romlib.data.assets.Asset;
+import com.github.jakz.romlib.data.assets.AssetImageType;
+import com.github.jakz.romlib.data.assets.AssetType;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.platforms.Platform;
@@ -203,7 +205,7 @@ public class MobyGamesFetcher extends DataFetcherPlugin
   }
 
   @Override
-  public void searchAssetsForGame(Game game)
+  public void searchAssetsForGame(Game game, AssetImageType type)
   {
     if (platformMapping.containsKey(game.getPlatform()))
     {

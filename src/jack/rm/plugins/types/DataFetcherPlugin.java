@@ -2,6 +2,7 @@ package jack.rm.plugins.types;
 
 import java.util.List;
 
+import com.github.jakz.romlib.data.assets.AssetImageType;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.pixbits.lib.plugin.PluginType;
@@ -16,5 +17,5 @@ public abstract class DataFetcherPlugin extends ActualPlugin
   public abstract List<Attribute> supportedAttributes();
   public abstract boolean supportsAssetDownload();
   
-  public abstract void searchAssetsForGame(Game game);
+  public abstract void searchAssetsForGame(Game game, AssetImageType type);
 }
