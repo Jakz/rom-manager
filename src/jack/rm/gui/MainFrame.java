@@ -14,6 +14,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -247,6 +249,22 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
     textFrame.showWithText(this, builder.toString());
 	}
 
+	private void openDatSaveFolder(GameSet set)
+	{
+	  try
+	  {
+	    setManager.saveSetStatus(set);
+
+	    Path path = GlobalSettings.DATA_PATH.resolve(set.uuid().asPath());
+	    Files.createDirectories(path);
+	    Main.openFolder(path.toFile());
+	  }
+	  catch (IOException e)
+	  {
+	    e.printStackTrace();
+	  }
+	}
+
 	private void buildMenu(final GameSet set)
 	{	
 		MenuElement.clearListeners();
@@ -322,7 +340,10 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
     {
       MenuElement.TOOLS_OPTIONS.item.addActionListener( e -> optionsFrame.showMe() );
       toolsMenu.add(MenuElement.TOOLS_OPTIONS.item);
-      
+
+      MenuElement.TOOLS_OPEN_DAT_FOLDER.item.addActionListener(e -> openDatSaveFolder(set));
+      toolsMenu.add(MenuElement.TOOLS_OPEN_DAT_FOLDER.item);
+
       MenuElement.TOOLS_SHOW_MESSAGES.item.addActionListener( e -> toggleLogPanel(((JMenuItem)e.getSource()).isSelected()));
       toolsMenu.add(MenuElement.TOOLS_SHOW_MESSAGES.item);
       

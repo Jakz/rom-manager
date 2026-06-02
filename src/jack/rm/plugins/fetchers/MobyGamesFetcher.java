@@ -8,20 +8,22 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.swing.JPanel;
 
 import com.github.jakz.romlib.data.assets.Asset;
-import com.github.jakz.romlib.data.assets.AssetImageType;
 import com.github.jakz.romlib.data.assets.AssetType;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
@@ -37,6 +39,7 @@ import com.pixbits.lib.io.FileUtils;
 import com.pixbits.lib.io.digest.DigestOptions;
 import com.pixbits.lib.io.digest.Digester;
 import com.pixbits.lib.lang.StringUtils;
+import com.pixbits.lib.plugin.ExposedParameter;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
 
@@ -45,8 +48,8 @@ import jack.rm.plugins.types.DataFetcherPlugin;
 
 public class MobyGamesFetcher extends DataFetcherPlugin
 {
-  private final String API_KEY = "moby_HHsziFeryZRVjgX8Yvjku92zuaz";
-  private final String url = "https://api.mobygames.com/v1/games?api_key=" + API_KEY;
+  @ExposedParameter(name="API Key File") private String apiKey = "";
+  @ExposedParameter(name="Request Delay (ms)") private int requestDelayMillis = 1000;
 
   static Map<Platform, Integer> platformMapping = Map.of(Platforms.AMIGA, 19, Platforms.GB, 10, Platforms.IBM_PC, 2,
       Platforms.NES, 22, Platforms.PSP, 46
@@ -56,21 +59,44 @@ public class MobyGamesFetcher extends DataFetcherPlugin
 
   // https://api.mobygames.com/v1/games?format=id&title=onslaught&platform=19
 
+  private Optional<String> loadApiKey()
+  {
+    return Optional.ofNullable(apiKey);
+	  /*Path path = Paths.get(apiKeyFile);
+
+    try
+    {
+      return Files.readAllLines(path).stream()
+          .map(String::trim)
+          .filter(line -> !line.isEmpty())
+          .findFirst();
+    } catch (IOException e)
+    {
+      warning("Unable to load MobyGames API key from " + path.toAbsolutePath());
+      return Optional.empty();
+    }*/
+  }
+
+  private String encode(String value)
+  {
+    return URLEncoder.encode(value, java.nio.charset.StandardCharsets.UTF_8);
+  }
+
   String httpRequestToString(String urls, String... args)
   {
-    String completeURL = urls;
+    StringBuilder completeURL = new StringBuilder(urls);
 
     for (int i = 0; i < args.length / 2; ++i)
     {
-      completeURL += (i == 0) ? "?" : "&";
-      completeURL += args[2 * i] + "=" + args[2 * i + 1];
+      completeURL.append(i == 0 ? "?" : "&");
+      completeURL.append(encode(args[2 * i])).append("=").append(encode(args[2 * i + 1]));
     }
 
     try
     {
-      this.debug("json request: " + completeURL);
+      this.debug("json request: " + completeURL.toString());
 
-      URL url = new URL(completeURL);
+      URL url = new URL(completeURL.toString());
 
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("GET");
@@ -100,6 +126,9 @@ public class MobyGamesFetcher extends DataFetcherPlugin
   JsonElement httpRequestToJson(String urls, String... args)
   {
     String response = httpRequestToString(urls, args);
+    if (response == null)
+      return null;
+
     JsonParser parser = new JsonParser();
     JsonElement element = parser.parse(response);
     return element;
@@ -116,7 +145,7 @@ public class MobyGamesFetcher extends DataFetcherPlugin
 
       if (Character.isAlphabetic(c))
         query.append(c);
-      else
+      else if (query.length() != 0 && query.charAt(query.length()-1) != ' ')
         query.append(' ');
     }
 
@@ -125,9 +154,15 @@ public class MobyGamesFetcher extends DataFetcherPlugin
 
   private int findGameID(Game game)
   {
+    Optional<String> apiKey = loadApiKey();
+    if (!apiKey.isPresent())
+      return -1;
+
     /* generate url */
-    var data = httpRequestToJson("https://api.mobygames.com/v1/games", "api_key", API_KEY, "platform",
+    var data = httpRequestToJson("https://api.mobygames.com/v1/games", "api_key", apiKey.get(), "platform",
         Integer.toString(platformMapping.get(game.getPlatform())), "format", "brief", "title", buildTitleQuery(game));
+    if (data == null)
+      return -1;
 
     Gson gson = new Gson();
     JsonObject root = gson.fromJson(data, JsonObject.class);
@@ -144,7 +179,13 @@ public class MobyGamesFetcher extends DataFetcherPlugin
     if (true)
       return;
 
-    var json = httpRequestToJson("https://api.mobygames.com/v1/platforms", "api_key", API_KEY);
+    Optional<String> apiKey = loadApiKey();
+    if (!apiKey.isPresent())
+      return;
+
+    var json = httpRequestToJson("https://api.mobygames.com/v1/platforms", "api_key", apiKey.get());
+    if (json == null)
+      return;
 
     Gson gson = new Gson();
     List<MobyGames.Platform> platforms = gson.fromJson(json.getAsJsonObject().get("platforms").toString(),
@@ -194,8 +235,7 @@ public class MobyGamesFetcher extends DataFetcherPlugin
   @Override
   public List<Attribute> supportedAttributes()
   {
-    // TODO Auto-generated method stub
-    return null;
+    return Collections.emptyList();
   }
 
   @Override
@@ -205,9 +245,13 @@ public class MobyGamesFetcher extends DataFetcherPlugin
   }
 
   @Override
-  public void searchAssetsForGame(Game game, AssetImageType type)
+  public void searchAssetsForGame(Game game, AssetType type)
   {
-    if (platformMapping.containsKey(game.getPlatform()))
+    Optional<String> apiKey = loadApiKey();
+    if (!apiKey.isPresent())
+      return;
+	  
+	if (platformMapping.containsKey(game.getPlatform()))
     {
       int id = findGameID(game);
       System.out.println("game id: " + id);
@@ -216,10 +260,14 @@ public class MobyGamesFetcher extends DataFetcherPlugin
       {
         try
         {
-          Thread.sleep(1000);
+
+
+          Thread.sleep(requestDelayMillis);
 
           var data = httpRequestToJson("https://api.mobygames.com/v1/games/" + id + "/platforms/"
-              + platformMapping.get(game.getPlatform()) + "/screenshots", "api_key", API_KEY);
+              + platformMapping.get(game.getPlatform()) + "/screenshots", "api_key", apiKey.get());
+          if (data == null)
+            return;
 
           Gson gson = new Gson();
           JsonObject root = gson.fromJson(data, JsonObject.class);
@@ -278,7 +326,7 @@ public class MobyGamesFetcher extends DataFetcherPlugin
       }
 
       /* generate url */
-      var data = httpRequestToJson("https://api.mobygames.com/v1/games", "api_key", API_KEY, "platform",
+      var data = httpRequestToJson("https://api.mobygames.com/v1/games", "api_key", apiKey.get(), "platform",
           Integer.toString(platformMapping.get(game.getPlatform())), "title", query.toString().trim());
 
       Gson gson = new Gson();
