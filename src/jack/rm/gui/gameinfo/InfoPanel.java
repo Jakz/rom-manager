@@ -251,7 +251,7 @@ public class InfoPanel extends JPanel
         
         if (plugin != null && plugin.supportsAssetDownload())
         {
-          plugin.searchAssetsForGame(game);
+          plugin.searchAssetsForGame(game, AssetType.IMAGE);
         }
       }
   

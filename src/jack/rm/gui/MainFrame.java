@@ -340,9 +340,25 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
     {
       MenuElement.TOOLS_OPTIONS.item.addActionListener( e -> optionsFrame.showMe() );
       toolsMenu.add(MenuElement.TOOLS_OPTIONS.item);
-
+      
+      JMenu openFolderMenu = new JMenu("Open folder"); //TODO localize
+      
       MenuElement.TOOLS_OPEN_DAT_FOLDER.item.addActionListener(e -> openDatSaveFolder(set));
-      toolsMenu.add(MenuElement.TOOLS_OPEN_DAT_FOLDER.item);
+      openFolderMenu.add(MenuElement.TOOLS_OPEN_DAT_FOLDER.item);
+      
+      JMenuItem openRomsFolder = new JMenuItem("Open ROMs folder"); //TODO localize, move to MenuElement
+      openRomsFolder.addActionListener(e -> {
+        MyGameSetFeatures helper = set.helper();
+        var path = helper.settings().romsPath;
+        if (Files.exists(path) && Files.isDirectory(path))
+          Main.openFolder(path.toFile());
+        else
+          Dialogs.showError("ROMs folder not found!", "The ROMs folder for this set doesn't exist. It should be located at "+path.toString(), Main.mainFrame);        
+      });
+      openFolderMenu.add(openRomsFolder);
+      
+      
+      toolsMenu.add(openFolderMenu);
 
       MenuElement.TOOLS_SHOW_MESSAGES.item.addActionListener( e -> toggleLogPanel(((JMenuItem)e.getSource()).isSelected()));
       toolsMenu.add(MenuElement.TOOLS_SHOW_MESSAGES.item);
