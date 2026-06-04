@@ -41,6 +41,7 @@ import javax.swing.SwingUtilities;
 import com.github.jakz.romlib.data.game.Drawable;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameClone;
+import com.github.jakz.romlib.data.assets.Asset;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.platforms.Platforms;
 import com.github.jakz.romlib.data.set.Feature;
@@ -368,8 +369,14 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
       
       JMenu assetsMenu = new JMenu(Text.MENU_TOOLS_ASSETS.text());
       
-      assetsMenu.add(MenuElement.TOOLS_DOWNLOAD_ASSETS.item);
-      MenuElement.TOOLS_DOWNLOAD_ASSETS.item.addActionListener( e -> Main.downloader.start() );
+      //TODO: this is obsolete, I guess it's not working anymore, it was used on offlinelist DATs which had URL to specify asset in their dat
+      Asset[] assets = set.getAssetManager().getSupportedAssets();
+      if (assets.length != 0 && set.getAssetManager().assetURL(assets[0], set.getAny()) != null)
+      {
+        assetsMenu.add(MenuElement.TOOLS_DOWNLOAD_ASSETS.item);
+        MenuElement.TOOLS_DOWNLOAD_ASSETS.item.addActionListener( e -> Main.downloader.start() );
+      }
+
       assetsMenu.add(MenuElement.TOOLS_PACK_ASSETS.item);
       MenuElement.TOOLS_PACK_ASSETS.item.addActionListener( e -> AssetPacker.packAssets(set) );
       

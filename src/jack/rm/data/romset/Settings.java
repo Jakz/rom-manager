@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import com.github.jakz.romlib.data.assets.AssetKind;
 import com.github.jakz.romlib.data.game.BiasSet;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.Location;
@@ -35,21 +36,23 @@ import jack.rm.plugins.types.RomDownloaderPlugin;
 import jack.rm.plugins.types.SearchPlugin;
 
 public class Settings
-{	
+{
   public String renamingPattern;
   public String internalRenamingPattern;
   public boolean shouldRenameInternalName;
-	public Path romsPath;	
-	public BiasSet bias;
-	
-	public PluginSet<ActualPlugin> plugins;
-	
-	public List<Attribute> attributes;
+  public Path romsPath;
+  public BiasSet bias;
+
+  public PluginSet<ActualPlugin> plugins;
+
+  public List<Attribute> attributes;
+  public final List<AssetKind> visibleAssets;
 
   Settings()
   {
     plugins = new PluginSet<ActualPlugin>();
     attributes = new ArrayList<>();
+    visibleAssets = new ArrayList<>(List.of(AssetKind.BOXART, AssetKind.TITLE_SCREEN));
     bias = new BiasSet(Location.ITALY, Location.EUROPE, Location.USA);
   }
   
@@ -60,7 +63,6 @@ public class Settings
 	  manager.setup(plugins); 
 	  renamingPattern = "%n - %t [%S]";
 	  romsPath = null;
-    bias = new BiasSet(Location.ITALY, Location.EUROPE, Location.USA);
 	}
 	
 	
@@ -127,6 +129,23 @@ public class Settings
 
 	  return paths;
 	}
-	
+
 	public List<Attribute> getRomAttributes() { return attributes; }
+
+
+	public boolean isAssetKindVisible(AssetKind kind)
+	{
+	  return visibleAssets.contains(kind);
+	}
+
+	public void setAssetKindVisible(AssetKind kind, boolean visible)
+	{
+	  List<AssetKind> kinds = visibleAssets;
+
+	  //TODO: always added to the end, maybe manage ordering?
+	  if (visible && !kinds.contains(kind))
+	    kinds.add(kind);
+	  else if (!visible)
+	    kinds.remove(kind);
+	}
 }

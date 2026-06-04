@@ -1,7 +1,9 @@
 package jack.rm.plugins.providers;
 
 import java.io.IOException;
+import java.awt.Dimension;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -12,7 +14,9 @@ import java.util.function.Function;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import com.github.jakz.romlib.data.assets.AssetKind;
 import com.github.jakz.romlib.data.assets.AssetManager;
+import com.github.jakz.romlib.data.assets.Asset;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameID;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
@@ -313,7 +317,7 @@ public class DatGuesserPlugin extends ProviderPlugin
                 datParser,
                 format,
                 attributes.toArray(new Attribute[attributes.size()]),
-                AssetManager.DUMMY, // AssetManager assetManager,
+                buildAssetManager(data.platform),
                 s -> {
                   GameSetFeatures features = new MyGameSetFeatures(s, idGenerator, Feature.FINITE_SIZE_SET);
                   
@@ -339,5 +343,21 @@ public class DatGuesserPlugin extends ProviderPlugin
     }
         
     return sets.toArray(new GameSet[sets.size()]);
+  }
+
+  private AssetManager buildAssetManager(Platform platform)
+  {
+    Dimension screenSize = platform.details().screenSizes() != null ? platform.details().screenSizes() : new Dimension(320, 240);
+    Asset boxart = new Asset.Image(AssetKind.BOXART, Paths.get(AssetKind.BOXART.getIdentifier()), new Dimension(220, 320));
+    Asset titleScreen = new Asset.Image(AssetKind.TITLE_SCREEN, Paths.get(AssetKind.TITLE_SCREEN.getIdentifier()), screenSize);
+    Asset gameplayScreen = new Asset.Image(AssetKind.GAMEPLAY_SCREEN, Paths.get(AssetKind.GAMEPLAY_SCREEN.getIdentifier()), screenSize);
+    Asset cartridge = new Asset.Image(AssetKind.CARTRIDGE, Paths.get(AssetKind.CARTRIDGE.getIdentifier()), new Dimension(320, 220));
+    Asset[] assets = new Asset[] { boxart, titleScreen, gameplayScreen, cartridge };
+
+    return new AssetManager()
+    {
+      @Override public java.net.URL assetURL(Asset asset, Game rom) { return null; }
+      @Override public Asset[] getSupportedAssets() { return assets; }
+    };
   }
 }

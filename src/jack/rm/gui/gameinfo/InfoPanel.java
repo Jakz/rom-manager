@@ -12,6 +12,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +26,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -36,6 +39,7 @@ import javax.swing.SwingUtilities;
 
 import com.github.jakz.romlib.data.assets.Asset;
 import com.github.jakz.romlib.data.assets.AssetData;
+import com.github.jakz.romlib.data.assets.AssetKind;
 import com.github.jakz.romlib.data.assets.AssetManager;
 import com.github.jakz.romlib.data.assets.AssetType;
 import com.github.jakz.romlib.data.game.Game;
@@ -43,10 +47,10 @@ import com.github.jakz.romlib.data.game.GameStatus;
 import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.game.attributes.GameAttribute;
 import com.github.jakz.romlib.data.game.attributes.RomAttribute;
-import com.github.jakz.romlib.data.platforms.PlatformDetails;
 import com.github.jakz.romlib.data.set.Feature;
 import com.github.jakz.romlib.data.set.GameSet;
 import com.github.jakz.romlib.ui.Icon;
+import com.pixbits.lib.io.FileUtils;
 
 import jack.rm.Main;
 import jack.rm.data.romset.GameSetManager;
@@ -104,7 +108,9 @@ public class InfoPanel extends JPanel
 	final private JToggleButton editButton;
 	final private JButton resetCustomFieldsButton;
 	final private JButton addCustomFieldButton;
+	final private JButton assetsButton;
 	final private JPopupMenu customPopup;
+	final private JPopupMenu assetsPopup;
 	
 	
 	private boolean showAttachmentsTable;
@@ -163,10 +169,17 @@ public class InfoPanel extends JPanel
     
     addCustomFieldButton = new JButton(Icon.ADD.getIcon());
     addCustomFieldButton.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
-    addCustomFieldButton.setToolTipText("Add a custom attribute to the romset");    
-    
+    addCustomFieldButton.setToolTipText("Add a custom attribute to the romset");
+
     customPopup = new JPopupMenu();
-    
+    assetsPopup = new JPopupMenu();
+    assetsButton = new JButton("Assets");
+    assetsButton.setToolTipText("Choose visible asset slots");
+    assetsButton.addActionListener(e -> {
+      buildAssetsPopup();
+      assetsPopup.show(assetsButton, 0, assetsButton.getHeight());
+    });
+
     addCustomFieldButton.addMouseListener(new MouseAdapter(){
       public void mousePressed(MouseEvent e) {
         addCustomFieldButton.doClick();
@@ -226,6 +239,7 @@ public class InfoPanel extends JPanel
       buttonsPanel.add(buttons[i]);
       buttons[i].setEnabled(false);
     }
+    buttonsPanel.add(assetsButton);
     
     buttons[0].addActionListener(e -> {
       try
@@ -275,6 +289,35 @@ public class InfoPanel extends JPanel
         SwingUtilities.invokeLater(() -> mediator.repaint());
       }
     });
+	}
+
+	private void buildAssetsPopup()
+	{
+	  assetsPopup.removeAll();
+
+	  if (set == null)
+	    return;
+
+	  MyGameSetFeatures helper = set.helper();
+	  Settings settings = helper.settings();
+	  List<AssetKind> addedKinds = new java.util.ArrayList<>();
+
+	  for (Asset asset : set.getAssetManager().getSupportedAssets())
+	  {
+	    AssetKind kind = asset.getKind();
+	    if (kind == AssetKind.UNKNOWN || addedKinds.contains(kind))
+	      continue;
+
+	    JCheckBoxMenuItem item = new JCheckBoxMenuItem(kind.getCaption(), settings.isAssetKindVisible(kind));
+	    item.addActionListener(e -> {
+	      settings.setAssetKindVisible(kind, item.isSelected());
+	      rebuildAssetImages();
+	      layoutImages();
+	      updateFields(game);
+	    });
+	    assetsPopup.add(item);
+	    addedKinds.add(kind);
+	  }
 	}
 	
 	public void buildPopupMenu()
@@ -402,74 +445,62 @@ public class InfoPanel extends JPanel
 	public void romSetLoaded(final GameSet set)
 	{
 		mode = Mode.VIEW;
-	  
+
 	  this.set = set;
-		
-		AssetManager manager = set.getAssetManager();
-		Asset[] assets = manager.getSupportedAssets();
-		
+
 		showClonesTable = set.hasFeature(Feature.CLONES); // TODO && uiSettings.showClonesTable
-		
+
 		buildMainLayout();
 		buildPopupMenu();
-		
+
 		clonesTable.gameSetLoaded(set);
-		
-		images = new AssetImage[0];
-		
-		
-    PlatformDetails details = set.platform().details();
 
-		
-		if (details.screenSizes() != null)
-		{
-		  /* check if there are specifics for the platform */
-		  Asset asset = new Asset.Image(Paths.get("."), details.screenSizes());
-		  images = new AssetImage[] { new AssetImage(asset) };
-		}
-		else if (assets.length != 0)
-		{
-      images = new AssetImage[] { new AssetImage(assets[0]), new AssetImage(assets[1]) };  	 
-		}
-		
-		if (images.length == 0)
-		{
-      imagesPanel.removeAll();
-      imagesPanel.revalidate();
-		}
-		else
-		{
-		  SwingUtilities.invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          imagesPanel.removeAll();
-          
-          for (int i = 0; i < images.length; ++i)
-          {
-            if (i > 0)
-              imagesPanel.add(Box.createRigidArea(new Dimension(30,0)));
-            
-            imagesPanel.add(images[i].image);
-          }
+		rebuildAssetImages();
+		layoutImages();
 
-          for (AssetImage image : images)
-          {
-            image.image.setPreferredSize(((Asset.Image)image.asset).getSize());
-            image.image.revalidate();
-          }
-          
-          imagesPanel.revalidate();
-        }
-      });
-		}
-		
 		buildFields();
+	}
+
+	private void rebuildAssetImages()
+	{
+	  AssetManager manager = set.getAssetManager();
+	  MyGameSetFeatures helper = set.helper();
+	  Settings settings = helper.settings();
+
+	  images = Arrays.stream(manager.getSupportedAssets())
+	      .filter(asset -> asset.getType() == AssetType.IMAGE)
+	      .filter(asset -> asset.getKind() == AssetKind.UNKNOWN || settings.isAssetKindVisible(asset.getKind()))
+	      .map(AssetImage::new)
+	      .toArray(AssetImage[]::new);
+	}
+
+	private void layoutImages()
+	{
+	  imagesPanel.removeAll();
+
+	  for (int i = 0; i < images.length; ++i)
+	  {
+	    if (i > 0)
+	      imagesPanel.add(Box.createRigidArea(new Dimension(30,0)));
+
+	    imagesPanel.add(images[i].image);
+	  }
+
+	  for (AssetImage image : images)
+	  {
+	    image.image.setPreferredSize(((Asset.Image)image.asset).getSize());
+	    image.image.revalidate();
+	  }
+
+	  imagesPanel.revalidate();
+	  imagesPanel.repaint();
 	}
 	
 	void setImage(Game rom, Asset asset, JLabel dest)
 	{
 		AssetData data = rom.getAssetData(asset);
-		
+		restoreAssetData(rom, asset, data);
+
 		if (data.isPresent())
 		{
 		  Asset.Image imageAsset = (Asset.Image)asset;
@@ -479,8 +510,15 @@ public class InfoPanel extends JPanel
 			Image img = i.getImage();
 			BufferedImage bi = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 			Graphics g = bi.createGraphics();
-			g.drawImage(img, 0, 0, size.width, size.height, null);
-			
+			int imageWidth = i.getIconWidth();
+			int imageHeight = i.getIconHeight();
+			double scale = Math.min(size.width / (double)imageWidth, size.height / (double)imageHeight);
+			int drawWidth = Math.max(1, (int)(imageWidth * scale));
+			int drawHeight = Math.max(1, (int)(imageHeight * scale));
+			int x = (size.width - drawWidth) / 2;
+			int y = (size.height - drawHeight) / 2;
+			g.drawImage(img, x, y, drawWidth, drawHeight, null);
+
 			dest.setText("");
 			dest.setIcon(new ImageIcon(bi));
 		}
@@ -490,7 +528,27 @@ public class InfoPanel extends JPanel
 			dest.setIcon(null);
 		}
 	}
-	
+
+	private void restoreAssetData(Game rom, Asset asset, AssetData data)
+	{
+	  try
+	  {
+	    if (!data.getPath().equals(Paths.get(".")) && data.isPresent())
+	      return;
+
+	    Path path = Paths.get(Asset.safeName(rom.getCorrectName()) + ".png");
+	    data.setPath(path);
+
+	    Path finalPath = data.getFinalPath();
+	    if (Files.exists(finalPath))
+	      data.setCRC(FileUtils.calculateCRCFast(finalPath));
+	  }
+	  catch (Exception e)
+	  {
+	    e.printStackTrace();
+	  }
+	}
+
 	public void resetFields()
 	{
 		for (AttributeField field : fields)
