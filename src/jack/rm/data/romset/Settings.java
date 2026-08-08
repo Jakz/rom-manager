@@ -47,12 +47,16 @@ public class Settings
 
   public List<Attribute> attributes;
   public final List<AssetKind> visibleAssets;
+  private Boolean renderCartridgeTemplate;
+  private String cartridgeTemplateId;
 
   Settings()
   {
     plugins = new PluginSet<ActualPlugin>();
     attributes = new ArrayList<>();
     visibleAssets = new ArrayList<>(List.of(AssetKind.BOXART, AssetKind.TITLE_SCREEN));
+    renderCartridgeTemplate = true;
+    cartridgeTemplateId = null;
     bias = new BiasSet(Location.ITALY, Location.EUROPE, Location.USA);
   }
   
@@ -138,7 +142,7 @@ public class Settings
 	  return visibleAssets.contains(kind);
 	}
 
-	public void setAssetKindVisible(AssetKind kind, boolean visible)
+  public void setAssetKindVisible(AssetKind kind, boolean visible)
 	{
 	  List<AssetKind> kinds = visibleAssets;
 
@@ -146,6 +150,15 @@ public class Settings
 	  if (visible && !kinds.contains(kind))
 	    kinds.add(kind);
 	  else if (!visible)
-	    kinds.remove(kind);
-	}
+      kinds.remove(kind);
+  }
+
+  public boolean shouldRenderCartridgeTemplate()
+  {
+    return renderCartridgeTemplate == null || renderCartridgeTemplate.booleanValue();
+  }
+
+  public void setRenderCartridgeTemplate(boolean render) { this.renderCartridgeTemplate = render; }
+  public String getCartridgeTemplateId() { return cartridgeTemplateId; }
+  public void setCartridgeTemplateId(String id) { this.cartridgeTemplateId = id; }
 }

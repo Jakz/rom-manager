@@ -4,7 +4,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
@@ -15,7 +17,10 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 
+import com.github.jakz.romlib.data.assets.AssetKind;
 import com.github.jakz.romlib.data.game.Drawable;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameStatus;
@@ -29,9 +34,18 @@ import com.pixbits.lib.lang.Pair;
 import jack.rm.gui.gamelist.GameListData;
 import jack.rm.gui.resources.Resources;
 import jack.rm.i18n.Text;
+import jack.rm.data.romset.MyGameSetFeatures;
+import jack.rm.data.romset.Settings;
 
 public class ViewMenu extends JMenu
 {
+  private static final AssetKind[] ASSET_DISPLAY_ORDER = new AssetKind[] {
+      AssetKind.BOXART,
+      AssetKind.GAMEPLAY_SCREEN,
+      AssetKind.TITLE_SCREEN,
+      AssetKind.CARTRIDGE
+  };
+
   private final Attribute[] sortAttributes = new Attribute[] { GameAttribute.TITLE, GameAttribute.ORDINAL, GameAttribute.SIZE, GameAttribute.NUMBER };
   private final List<Comparator<? super Drawable>> sorters = Arrays.asList(
      null,
@@ -171,7 +185,86 @@ public class ViewMenu extends JMenu
       add(sortMenu);
       add(reverseSortOrder); 
       addSeparator();
+
+      JMenu assetsMenu = buildAssetsMenu(set);
+      if (assetsMenu.getItemCount() != 0)
+      {
+        add(assetsMenu);
+        addSeparator();
+      }
+
       add(showTotalsInCount);
+    }
+  }
+
+  private JMenu buildAssetsMenu(GameSet set)
+  {
+    JMenu assetsMenu = new JMenu("Assets");
+    MyGameSetFeatures helper = set.helper();
+    Settings settings = helper.settings();
+    Map<AssetKind, JCheckBoxMenuItem> items = new EnumMap<>(AssetKind.class);
+
+    for (AssetKind kind : ASSET_DISPLAY_ORDER)
+    {
+      boolean supported = Arrays.stream(set.getAssetManager().getSupportedAssets())
+          .anyMatch(asset -> asset.getKind() == kind);
+      if (!supported)
+        continue;
+
+      JCheckBoxMenuItem item = new JCheckBoxMenuItem(assetCaption(kind), settings.isAssetKindVisible(kind));
+      item.addActionListener(e -> {
+        settings.setAssetKindVisible(kind, item.isSelected());
+        mediator.refreshInfoPanelAssets();
+      });
+      items.put(kind, item);
+      assetsMenu.add(item);
+    }
+
+    JCheckBoxMenuItem renderCartridgeShell = null;
+    if (items.containsKey(AssetKind.CARTRIDGE))
+    {
+      assetsMenu.addSeparator();
+      renderCartridgeShell = new JCheckBoxMenuItem("Render Cartridge Shell",
+          settings.shouldRenderCartridgeTemplate());
+      JCheckBoxMenuItem shellItem = renderCartridgeShell;
+      shellItem.addActionListener(e -> {
+        settings.setRenderCartridgeTemplate(shellItem.isSelected());
+        if (shellItem.isSelected())
+        {
+          settings.setAssetKindVisible(AssetKind.CARTRIDGE, true);
+          items.get(AssetKind.CARTRIDGE).setSelected(true);
+        }
+        mediator.refreshInfoPanelAssets();
+      });
+      assetsMenu.add(shellItem);
+    }
+
+    JCheckBoxMenuItem shellItem = renderCartridgeShell;
+
+    assetsMenu.addMenuListener(new MenuListener() {
+      @Override public void menuSelected(MenuEvent e)
+      {
+        items.forEach((kind, item) -> item.setSelected(settings.isAssetKindVisible(kind)));
+        if (shellItem != null)
+          shellItem.setSelected(settings.shouldRenderCartridgeTemplate());
+      }
+
+      @Override public void menuDeselected(MenuEvent e) { }
+      @Override public void menuCanceled(MenuEvent e) { }
+    });
+
+    return assetsMenu;
+  }
+
+  private String assetCaption(AssetKind kind)
+  {
+    switch (kind)
+    {
+      case BOXART: return "Box Art";
+      case GAMEPLAY_SCREEN: return "Gameplay Screenshot";
+      case TITLE_SCREEN: return "Title Screen";
+      case CARTRIDGE: return "Cartridge Label";
+      default: return kind.getCaption();
     }
   }
   

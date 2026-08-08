@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -32,6 +33,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
@@ -57,6 +59,7 @@ import jack.rm.data.romset.GameSetManager;
 import jack.rm.data.romset.MyGameSetFeatures;
 import jack.rm.data.romset.Settings;
 import jack.rm.gui.Mediator;
+import jack.rm.gui.resources.CartridgeTemplate;
 import jack.rm.plugins.PluginRealType;
 import jack.rm.plugins.types.DataFetcherPlugin;
 import jack.rm.plugins.types.RomDownloaderPlugin;
@@ -260,12 +263,29 @@ public class InfoPanel extends JPanel
     buttons[1].addActionListener(e -> {
       if (game != null)
       {
-        MyGameSetFeatures helper = set.helper();        
-        DataFetcherPlugin plugin = helper.settings().getEnabledPluginOfType(PluginRealType.DATA_FETCHER);
-        
-        if (plugin != null && plugin.supportsAssetDownload())
+        MyGameSetFeatures helper = set.helper();
+        List<DataFetcherPlugin> plugins = helper.settings()
+            .<DataFetcherPlugin>getEnabledPluginsOfType(PluginRealType.DATA_FETCHER)
+            .stream()
+            .filter(DataFetcherPlugin::supportsAssetDownload)
+            .sorted((left, right) -> left.getInfo().name.compareToIgnoreCase(right.getInfo().name))
+            .collect(Collectors.toList());
+
+        if (plugins.size() == 1)
         {
-          plugin.searchAssetsForGame(game, AssetType.IMAGE);
+          plugins.get(0).searchAssetsForGame(game, AssetType.IMAGE);
+        }
+        else if (!plugins.isEmpty())
+        {
+          JPopupMenu sources = new JPopupMenu();
+          for (DataFetcherPlugin plugin : plugins)
+          {
+            JMenuItem source = new JMenuItem(plugin.getInfo().name);
+            source.setToolTipText(plugin.getInfo().description);
+            source.addActionListener(event -> plugin.searchAssetsForGame(game, AssetType.IMAGE));
+            sources.add(source);
+          }
+          sources.show(buttons[1], 0, buttons[1].getHeight());
         }
       }
   
@@ -318,7 +338,59 @@ public class InfoPanel extends JPanel
 	    assetsPopup.add(item);
 	    addedKinds.add(kind);
 	  }
+
+    boolean supportsCartridge = Arrays.stream(set.getAssetManager().getSupportedAssets())
+        .anyMatch(asset -> asset.getKind() == AssetKind.CARTRIDGE);
+    if (supportsCartridge)
+    {
+      assetsPopup.addSeparator();
+      JMenu templates = new JMenu("Cartridge/media style");
+      ButtonGroup group = new ButtonGroup();
+      JRadioButtonMenuItem automatic = new JRadioButtonMenuItem("Automatic for platform",
+          settings.getCartridgeTemplateId() == null);
+      automatic.addActionListener(e -> {
+        settings.setCartridgeTemplateId(null);
+        settings.setRenderCartridgeTemplate(true);
+        settings.setAssetKindVisible(AssetKind.CARTRIDGE, true);
+        rebuildAssetImages();
+        layoutImages();
+        updateFields(game);
+      });
+      group.add(automatic);
+      templates.add(automatic);
+
+      List<CartridgeTemplate> recommended = CartridgeTemplate.recommendedFor(set.platform());
+      if (!recommended.isEmpty())
+      {
+        templates.addSeparator();
+        for (CartridgeTemplate template : recommended)
+          addCartridgeTemplateItem(templates, group, template, settings);
+      }
+
+      templates.addSeparator();
+      for (CartridgeTemplate template : CartridgeTemplate.values())
+        if (!recommended.contains(template))
+          addCartridgeTemplateItem(templates, group, template, settings);
+
+      assetsPopup.add(templates);
+    }
 	}
+
+  private void addCartridgeTemplateItem(JMenu menu, ButtonGroup group, CartridgeTemplate template, Settings settings)
+  {
+    JRadioButtonMenuItem item = new JRadioButtonMenuItem(template.caption(),
+        template.id().equals(settings.getCartridgeTemplateId()));
+    item.addActionListener(e -> {
+      settings.setCartridgeTemplateId(template.id());
+      settings.setRenderCartridgeTemplate(true);
+      settings.setAssetKindVisible(AssetKind.CARTRIDGE, true);
+      rebuildAssetImages();
+      layoutImages();
+      updateFields(game);
+    });
+    group.add(item);
+    menu.add(item);
+  }
 	
 	public void buildPopupMenu()
 	{
@@ -495,11 +567,46 @@ public class InfoPanel extends JPanel
 	  imagesPanel.revalidate();
 	  imagesPanel.repaint();
 	}
-	
+
+  public void refreshAssetView()
+  {
+    if (set == null)
+      return;
+
+    rebuildAssetImages();
+    layoutImages();
+
+    if (game != null)
+      updateFields(game);
+	}
+
 	void setImage(Game rom, Asset asset, JLabel dest)
 	{
 		AssetData data = rom.getAssetData(asset);
 		restoreAssetData(rom, asset, data);
+
+    MyGameSetFeatures helper = set.helper();
+    Settings settings = helper.settings();
+    if (asset.getKind() == AssetKind.CARTRIDGE && settings.shouldRenderCartridgeTemplate())
+    {
+      CartridgeTemplate template = CartridgeTemplate.byId(settings.getCartridgeTemplateId())
+          .orElseGet(() -> CartridgeTemplate.defaultFor(set.platform())
+              .orElse(CartridgeTemplate.COMPACT_WHITE_CARD));
+      Image label = null;
+      if (data.isPresent())
+      {
+        ImageIcon labelIcon = data.asImage();
+        if (labelIcon != null)
+          label = labelIcon.getImage();
+      }
+
+      Dimension size = ((Asset.Image)asset).getSize();
+      BufferedImage rendered = template.layout().render(label, size);
+      dest.setText("");
+      dest.setIcon(new ImageIcon(rendered));
+      dest.setToolTipText(template.caption() + (label == null ? " (label missing)" : ""));
+      return;
+    }
 
 		if (data.isPresent())
 		{
@@ -521,11 +628,13 @@ public class InfoPanel extends JPanel
 
 			dest.setText("");
 			dest.setIcon(new ImageIcon(bi));
+			dest.setToolTipText(asset.getKind().getCaption());
 		}
 		else
 		{
 			dest.setText("Asset Missing");
 			dest.setIcon(null);
+			dest.setToolTipText(null);
 		}
 	}
 

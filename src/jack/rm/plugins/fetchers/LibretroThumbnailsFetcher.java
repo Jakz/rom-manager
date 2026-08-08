@@ -32,6 +32,7 @@ import com.github.jakz.romlib.data.game.attributes.Attribute;
 import com.github.jakz.romlib.data.platforms.Platform;
 import com.github.jakz.romlib.data.platforms.Platforms;
 import com.pixbits.lib.io.FileUtils;
+import com.pixbits.lib.plugin.ExposedParameter;
 import com.pixbits.lib.plugin.PluginInfo;
 import com.pixbits.lib.plugin.PluginVersion;
 
@@ -46,6 +47,8 @@ public class LibretroThumbnailsFetcher extends DataFetcherPlugin
   private static final Map<Platform, String> PLATFORM_MAPPING = new LinkedHashMap<>();
   private static final Map<AssetKind, String> ASSET_FOLDER_MAPPING = new LinkedHashMap<>();
   private final Map<String, List<String>> indexCache = new HashMap<>();
+
+  @ExposedParameter(name="Fuzzy Match Mode") private AssetFetchSelectionDialog.MatchMode matchMode = AssetFetchSelectionDialog.MatchMode.BALANCED;
 
   static
   {
@@ -65,6 +68,7 @@ public class LibretroThumbnailsFetcher extends DataFetcherPlugin
     PLATFORM_MAPPING.put(Platforms.A2600, "Atari - 2600");
     PLATFORM_MAPPING.put(Platforms.LYNX, "Atari - Lynx");
     PLATFORM_MAPPING.put(Platforms.MAME, "MAME");
+    PLATFORM_MAPPING.put(Platforms.IBM_PC, "DOS");
 
     ASSET_FOLDER_MAPPING.put(AssetKind.BOXART, "Named_Boxarts");
     ASSET_FOLDER_MAPPING.put(AssetKind.TITLE_SCREEN, "Named_Titles");
@@ -113,14 +117,23 @@ public class LibretroThumbnailsFetcher extends DataFetcherPlugin
       return;
     }
 
-    List<AssetFetchSelectionDialog.Result> candidates = buildCandidates(platform.get(), game, assets);
+    AssetFetchSelectionDialog.MatchMode initialMode = matchMode != null ? matchMode : AssetFetchSelectionDialog.MatchMode.BALANCED;
+
+    List<AssetFetchSelectionDialog.Result> candidates = buildCandidates(platform.get(), game, assets, initialMode);
     logInfo("Libretro candidates for " + game.getTitle() + ": " + candidates.size());
 
     AssetFetchSelectionDialog.Selection selection = AssetFetchSelectionDialog.choose(Main.mainFrame,
-        "Choose assets for " + game.getTitle(), candidates, this::assetExists);
+        "Choose assets for " + game.getTitle(), initialMode, mode -> {
+          matchMode = mode;
+          return buildCandidates(platform.get(), game, assets, mode);
+        },
+        this::assetExists);
 
     if (selection != null)
+    {
+      matchMode = selection.matchMode;
       download(game, assets, selection);
+    }
     else
       logInfo("Libretro asset download cancelled for " + game.getTitle());
   }
@@ -136,7 +149,8 @@ public class LibretroThumbnailsFetcher extends DataFetcherPlugin
     return assets;
   }
 
-  private List<AssetFetchSelectionDialog.Result> buildCandidates(String platform, Game game, Map<AssetKind, Asset> assets)
+  private List<AssetFetchSelectionDialog.Result> buildCandidates(String platform, Game game, Map<AssetKind, Asset> assets,
+      AssetFetchSelectionDialog.MatchMode mode)
   {
     logInfo("Searching Libretro thumbnails for " + game.getTitle() + " on " + platform);
 
@@ -152,7 +166,7 @@ public class LibretroThumbnailsFetcher extends DataFetcherPlugin
     for (String name : names)
       candidates.add(buildResult(platform, name, 0, assets));
 
-    candidates.addAll(matchIndexedCandidates(platform, names, assets));
+    candidates.addAll(matchIndexedCandidates(platform, names, assets, mode));
 
     return candidates.stream()
         .collect(Collectors.toMap(candidate -> candidate.name, candidate -> candidate, (left, right) -> left,
@@ -174,7 +188,7 @@ public class LibretroThumbnailsFetcher extends DataFetcherPlugin
   }
 
   private List<AssetFetchSelectionDialog.Result> matchIndexedCandidates(String platform, List<String> names,
-      Map<AssetKind, Asset> assets)
+      Map<AssetKind, Asset> assets, AssetFetchSelectionDialog.MatchMode mode)
   {
     try
     {
@@ -186,7 +200,7 @@ public class LibretroThumbnailsFetcher extends DataFetcherPlugin
       logDebug("Normalized Libretro fuzzy queries: " + normalizedQueries);
 
       List<AssetFetchSelectionDialog.Result> matches = index.stream()
-          .map(name -> buildResult(platform, name, score(name, normalizedQueries), assets))
+          .map(name -> buildResult(platform, name, score(name, normalizedQueries, mode), assets))
           .filter(candidate -> candidate.score < Integer.MAX_VALUE)
           .sorted(Comparator.comparingInt(candidate -> candidate.score))
           .limit(MAX_MATCHES)
@@ -268,7 +282,7 @@ public class LibretroThumbnailsFetcher extends DataFetcherPlugin
     }
   }
 
-  private int score(String candidate, List<String> normalizedQueries)
+  private int score(String candidate, List<String> normalizedQueries, AssetFetchSelectionDialog.MatchMode mode)
   {
     String normalizedCandidate = normalizeForMatch(candidate);
     if (normalizedCandidate.isEmpty())
@@ -286,18 +300,62 @@ public class LibretroThumbnailsFetcher extends DataFetcherPlugin
         best = Math.min(best, 4);
       else
       {
+        int tokenScore = tokenSubsetScore(normalizedCandidate, query, mode);
+        if (tokenScore != Integer.MAX_VALUE)
+          best = Math.min(best, tokenScore);
+
         int distance = levenshtein(normalizedCandidate, query);
         int maxLength = Math.max(normalizedCandidate.length(), query.length());
 
         double overlap = tokenOverlap(normalizedCandidate, query);
-        if (overlap >= 0.5)
+        double overlapThreshold = mode == AssetFetchSelectionDialog.MatchMode.STRICT ? 0.65
+            : mode == AssetFetchSelectionDialog.MatchMode.BROAD ? 0.25 : 0.40;
+        int distanceDivisor = mode == AssetFetchSelectionDialog.MatchMode.STRICT ? 4
+            : mode == AssetFetchSelectionDialog.MatchMode.BROAD ? 2 : 3;
+
+        if (overlap >= overlapThreshold)
           best = Math.min(best, 20 + distance - (int)(overlap * 10));
-        else if (maxLength != 0 && distance <= Math.max(4, maxLength / 3))
+        else if (maxLength != 0 && distance <= Math.max(4, maxLength / distanceDivisor))
           best = Math.min(best, 40 + distance);
       }
     }
 
     return best;
+  }
+
+  private int tokenSubsetScore(String candidate, String query, AssetFetchSelectionDialog.MatchMode mode)
+  {
+    List<String> candidateTokens = significantTokens(candidate);
+    List<String> queryTokens = significantTokens(query);
+
+    if (candidateTokens.isEmpty() || queryTokens.isEmpty())
+      return Integer.MAX_VALUE;
+
+    long matches = queryTokens.stream().filter(candidateTokens::contains).count();
+
+    if (matches == queryTokens.size())
+      return 8 + candidateTokens.size() - queryTokens.size();
+
+    if (mode == AssetFetchSelectionDialog.MatchMode.BROAD && matches != 0)
+      return 25 + (queryTokens.size() - (int)matches) * 4 + candidateTokens.size();
+
+    return Integer.MAX_VALUE;
+  }
+
+  private List<String> significantTokens(String value)
+  {
+    return List.of(value.split(" ")).stream()
+        .filter(token -> !token.isEmpty())
+        .filter(token -> !token.chars().allMatch(Character::isDigit))
+        .filter(token -> token.length() > 1)
+        .filter(token -> !isStopToken(token))
+        .collect(Collectors.toList());
+  }
+
+  private boolean isStopToken(String token)
+  {
+    return token.equals("the") || token.equals("a") || token.equals("an") || token.equals("of") || token.equals("and")
+        || token.equals("s");
   }
 
   private double tokenOverlap(String left, String right)
@@ -343,7 +401,12 @@ public class LibretroThumbnailsFetcher extends DataFetcherPlugin
       }
     }
 
-    return builder.toString().trim();
+    return stripLeadingCatalogId(builder.toString().trim());
+  }
+
+  private String stripLeadingCatalogId(String name)
+  {
+    return name.replaceFirst("^(?:\\d+\\s+)+", "").trim();
   }
 
   private int levenshtein(String left, String right)

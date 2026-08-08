@@ -548,7 +548,13 @@ public class MainFrame extends JFrame implements WindowListener, Mediator
 	{
 	  gameListPanel.refreshCurrentSelection();
 	}
-	
+
+  @Override
+  public void refreshInfoPanelAssets()
+  {
+    infoPanel.refreshAssetView();
+  }
+
 	@Override
 	public void switchGameListMode(GameListData.Mode mode, boolean treeMode)
 	{

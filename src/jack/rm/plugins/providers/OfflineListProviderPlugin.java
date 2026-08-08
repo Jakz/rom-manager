@@ -14,6 +14,7 @@ import java.util.UnknownFormatConversionException;
 
 import com.github.jakz.romlib.data.game.RomSize;
 import com.github.jakz.romlib.data.assets.Asset;
+import com.github.jakz.romlib.data.assets.AssetKind;
 import com.github.jakz.romlib.data.game.Game;
 import com.github.jakz.romlib.data.game.GameSave;
 import com.github.jakz.romlib.data.game.Version;
@@ -37,32 +38,32 @@ public class OfflineListProviderPlugin extends ProviderPlugin
 {  
   private final static Asset[] GBA_ASSETS =  
   {
-    new Asset.Image(Paths.get("title"), new Dimension(480,320)),
-    new Asset.Image(Paths.get("gameplay"), new Dimension(480,320))
+    new Asset.Image(AssetKind.TITLE_SCREEN, Paths.get("title"), new Dimension(480,320)),
+    new Asset.Image(AssetKind.GAMEPLAY_SCREEN, Paths.get("gameplay"), new Dimension(480,320))
   };
   
   private final static Asset[] NDS_ASSETS = 
   {
-    new Asset.Image(Paths.get("title"), new Dimension(214,384)),
-    new Asset.Image(Paths.get("gameplay"), new Dimension(256,384))
+    new Asset.Image(AssetKind.TITLE_SCREEN, Paths.get("title"), new Dimension(214,384)),
+    new Asset.Image(AssetKind.GAMEPLAY_SCREEN, Paths.get("gameplay"), new Dimension(256,384))
   };
   
   private final static Asset[] GB_ASSETS = 
   {
-    new Asset.Image(Paths.get("title"), new Dimension(320,288)),
-    new Asset.Image(Paths.get("gameplay"), new Dimension(320,288))
+    new Asset.Image(AssetKind.TITLE_SCREEN, Paths.get("title"), new Dimension(320,288)),
+    new Asset.Image(AssetKind.GAMEPLAY_SCREEN, Paths.get("gameplay"), new Dimension(320,288))
   };
   
   private final static Asset[] NES_ASSETS = 
   {
-    new Asset.Image(Paths.get("title"), new Dimension(320,288)),
-    new Asset.Image(Paths.get("gameplay"), new Dimension(320,288))
+    new Asset.Image(AssetKind.TITLE_SCREEN, Paths.get("title"), new Dimension(320,288)),
+    new Asset.Image(AssetKind.GAMEPLAY_SCREEN, Paths.get("gameplay"), new Dimension(320,288))
   };
   
   private final static Asset[] LYNX_ASSETS = 
   {
-    new Asset.Image(Paths.get("title"), new Dimension(320,320)),
-    new Asset.Image(Paths.get("gameplay"), new Dimension(320,320))
+    new Asset.Image(AssetKind.TITLE_SCREEN, Paths.get("title"), new Dimension(320,320)),
+    new Asset.Image(AssetKind.GAMEPLAY_SCREEN, Paths.get("gameplay"), new Dimension(320,320))
   };
   
   
@@ -297,8 +298,8 @@ public class OfflineListProviderPlugin extends ProviderPlugin
         
         final Asset[] PSP_ASSETS =  
         {
-          new Asset.Image(Paths.get("title"), new Dimension(208,181*2)),
-          new Asset.Image(Paths.get("gameplay"), new Dimension(320*2,181*2))
+          new Asset.Image(AssetKind.TITLE_SCREEN, Paths.get("title"), new Dimension(208,181*2)),
+          new Asset.Image(AssetKind.GAMEPLAY_SCREEN, Paths.get("gameplay"), new Dimension(320*2,181*2))
         };
         
         final Attribute[] attributes = 
@@ -346,8 +347,8 @@ public class OfflineListProviderPlugin extends ProviderPlugin
       {
         final Asset[] _3DS_ASSETS = 
         {
-          new Asset.Image(Paths.get("title"), new Dimension(268, 480)),
-          new Asset.Image(Paths.get("gameplay"), new Dimension(400, 480))
+          new Asset.Image(AssetKind.TITLE_SCREEN, Paths.get("title"), new Dimension(268, 480)),
+          new Asset.Image(AssetKind.GAMEPLAY_SCREEN, Paths.get("gameplay"), new Dimension(400, 480))
         };
         
         final Attribute[] _3DS_ATTRIBUTES = 

@@ -12,6 +12,7 @@ public interface Mediator
   public void refreshGameList(int row);
   public void refreshGameListCurrentSelection();
   public void refreshGameListCounters();
+  public void refreshInfoPanelAssets();
   public void rebuildGameList();
   public void switchGameListMode(GameListData.Mode mode, boolean treeMode);
   

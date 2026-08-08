@@ -1,39 +1,61 @@
 package jack.rm.plugins.fetchers;
 
+import java.util.Collections;
 import java.util.List;
 
-public class MobyGames
+final class MobyGames
 {
-  public class Platform
+  static final class Platform
   {
     int platform_id;
     String platform_name;
-  }  
-  
-  public class Game
+  }
+
+  static final class Game
   {
     int game_id;
     String title;
-    Sample sample_cover;
-    List<Sample> sample_screenshots;
+
+    @Override public String toString()
+    {
+      return title;
+    }
   }
-  
-  public class Sample
+
+  static final class Games
   {
+    List<Game> games = Collections.emptyList();
+  }
+
+  static final class Platforms
+  {
+    List<Platform> platforms = Collections.emptyList();
+  }
+
+  static final class Cover
+  {
+    String comments;
+    String description;
     int width;
     int height;
     String image;
     String thumbnail_image;
-    String caption;
+    String scan_of;
   }
-  
-  public class GameIDs
+
+  static final class CoverGroup
   {
-    List<Integer> games;
-  } 
-  
-  public class Games
+    String comments;
+    List<String> countries = Collections.emptyList();
+    List<Cover> covers = Collections.emptyList();
+  }
+
+  static final class CoverGroups
   {
-    List<Game> games;
+    List<CoverGroup> cover_groups = Collections.emptyList();
+  }
+
+  private MobyGames()
+  {
   }
 }
